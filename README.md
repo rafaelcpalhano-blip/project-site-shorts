@@ -133,3 +133,27 @@ A prioridade será preservar a simplicidade da experiência, a organização dos
 ---
 
 **Projeto em desenvolvimento.** Este README documenta a proposta e as funcionalidades planejadas. Sua implementação, arquitetura e documentação serão atualizadas ao longo das etapas de desenvolvimento.
+
+## Implementação local disponível
+
+As etapas 2 e 3 entregaram a estrutura modular e o protótipo interativo. A etapa 4
+adiciona leitura paginada no emulador Firestore, regras e testes de acesso.
+As funcionalidades de produção descritas acima continuam planejadas.
+
+- `npm ci`: instalar dependências (Node 24).
+- `npm run dev`: executar o protótipo com dados em memória.
+- `npm run emulators`: iniciar Firestore local (requer Java 21).
+- `npm run seed:firestore`: carregar registros fictícios no emulador.
+- `npm run dev:firestore`: abrir o modo local de leitura em localhost:5174.
+- `npm run lint`, `npm run build` e `npm test`: verificações da aplicação.
+- `npm run test:firestore`: testes isolados das regras e consultas na porta 8081, sem interromper o emulador de desenvolvimento.
+
+Configuração, modelos, índices, limites e pendências estão em
+[Firestore local](docs/firestore-local.md). Este estágio não exige projeto Firebase
+real e não configura autenticação, publicação, serviços pagos ou deploy.
+A busca por título permanece disponível no protótipo; sua integração persistente
+aguarda definição. Escritas no modo Firestore estão bloqueadas.
+
+O [checkpoint de continuidade](docs/continuidade.md) registra as decisões de
+publicação automática, o núcleo transacional testado e as integrações ainda
+necessárias. A aplicação completa de produção ainda não está disponível.

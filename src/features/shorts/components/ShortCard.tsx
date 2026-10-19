@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Short } from '../types/models'
-import { games } from '../data/fixtures'
+
 import styles from './ShortCard.module.css'
-export function ShortCard({ short, count, onOpen }: { short: Short; count: number; onOpen: () => void }) {
-  const game = games.find(item => item.id === short.gameId)!
+export function ShortCard({ short, count, gameName, onOpen }: { short: Short; count?: number; gameName?: string; onOpen: () => void }) {
+  const game = { id: short.gameId, name: gameName || 'Jogo indisponível' }
   const [now, setNow] = useState(Date.now)
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000)
@@ -21,7 +21,7 @@ export function ShortCard({ short, count, onOpen }: { short: Short; count: numbe
     <div className={styles.body}>
       <h3><button type="button" className={styles.title} onClick={onOpen}>{short.title}</button></h3>
       <p>{short.channelName || 'Canal não informado'} · <time dateTime={new Date(short.createdAt).toISOString()}>{minutes ? minutes + ' min atrás' : 'agora'}</time></p>
-      <button className={styles.comments} type="button" onClick={onOpen}>Comentários ({count})</button>
+      <button className={styles.comments} type="button" onClick={onOpen}>Comentários{count !== undefined ? ' (' + count + ')' : ''}</button>
       <Link className={styles.gameLink} to={'/jogos/' + game.id}>Ver jogo</Link>
     </div>
   </article>

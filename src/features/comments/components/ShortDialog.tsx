@@ -1,3 +1,4 @@
+import { validateCommentInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
 import { Modal } from '../../../components/ui/Modal'
 import { useDemo } from '../../../app/providers/demo-context'
@@ -19,8 +20,10 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
     {comments.length ? comments.map(item => <p key={item.id}>{item.content}</p>) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
     <form className="form" onSubmit={event => {
       event.preventDefault()
-      if (!content.trim()) { setMessage('Escreva um comentário antes de enviar.'); return }
-      comment(short.id, content.trim()); setContent('')
+      let validated
+      try { validated = validateCommentInput({ shortId: short.id, content }) }
+      catch (reason) { setMessage(reason instanceof Error ? reason.message : 'Comentário inválido.'); return }
+      comment(validated.shortId, validated.content); setContent('')
       setMessage('Comentário enviado para análise nesta sessão. Ele permanece oculto; a moderação ainda não está conectada.')
     }}>
       <div className="form-field">

@@ -27,3 +27,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Local Firebase and portable runtimes
+.tools/
+.firebase/
+.emulator-data/

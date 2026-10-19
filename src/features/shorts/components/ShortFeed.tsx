@@ -37,7 +37,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
       <p role="status">{matching.length} shorts · mais recentes primeiro · 15 por página</p>
     </div>
     {matching.length ? <div className={styles.grid}>
-      {matching.slice((currentPage - 1) * 15, currentPage * 15).map(short => <ShortCard key={short.id} short={short}
+      {matching.slice((currentPage - 1) * 15, currentPage * 15).map(short => <ShortCard key={short.id} short={short} gameName={games.find(game => game.id === short.gameId)?.name}
         count={state.comments.filter(item => item.shortId === short.id && item.status === 'approved').length}
         onOpen={() => setSelected(short)} />)}
     </div> : <div className="inset"><h3>Nenhuma jogada encontrada</h3><p>Tente outro título ou jogo.</p>

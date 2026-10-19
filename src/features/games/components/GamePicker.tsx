@@ -1,3 +1,4 @@
+import { validateGameRequestInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
 import { games } from '../../shorts/data/fixtures'
 import { useDemo } from '../../../app/providers/demo-context'
@@ -24,7 +25,12 @@ export function GamePicker({ value, onChange }: { value: string; onChange: (id: 
       {query.trim() && results.length === 0 && <>
         <p>Jogo não encontrado. Sua solicitação ficará pendente de revisão nesta sessão.</p>
         <button type="button" onClick={() => {
-          requestGame(query.trim()); setMessage('Solicitação pendente. Selecione um jogo cadastrado para publicar o short.')
+                    try {
+            requestGame(validateGameRequestInput({ name: query }).name)
+            setMessage('Solicitação pendente. Selecione um jogo cadastrado para publicar o short.')
+          } catch (reason) {
+            setMessage(reason instanceof Error ? reason.message : 'Nome de jogo inválido.')
+          }
         }}>Solicitar revisão</button>
       </>}
       <p role="status">{message}</p>

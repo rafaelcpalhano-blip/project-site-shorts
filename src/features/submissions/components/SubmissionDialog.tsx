@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Modal } from '../../../components/ui/Modal'
 import { GamePicker } from '../../games/components/GamePicker'
 import { games } from '../../shorts/data/fixtures'
-import { parseVideoUrl } from '../services/video-url'
+import { validateSubmissionInput } from '../../../lib/validation/public-input'
 import { useDemo } from '../../../app/providers/demo-context'
 export function SubmissionDialog({ onClose, onPublished }: { onClose: () => void; onPublished: () => void }) {
   const { state, publish } = useDemo()
@@ -15,7 +15,7 @@ export function SubmissionDialog({ onClose, onPublished }: { onClose: () => void
     <form className="form" onSubmit={event => {
       event.preventDefault()
       try {
-        const video = parseVideoUrl(url)
+        const video = validateSubmissionInput({ url, gameId, channelName })
         if (!games.some(game => game.id === gameId)) throw new Error('Selecione exatamente um jogo cadastrado.')
         if (state.shorts.some(short => short.identity === video.identity)) throw new Error('Este short já foi compartilhado nesta sessão.')
         publish({ ...video, id: crypto.randomUUID(), gameId, channelName: channelName.trim(),
