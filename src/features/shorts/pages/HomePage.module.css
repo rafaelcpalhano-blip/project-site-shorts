@@ -1,0 +1,5 @@
+.hero { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 36px; }
+.hero button { flex-shrink: 0; }
+.notice { border: 1px solid var(--color-border); border-radius: 10px; padding: 12px 16px; color: var(--color-muted); font-size: .75rem; }
+@media (max-width: 600px) { .hero { align-items: start; flex-direction: column; gap: 16px; margin-bottom: 24px; } }
+

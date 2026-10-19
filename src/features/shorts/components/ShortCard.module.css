@@ -1,0 +1,14 @@
+.card { min-width: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
+.preview { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: start; width: 100%; min-height: 212px; padding: 12px; border: 0; border-radius: 0; overflow: hidden; background: linear-gradient(150deg, #30263f, #1c1d25); text-align: left; }
+.preview::before { content: ''; position: absolute; z-index: -1; inset: 58px -35px 55px 16px; border-radius: 25px; transform: rotate(-35deg); background: linear-gradient(110deg, #3d3053, #5b4779); opacity: .8; }
+.platform { background: #16171d; border-radius: 4px; padding: 3px 7px; font-size: .65rem; }
+.play { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #3b3549; border-radius: 50%; align-self: center; margin: 20px 0; color: var(--color-accent); background: #1b1c23; }
+.game { font-size: 1.1rem; font-weight: 750; line-height: 1.25; margin-bottom: 20px; }
+.caption { font-size: .7rem; color: var(--color-muted); margin-top: auto; }
+.body { padding: 13px 12px 18px; }
+.body h3 { margin: 0; font-size: .85rem; }
+.title { padding: 0; border: 0; background: none; text-align: left; line-height: 1.55; font-weight: 700; }
+.body p { color: var(--color-muted); font-size: .7rem; line-height: 1.5; }
+.comments { padding: 4px 0; border: 0; background: none; color: var(--color-muted); font-size: .7rem; }
+.gameLink { display: block; margin-top: 7px; font-size: .7rem; color: var(--color-muted); }
+
