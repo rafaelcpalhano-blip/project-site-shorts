@@ -14,11 +14,11 @@ function response(status: number, body: unknown, extra: Record<string, string> =
     'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...extra,
   } })
 }
-class BodyError extends Error {
+export class BodyError extends Error {
   readonly status: number
   constructor(status: number) { super('invalid-body'); this.status = status }
 }
-async function readInput(request: Request): Promise<unknown> {
+export async function readInput(request: Request): Promise<unknown> {
   const length = request.headers.get('content-length')
   if (length !== null && (!/^\d+$/.test(length) || Number(length) > maximumBodyBytes)) throw new BodyError(413)
   if (!request.body) throw new BodyError(400)

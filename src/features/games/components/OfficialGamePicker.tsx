@@ -1,0 +1,47 @@
+import { useRef, useState } from 'react'
+import { createGameCatalogClient } from '../services/catalog-api'
+import type { OfficialGame } from '../services/catalog-api'
+const catalog = createGameCatalogClient()
+export function OfficialGamePicker({ disabled, onBusyChange, onSelected }: {
+  disabled: boolean; onBusyChange: (busy: boolean) => void; onSelected: (game: { id: string; name: string }) => void
+}) {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<OfficialGame[]>([])
+  const [selected, setSelected] = useState('')
+  const [searched, setSearched] = useState(false)
+  const [working, setWorking] = useState(false)
+  const [error, setError] = useState('')
+  const lock = useRef(false)
+  async function run(action: () => Promise<void>) {
+    if (lock.current || disabled) return
+    lock.current = true; setWorking(true); onBusyChange(true); setError('')
+    try { await action() }
+    catch (reason) { setError(reason instanceof Error && reason.name === 'Error' ? reason.message : 'Não foi possível concluir a consulta. Tente novamente.') }
+    finally { lock.current = false; setWorking(false); onBusyChange(false) }
+  }
+  const search = () => run(async () => {
+    setResults([]); setSelected(''); setSearched(false)
+    const games = await catalog.search(query)
+    setResults(games); setSearched(true)
+  })
+  return <fieldset disabled={disabled || working} className="form-field">
+    <legend>Não encontrou seu jogo?</legend>
+    <label htmlFor="official-game-query">Pesquisar nome oficial</label>
+    <input id="official-game-query" value={query} maxLength={100} onChange={event => {
+      setQuery(event.target.value); setResults([]); setSelected(''); setSearched(false); setError('')
+    }} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void search() } }} />
+    <button type="button" disabled={!query.trim()} onClick={() => void search()}>Pesquisar no IGDB</button>
+    {working && <p role="status">Consultando catálogo...</p>}
+    {results.map(game => <label key={game.externalId}>
+      <input type="radio" name="official-game-choice" value={game.externalId} checked={selected === game.externalId} onChange={() => setSelected(game.externalId)} />
+      {game.officialName}{game.releaseDate ? ' · ' + game.releaseDate.slice(0, 4) : ''}{game.platforms.length ? ' · ' + game.platforms.join(', ') : ''}
+    </label>)}
+    {results.length > 0 && <button type="button" disabled={!selected} onClick={() => void run(async () => {
+      const game = await catalog.confirm(selected)
+      onSelected(game); setResults([]); setSelected(''); setSearched(false)
+    })}>Confirmar este jogo</button>}
+    {searched && !results.length && <p role="status">Nenhum jogo encontrado. A solicitação de análise ainda não está disponível neste ambiente.</p>}
+    {error && <p role="alert" className="error">{error}</p>}
+    <small>Dados de jogos: <a href="https://www.igdb.com/" target="_blank" rel="noreferrer">IGDB</a>. Confira o título antes de confirmar.</small>
+  </fieldset>
+}

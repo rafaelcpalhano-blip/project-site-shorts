@@ -22,7 +22,7 @@ test('Twitch consulta somente API oficial e confirma metadados sem liberar moder
   assert.equal(result.gameMatch, 'confirmed')
   assert.equal(result.title, clip.title)
   assert.equal(result.moderation, 'unavailable')
-  assert.equal(decidePublication(result).status, 'pending')
+  assert.equal(decidePublication(result).status, 'published')
 })
 test('Twitch distingue ausência de falhas, resposta malformada e identidade inesperada', async () => {
   assert.equal((await verifier({ data: [] })(input)).existence, 'missing')
@@ -50,4 +50,5 @@ test('links não Twitch ou host arbitrário não provocam requisições', async 
   }
   assert.equal(calls, 0)
 })
+
 

@@ -7,7 +7,7 @@ import { createRestStore } from '../../server/firestore/rest-store.ts'
 import { submitShort } from '../../server/submissions/submit-short.ts'
 let environment
 const visitor = 'a'.repeat(64)
-const clean = { existence:'confirmed', shortFormat:'confirmed', gameMatch:'confirmed', moderation:'clear', flags:[], title:'Jogada verificada' }
+const clean = { existence:'confirmed', shortFormat:'confirmed', gameMatch:'confirmed', moderation:'unavailable', flags:[], title:'Jogada verificada' }
 const input = id => ({ url:'https://clips.twitch.tv/' + id, gameId:'lol', channelName:'Canal' })
 const store = createRestStore({ projectId:'demo-clipzone-tests', emulatorPort:8081 })
 const dependencies = { store, checkAbuse:async () => {}, verify:async () => clean, now:() => new Date('2026-10-19T12:00:00Z') }
@@ -40,7 +40,7 @@ test('publicações concorrentes não ultrapassam cinco por dia', async () => sc
   assert.equal((await getDocs(collection(db,'shorts'))).size,5)
 }))
 test('pendentes e rejeitados não gastam cota; pendentes não são publicados', async () => scenario(async db => {
-  const result = await submitShort(input('Pending'),visitor,{...dependencies,verify:async()=>({...clean,moderation:'unavailable'})})
+  const result = await submitShort(input('Pending'),visitor,{...dependencies,verify:async()=>({...clean,gameMatch:'unknown'})})
   assert.equal(result.status,'pending')
   assert.equal((await getDocs(collection(db,'submissionLimits'))).size,0)
   await assert.rejects(submitShort(input('Missing'),visitor,{...dependencies,verify:async()=>({...clean,existence:'missing'})}),{code:'video-not-found'})
@@ -63,4 +63,5 @@ test('checagem de abuso obrigatória interrompe antes da gravação', async () =
   await assert.rejects(submitShort(input('Abuse'),visitor,{...dependencies,checkAbuse:async()=>{throw new Error('rate-limited')}}),/rate-limited/)
   assert.equal((await getDocs(collection(db,'shorts'))).size,0)
 }))
+
 

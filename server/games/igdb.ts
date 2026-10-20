@@ -62,6 +62,8 @@ export function createIgdbCatalog(credentials: Credentials, fetcher: Fetch = fet
     })
   }
   return {
+    // Server-only token provider shared with Helix; never serialize to clients.
+    accessToken: token,
     async search(value: string) {
       const { name } = validateGameRequestInput({ name: value })
       // Escape the quoted API search literal; never accept arbitrary IGDB query syntax.
@@ -74,4 +76,5 @@ export function createIgdbCatalog(credentials: Credentials, fetcher: Fetch = fet
     },
   }
 }
+
 

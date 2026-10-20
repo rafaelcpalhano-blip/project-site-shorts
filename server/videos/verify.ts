@@ -12,7 +12,8 @@ export function createMetadataVerifier(adapters: Adapters) {
       if (!adapter) return unknown
       const evidence = await adapter({ url: video.url, gameId: submission.gameId })
       // Metadata never clears audiovisual moderation, even if an adapter mistakenly says so.
-      return { ...evidence, moderation: 'unavailable' }
+      return { ...evidence, moderation: evidence.moderation === 'flagged' ? 'flagged' : 'unavailable' }
     } catch { return unknown }
   }
 }
+

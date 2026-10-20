@@ -11,7 +11,7 @@ const messages: Record<string, string> = {
   'invalid-input': 'Confira o link, o jogo e o nome do canal.',
 }
 export function createSubmissionClient(fetcher: typeof fetch = fetch) {
-  return async (input: { url: string; gameId: string; channelName: string }): Promise<SubmissionResult> => {
+  return async (input: { url: string; gameId: string; channelName: string; title?: string }): Promise<SubmissionResult> => {
     validateSubmissionInput(input)
     const post = async (path: string, body?: unknown) => {
       const response = await fetcher(path, { method: 'POST', credentials: 'same-origin', redirect: 'error',
@@ -35,3 +35,4 @@ export function createSubmissionClient(fetcher: typeof fetch = fetch) {
     return { id: result.id, status: result.status, remaining: result.remaining }
   }
 }
+

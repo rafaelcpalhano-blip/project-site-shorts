@@ -23,10 +23,12 @@ function identifier(value: unknown, label: string): string {
   if (!/^[\w-]+$/u.test(result)) throw new Error(label + ' inválido.')
   return result
 }
+export function validateVideoTitle(value: unknown): string { return text(value, 'Título', 500) }
 export function validateSubmissionInput(value: unknown) {
-  const data = object(value, ['url', 'gameId', 'channelName'])
+  const data = object(value, ['url', 'gameId', 'channelName', 'title'])
   const originalUrl = text(data.url, 'Link do short', 2048)
   return { ...parseVideoUrl(originalUrl), originalUrl,
+    title: text(data.title, 'Título', 500, true),
     gameId: identifier(data.gameId, 'Jogo'), channelName: text(data.channelName, 'Nome do canal', 80, true) }
 }
 export function validateCommentInput(value: unknown) {
@@ -38,4 +40,5 @@ export function validateGameRequestInput(value: unknown) {
   const name = text(data.name, 'Nome do jogo', 100)
   return { name, normalizedName: name.normalize('NFKD').replace(/\p{M}/gu, '').toLocaleLowerCase('pt-BR').replace(/\s+/g, ' ') }
 }
+
 

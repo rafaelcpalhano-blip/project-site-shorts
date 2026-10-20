@@ -1,4 +1,4 @@
-import { validateSubmissionInput } from '../../src/lib/validation/public-input.ts'
+import { validateSubmissionInput, validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { saoPauloDayKey } from '../../src/lib/validation/day-key.ts'
 import { decidePublication } from './decision.ts'
 import type { VideoEvidence } from './decision.ts'
@@ -46,14 +46,14 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     const count = quota?.count ?? 0
     if (!Number.isInteger(count) || Number(count) < 0) throw new SubmissionError('invalid-quota')
     if (decision.status === 'published' && Number(count) >= 5) throw new SubmissionError('daily-limit')
-    const title = typeof evidence.title === 'string' && evidence.title.trim()
-      ? evidence.title.trim() : 'Short de ' + String(game.officialName || 'game')
+    const originalTitle = typeof evidence.title === 'string' && evidence.title.trim() ? validateVideoTitle(evidence.title) : null
+    const title = submission.title || originalTitle || 'Short de ' + String(game.officialName || 'game')
     if (title.length > 500) throw new SubmissionError('invalid-metadata')
     transaction.create('videoIdentities/' + identityId, { shortId: identityId, identity: submission.identity, createdAt: now })
     transaction.create('shorts/' + identityId, {
       originalUrl: submission.originalUrl, normalizedUrl: submission.url,
       platform: submission.platform, platformVideoId: submission.identity.slice(submission.platform.length + 1),
-      title, channelName: submission.channelName, gameId: submission.gameId,
+      title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
       createdAt: now, moderationStatus: decision.status,
     })
     // Private ownership supports later quota accounting on approval; never in public short documents.
@@ -68,4 +68,5 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     return { id: identityId, status: decision.status, remaining: Math.max(0, 5 - Number(count) - (decision.status === 'published' ? 1 : 0)) }
   })
 }
+
 

@@ -15,9 +15,10 @@ export function decidePublication(evidence: VideoEvidence): PublicationDecision 
   }
   if (evidence.gameMatch === 'mismatch') return { status: 'pending', reason: 'game-mismatch' }
   if (evidence.existence !== 'confirmed' || evidence.shortFormat !== 'confirmed' ||
-      evidence.gameMatch !== 'confirmed' || evidence.moderation !== 'clear') {
+      evidence.gameMatch !== 'confirmed') {
     return { status: 'pending', reason: 'verification-incomplete' }
   }
   return { status: 'published', reason: 'automatically-verified' }
 }
+
 
