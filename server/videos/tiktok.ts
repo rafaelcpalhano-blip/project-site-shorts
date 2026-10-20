@@ -1,0 +1,24 @@
+import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
+import type { VideoEvidence } from '../submissions/decision.ts'
+export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
+  return async (submission: { url: string }): Promise<VideoEvidence> => {
+    const evidence: VideoEvidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] }
+    try {
+      const video = parseVideoUrl(submission.url)
+      if (video.platform !== 'TikTok') return evidence
+      const endpoint = new URL('https://www.tiktok.com/oembed')
+      endpoint.searchParams.set('url', video.url)
+      const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
+      if (!response.ok) return evidence
+      const result = await response.json()
+      if (!result || result.type !== 'video' || result.version !== '1.0' || result.provider_name !== 'TikTok' ||
+          !['https://www.tiktok.com', 'https://www.tiktok.com/'].includes(result.provider_url)) return evidence
+      evidence.existence = 'confirmed'
+      if (typeof result.title === 'string' && result.title.trim() && result.title.length <= 500 &&
+          ![...result.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = result.title.trim()
+      // Do not store, render or execute oEmbed HTML/scripts, or fetch thumbnail/author URLs.
+      // oEmbed does not prove short duration, game identity or content safety.
+      return evidence
+    } catch { return evidence }
+  }
+}
