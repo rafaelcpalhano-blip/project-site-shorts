@@ -287,3 +287,165 @@ a confirmação do título oficial continua necessária no fluxo de cadastro.
 Próxima etapa: integrar a consulta/seleção de jogos ao servidor e formulário,
 com limitação de requisições e persistência somente após validação oficial.
 Deploy público permanece não autorizado.
+
+## Checkpoint — pesquisa IGDB na API
+
+Adicionado server/http/game-search.ts e rota GET /api/games/search?q=... na
+composição da API. Exige sessão assinada; rejeita origem cruzada, parâmetros
+extras, repetidos ou inválidos; devolve no máximo dez resultados e atribuição
+IGDB. Campos enviados ao cliente limitados a ID oficial, nome, data e plataformas.
+Falhas retornam indisponibilidade; não geram jogos fictícios nem registros.
+
+Limite privado gameSearchAttempts separado de submissionAttempts e da cota diária.
+Thresholds são configuração explícita; gameSearch ausente mantém a rota em 503.
+Coleção privada já coberta pelo deny-all das regras. Sem novos bancos/dependências.
+
+Validação: quatro testes novos e três testes da API afetada passaram; build passou.
+Lint completo concluído sem erros. Nenhuma consulta real repetida sem necessidade.
+Próximo bloco: confirmar seleção contra IGDB no servidor antes de gravar o jogo,
+então integrar busca/seleção ao formulário. Não confundir resultado de busca com
+jogo já cadastrado. Rotas continuam sem deploy e não estão acessíveis pelo Vite.
+
+## Checkpoint — confirmação oficial de jogos
+
+Adicionados server/games/confirm-game.ts e server/http/game-confirmation.ts.
+POST /api/games/confirm recebe somente externalId, exige origem/sessão, aplica o
+limite de operações do catálogo e consulta novamente o IGDB antes de gravar.
+ID determinístico games/igdb-{externalId}, criação transacional e retorno do jogo
+existente evitam duplicatas. Jogos desabilitados não são reativados. Cliente não
+pode enviar nome, status ou metadados. Reutilizado leitor HTTP limitado a 8 KiB.
+
+Quatro testes novos e sete testes relacionados passaram; lint e build passaram.
+Testes usam catálogo controlado e AtomicStore serializado em memória, não uma
+nova comprovação de concorrência no emulador. Antes de habilitar esse fluxo,
+validar a transação de confirmação no emulador e completar integração visual.
+Nenhum dado de catálogo foi gravado na nuvem, nenhuma dependência/deploy criado.
+
+Ausência no IGDB retorna game-not-found sem inventar cadastro; fluxo persistente
+de solicitação pendente ainda falta. Próximo: seletor de resultados oficiais no
+formulário e confirmação explícita preservando link/canal preenchidos.
+
+## Checkpoint — seleção IGDB no formulário persistente
+
+Adicionados OfficialGamePicker.tsx e catalog-api.ts; integrados ao
+PersistentSubmissionDialog.tsx. Busca por botão ou Enter, até dez resultados,
+atribuição IGDB, escolha por rádio e confirmação explícita. Apenas gameId oficial
+confirmado é selecionado no formulário. Link e canal permanecem no componente pai.
+Sem formulários aninhados, sem pesquisa a cada tecla e sem repetição automática
+de gravações. Operações de catálogo bloqueiam envio/fechamento concorrentes.
+
+Três testes novos do cliente HTTP, lint completo e build passaram. Não realizada
+validação visual ou ponta a ponta com servidor neste bloco. A API ainda não está
+montada no Vite; indisponibilidade é exibida sem simular cadastro bem-sucedido.
+
+Pendências preservadas: teste de concorrência da confirmação no emulador,
+solicitação persistente de jogo não encontrado, composição segura local da API,
+administração/MFA e verificação audiovisual. Nenhum deploy ou nova dependência.
+
+## Checkpoint — confirmação validada no emulador
+
+Adicionado tests/firestore/game-confirmation.test.mjs. Três testes passaram com
+o adaptador REST real no Firestore Emulator: três confirmações simultâneas geram
+um único registro; visitante não consegue escrever no catálogo; jogo desabilitado
+permanece oculto e não é reativado; falha/ausência no IGDB não cria documentos.
+Respostas IGDB continuam controladas nesse teste, sem consulta externa.
+
+scripts/firebase-local.mjs aceita nome opcional validado de teste para executar
+apenas a suíte necessária. Executado:
+node scripts/firebase-local.mjs test game-confirmation.test.mjs
+Lint localizado passou. Nenhum código da aplicação alterado, build não repetido.
+Emulador de testes encerrado normalmente. Nenhuma alteração no banco da nuvem.
+Próxima etapa: API local segura para validar os formulários ponta a ponta; manter
+proteções de produção e não habilitar publicação pública incompleta.
+
+## Checkpoint — servidor HTTPS local preparado
+
+Adicionados scripts/dev-api.mjs, scripts/local-api-bridge.mjs,
+tests/local-api-bridge.test.mjs e docs/api-local.md. Servidor restrito a
+127.0.0.1:5174, certificado externo obrigatório, API e Vite na mesma origem,
+Firestore fixo demo-clipzone:8080, catálogo IGDB com credenciais privadas opcionais.
+Verificação de vídeos ainda indisponível: envios permanecem pendentes. Nenhum
+deploy, instalação ou modificação de regras na nuvem. Sessões locais limitadas
+por processo e invalidadas ao reiniciar; não reutilizar esse runner em produção.
+
+Três testes da ponte passaram; lint completo e build passaram. Início sem
+certificado foi recusado como esperado. Fluxo HTTPS real no navegador ainda
+não validado: depende de certificado local confiável e emulador em execução.
+Solicitada participação do usuário para certificado, sem instalar autoridades
+ou ignorar alertas TLS automaticamente. Próximo: certificado e validação ponta
+a ponta de seleção IGDB/envio pendente/duplicidade.
+
+## Checkpoint — fluxo local validado no navegador (2026-10-20)
+
+Após reinício, certificado HTTPS reconhecido pelo navegador interno, sem ignorar
+alertas. Servidor dev-api em 127.0.0.1:5174 e emulador demo-clipzone:8080 ativos.
+Validados pela interface: pesquisa IGDB real (8 resultados), confirmação explícita
+de League of Legends, preservação de link/canal, envio de URL sintética de teste
+recebido para análise e segundo envio rejeitado como duplicado. Reabertura do
+formulário recuperou o jogo cadastrado. Feed permaneceu vazio.
+Leitura REST no emulador confirmou exatamente um short com moderationStatus
+pending e zero documentos em submissionLimits. Nenhuma gravação na nuvem.
+Não houve alteração de código; lint/build anteriores não repetidos.
+Evidência visual no workspace do chat: validacao-formulario-local.png.
+Limitação: URL sintética exercita o fluxo pendente, não valida vídeo real.
+Próximas funcionalidades: solicitação persistente de jogo não encontrado,
+validação real de vídeos e administração autenticada/moderação. Publicação
+automática continua dependente da verificação completa do conteúdo.
+
+## Checkpoint — metadados Twitch reais (2026-10-20)
+
+Servidor local agora configura createTwitchClipVerifier. O catálogo IGDB expõe
+accessToken somente para composição de servidor, reutilizando seu cache existente.
+Novo server/games/twitch-mapping.ts lê jogo ativo IGDB do banco e consulta Helix
+Get Games por igdb_id; respostas ambíguas/inconsistentes/falhas não confirmam jogo.
+Referência: https://dev.twitch.tv/docs/api/reference#get-games
+
+Sete testes focados (mapeamento + clipes), lint completo e build passaram.
+Consulta real somente leitura a um clipe retornou existence=confirmed,
+shortFormat=confirmed, gameMatch=confirmed, moderation=unavailable. Nenhum clipe
+foi gravado ou publicado nessa verificação. Servidor HTTPS reiniciado com a
+integração; sessões anteriores precisam ser renovadas automaticamente pelo cliente.
+Ainda faltam análise audiovisual, integração das demais fontes e administração.
+
+## Checkpoint — publicação automática por validação técnica (2026-10-20)
+
+Decisão explícita do usuário: ausência de análise audiovisual não deve impedir
+publicação se existência, formato e jogo estiverem confirmados. decision.ts agora
+aplica essa política. Flags de ameaça/ódio/violência real/inconsistência e verdict
+flagged continuam pendentes, assim como qualquer validação técnica inconclusiva.
+verify.ts preserva flagged em vez de sobrescrevê-lo por unavailable.
+
+Nove testes focados, seis testes de transações no emulador, lint e build passaram.
+A suíte de concorrência agora usa moderation=unavailable e comprova publicação,
+limite diário, deduplicação e reserva após remoção com a nova política. Não houve
+publicação na nuvem. A integração local atual permite confirmar metadados Twitch;
+YouTube/TikTok ainda não têm todas as verificações técnicas necessárias.
+
+Pendências autorizadas: título original automático editável com original mantido
+no servidor; botão de denúncias e fila administrativa. Denúncias iniciais NÃO
+ocultam conteúdo. Volume elevado poderá ocultar temporariamente, mas limiar e
+proteções contra manipulação precisam ser definidos antes da ativação. Notificação
+externa ao administrador fica para etapa futura. Nenhum novo serviço aprovado.
+
+## Checkpoint — título automático editável (2026-10-20)
+
+Adicionada prévia POST /api/shorts/preview com sessão assinada, origem exata,
+corpo limitado, URLs aceitas e contador privado videoPreviewAttempts separado da
+cota e das tentativas de envio. Retorna somente título validado; não grava short
+nem reserva vídeo. Reutiliza adaptadores do servidor; fonte não configurada
+retorna indisponível, sem inventar título original.
+
+Formulário consulta após 600 ms, cancela/ignora respostas antigas ao trocar link
+ou fechar e não sobrescreve edição manual. Campo Título opcional até 500 caracteres,
+sem controles. Envio aceita title, jamais originalTitle do cliente. Servidor
+consulta novamente a fonte e grava originalTitle separado (null se indisponível).
+
+19 testes focados passaram; lint completo e build passaram. Validação no navegador
+com link Twitch real preencheu Legends, permitiu editar para Teste local — título
+editado e publicou automaticamente no emulador. Leitura REST confirmou title
+editado, originalTitle=Legends e moderationStatus=published. Nenhum deploy ou
+gravação na nuvem. Screenshot titulo-automatico-validado.png no workspace do chat.
+
+Próximo: botão de denúncias e persistência privada com deduplicação/limites; fila
+administrativa e notificações pendentes. Não ativar ocultação por volume até
+limiar/proteções serem definidos. Outras fontes ainda precisam integração técnica.
