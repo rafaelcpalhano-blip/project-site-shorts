@@ -101,3 +101,189 @@ privadas serão tratados no ambiente próprio; não colar senhas ou chaves no ch
 Nenhum serviço externo foi criado, nenhum faturamento foi ativado e nenhum
 commit, push ou deploy foi feito nesta continuação.
 
+
+## Checkpoint — identidade anônima e composição da API
+
+Implementados e compilados, sem exposição pública:
+- server/security/visitor-identity.ts: cookie __Host- assinado com HMAC-SHA-256,
+  identificador aleatório, HttpOnly/Secure/SameSite=Strict, validade de 30 dias,
+  rejeição de assinatura inválida, duplicidade e expiração. O segredo permanece
+  exclusivamente no servidor; nenhum segredo real foi criado neste bloco.
+- server/security/attempt-limit.ts: contador transacional privado por identidade,
+  janela e quantidade configuráveis, separado da cota diária de publicações.
+  Conta tentativas válidas que chegam ao núcleo, incluindo vídeos rejeitados.
+  Requisições malformadas são recusadas antes e ainda precisam de proteção de borda.
+- server/http/session.ts: preserva sessão válida e exige controle de admissão
+  confiável antes de emitir outra. Falha de admissão impede a emissão.
+- server/http/public-api.ts: compõe /api/session e /api/shorts, sem registrar
+  endpoints Cloudflare ou alterar o formulário demonstrativo.
+
+Validação deste bloco: 5 testes de identidade/sessão e 3 de limite/API passaram;
+lint e build completos passaram. As suítes anteriores não foram repetidas.
+Os testes novos de API usam AtomicStore em memória com transações serializadas;
+não representam nova validação de concorrência do adaptador REST no emulador.
+
+Limites explícitos e próxima retomada:
+1. Cookies não identificam uma pessoa. Apagá-los permite pedir nova identidade;
+   allowSessionIssuance precisa de controle real independente do cookie antes
+   da exposição pública. Nenhum mecanismo antiabuso de borda foi simulado como pronto.
+2. Os valores operacionais maximumAttempts/attemptWindowMs precisam ser definidos
+   na configuração. Nenhum limite adicional foi imposto à interface atual.
+3. Não há política de limpeza automática de submissionAttempts; registros são
+   reutilizados por identidade, mas retenção deve ser resolvida antes de produção.
+4. Criar adaptadores oficiais de verificação real e escolher como analisar conteúdo
+   além dos metadados. Não usar respostas dos testes como evidência real.
+5. Configurar infraestrutura/segredos com aprovação, montar a rota Cloudflare,
+   depois conectar o formulário. A sessão exige HTTPS, sem fallback inseguro.
+6. Autenticação administrativa/MFA e painel permanecem pendentes.
+
+Estado seguro para interrupção: site demonstrativo preservado, nenhuma rota nova
+exposta, nenhuma dependência instalada, nenhum commit/push/deploy realizado.
+Para retomar, começar deste checkpoint e consultar apenas os módulos envolvidos.
+
+## Checkpoint — metadados oficiais Twitch
+
+Adicionado server/videos/twitch.ts com consultas GET restritas a
+https://api.twitch.tv/helix/clips, timeout, redirects bloqueados e token somente
+no cabeçalho de servidor. Verifica identidade retornada, existência, duração,
+título e categoria comparada a um mapeamento confiável do catálogo.
+Resposta vazia indica ausência; falhas HTTP/rede e respostas inválidas indicam
+incerteza. Não consulta URLs arbitrárias nem utiliza HTML fornecido pelo visitante.
+
+Este adaptador NÃO analisa áudio/imagens, não comprova incorporação e não libera
+moderação. Evidências de metadados continuam pendentes até as verificações restantes.
+Mapeamento Twitch do catálogo e obtenção do token ainda precisam ser conectados.
+YouTube e TikTok ainda não têm adaptadores reais. Nenhuma credencial foi criada.
+
+Validação: quatro testes com respostas HTTP controladas, TypeScript do servidor
+e lint localizado passaram. Não houve chamada autenticada real à Twitch nem
+repetição de testes antigos. Nenhuma alteração na interface ou dependências.
+Fonte: https://dev.twitch.tv/docs/api/reference/#get-clips (19/10/2026).
+
+## Checkpoint — metadados oficiais YouTube
+
+Adicionado server/videos/youtube.ts com consulta restrita ao endpoint oficial
+videos.list, seleção mínima de campos, timeout e redirects bloqueados. Chave
+somente no servidor; URL autenticada não deve ser registrada em logs.
+Confirma existência e título apenas quando identidade e estado são coerentes.
+Respostas vazias, privadas, malformadas e erros permanecem inconclusivos.
+
+O adaptador não infere Shorts pela URL/duração nem jogo pelo título/categoria.
+Também não libera moderação. Todo resultado continua pendente até a verificação
+completa; incorporação deverá ser verificada pelo fluxo completo antes de publicar.
+Não houve criação de chave, chamada autenticada real ou habilitação de rota.
+
+Validação: quatro testes novos com HTTP simulado, TypeScript do servidor e lint
+localizado passaram. Sem novas dependências ou repetição das suítes antigas.
+Próximo: TikTok e composição dos verificadores, mantendo explícitas as limitações
+que exigem credenciais, análise de conteúdo e decisões de infraestrutura.
+Fontes oficiais consultadas em 19/10/2026:
+- https://developers.google.com/youtube/data/reference/rest/v3/videos/list
+- https://developers.google.com/youtube/data/reference/rest/v3/videos
+
+## Checkpoint recuperado — TikTok e roteamento
+
+server/videos/tiktok.ts consulta somente o oEmbed oficial com URL canônica,
+timeout e redirects bloqueados; ignora HTML/scripts e URLs de mídia retornadas.
+server/videos/verify.ts seleciona o adaptador pela URL validada. Metadados não
+liberam moderação audiovisual. Adaptadores ausentes mantêm o envio pendente.
+Cinco testes novos, lint e build passaram antes da interrupção. A gravação deste
+checkpoint havia sido bloqueada por limite de uso da revisão automática e foi
+concluída na retomada. Não foi necessário repetir os testes sem mudanças.
+Fonte: https://developers.tiktok.com/docs/en/embed-videos
+
+## Checkpoint — formulário persistente conectado ao contrato HTTP
+
+Adicionados PersistentSubmissionDialog.tsx e submission-api.ts. No modo Firestore,
+o botão Compartilhar abre formulário com catálogo paginado e usa /api/session
+antes de /api/shorts. Respostas 201/publicado e 202/pendente têm mensagens diferentes;
+apenas publicação confirmada atualiza o feed. Falhas preservam campos, e não há
+retentativa automática após perda de resposta. Envio duplo é bloqueado por ref.
+Modal.tsx agora permite impedir fechamento durante envio, inclusive Escape, sem
+alterar o fechamento padrão dos outros diálogos. HomePage preserva modo demo.
+
+Três testes novos do cliente HTTP passaram. Lint completo e build passaram;
+após corrigir o fechamento do modal, TypeScript e lint dos componentes passaram.
+Não houve validação visual deste bloco nem teste ponta a ponta com API real.
+Nenhuma nova dependência, commit, push ou infraestrutura foi adicionada.
+
+Atenção: conexão de código não significa servidor disponível. O Vite atual não
+expõe essas rotas; tentativas no modo Firestore mostram indisponibilidade. Para
+publicação real faltam configuração autorizada de infraestrutura/credenciais,
+controle real de emissão de sessões e verificações completas do vídeo. Foi
+solicitada ao proprietário autorização específica para configuração externa sem
+faturamento; não presumir aprovação enquanto não houver resposta.
+
+Próximos blocos: composição/deploy seguro após autorização; autenticação
+administrativa/MFA; comentários/denúncias persistentes e filas administrativas.
+Busca global por trechos permanece pendente, sem D1 autorizado. Não declarar a
+aplicação completa ou a moderação autônoma pronta neste estado.
+
+## Autorização de configuração externa — 19/10/2026
+
+Proprietário autorizou configurar Firebase, Cloudflare e Twitch/IGDB somente em
+planos sem faturamento, sem cartão/planos pagos ou serviços cobrados. Único banco
+autorizado: Firestore. Preservar execução local. Segredos exclusivamente em
+ambiente/armazenamento seguro, nunca no Git. Contas, login e configuração de
+credenciais exigem participação do proprietário. Deploy público NÃO autorizado;
+antes de expor endpoints verificar regras e autorização e obter aprovação específica.
+
+Iniciada abertura do console Firebase; exige login Google pelo proprietário.
+Nenhum projeto externo criado, credencial emitida ou faturamento ativado.
+Próximo passo: após login, criar projeto Spark sem Analytics opcional e conferir
+as opções gratuitas reais do console antes de habilitar Auth/Firestore. MFA deve
+ser verificado quanto à disponibilidade sem faturamento; não habilitar SMS pago.
+Cloudflare permanece sem deploy; Twitch exige conta com 2FA para registro do app.
+
+## Projeto Firebase confirmado
+
+Projeto criado pelo proprietário: Clipzone, ID público clipzone-db02a.
+Console confirmou plano Spark, sem custos (US$ 0/mês). Login concluído pelo
+proprietário. Em configuração do único banco Firestore autorizado; ainda não
+considerar banco, Auth ou aplicativo Web configurados sem confirmação posterior.
+Nenhum deploy público autorizado. Configuração local continua usando demo-clipzone.
+
+## Firestore criado na nuvem
+
+Confirmado no console: banco (default), edição Standard, southamerica-east1
+(São Paulo), projeto clipzone-db02a em Spark. Criado no modo produção com
+allow read, write: if false. Nenhuma coleção adicionada. Backups desativados
+(exigem Blaze). Regras públicas locais ainda NÃO implantadas na nuvem.
+Não alterados os destinos locais do emulador. Cloudflare aberto na tela de login;
+autenticação/aceite de termos aguardam o proprietário. Sem deploy público.
+
+## Cloudflare confirmado — conta gratuita
+
+Login do proprietário concluído. Console Workers plans confirma Free como
+Current plan, US$ 0; Workers & Pages mostra nenhum projeto existente. Nenhuma
+aplicação criada/publicada, nenhum upgrade e nenhum armazenamento adicional.
+Limites exibidos: 100.000 requisições/dia e 10 ms CPU/requisição. Medir CPU da
+verificação/autorização antes de qualquer deploy; espera de rede não equivale a CPU.
+Conta preparada para a etapa futura, mas deploy continua sem autorização.
+Console Twitch aberto, aguardando login/2FA pelo proprietário para registro IGDB.
+
+## Retomada — aplicativo Twitch confirmado
+
+Console confirmou Clipzone Games registrado, callback https://localhost.
+Preparado .env.server.local (ignorado pelo Git) para TWITCH_CLIENT_ID e
+TWITCH_CLIENT_SECRET, preenchidos diretamente pelo proprietário. Não usar VITE_.
+Não ler/imprimir esse arquivo em ferramentas, logs ou respostas. Não versioná-lo.
+
+Adicionado scripts/check-igdb.mjs. Após preenchimento, executar:
+node --env-file=.env.server.local scripts/check-igdb.mjs
+O teste usa somente endpoints oficiais Twitch/IGDB, informa sucesso/erro sem
+segredos, consulta League of Legends e não escreve no Firestore. Nenhuma chamada
+real foi feita nesta preparação; falta participação do proprietário nas credenciais.
+Arquivo verificado sintaticamente, sem instalar dependências ou repetir suítes.
+
+## Twitch/IGDB — conexão real validada
+
+Executado node --env-file=.env.server.local scripts/check-igdb.mjs após o
+proprietário preencher as credenciais. Autenticação Twitch e consulta oficial
+IGDB concluídas com sucesso; pesquisa League of Legends retornou 8 registros.
+Nenhum segredo/token foi exibido, nenhum jogo foi selecionado automaticamente
+e nenhum dado foi gravado no Firestore. A consulta pode conter jogos relacionados;
+a confirmação do título oficial continua necessária no fluxo de cadastro.
+Próxima etapa: integrar a consulta/seleção de jogos ao servidor e formulário,
+com limitação de requisições e persistência somente após validação oficial.
+Deploy público permanece não autorizado.
