@@ -1,6 +1,6 @@
 # Administração: Google, TOTP e autorização
 
-Etapa 1. O painel de revisão pertence à próxima etapa e não está liberado por esta implementação.
+Etapa 1 validada. O painel de denúncias e revisão foi autorizado posteriormente; consulte [painel-administrativo.md](painel-administrativo.md).
 
 ## Funcionamento e proteção
 
@@ -29,7 +29,7 @@ Proprietário ativou TOTP pelo Cloud Shell: resposta com state ENABLED e provedo
 TOTP ENABLED, adjacentIntervals 1, sem enabledProviders de SMS.
 Em 21/10/2026, após o cadastro do autenticador e o roteiro de novo login,
 o proprietário informou o resultado real: "Acesso administrativo verificado."
-Etapa 1 concluída no ambiente local. Painel de moderação depende de nova autorização;
+Etapa 1 concluída no ambiente local. Painel de moderação autorizado posteriormente e implementado localmente;
 nenhum deploy nem acesso ao Firestore de produção foi realizado.
 
 ## Roteiro de configuração no Firebase (sem faturamento)

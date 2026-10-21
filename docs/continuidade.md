@@ -1,6 +1,6 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — Etapa 1 concluída localmente (21/10/2026)
+## Estado vigente — Etapa 2 concluída localmente (21/10/2026)
 
 Etapa 0 regularizada. Etapa 1 autorizada individualmente e concluída no ambiente
 local: Google, cadastro/desafio TOTP e autorização administrativa no servidor.
@@ -14,8 +14,7 @@ ENABLED e adjacentIntervals 1; SMS não configurado. Plano Spark mantido, sem
 faturamento ativado. Firestore da aplicação continua somente no emulador local.
 
 Onze testes focados, lint e build já passaram na implementação; não repetidos
-para alterações documentais. Próxima etapa recomendada: painel administrativo
-para denúncias e revisão, sujeito a nova autorização individual. Sem deploy,
+para alterações documentais. Painel de denúncias e revisão autorizado em 21/10/2026 e implementado; três filas conferidas no navegador, incluindo removidos. Restauração aprovada, implementada e testada. Etapa 2 concluída localmente; próxima etapa (players oficiais e elegibilidade) aguarda autorização individual. Sem deploy,
 commit, push ou alteração das regras de negócio neste fechamento.
 
 Os checkpoints abaixo são históricos; este resumo prevalece sobre estados antigos.
@@ -671,3 +670,49 @@ obteve tokens. Etapa 1 concluída localmente; próxima etapa aguarda autorizaç�
 Neste fechamento, apenas docs/autenticacao-admin.md e docs/continuidade.md alterados;
 verificação de whitespace, sem repetir testes funcionais já aprovados.
 Alterações anteriores preservadas, sem staging, commit, push ou deploy.
+## Checkpoint — painel administrativo implementado (21/10/2026)
+
+Git estava limpo ao iniciar. Implementadas filas paginadas de denúncias e vídeos
+pendentes, detalhes com fonte original e histórico, motivo obrigatório e confirmação.
+Servidor valida Google/TOTP/UID e estado da conta em cada rota. Revisões atômicas
+com controle de concorrência e audit log; publicação pendente revalida fonte/jogo e
+cota do autor no dia da aprovação. Remoção mantém reserva e não devolve cota.
+Arquivamento mantém visibilidade; nova denúncia preserva marco reviewedCount e reabre fila.
+Sem ocultação automática por volume, novos serviços, dependências ou deploy.
+
+16 testes HTTP/autorização/denúncias e 6 testes transacionais no emulador isolado
+8081 passaram. Lint e build passaram. API local reiniciada com as novas rotas;
+proprietário solicitado a verificar acesso e Carregar fila para conferência manual.
+Dados do emulador de desenvolvimento 8080 preservados. Índices somente em arquivo.
+Documentação de uso e limites em docs/painel-administrativo.md. Nenhum commit/push.
+Conferência manual: proprietário confirmou painel visível sem erros aparentes;
+agente confirmou carregamento real de denúncias e pendentes, ambas vazias.
+Captura painel-administrativo-2026-10-21.png no workspace do chat, sem e-mail/UID.
+Critério da auditoria inclui restaurar conforme política; solicitada definição
+explícita sobre restauração administrativa do registro original. A reserva contra
+novos envios será preservada em qualquer opção. Implementação dessa ação aguarda
+resposta; não declarar toda a etapa encerrada antes dessa definição.
+## Checkpoint — restauração administrativa implementada (21/10/2026)
+
+Proprietário autorizou restaurar o registro original, mantendo a reserva contra
+novos envios. Adicionadas fila de removidos e ação restaurar com motivo/confirmação.
+Destino obtido no servidor de moderationStates privado, gravado atomicamente na
+remoção e vinculado à revisão. Publicado exige revalidação técnica/jogo ativo;
+pendente volta a pendente. Nenhuma cota é cobrada novamente ou devolvida.
+Registros sem histórico confiável permanecem removidos, sem inventar destino.
+
+13 testes relacionados passaram (3 entrada/HTTP e 10 transacionais), incluindo
+restaurações concorrentes, dias distintos, pendentes, histórico ausente, falhas,
+dados alterados, reserva e privacidade. Lint e build passaram; suítes Auth não
+repetidas. API local reiniciada com a implementação. Sessão em memória encerrada;
+solicitado novo login Google/TOTP e carregamento da fila Vídeos removidos.
+Sem novos serviços/dependências, mudanças na nuvem, commit, push ou deploy.
+## Encerramento da Etapa 2 (21/10/2026)
+
+Proprietário confirmou nova fila de removidos sem erros após login Google/TOTP.
+Fila vazia é esperada: nenhum registro removido no ambiente de desenvolvimento.
+Cenários com conteúdo, remoção/restauração e concorrência passaram em testes
+no emulador isolado; não foram inseridos registros artificiais no ambiente 8080.
+Etapa 2 concluída localmente. Próxima recomendação conforme auditoria: Etapa 3,
+players oficiais e elegibilidade, ainda sem autorização de implementação.
+Git permanece com alterações desta etapa, sem staging/commit/push ou deploy.
