@@ -38,7 +38,7 @@ test('TikTok não consulta destinos arbitrários nem outras plataformas', async 
   for (const url of ['https://evil.example/@gamer/video/123', 'https://clips.twitch.tv/Example']) await verify({ url })
   assert.equal(calls, 0)
 })
-test('roteador seleciona apenas adaptador da URL e não permite aprovação por metadados', async () => {
+test('roteador seleciona a URL e publica evidência técnica completa sem afirmar moderação audiovisual', async () => {
   const calls = []
   const evidence = { existence: 'confirmed', shortFormat: 'confirmed', gameMatch: 'confirmed', moderation: 'clear', flags: [] }
   const adapters = Object.fromEntries(['TikTok', 'YouTube', 'Twitch'].map(platform => [platform, async value => { calls.push({ platform, value }); return evidence }]))
@@ -49,7 +49,7 @@ test('roteador seleciona apenas adaptador da URL e não permite aprovação por 
   assert.equal(calls[0].value.url, 'https://www.tiktok.com/@gamer/video/123456789')
   assert.equal(calls[0].value.gameId, 'lol')
   assert.equal(result.moderation, 'unavailable')
-  assert.equal(decidePublication(result).status, 'pending')
+  assert.equal(decidePublication(result).status, 'published')
 })
 test('roteador mantém adaptador ausente, erro ou URL inválida pendentes', async () => {
   for (const verify of [createMetadataVerifier({}), createMetadataVerifier({ TikTok: async () => { throw new Error('private') } })]) {
