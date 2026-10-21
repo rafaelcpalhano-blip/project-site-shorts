@@ -1,3 +1,5 @@
+import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
+import { titleSearchFields } from '../../src/lib/validation/title-search.ts'
 import { validateSubmissionInput, validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { saoPauloDayKey } from '../../src/lib/validation/day-key.ts'
 import { decidePublication } from './decision.ts'
@@ -54,6 +56,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     transaction.create('shorts/' + identityId, {
       originalUrl: submission.originalUrl, normalizedUrl: submission.url,
       platform: submission.platform, platformVideoId: submission.identity.slice(submission.platform.length + 1),
+      ...(TITLE_SEARCH_ENABLED ? titleSearchFields(title) : {}),
       title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
       createdAt: now, moderationStatus: decision.status,
     })

@@ -1,3 +1,4 @@
+import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { useState } from 'react'
 import { useDemo } from '../../../app/providers/demo-context'
 import { games } from '../data/fixtures'
@@ -13,17 +14,17 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
   const [selected, setSelected] = useState<Short | null>(null)
   const matching = state.shorts.filter(short =>
     (!(gameId || filter) || short.gameId === (gameId || filter)) &&
-    short.title.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR')),
+    (!TITLE_SEARCH_ENABLED || short.title.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR'))),
   ).sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id))
   const pages = Math.max(1, Math.ceil(matching.length / 15))
   const currentPage = Math.min(page, pages)
   return <>
     <div className={styles.filters}>
-      <div className="form-field">
+      {TITLE_SEARCH_ENABLED && <div className="form-field">
         <label htmlFor="feed-search">Buscar por título</label>
         <input id="feed-search" type="search" placeholder="Encontre uma jogada..." value={query}
           onChange={event => { setQuery(event.target.value); setPage(1) }} />
-      </div>
+      </div>}
       {!gameId && <div className="form-field">
         <label htmlFor="feed-game">Filtrar por jogo</label>
         <select id="feed-game" value={filter} onChange={event => { setFilter(event.target.value); setPage(1) }}>
@@ -40,7 +41,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
       {matching.slice((currentPage - 1) * 15, currentPage * 15).map(short => <ShortCard key={short.id} short={short} gameName={games.find(game => game.id === short.gameId)?.name}
         count={state.comments.filter(item => item.shortId === short.id && item.status === 'approved').length}
         onOpen={() => setSelected(short)} />)}
-    </div> : <div className="inset"><h3>Nenhuma jogada encontrada</h3><p>Tente outro título ou jogo.</p>
+    </div> : <div className="inset"><h3>Nenhuma jogada encontrada</h3><p>Selecione outro jogo ou limpe os filtros.</p>
       <button type="button" onClick={() => { setQuery(''); setFilter(''); setPage(1) }}>Limpar filtros</button></div>}
     <nav className={styles.pagination} aria-label="Paginação de shorts">
       <button type="button" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>← Anterior</button>

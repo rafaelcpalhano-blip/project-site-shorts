@@ -53,6 +53,23 @@ export function createRestStore(options: Options): AtomicStore {
     return result
   }
   return {
+    async scanShorts(after) {
+      if(after!==undefined&&!/^[\w-]{1,128}$/.test(after))throw new Error('Cursor inválido')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,
+        ...(after?{startAt:{before:false,values:[{referenceValue:name('shorts/'+after)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>({id:String(item.document.name).split('/').at(-1)!,data:Object.fromEntries(Object.entries(item.document.fields||{}).map(([key,value])=>[key,decode(value as Value)]))}))
+    },
+    async searchShorts(query) {
+      if(typeof query.fragment!=='string'||![1,2,3].includes([...query.fragment].length)||!Number.isSafeInteger(query.limit)||query.limit<1||query.limit>30||query.gameId!==undefined&&!/^[\w-]{1,128}$/.test(query.gameId)||query.cursor&&(!/^[\w-]{1,128}$/.test(query.cursor.id)||!Number.isFinite(Date.parse(query.cursor.time))))throw new Error('Consulta de busca inválida')
+      const filters=[{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'EQUAL',value:encode('published')}},
+        {fieldFilter:{field:{fieldPath:'searchFragments'},op:'ARRAY_CONTAINS',value:encode(query.fragment)}},
+        ...(query.gameId?[{fieldFilter:{field:{fieldPath:'gameId'},op:'EQUAL',value:encode(query.gameId)}}]:[])]
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],where:{compositeFilter:{op:'AND',filters}},
+        select:{fields:['moderationStatus','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName'].map(fieldPath=>({fieldPath}))},
+        orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
+        ...(query.cursor?{startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name('shorts/'+query.cursor.id)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>({id:String(item.document.name).split('/').at(-1)!,data:Object.fromEntries(Object.entries(item.document.fields||{}).map(([key,value])=>[key,decode(value as Value)]))}))
+    },
     async query(query) {
       const allowed = { gameRequests: ['status', 'createdAt'], comments: ['moderationStatus', 'createdAt'], shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
       const fieldsAllowed = allowed[query.collection]

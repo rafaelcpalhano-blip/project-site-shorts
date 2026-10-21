@@ -1,4 +1,4 @@
-.filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(165px, auto); gap: 12px; margin: 22px 0; }
+.filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(165px, auto); align-items: start; gap: 16px; margin: 22px 0; }
 .heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 14px; }
 .heading h2 { font-size: .85rem; margin: 0; }
 .heading p { font-size: .7rem; color: var(--color-muted); margin: 0; }
@@ -9,3 +9,7 @@
 @media (max-width: 520px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .filters { grid-template-columns: 1fr; } }
 @media (max-width: 340px) { .grid { grid-template-columns: 1fr; } }
 
+
+.filters > :global(.form-field) { align-content: start; gap: 12px; }
+.filters input, .filters select { min-height: 48px; }
+.searchActions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 4px; }

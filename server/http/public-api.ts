@@ -1,3 +1,5 @@
+import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
+import { handleTitleSearch } from './title-search.ts'
 import { handleGameRequest } from './game-requests.ts'
 import { handleComment } from './comments.ts'
 import { handleAdminModeration } from './admin-moderation.ts'
@@ -14,6 +16,8 @@ import { handleSession } from './session.ts'
 import { handleSubmission } from './submissions.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 export interface PublicApiOptions {
+  // Server-only opt-in for isolated tests/future approved reactivation; never read from HTTP.
+  titleSearchEnabled?: boolean
   gameTranslation?: (id: string) => Promise<void>
   admin?: AdminConfiguration
   gameSearch?: { get?: (id: string) => Promise<CatalogGame | null>; search: (name: string) => Promise<CatalogGame[]>; maximumAttempts: number; windowMs: number }
@@ -39,6 +43,8 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
   const gameRequestLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'game-request' })
+  const titleSearchEnabled = options.titleSearchEnabled ?? TITLE_SEARCH_ENABLED
+  const titleSearchLimit = titleSearchEnabled ? createAttemptLimiter({ store: options.store, now: options.now, maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'title-search' }) : undefined
   const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
@@ -65,6 +71,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     if (path === '/api/games/requests') return handleGameRequest(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
+    if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })

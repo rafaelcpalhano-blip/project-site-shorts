@@ -1,3 +1,5 @@
+import { TITLE_SEARCH_ENABLED } from '../src/lib/features/title-search.ts'
+import { titleSearchFields } from '../src/lib/validation/title-search.ts'
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing'
 import { doc, setDoc, Timestamp } from 'firebase/firestore'
 // Fixed local target: this helper has no production project or credentials.
@@ -17,6 +19,7 @@ try {
       originalUrl: 'https://clips.twitch.tv/LocalDemo' + index,
       normalizedUrl: 'https://clips.twitch.tv/LocalDemo' + index,
       platform: 'Twitch', platformVideoId: 'LocalDemo' + index,
+      ...(TITLE_SEARCH_ENABLED ? titleSearchFields('Jogada local ' + (index + 1)) : {}),
       title: 'Jogada local ' + (index + 1), channelName: 'Dados de teste',
       gameId: games[index % 2].id, createdAt: date, moderationStatus: 'published',
     })

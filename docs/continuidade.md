@@ -1,5 +1,70 @@
 # Continuidade da aplicação — checkpoint
 
+## Descoberta cronológica — pesquisa textual desativada por decisão de produto (21/10/2026)
+
+Proprietário confirmou publicação e pesquisa funcionando localmente, encerrando a
+validação visual da Etapa 7, e depois autorizou retirar a pesquisa da primeira versão
+pública. Implementação/testes preservados sob controle compartilhado desativado;
+rota pública sem operações Firestore, sem novos fragmentos na publicação/seed e
+backfill bloqueado. Índices exclusivos arquivados fora da configuração ativa;
+isenções simples preservadas para campos antigos. Nenhum dado existente removido,
+nenhuma migração executada, nenhum índice remoto alterado ou deploy realizado.
+Feed cronológico, 15 por página, cursor e filtros/fichas de jogos mantidos.
+Curtidas anônimas próprias e relevância geral/por jogo são requisitos futuros
+obrigatórios, ainda sujeitos a autorização de implementação. Detalhes e reativação
+em [busca-firestore.md](busca-firestore.md). 36 testes relacionados aprovados, lint/build
+aprovados e rota HTTPS local conferida com 404 após reinício da API. Conferência
+visual final pelo proprietário; nenhuma alteração commitada pelo agente.
+Checkpoints abaixo são históricos.
+
+
+## Conferência visual da pesquisa — acesso YouTube restabelecido (21/10/2026)
+
+Após o proprietário atualizar a restrição de IP, a consulta real da YouTube Data API
+retornou HTTP 200. Controle N2sTV8SekIs: público, processado, incorporável, duração
+36 segundos e título "O minotauro é outra experiência #dimraeth". O ID kYXeqi8U-ig
+não veio em items; sua existência/disponibilidade não foi confirmada e não deve ser
+aprovado com base nessa resposta. Não inferir duração ou motivo da ausência.
+Próximo passo: proprietário publicar o controle no emulador com jogo Dimraeth e
+conferir pesquisa por fragmentos/acentuação e filtro de jogos. Conferência visual
+continua pendente. Nenhuma regra de publicação alterada ou configuração externa
+modificada pelo agente. IP auxiliar permanece em arquivo .local ignorado pelo Git.
+
+
+## Etapa 7 — pesquisa por títulos implementada e validada no emulador (21/10/2026)
+
+Autorização ajustou o teto para 30 candidatos e 15 resultados. Firestore exclusivo;
+fragmentos 1–3 no short, comparação final no servidor, ordem cronológica e filtro
+de jogo. Até dois lotes internos de 15, cursor no último examinado, continuação
+explícita inclusive em lote vazio e sem leitura do candidato 31. Sem novas consultas
+por tecla, likes/relevância, serviços ou deploy. Índices apenas locais.
+24 testes relacionados passaram (6 no emulador); lint/build, verificações finais
+do servidor e scripts aprovados. Backfill local concluído com zero shorts existentes;
+API HTTPS reiniciada e endpoint conferido com 200/zero candidatos/consulta esgotada.
+Base de desenvolvimento não recebeu shorts fictícios. Navegador sem automação local;
+conferência visual pendente com o proprietário. Limitações/custos/20 arquivos em
+[busca-firestore.md](busca-firestore.md). Scripts geram migração local retomável, com
+prontidão bloqueada em falha. Termos comuns podem exigir muitas continuações.
+Relevância futura permanece separada do índice textual; nenhuma implementação de
+curtidas foi antecipada. Não avançar a produção ou outra etapa sem autorização.
+
+
+## Histórico anterior — avaliação inicial da pesquisa (antes da aprovação de 30 candidatos)
+
+Proprietário autorizou avançar à etapa seguinte após organizar commits. Git limpo
+no início. Avaliação Firestore existente e simulação com 1.000 títulos documentadas
+em docs/busca-firestore.md; script reproduzível scripts/evaluate-title-search.mjs.
+Proposta: fragmentos 1–3 no próprio short, consulta por candidato e comparação final
+no servidor; até 15 resultados/60 candidatos examinados e continuação explícita.
+Sem código funcional/índices/backfill implementados, sem serviços novos, testes
+completos, alterações externas ou deploy. A mudança de campos/índices aguarda
+aprovação arquitetural, conforme regra do proprietário. Próximo passo: aprovar a
+estratégia e então medir no emulador, preservando publicação/cotas/privacidade.
+
+Proprietário informou conclusão da conferência local do cadastro manual antes desta
+etapa. Manter limitações conhecidas de tradução e contato de suporte provisório.
+
+
 ## Cadastro manual de jogos — implementado; conferência visual pendente (21/10/2026)
 
 Proprietário esclareceu e autorizou aceitar solicitações sem cadastro na IGDB.

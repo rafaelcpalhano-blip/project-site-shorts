@@ -171,5 +171,16 @@
       ]
     }
   ],
-  "fieldOverrides": []
+  "fieldOverrides": [
+    {
+      "collectionGroup": "shorts",
+      "fieldPath": "searchFragments",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "shorts",
+      "fieldPath": "titleSearchVersion",
+      "indexes": []
+    }
+  ]
 }

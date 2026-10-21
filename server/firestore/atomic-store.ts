@@ -11,7 +11,10 @@ export interface StoreQuery {
   limit: number
   cursor?: { time: string; id: string }
 }
+export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time:string;id:string};limit:number}
 export interface AtomicStore {
+  searchShorts?: (query:SearchShortsQuery)=>Promise<Array<{id:string;data:RecordData}>>
+  scanShorts?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   query?: (query: StoreQuery) => Promise<Array<{ id: string; data: RecordData }>>
   transact<T>(work: (transaction: AtomicTransaction) => Promise<T>): Promise<T>
 }
