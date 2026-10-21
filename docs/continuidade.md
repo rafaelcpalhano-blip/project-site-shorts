@@ -1,6 +1,6 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — Etapa 2 concluída localmente (21/10/2026)
+## Estado vigente — Etapa 3 concluída localmente (21/10/2026)
 
 Etapa 0 regularizada. Etapa 1 autorizada individualmente e concluída no ambiente
 local: Google, cadastro/desafio TOTP e autorização administrativa no servidor.
@@ -14,7 +14,7 @@ ENABLED e adjacentIntervals 1; SMS não configurado. Plano Spark mantido, sem
 faturamento ativado. Firestore da aplicação continua somente no emulador local.
 
 Onze testes focados, lint e build já passaram na implementação; não repetidos
-para alterações documentais. Painel de denúncias e revisão autorizado em 21/10/2026 e implementado; três filas conferidas no navegador, incluindo removidos. Restauração aprovada, implementada e testada. Etapa 2 concluída localmente; próxima etapa (players oficiais e elegibilidade) aguarda autorização individual. Sem deploy,
+para alterações documentais. Painel de denúncias e revisão autorizado em 21/10/2026 e implementado; três filas conferidas no navegador, incluindo removidos. Restauração aprovada, implementada e testada. Etapa 2 concluída localmente; Etapa 3 autorizada e concluída localmente: players oficiais e elegibilidade. Próxima etapa: completar fontes YouTube/TikTok e títulos, aguardando autorização individual. Sem deploy,
 commit, push ou alteração das regras de negócio neste fechamento.
 
 Os checkpoints abaixo são históricos; este resumo prevalece sobre estados antigos.
@@ -716,3 +716,21 @@ no emulador isolado; não foram inseridos registros artificiais no ambiente 8080
 Etapa 2 concluída localmente. Próxima recomendação conforme auditoria: Etapa 3,
 players oficiais e elegibilidade, ainda sem autorização de implementação.
 Git permanece com alterações desta etapa, sem staging/commit/push ou deploy.
+## Checkpoint — players oficiais e elegibilidade (21/10/2026)
+
+Etapa 3 autorizada pelo proprietário. Player compartilhado entre demo e Firestore,
+iframe apenas após escolha do usuário, autoplay/loop desativados e início pelos
+controles nativos. Um player ativo; limpeza ao fechar/trocar, ocultar aba ou deixar
+a área visível. URLs canônicas/identidade coerentes, HTTPS, parent Twitch real,
+área útil mínima e fallback preservando fonte. Mensagens TikTok validam origem/janela.
+Nenhuma regra de publicação, cota, autenticação ou serviço externo alterada.
+
+Seis testes focados, lint e build passaram. Os três links fornecidos pelo dono
+reproduziram voluntariamente uma vez em conferência local do componente real.
+Verificados zero iframes antes de carregar/ao fechar e um ao ativar outro player.
+Modal real: Twitch 508×300 úteis e desmontagem ao fechar. Último ajuste CSS de
+bordas teve conferência localizada, sem repetir testes de outras funcionalidades.
+Arquivos temporários player-check.html/tsx removidos. Sem posts de teste no 8080,
+sem nova dependência, commit/push/deploy ou contadores internos de visualizações.
+Limites de erros cross-origin/restrições e fontes oficiais em docs/players-oficiais.md.
+Etapa 4 (fontes YouTube/TikTok e títulos) aguarda autorização individual.
