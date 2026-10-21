@@ -1,3 +1,4 @@
+import { LikeButton } from '../../likes/components/LikeButton'
 import { PersistentCommentForm } from '../../comments/components/PersistentCommentForm'
 import { ReportForm } from '../../reports/ReportForm'
 import { useEffect, useState } from 'react'
@@ -8,7 +9,8 @@ import type { PublicCursor, PublicComment } from '../../../lib/firebase/public-r
 import type { Short } from '../types/models'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
-export function FirestoreShortDialog({ short, onClose }: { short: Short; onClose: () => void }) {
+export function FirestoreShortDialog({ short, onClose, onLikeCount }: { short: Short; onClose: () => void; onLikeCount:(id:string,count:number)=>void }) {
+  const [liking,setLiking]=useState(false)
   const [available, setAvailable] = useState(false)
   const [commenting, setCommenting] = useState(false)
   const [reporting, setReporting] = useState(false)
@@ -26,8 +28,9 @@ export function FirestoreShortDialog({ short, onClose }: { short: Short; onClose
     }).catch(() => { if (active) { setAvailable(false); setError('Não foi possível carregar os comentários. Verifique o emulador.'); setLoading(false) } })
     return () => { active = false }
   }, [short.id, cursor, attempt])
-  return <Modal title={short.title} closeDisabled={reporting || commenting} onClose={() => { if (!reporting && !commenting) onClose() }}>
+  return <Modal title={short.title} closeDisabled={reporting || commenting || liking} onClose={() => { if (!reporting && !commenting && !liking) onClose() }}>
     {available && <OfficialPlayer key={short.id} short={short} />}
+    {available && <LikeButton key={short.id} shortId={short.id} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     {available && <ReportForm key={short.id} shortId={short.id} onBusyChange={setReporting} />}
     <h3>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>

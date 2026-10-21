@@ -221,6 +221,16 @@
       "collectionGroup": "shorts",
       "fieldPath": "titleSearchVersion",
       "indexes": []
+    },
+    {
+      "collectionGroup": "shortLikes",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "likeAttempts",
+      "fieldPath": "*",
+      "indexes": []
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
 import type { TitleSearchCursor } from '../../../lib/validation/title-search'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
@@ -31,6 +31,10 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const [catalogAttempt,setCatalogAttempt]=useState(0)
   const [selected, setSelected] = useState<Short | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
+  const updateLikeCount=useCallback((id:string,count:number)=>{
+    setPage(current=>({...current,items:current.items.map(short=>short.id===id?{...short,likeCount:count}:short)}))
+    setSelected(current=>current?.id===id?{...current,likeCount:count}:current)
+  },[])
   const selectedGame = gameId || filter
   const cursor = cursors[index]
   useEffect(() => {
@@ -103,7 +107,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
     <p className="muted">Página {index + 1} · até 15 shorts · somente conteúdo publicado no emulador.</p>
-    {selected && <FirestoreShortDialog short={selected} onClose={() => setSelected(null)} />}
+    {selected && <FirestoreShortDialog short={selected} onLikeCount={updateLikeCount} onClose={() => setSelected(null)} />}
   </>
 }
 

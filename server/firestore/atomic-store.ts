@@ -3,6 +3,7 @@ export interface AtomicTransaction {
   get(path: string): Promise<RecordData | null>
   create(path: string, data: RecordData): void
   set(path: string, data: RecordData): void
+  delete?(path:string):void
 }
 export interface StoreQuery {
   collection: 'gameRequests' | 'comments' | 'shorts' | 'reportSummaries' | 'reports' | 'moderationLogs'
@@ -16,6 +17,7 @@ export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: strin
 export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'banned'
 export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
 export interface AtomicStore {
+  scanLikeRecords?: (collection:'shortLikes'|'likeAttempts',after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   gameCatalogPage?: (query:GameCatalogQuery)=>Promise<Array<{id:string;data:RecordData}>>
   countGameShorts?: (gameId:string)=>Promise<number>
   scanGames?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>

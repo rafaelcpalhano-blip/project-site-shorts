@@ -2,7 +2,7 @@ import type { Short } from '../../features/shorts/types/models.ts'
 import { publicCursor, publicId } from '../validation/public-read.ts'
 import type { PublicCursor } from '../validation/public-read.ts'
 export type { PublicCursor }
-export interface PublicShort extends Short { gameName: string }
+export interface PublicShort extends Short { gameName: string; likeCount:number }
 export interface PublicComment { id:string;content:string;createdAt:number }
 export interface ReadPage<T> { items:T[];next:PublicCursor|null;limited?:boolean }
 export function createPublicReadClient(fetcher:typeof fetch=fetch) {
@@ -17,7 +17,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  }
  function checkShort(value:unknown):PublicShort {
   const row=value as PublicShort
-  if(!row||typeof row!=='object'||typeof row.title!=='string'||typeof row.gameName!=='string'||typeof row.url!=='string'||typeof row.channelName!=='string'||typeof row.identity!=='string'||!['YouTube','TikTok','Twitch'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.')
+  if(!row||typeof row!=='object'||typeof row.title!=='string'||typeof row.gameName!=='string'||!Number.isSafeInteger(row.likeCount)||row.likeCount<0||typeof row.url!=='string'||typeof row.channelName!=='string'||typeof row.identity!=='string'||!['YouTube','TikTok','Twitch'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.')
   publicId(row.id);publicId(row.gameId);return row
  }
  return {

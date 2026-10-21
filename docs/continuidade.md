@@ -1,5 +1,24 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.5 — curtidas implementadas localmente (21/10/2026)
+
+Proposta aprovada: contador nos cards, curtir/descurtir no visualizador e persistência
+privada sem cadastro. API usa cookie assinado, valida short publicado/jogo ativo,
+transação de estado/contador e revisão contra pedidos atrasados. Duplicatas não
+incrementam de novo. Limite independente de 20 chamadas/minuto; sem efeito nas cotas
+de publicação. Alterações confirmadas atualizam card/modal sem recarregar o feed.
+Retenção manual local em lotes de 30: inativos/tentativas com mais de 90 dias;
+ativos preservados. Script não foi aplicado no desenvolvimento. Sem TTL pago,
+agendamento, dependências, novos bancos, mudanças externas ou deploy. Regras já
+bloqueiam acesso SDK; índices privados dispensados no manifesto não publicado.
+29 testes relacionados aprovados (14 novos + 8 regressões públicas + 7 emulador),
+lint/build aprovados. HTTPS: feed/estado 200 e alteração sem sessão 401, sem votos
+artificiais no desenvolvimento. Conferência visual pendente no visualizador de um short.
+Após reinício local, cookies/sessões antigas precisam renovação como antes.
+Detalhes, custos e limitações em [etapa-7-5-5.md](etapa-7-5-5.md). Próxima 7.5.6:
+propor relevância/quatro ordenações; aguardar autorização. Checkpoints abaixo históricos.
+
+
 ## Etapa 7.5.4-C — catálogo administrativo implementado localmente (21/10/2026)
 
 Catálogo protegido pela autorização existente de UID + Google/TOTP: todos, ativos,

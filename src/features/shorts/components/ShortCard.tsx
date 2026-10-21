@@ -22,6 +22,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
       <h3><button type="button" className={styles.title} onClick={onOpen}>{short.title}</button></h3>
       <p>{short.channelName || 'Canal não informado'} · <time dateTime={new Date(short.createdAt).toISOString()}>{minutes ? minutes + ' min atrás' : 'agora'}</time></p>
       <button className={styles.comments} type="button" onClick={onOpen}>Comentários{count !== undefined ? ' (' + count + ')' : ''}</button>
+      {short.likeCount!==undefined&&<p aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</p>}
       <Link className={styles.gameLink} to={'/jogos/' + game.id}>Ver jogo</Link>
     </div>
   </article>

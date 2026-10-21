@@ -1,3 +1,4 @@
+import { handleLike } from './likes.ts'
 import { handlePublicRead } from './public-read.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
 import { handleTitleSearch } from './title-search.ts'
@@ -47,6 +48,7 @@ export async function createPublicApi(options: PublicApiOptions) {
   const titleSearchEnabled = options.titleSearchEnabled ?? TITLE_SEARCH_ENABLED
   const titleSearchLimit = titleSearchEnabled ? createAttemptLimiter({ store: options.store, now: options.now, maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'title-search' }) : undefined
   const publicReadLimit = createAttemptLimiter({store:options.store,now:options.now,maximum:options.maximumAttempts,windowMs:options.attemptWindowMs,scope:'public-read'})
+  const likeLimit = createAttemptLimiter({store:options.store,now:options.now,maximum:20,windowMs:60000,scope:'like'})
   const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
@@ -81,6 +83,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })
+    if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:likeLimit})
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })

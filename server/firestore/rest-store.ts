@@ -81,9 +81,15 @@ export function createRestStore(options: Options): AtomicStore {
       if (!['shorts','comments'].includes(query.kind) || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > (query.kind === 'shorts' ? 30 : 21) || query.parentId !== undefined && !/^[\w-]{1,128}$/.test(query.parentId) || query.kind === 'comments' && !query.parentId || query.cursor && (!/^[\w-]{1,128}$/.test(query.cursor.id) || !Number.isFinite(Date.parse(query.cursor.time)))) throw new Error('Consulta pública inválida')
       const filters = [{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'EQUAL',value:encode(query.kind === 'shorts' ? 'published' : 'approved')}},
         ...(query.parentId ? [{fieldFilter:{field:{fieldPath:query.kind === 'shorts' ? 'gameId' : 'shortId'},op:'EQUAL',value:encode(query.parentId)}}] : [])]
-      const selected = query.kind === 'shorts' ? ['title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName','moderationStatus'] : ['shortId','content','createdAt','moderationStatus']
+      const selected = query.kind === 'shorts' ? ['likeCount','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName','moderationStatus'] : ['shortId','content','createdAt','moderationStatus']
       const result = await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected.map(fieldPath=>({fieldPath}))},where:{compositeFilter:{op:'AND',filters}},orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
         ...(query.cursor ? {startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}} : {})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
+    async scanLikeRecords(collection,after) {
+      if(!['shortLikes','likeAttempts'].includes(collection)||after!==undefined&&!/^[a-f0-9]{64}$/.test(after))throw new Error('Página de retenção inválida')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:collection}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,
+        ...(after?{startAt:{before:false,values:[{referenceValue:name(collection+'/'+after)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
     async scanGames(after) {
@@ -104,7 +110,7 @@ export function createRestStore(options: Options): AtomicStore {
         {fieldFilter:{field:{fieldPath:'searchFragments'},op:'ARRAY_CONTAINS',value:encode(query.fragment)}},
         ...(query.gameId?[{fieldFilter:{field:{fieldPath:'gameId'},op:'EQUAL',value:encode(query.gameId)}}]:[])]
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],where:{compositeFilter:{op:'AND',filters}},
-        select:{fields:['moderationStatus','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName'].map(fieldPath=>({fieldPath}))},
+        select:{fields:['likeCount','moderationStatus','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName'].map(fieldPath=>({fieldPath}))},
         orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
         ...(query.cursor?{startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name('shorts/'+query.cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>({id:String(item.document.name).split('/').at(-1)!,data:Object.fromEntries(Object.entries(item.document.fields||{}).map(([key,value])=>[key,decode(value as Value)]))}))
@@ -141,6 +147,7 @@ export function createRestStore(options: Options): AtomicStore {
             return found ? Object.fromEntries(Object.entries(found.fields || {}).map(([key, value]) => [key, decode(value as Value)])) : null
           },
           create(path, data) { writes.push({ update: { name: name(path), fields: fields(data) }, currentDocument: { exists: false } }) },
+          delete(path) { writes.push({delete:name(path),currentDocument:{exists:true}}) },
           set(path, data) { writes.push({ update: { name: name(path), fields: fields(data) } }) },
         }
         try {

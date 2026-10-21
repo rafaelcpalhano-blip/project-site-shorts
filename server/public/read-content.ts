@@ -1,3 +1,4 @@
+import { likeCount } from '../likes/short-likes.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import { isVisibleGame } from '../games/visibility.ts'
 import { publicId, publicCursor } from '../../src/lib/validation/public-read.ts'
@@ -12,7 +13,7 @@ function text(data: RecordData, key: string, maximum: number) { const v=data[key
 export function publicShort(id: string, data: RecordData, game: RecordData) {
   const url=text(data,'normalizedUrl',2048), parsed=parseVideoUrl(url)
   if(parsed.platform!==data.platform || parsed.identity!==data.platform+':'+data.platformVideoId)throw new Error('invalid-record')
-  return {id,identity:parsed.identity,url,platform:parsed.platform,title:text(data,'title',500),channelName:typeof data.channelName==='string'?data.channelName:'',gameId:publicId(data.gameId),gameName:text(game,'officialName',500),createdAt:date(data).getTime()}
+  return {id,likeCount:likeCount(data.likeCount),identity:parsed.identity,url,platform:parsed.platform,title:text(data,'title',500),channelName:typeof data.channelName==='string'?data.channelName:'',gameId:publicId(data.gameId),gameName:text(game,'officialName',500),createdAt:date(data).getTime()}
 }
 function reader(store: AtomicStore) { if(!store.get||!store.publicPage)throw new Error('public-read-unavailable');return {get:store.get,page:store.publicPage} }
 export async function readFeed(value: unknown, store: AtomicStore) {
