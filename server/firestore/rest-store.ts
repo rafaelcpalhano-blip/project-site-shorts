@@ -54,12 +54,12 @@ export function createRestStore(options: Options): AtomicStore {
   }
   return {
     async query(query) {
-      const allowed = { shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
+      const allowed = { comments: ['moderationStatus', 'createdAt'], shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
       const fieldsAllowed = allowed[query.collection]
       if (!fieldsAllowed || query.filter.field !== fieldsAllowed[0] || query.orderBy !== fieldsAllowed[1] ||
           !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 21) throw new Error('Consulta inválida')
       const start = query.cursor
-      if (start && (!/^[a-f0-9]{64}$/.test(start.id) || !Number.isFinite(Date.parse(start.time)))) throw new Error('Cursor inválido')
+      if (start && (!(query.collection === 'comments' ? /^[\w-]{1,128}$/ : /^[a-f0-9]{64}$/).test(start.id) || !Number.isFinite(Date.parse(start.time)))) throw new Error('Cursor inválido')
       const result = await request('runQuery', { structuredQuery: {
         from: [{ collectionId: query.collection }],
         where: { fieldFilter: { field: { fieldPath: query.filter.field }, op: 'EQUAL', value: encode(query.filter.value) } },

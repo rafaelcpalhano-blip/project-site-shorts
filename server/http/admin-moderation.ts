@@ -1,3 +1,5 @@
+import { loadCommentQueue, loadCommentDetail } from '../comments/queue.ts'
+import { parseCommentReview, reviewComment } from '../comments/review-comment.ts'
 import type { AdminConfiguration } from './admin.ts'
 import { AdminAuthError } from '../auth/firebase-admin.ts'
 import { BodyError, readInput } from './submissions.ts'
@@ -21,6 +23,9 @@ export async function handleAdminModeration(request: Request, options: {
     const admin = await options.admin.authorize(request)
     const input = await readInput(request)
     const path = new URL(request.url).pathname
+    if (path === '/api/admin/comments/queue') return reply(200, await loadCommentQueue(input, options.store))
+    if (path === '/api/admin/comments/detail') return reply(200, await loadCommentDetail(input, options.store))
+    if (path === '/api/admin/comments/review') return reply(200, await reviewComment(parseCommentReview(input), admin.uid, options))
     if (path === '/api/admin/queue') return reply(200, await loadQueue(input, options.store))
     if (path === '/api/admin/detail') return reply(200, await loadDetail(input, options.store))
     if (path === '/api/admin/review') return reply(200, await reviewShort(parseReview(input), admin.uid, options))

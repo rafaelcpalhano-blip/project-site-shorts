@@ -17,7 +17,7 @@ export function HomePage() {
       <button className="primary" type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
     </div>
     <div className={styles.notice}>
-      {usesFirestore ? <>FIRESTORE LOCAL · Leitura de dados do emulador. Envios dependem da API configurada; comentários e busca persistente ainda estão em desenvolvimento.</> : <>
+      {usesFirestore ? <>AMBIENTE LOCAL · Publicações e comentários ficam neste ambiente. A busca por trechos continua em desenvolvimento.</> : <>
       PROTÓTIPO · Feed fictício. Publicações e comentários duram apenas nesta sessão; não são enviados a um servidor.
       <br />Links válidos podem usar o player oficial após sua escolha. Comentários enviados ficam pendentes.</>}
     </div>

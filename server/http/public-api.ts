@@ -1,3 +1,4 @@
+import { handleComment } from './comments.ts'
 import { handleAdminModeration } from './admin-moderation.ts'
 import { handleAdmin } from './admin.ts'
 import type { AdminConfiguration } from './admin.ts'
@@ -34,6 +35,8 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'admin-auth' })
   const reportLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
+  const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
+    maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'video-preview' })
   const searchLimit = options.gameSearch ? createAttemptLimiter({ store: options.store, now: options.now,
@@ -46,7 +49,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       await adminLimit(visitor)
       return true
     })
-    if (['/api/admin/queue', '/api/admin/detail', '/api/admin/review'].includes(path)) return handleAdminModeration(request, {
+    if (['/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
       origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
       checkAbuse: async candidate => {
         const visitor = await identity.resolveVisitor(candidate)
@@ -54,6 +57,9 @@ export async function createPublicApi(options: PublicApiOptions) {
         await adminLimit(visitor)
         return true
       },
+    })
+    if (path === '/api/comments') return handleComment(request, {
+      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,

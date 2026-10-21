@@ -6,16 +6,17 @@ export class AdminRequestError extends Error {
 }
 const messages: Record<string, string> = {
   'restore-unavailable': 'Não há histórico seguro para restaurar este registro. O vídeo permanece removido.',
-  'stale-review': 'O vídeo ou as denúncias mudaram. Reabra os detalhes antes de decidir.',
+  'stale-review': 'O conteúdo ou as denúncias mudaram. Reabra os detalhes antes de decidir.',
   'daily-limit': 'O autor já atingiu cinco publicações hoje. O estado do vídeo foi preservado.',
   'verification-incomplete': 'A fonte ainda não confirmou existência, formato curto e condições técnicas. O estado do vídeo foi preservado.',
   'invalid-video': 'O vídeo ou o jogo não pode ser publicado com os dados atuais.',
+  'comment-unavailable': 'Comentário indisponível. Atualize a fila.',
   'short-unavailable': 'Vídeo indisponível. Atualize a fila.',
   'invalid-input': 'Confira o motivo e os dados da revisão.',
   'abuse-limit': 'Muitas operações. Aguarde antes de tentar novamente.',
   'totp-required': 'Entre novamente com Google e TOTP.',
 }
-async function request<T>(user: User, path: string, body: unknown): Promise<T> {
+export async function request<T>(user: User, path: string, body: unknown): Promise<T> {
   const token = await user.getIdToken()
   const response = await fetch('/api/admin/' + path, { method: 'POST', credentials: 'same-origin', redirect: 'error',
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },

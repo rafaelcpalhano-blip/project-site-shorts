@@ -5,7 +5,7 @@ export interface AtomicTransaction {
   set(path: string, data: RecordData): void
 }
 export interface StoreQuery {
-  collection: 'shorts' | 'reportSummaries' | 'reports' | 'moderationLogs'
+  collection: 'comments' | 'shorts' | 'reportSummaries' | 'reports' | 'moderationLogs'
   filter: { field: string; value: string }
   orderBy: string
   limit: number
