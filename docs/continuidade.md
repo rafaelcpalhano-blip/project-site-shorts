@@ -1,5 +1,18 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.4 — desenho técnico preparado; implementação pendente (21/10/2026)
+
+Proprietário autorizou avançar à 7.5.4. Análise identificou que shorts/comments lidos
+pelo SDK e regras atuais não ocultam os vídeos ao bloquear apenas o jogo. Proposta
+em [etapa-7-5-4.md](etapa-7-5-4.md): leitura pública de shorts/comentários pela API
+existente, preservando Firestore exclusivo; entrega A de integridade, B de inclusão
+manual autônoma, C de catálogo/bloqueio auditado. Ajuste arquitetural e impacto das
+páginas parciais/leituras aguardam aprovação antes de alterar código. Nenhum dado,
+serviço externo ou regra alterado, nenhum teste repetido nesta análise.
+Reserva privada de nomes legados requer diagnóstico e preenchimento local com
+aprovação específica posterior; não mesclar colisões nem migrar automaticamente.
+
+
 ## Etapa 7.5.3 — atalhos de motivos administrativos (21/10/2026)
 
 Painel de solicitações de jogos usa ReasonShortcuts: seis opções aprovadas em dois
