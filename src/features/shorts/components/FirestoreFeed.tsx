@@ -1,3 +1,5 @@
+import {createOrderedFeedClient,feedOrderLabels} from '../services/ordered-feed-api'
+import type {FeedOrder} from '../services/ordered-feed-api'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
 import type { TitleSearchCursor } from '../../../lib/validation/title-search'
@@ -10,11 +12,13 @@ import type { Game, Short } from '../types/models'
 import { ShortCard } from './ShortCard'
 import { FirestoreShortDialog } from './FirestoreShortDialog'
 import styles from './ShortFeed.module.css'
-type FeedCursor=PublicCursor|TitleSearchCursor
-interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean}
+type FeedCursor=PublicCursor|TitleSearchCursor|string
+interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean;orderingAt?:string}
+const orderedFeed=createOrderedFeedClient()
 const searchTitles=createTitleSearchClient()
 const repository = createPublicRepository(database)
 export function FirestoreFeed({ gameId }: { gameId?: string }) {
+  const [order,setOrder]=useState<FeedOrder>('latest')
   const [draft,setDraft]=useState('')
   const [query,setQuery]=useState('')
   const [filter, setFilter] = useState('')
@@ -47,7 +51,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   useEffect(() => {
     let active = true
     const controller=new AbortController()
-    const request=TITLE_SEARCH_ENABLED && query ? searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},controller.signal) : repository.listShorts(selectedGame || undefined,cursor as PublicCursor|undefined,controller.signal)
+    const request=TITLE_SEARCH_ENABLED && query ? searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},controller.signal) : orderedFeed(order,selectedGame||undefined,typeof cursor==='string'?cursor:undefined,controller.signal)
     request.then(async result => {
       const ids = [...new Set(result.items.map(short => short.gameId))]
       const resolved = await Promise.all(ids.map(async id => {
@@ -59,10 +63,10 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       if (!active) return
       setNames(Object.fromEntries(resolved)); setPage(result); setLoading(false)
     }).catch(failure => {
-      if (active) { setError(TITLE_SEARCH_ENABLED && query && failure instanceof Error && failure.name==='Error'?failure.message:TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Verifique se o emulador está em execução.'); setLoading(false) }
+      if (active) { setError(failure instanceof Error?failure.message:TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Verifique se o emulador está em execução.'); setLoading(false) }
     })
     return () => { active = false; controller.abort() }
-  }, [selectedGame, cursor, attempt, query])
+  }, [selectedGame, cursor, attempt, query, order])
   const refresh = () => {
     setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); setCatalogAttempt(value=>value+1)
   }
@@ -88,14 +92,18 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         }}>{catalogLoading ? 'Carregando...' : 'Carregar mais jogos'}</button>}
         {catalogError && <p role="alert">{catalogError}</p>}
       </div>}
+      <div className="form-field"><label htmlFor="persistent-order">Filtrar por relevância</label>
+        <select id="persistent-order" value={order} onChange={event=>{setOrder(event.target.value as FeedOrder);setIndex(0);setCursors([undefined]);setError('');setLoading(true)}}>{(Object.keys(feedOrderLabels) as FeedOrder[]).map(value=><option key={value} value={value}>{feedOrderLabels[value]}</option>)}</select>
+      </div>
     </div>
-    <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':'Últimos compartilhados'}</h2><button onClick={refresh}>Atualizar feed</button></div>
+    <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
     {loading ? <p role="status">Carregando shorts...</p> : error ? <div role="alert"><p>{error}</p><button onClick={refresh}>Tentar novamente</button></div>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
         <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
       : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
     {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
+    {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima geração horária.</p>}
     <nav className={styles.pagination} aria-label="Paginação de shorts">
       <button disabled={loading || index === 0} onClick={() => { setLoading(true); setError(''); setIndex(index - 1) }}>← Anterior</button>
       {cursors.map((_, position) => <button key={position} disabled={loading || position === index} aria-label={'Página ' + (position + 1)}

@@ -1,3 +1,4 @@
+import {createRankingCursor} from '../ranking/cursor.ts'
 import { handleLike } from './likes.ts'
 import { handlePublicRead } from './public-read.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
@@ -36,6 +37,7 @@ export interface PublicApiOptions {
 export async function createPublicApi(options: PublicApiOptions) {
   const origin = new URL(options.origin)
   if (origin.protocol !== 'https:' || origin.origin !== options.origin) throw new Error('Expected canonical HTTPS origin')
+  const rankingCursor = await createRankingCursor(options.visitorSecret,options.origin)
   const identity = await createVisitorIdentity(options.visitorSecret, options.now)
   const checkAbuse = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs })
@@ -79,7 +81,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
     if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
-    if (['/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit})
+    if (['/api/feed/ordered','/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit,ordered:{cursor:rankingCursor,now:options.now}})
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })

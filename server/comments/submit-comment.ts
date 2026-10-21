@@ -1,3 +1,4 @@
+import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
 import { validateCommentSubmission } from '../../src/lib/validation/comment-input.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
@@ -40,6 +41,8 @@ export async function submitComment(input: unknown, visitorHash: string, options
           recent.createdAt.getTime() < 0 || recent.createdAt.getTime() > now.getTime()) throw new Error('invalid-dedup')
       if (now.getTime() - recent.createdAt.getTime() < 60000) throw new CommentError('duplicate-comment', 409)
     }
+    const applyRanking=verdict.status==='approved'?await prepareEngagement(tx,{shortId:data.shortId,gameId:short.gameId as string,kind:'comment',sourceId:id,identity:visitorHash,at:now,now,active:true}):()=>{}
+    applyRanking()
     tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now,
       moderationStatus: verdict.status, reviewVersion: 0 })
     // Ownership, request fingerprints and triage flags never enter public comment documents.

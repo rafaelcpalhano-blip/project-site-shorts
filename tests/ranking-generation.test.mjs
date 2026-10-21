@@ -57,7 +57,7 @@ test('leitura usa um snapshot de fontes mesmo que fonte atual mude durante colet
 test('limpeza recusa geração corrente/anterior, remove somente cache antigo em lotes',async()=>{
  const deps=memory(31),result=await buildRankingGeneration(deps);deps.clock(new Date(deps.now().getTime()+3*3600000));await assert.rejects(pruneRankingGeneration({...deps,generationId:result.generationId}),/generation-protected/)
  deps.docs.set('rankingState/current',{generationId:'c'.repeat(32),previousGenerationId:'d'.repeat(32)})
- assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,30);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,1);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).complete,true);assert.equal(deps.docs.has('shorts/s000'),true)
+ assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,30);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,2);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).complete,true);assert.equal(deps.docs.has('shorts/s000'),true)
 })
 test('cursor expirado/mudança de modo e ranking ausente não consultam fontes',async()=>{
  const deps=memory();deps.store.rankingPage=async()=>{throw Error('must-not-query')}

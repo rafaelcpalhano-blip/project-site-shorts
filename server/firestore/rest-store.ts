@@ -60,6 +60,13 @@ export function createRestStore(options: Options): AtomicStore {
       const found=(Array.isArray(result)?result:[result]).find(item=>item.found)?.found
       return found?decodeDocument(found).data:null
     },
+    async rankingBootstrapPage(collection,after,readTime) {
+      if(!['shorts','games','shortLikes','comments','commentRequests'].includes(collection)||after!==undefined&&!/^[\w-]{1,128}$/.test(after)||readTime!==undefined&&!Number.isFinite(Date.parse(readTime)))throw new Error('Preparação inválida')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:collection}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,...(after?{startAt:{before:false,values:[{referenceValue:name(collection+'/'+after)}]}}:{})},...(readTime?{readTime}:{})})
+      const rows=Array.isArray(result)?result:[result],point=readTime??rows.find(item=>item.readTime)?.readTime
+      if(!point)throw new Error('Snapshot ausente')
+      return {items:rows.filter(item=>item.document).map(item=>decodeDocument(item.document)),readTime:point}
+    },
     async rankingItemsPage(generationId) {
       if(!/^[a-f0-9]{32}$/.test(generationId))throw new Error('Geração inválida')
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'rankingItems'}],select:{fields:[{fieldPath:'generationId'}]},where:{fieldFilter:{field:{fieldPath:'generationId'},op:'EQUAL',value:encode(generationId)}},orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30}})

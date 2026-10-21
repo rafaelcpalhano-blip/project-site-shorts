@@ -1,3 +1,4 @@
+import { emptyRankingMetric } from '../ranking/engagement.ts'
 import { isVisibleGame } from '../games/visibility.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
 import { titleSearchFields } from '../../src/lib/validation/title-search.ts'
@@ -53,6 +54,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     const originalTitle = typeof evidence.title === 'string' && evidence.title.trim() ? validateVideoTitle(evidence.title) : null
     const title = submission.title || originalTitle || 'Short de ' + String(game.officialName || 'game')
     if (title.length > 500) throw new SubmissionError('invalid-metadata')
+    const ranking=await transaction.get('rankingState/metrics')
     transaction.create('videoIdentities/' + identityId, { shortId: identityId, identity: submission.identity, createdAt: now })
     transaction.create('shorts/' + identityId, {
       originalUrl: submission.originalUrl, normalizedUrl: submission.url,
@@ -61,6 +63,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
       title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
       createdAt: now, moderationStatus: decision.status, likeCount: 0,
     })
+    if(ranking?.ready===true&&typeof ranking.epoch==='string')transaction.create('rankingMetrics/'+identityId,emptyRankingMetric(identityId,submission.gameId,now,ranking.epoch))
     // Private ownership supports later quota accounting on approval; never in public short documents.
     transaction.create('submissionOwners/' + identityId, { visitorHash, createdAt: now })
     transaction.create('moderationLogs/' + crypto.randomUUID(), {

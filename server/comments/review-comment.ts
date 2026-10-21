@@ -1,3 +1,4 @@
+import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import { parseQuery } from '../moderation/queue.ts'
@@ -33,6 +34,12 @@ export async function reviewComment(input: ReturnType<typeof parseCommentReview>
     const now = options.now()
     if (!Number.isFinite(now.getTime())) throw new Error('invalid-clock')
     const next = input.action === 'approve' || input.action === 'restore' ? 'approved' : input.action === 'reject' ? 'rejected' : 'removed'
+    let applyRanking=()=>{}
+    if(next==='approved'||status==='approved'){
+      const owner=await tx.get('commentRequests/'+input.commentId)
+      if(short&&typeof short.gameId==='string')applyRanking=await prepareEngagement(tx,{shortId:String(comment.shortId),gameId:short.gameId,kind:'comment',sourceId:input.commentId,identity:typeof owner?.visitorHash==='string'?owner.visitorHash:undefined,at:comment.createdAt as Date,now,active:next==='approved'})
+    }
+    applyRanking()
     tx.set(path,{...comment,moderationStatus:next,reviewVersion:revision+1})
     tx.create('moderationLogs/' + crypto.randomUUID(),{contentType:'comment',contentId:input.commentId,
       action:input.action,reason:input.reason,previousStatus:status,resultingStatus:next,

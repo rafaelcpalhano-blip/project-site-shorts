@@ -387,6 +387,21 @@
       "collectionGroup": "rankingState",
       "fieldPath": "*",
       "indexes": []
+    },
+    {
+      "collectionGroup": "rankingSignals",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "rankingHours",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "rankingDays",
+      "fieldPath": "*",
+      "indexes": []
     }
   ]
 }

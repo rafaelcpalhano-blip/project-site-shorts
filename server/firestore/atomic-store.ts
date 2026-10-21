@@ -18,6 +18,7 @@ export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'b
 export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
 export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?:string;generationId?:string;readTime?:string;cursor?:{id:string;time:string;value?:number};limit:15}
 export interface AtomicStore {
+  rankingBootstrapPage?: (collection:'shorts'|'games'|'shortLikes'|'comments'|'commentRequests',after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   rankingItemsPage?: (generationId:string)=>Promise<Array<{id:string;data:RecordData}>>
   rankingSourcePage?: (after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   snapshotGet?: (path:string,readTime:string)=>Promise<RecordData|null>

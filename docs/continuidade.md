@@ -1,5 +1,27 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.6-C — implementação e validação local concluídas (21/10/2026)
+
+Quatro ordenações integradas ao feed/filtro/ficha, padrão Ultimo Postado; busca
+textual permanece desativada. Métricas elegíveis transacionais, caps 20 curtidas/
+10 comentários por short/hora e um comentário por identidade/short/dia UTC;
+remoção retira contribuição e restauro conserva idade, sem reciclar admissões.
+Cursor assinado, snapshot 30min, páginas 15/30 candidatos, moderação atual.
+Geração horária somente no runner local: promoção completa, orçamento/lease e
+retenção limitados; indisponibilidade não vira ranking parcial ou fallback falso.
+Limites da B preservados. Custos por interação e crescimento dos registros privados
+exigem monitoramento/retenção próprios antes de produção. Sem novo serviço/deploy.
+71 testes relacionados distintos aprovados, lint/build e HTTPS local conferidos.
+Concorrência extrema pode esgotar retries; reenvio permanece atômico/idempotente.
+8080: 10 shorts preservados por hashes; métricas inicializadas de fontes verificadas,
+sem interação histórica existente/fictícia. Primeira geração completa publicada
+somente no emulador; API reiniciada e sessões locais renovam no próximo acesso.
+Conferência visual pelo proprietário ainda pendente. Detalhes/custos/reprodução:
+[etapa-7-5-6-c.md](etapa-7-5-6-c.md). Próxima 7.5.7 — miniaturas e prévias, aguardando
+autorização e avaliação da compatibilidade de cada plataforma. Checkpoints abaixo
+são históricos e não representam funcionalidades ainda pendentes na C.
+
+
 ## Etapa 7.5.6-B — base local concluída, integração C pendente (21/10/2026)
 
 Aprovada variante 24h/12h/6h e gerações horárias com controle de orçamento. Base interna

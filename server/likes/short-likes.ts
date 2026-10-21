@@ -1,3 +1,4 @@
+import { prepareEngagement } from '../ranking/engagement.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import { isVisibleGame } from '../games/visibility.ts'
 export class LikeError extends Error {
@@ -42,6 +43,8 @@ export async function shortLike(value:unknown,visitor:string,options:{store:Atom
   const now=options.now()
   if(!Number.isFinite(now.getTime())||record&&now.getTime()<(record.changedAt as Date).getTime())throw new Error('invalid-like-clock')
   const nextCount=count+(input.liked?1:-1),revision=state.revision+1
+  const applyRanking=await prepareEngagement(tx,{shortId:input.shortId,gameId:short.gameId as string,kind:'like',sourceId:path.split('/')[1],identity:path.split('/')[1],at:(record?.createdAt as Date|undefined)??now,now,active:input.liked})
+  applyRanking()
   tx.set(path,{shortId:input.shortId,liked:input.liked,revision,createdAt:record?.createdAt??now,changedAt:now})
   tx.set('shorts/'+input.shortId,{...short,likeCount:nextCount})
   return {shortId:input.shortId,liked:input.liked,revision,count:nextCount}

@@ -14,13 +14,14 @@ export async function pruneRankingGeneration(options:{store:AtomicStore;now:()=>
   for(const row of rows){const data=await tx.get('rankingItems/'+row.id);if(data){if(data.generationId!==id)throw Error('ranking-invalid-page');records.push(row.id)}}
   if(budget&&budget.version!==1)throw Error('ranking-invalid-budget')
   const number=(key:string)=>{if(!budget)return 0;const value=budget[key];if(!Number.isSafeInteger(value)||Number(value)<0)throw Error('ranking-invalid-budget');return Number(value)}
-  const reads=number('readsReserved'),writes=number('writesReserved'),deletes=number('deletesReserved'),removed=records.length+(rows.length===0?1:0)
-  if(reads+70>generationLimits.dailyReads||writes+2>generationLimits.dailyWrites||deletes+removed>4000)throw Error('ranking-budget-exhausted')
+  const reads=number('readsReserved'),writes=number('writesReserved'),deletes=number('deletesReserved'),removed=records.length+(rows.length<30?1:0)
+  if(reads+70>generationLimits.dailyReads||writes+3>generationLimits.dailyWrites||deletes+removed>4000)throw Error('ranking-budget-exhausted')
   if(!tx.delete)throw Error('ranking-store-unavailable')
   for(const itemId of records)tx.delete('rankingItems/'+itemId)
-  if(rows.length===0)tx.delete('rankingRuns/'+id)
+  if(lease?.id===id)tx.set('rankingState/lease',{id:'pruned-'+id,expiresAt:now})
+  if(rows.length<30)tx.delete('rankingRuns/'+id)
   else tx.set('rankingRuns/'+id,{...run,status:'pruning'})
-  tx.set('rankingBudgets/'+day,{version:1,readsReserved:reads+70,writesReserved:writes+2,deletesReserved:deletes+removed,updatedAt:now})
-  return {deleted:removed,complete:rows.length===0,hasMore:rows.length===30}
+  tx.set('rankingBudgets/'+day,{version:1,readsReserved:reads+70,writesReserved:writes+3,deletesReserved:deletes+removed,updatedAt:now})
+  return {deleted:removed,complete:rows.length<30,hasMore:rows.length===30}
  })
 }

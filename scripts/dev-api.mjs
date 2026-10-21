@@ -1,3 +1,4 @@
+import {startLocalRanking} from './local-ranking.mjs'
 import { createDescriptionTranslator } from '../server/games/translate-description.ts'
 import { createGameTranslation } from '../server/games/translation-store.ts'
 import { createAdminAuthorizer } from '../server/auth/firebase-admin.ts'
@@ -16,6 +17,7 @@ import { localApiBridge } from './local-api-bridge.mjs'
 const origin = 'https://127.0.0.1:5174'
 let vite
 let server
+let stopRanking
 try {
   if (!process.env.LOCAL_TLS_CERT || !process.env.LOCAL_TLS_KEY) {
     throw new Error('missing-local-certificate')
@@ -55,6 +57,7 @@ try {
       return ++issued <= 20
     },
   })
+  stopRanking=await startLocalRanking({store,now:()=>new Date()})
   process.env.VITE_DATA_MODE = 'firestore-emulator'
   server = createHttpsServer({ cert, key, requestTimeout: 30_000, headersTimeout: 10_000 })
   vite = await createViteServer({
@@ -70,10 +73,11 @@ try {
   console.log('Publicação após validação técnica; sessões expiram ao reiniciar. Nenhuma gravação na nuvem.')
   console.log(gameTranslation ? 'Tradução pt-BR habilitada: até 20 tentativas/dia UTC, somente no cadastro/confirmação.' : 'Tradução pt-BR desativada ou sem credenciais: descrições originais preservadas.')
   if (!catalog) console.log('Catálogo IGDB indisponível: configure as variáveis privadas do servidor.')
-  const close = async () => { server.close(); server.closeAllConnections(); await vite.close() }
+  const close = async () => { stopRanking?.(); server.close(); server.closeAllConnections(); await vite.close() }
   process.once('SIGINT', close)
   process.once('SIGTERM', close)
 } catch {
+  stopRanking?.()
   server?.close()
   await vite?.close()
   console.error('Não foi possível iniciar. Confira certificado/chave locais confiáveis e porta 5174 livre. Consulte docs/api-local.md. Nenhuma credencial foi exibida.')
