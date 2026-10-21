@@ -99,6 +99,51 @@ nenhuma aplicação parcial em produção.
 
 ### B — Inclusão manual autônoma
 
+#### Parâmetros propostos — aguardando aprovação específica
+
+- Manter o limite existente de 20 tentativas por minuto por identidade assinada,
+  com contador separado de tentativas de cadastro; sem aumentar esse teto.
+- Limitar a 3 jogos manuais novos efetivamente criados por identidade/dia de São Paulo.
+  Reaproveitamento de jogo existente, falhas e recusas não gastam esse limite diário;
+  tentativas continuam sujeitas ao limitador existente. Não afeta os 5 shorts/dia.
+- Contagem e reserva de nome na mesma transação; concorrência/repetições não geram
+  novo jogo nem incremento duplicado. Sem cadastro/login obrigatório do visitante.
+- Chaves privadas de nomes/variantes e limite diário no mesmo Firestore. Sem consulta
+  do catálogo inteiro a cada cadastro, sem novo banco, índice textual ou dependência.
+- Normalizar acentos, caixa, compatibilidade e espaços; comparar chave conservadora
+  de pontuação/caracteres visualmente semelhantes. Colisões não mesclam IDs oficiais
+  ou manuais. Ambiguidade deve orientar seleção existente/correção de nome. Cobertura
+  contra grafias abusivas é limitada e não equivale a uma classificação universal.
+- Novo endpoint separado para inclusão autônoma, preservando o contrato e os registros
+  da fila antiga de solicitações. Reutilizar os validadores e a criação manual atual.
+- Provisório é qualificação de revisão separada do status ativo necessário ao acesso;
+  sem descrição/imagem inventadas, com seleção automática no formulário após sucesso.
+- Centralizar o suporte fictício de desenvolvimento, sem mailto/envio. Cadastro autônomo
+  não implica que já há um canal de suporte operacional ou que houve aprovação humana.
+
+#### Preparação local proposta — autorização condicionada solicitada
+
+Preparar e executar diagnóstico paginado somente no emulador demo-clipzone:8080,
+sem ler a coleção inteira de uma vez, identificando nomes/variantes conflitantes e
+registros não ativos. Preservar IDs, status, metadados e solicitações existentes.
+
+Se o diagnóstico não apresentar colisões, preencher somente as reservas privadas de
+nomes em lotes limitados/transações, com prontidão bloqueada durante o processo e
+retomada idempotente após interrupção. Não remover nem renomear jogos. Não transformar
+rejeições antigas em banimentos. Registros não ativos não podem ser recriados pela
+nova rota. Se houver colisão ou inconsistência, apresentar o caso e aguardar antes
+de qualquer correção/migração correspondente; não escolher automaticamente um ID.
+
+Ativar a nova inclusão somente quando a preparação estiver íntegra. Nada em produção,
+sem serviços externos, sem deploy. A proposta exige aprovação de limites e deste
+preenchimento local; autorização genérica para avançar à B não executou migração.
+
+Testes previstos: normalização/colisões, concorrência, repetição entre visitantes,
+3 criações/dia, falhas/reuso sem consumo, meia-noite São Paulo, jogos bloqueados,
+proteção da reserva contra cliente público e preenchimento interrompido/retomado.
+Validação do formulário: seleção automática e preservação de todos os outros campos.
+
+
 Reaproveitar validação de nome (1–100 caracteres), cadastro sem metadados e seleção automática.
 Representar provisório como qualificação separada da visibilidade: registro público elegível
 com status ativo e revisão provisória; administração distingue esse estado de um jogo validado.

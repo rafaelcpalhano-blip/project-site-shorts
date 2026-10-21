@@ -1,5 +1,19 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.4-B — parâmetros preparados; execução pendente (21/10/2026)
+
+Proprietário pediu avanço à B; Git limpo. Foi detalhada proposta de 3 novos jogos
+manuais/identidade/dia São Paulo, mantendo 20 tentativas/minuto existentes e as
+5 publicações/dia intactas. Reuso/falhas não gastam cota de criações aceitas.
+Proposta inclui diagnóstico paginado local; preencher reservas privadas apenas
+se não houver colisões, com prontidão bloqueada/retomada idempotente. Colisões
+exigem apresentar o caso antes de corrigir. Nada em produção ou serviços externos.
+Aguardando aprovação específica dos novos limites e desse preenchimento local,
+conforme a reserva já registrada no desenho técnico. Nenhum código alterado,
+diagnóstico/migração executado ou teste repetido nesta análise. Detalhes em
+[etapa-7-5-4.md](etapa-7-5-4.md). B ainda não implementada; C continua pendente.
+
+
 ## Etapa 7.5.4-A — integridade das leituras públicas concluída localmente (21/10/2026)
 
 Proprietário aprovou o ajuste arquitetural proposto. Feed/detalhe/comentários passam
