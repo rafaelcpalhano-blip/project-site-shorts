@@ -5,20 +5,20 @@ export interface AttemptLimitOptions {
   now: () => Date
   maximum: number
   windowMs: number
-  scope?: 'submission' | 'game-search' | 'video-preview' | 'report' | 'admin-auth' | 'comment' | 'game-request' | 'title-search'
+  scope?: 'submission' | 'game-search' | 'video-preview' | 'report' | 'admin-auth' | 'comment' | 'game-request' | 'title-search' | 'public-read'
 }
 // Operational thresholds are explicit configuration, separate from the five-publication quota.
 export function createAttemptLimiter(options: AttemptLimitOptions) {
   if (!Number.isSafeInteger(options.maximum) || options.maximum < 1 ||
       !Number.isSafeInteger(options.windowMs) || options.windowMs < 1000) throw new Error('Invalid attempt limit')
-  if (options.scope && !['submission', 'game-search', 'video-preview', 'report', 'admin-auth', 'comment', 'game-request', 'title-search'].includes(options.scope)) throw new Error('Invalid limit scope')
+  if (options.scope && !['submission', 'game-search', 'video-preview', 'report', 'admin-auth', 'comment', 'game-request', 'title-search', 'public-read'].includes(options.scope)) throw new Error('Invalid limit scope')
   return async (visitorHash: string): Promise<void> => {
     if (!/^[a-f0-9]{64}$/.test(visitorHash)) throw new SubmissionError('invalid-visitor')
     await options.store.transact(async transaction => {
       const now = options.now()
       const time = now.getTime()
       if (!Number.isSafeInteger(time) || time < 0) throw new Error('Invalid server clock')
-      const path = (options.scope === 'title-search' ? 'titleSearchAttempts/' : options.scope === 'game-request' ? 'gameRequestAttempts/' : options.scope === 'comment' ? 'commentAttempts/' : options.scope === 'admin-auth' ? 'adminAuthAttempts/' : options.scope === 'report' ? 'reportAttempts/' : options.scope === 'video-preview' ? 'videoPreviewAttempts/' : options.scope === 'game-search' ? 'gameSearchAttempts/' : 'submissionAttempts/') + visitorHash
+      const path = (options.scope === 'public-read' ? 'publicReadAttempts/' : options.scope === 'title-search' ? 'titleSearchAttempts/' : options.scope === 'game-request' ? 'gameRequestAttempts/' : options.scope === 'comment' ? 'commentAttempts/' : options.scope === 'admin-auth' ? 'adminAuthAttempts/' : options.scope === 'report' ? 'reportAttempts/' : options.scope === 'video-preview' ? 'videoPreviewAttempts/' : options.scope === 'game-search' ? 'gameSearchAttempts/' : 'submissionAttempts/') + visitorHash
       const previous = await transaction.get(path)
       let count = 0
       let startsAt = time

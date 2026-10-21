@@ -1,5 +1,30 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.4-A — integridade das leituras públicas concluída localmente (21/10/2026)
+
+Proprietário aprovou o ajuste arquitetural proposto. Feed/detalhe/comentários passam
+pela API existente e verificam jogo ativo antes de devolver conteúdo público. SDK
+continua apenas no catálogo/fichas. Regras locais bloqueiam reads diretos de shorts
+e comments, inclusive clientes com claim admin. Administração permanece pela API.
+Cursores vinculados ao contexto, até 30 candidatos/15 resultados, sem ocultação
+apenas visual, sem leituras irrestritas, sem novos índices, banco ou dependências.
+Nome do jogo vem no DTO; páginas parciais/vazias podem continuar. Limite independente
+publicReadAttempts; consulta não consome cota de publicação. Comentários/denúncias
+verificam jogo na transação; restauração de comentário bloqueada em jogo oculto.
+Política de publicação/IGDB/restauração de short preservada e compartilhada.
+61 testes relacionados aprovados, lint/build aprovados; HTTPS local: feed 200,
+comentários 200 e pesquisa 404. Regras atualizadas apenas no emulador demo-clipzone
+8080 sem limpar dados; API reiniciada, sessão administrativa pode precisar nova
+verificação. Nenhum dado de desenvolvimento removido/migrado, nenhum serviço externo
+alterado ou deploy. Conferência visual final pelo proprietário pendente.
+Logs anteriores da API continham aviso React de chaves duplicadas; sem reprodução
+nesta verificação de leitura, não houve ajuste fora do escopo. Rever se reaparecer
+na conferência de catálogo administrativo.
+Detalhes/custos em [etapa-7-5-4.md](etapa-7-5-4.md). Próxima subentrega 7.5.4-B exige
+aprovar limite de cadastros e diagnóstico/preenchimento local das reservas de nomes
+antes de ativar cadastro autônomo. B e C não foram implementadas neste passo.
+
+
 ## Etapa 7.5.4 — desenho técnico preparado; implementação pendente (21/10/2026)
 
 Proprietário autorizou avançar à 7.5.4. Análise identificou que shorts/comments lidos

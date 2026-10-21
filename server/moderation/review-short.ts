@@ -1,3 +1,4 @@
+import { isVisibleGame } from '../games/visibility.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 import { hasTechnicalEligibility } from '../submissions/decision.ts'
@@ -87,7 +88,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
       if (reservation?.shortId !== input.shortId) throw new ReviewError('invalid-video', 422)
       if (input.action === 'approve' || restoreStatus === 'published') {
         const game = await tx.get('games/' + String(short.gameId))
-        if (!game || game.status !== 'active') throw new ReviewError('invalid-video', 422)
+        if (!isVisibleGame(game)) throw new ReviewError('invalid-video', 422)
       }
       if (input.action === 'approve') {
         const owner = await tx.get('submissionOwners/' + input.shortId)

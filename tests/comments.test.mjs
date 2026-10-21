@@ -12,7 +12,7 @@ const origin='https://clipzone.test',shortId='a'.repeat(64),visitor='b'.repeat(6
 const now=()=>new Date('2026-10-21T12:00:00Z')
 const input=(patch={})=>({shortId,content:'Boa jogada!',requestId:crypto.randomUUID(),...patch})
 function memory(){
- const records=new Map([['shorts/'+shortId,{moderationStatus:'published',title:'Jogada'}]])
+ const records=new Map([['games/portal',{status:'active',officialName:'Portal'}],['shorts/'+shortId,{gameId:'portal',moderationStatus:'published',title:'Jogada'}]])
  let tail=Promise.resolve()
  const store={transact(work){
   const result=tail.then(async()=>{
@@ -157,7 +157,7 @@ test('admin approval, rejection, removal and restoration are revision checked, a
  records.set('shorts/'+shortId,{moderationStatus:'removed'})
  await assert.rejects(reviewComment(parseCommentReview(review(result.id,{action:'restore',revision:2})),'owner',{store,now}),/short-unavailable/)
  assert.equal(records.get('comments/'+result.id).reviewVersion,2)
- records.set('shorts/'+shortId,{moderationStatus:'published'})
+ records.set('shorts/'+shortId,{gameId:'portal',moderationStatus:'published'})
  await reviewComment(parseCommentReview(review(result.id,{action:'restore',revision:2})),'owner',{store,now})
  assert.equal(records.get('comments/'+result.id).moderationStatus,'approved')
  const pending=await submitComment(input({content:'idiota'}),visitor,{store,now})

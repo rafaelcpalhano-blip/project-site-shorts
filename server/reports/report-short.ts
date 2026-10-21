@@ -1,3 +1,4 @@
+import { shortGameVisible } from '../games/visibility.ts'
 import { validateReportInput } from '../../src/lib/validation/report-input.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 export class ReportError extends Error {}
@@ -9,7 +10,7 @@ export async function reportShort(input: unknown, visitor: string, options: { st
   return options.store.transact(async tx => {
     const short = await tx.get('shorts/' + report.shortId)
     // Do not expose whether an unavailable video exists privately.
-    if (!short || short.moderationStatus !== 'published') throw new ReportError('short-unavailable')
+    if (!short || short.moderationStatus !== 'published' || !await shortGameVisible(short, tx)) throw new ReportError('short-unavailable')
     const previous = await tx.get('reports/' + id)
     if (previous) return { received: true, duplicate: true }
     const summary = await tx.get('reportSummaries/' + report.shortId)

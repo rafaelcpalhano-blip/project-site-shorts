@@ -1,3 +1,4 @@
+import { handlePublicRead } from './public-read.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
 import { handleTitleSearch } from './title-search.ts'
 import { handleGameRequest } from './game-requests.ts'
@@ -45,6 +46,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'game-request' })
   const titleSearchEnabled = options.titleSearchEnabled ?? TITLE_SEARCH_ENABLED
   const titleSearchLimit = titleSearchEnabled ? createAttemptLimiter({ store: options.store, now: options.now, maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'title-search' }) : undefined
+  const publicReadLimit = createAttemptLimiter({store:options.store,now:options.now,maximum:options.maximumAttempts,windowMs:options.attemptWindowMs,scope:'public-read'})
   const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
@@ -72,6 +74,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
     if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
+    if (['/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit})
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })

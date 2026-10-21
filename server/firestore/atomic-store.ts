@@ -12,7 +12,10 @@ export interface StoreQuery {
   cursor?: { time: string; id: string }
 }
 export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time:string;id:string};limit:number}
+export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string}; limit: number }
 export interface AtomicStore {
+  get?: (path: string) => Promise<RecordData | null>
+  publicPage?: (query: PublicPageQuery) => Promise<Array<{id:string;data:RecordData}>>
   searchShorts?: (query:SearchShortsQuery)=>Promise<Array<{id:string;data:RecordData}>>
   scanShorts?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   query?: (query: StoreQuery) => Promise<Array<{ id: string; data: RecordData }>>

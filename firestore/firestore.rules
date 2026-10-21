@@ -4,22 +4,13 @@ service cloud.firestore {
     function bounded(maximum) {
       return request.query.limit != null && request.query.limit <= maximum;
     }
-    function publicShort(shortId) {
-      return get(/databases/$(database)/documents/shorts/$(shortId)).data.moderationStatus == 'published';
-    }
     match /games/{id} {
       allow get: if resource.data.status == 'active';
       allow list: if resource.data.status == 'active' && bounded(51);
     }
-    match /shorts/{id} {
-      allow get: if resource.data.moderationStatus == 'published';
-      allow list: if resource.data.moderationStatus == 'published' && bounded(16);
-    }
-    match /comments/{id} {
-      allow get: if resource.data.moderationStatus == 'approved' && publicShort(resource.data.shortId);
-      allow list: if resource.data.moderationStatus == 'approved'
-        && publicShort(resource.data.shortId) && bounded(21);
-    }
+    // Shorts/comments are served only by the API after checking their game.
+    match /shorts/{id} { allow read, write: if false; }
+    match /comments/{id} { allow read, write: if false; }
     // All client writes and all access to private collections are denied,
     // including requests carrying an administrative claim.
     match /{document=**} {

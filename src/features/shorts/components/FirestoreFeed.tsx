@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
-import type { Cursor } from '../../../lib/firebase/public-repository'
+import type { Cursor, PublicCursor } from '../../../lib/firebase/public-repository'
 import type { Game, Short } from '../types/models'
 import { ShortCard } from './ShortCard'
 import { FirestoreShortDialog } from './FirestoreShortDialog'
 import styles from './ShortFeed.module.css'
-type FeedCursor=Cursor|TitleSearchCursor
+type FeedCursor=PublicCursor|TitleSearchCursor
 interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean}
 const searchTitles=createTitleSearchClient()
 const repository = createPublicRepository(database)
@@ -43,10 +43,12 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   useEffect(() => {
     let active = true
     const controller=new AbortController()
-    const request=TITLE_SEARCH_ENABLED && query ? searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},controller.signal) : repository.listShorts(selectedGame || undefined,cursor as Cursor|undefined)
+    const request=TITLE_SEARCH_ENABLED && query ? searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},controller.signal) : repository.listShorts(selectedGame || undefined,cursor as PublicCursor|undefined,controller.signal)
     request.then(async result => {
       const ids = [...new Set(result.items.map(short => short.gameId))]
       const resolved = await Promise.all(ids.map(async id => {
+        const name = result.items.find(short => short.gameId === id)?.gameName
+        if (name) return [id, name]
         try { return [id, (await repository.getGame(id))?.name || 'Jogo indisponível'] }
         catch { return [id, 'Jogo indisponível'] }
       }))
@@ -87,8 +89,9 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     {loading ? <p role="status">Carregando shorts...</p> : error ? <div role="alert"><p>{error}</p><button onClick={refresh}>Tentar novamente</button></div>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
         <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
-      : <p role="status">{TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}
+      : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
+    {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
     <nav className={styles.pagination} aria-label="Paginação de shorts">
       <button disabled={loading || index === 0} onClick={() => { setLoading(true); setError(''); setIndex(index - 1) }}>← Anterior</button>
       {cursors.map((_, position) => <button key={position} disabled={loading || position === index} aria-label={'Página ' + (position + 1)}

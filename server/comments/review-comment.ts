@@ -1,3 +1,4 @@
+import { shortGameVisible } from '../games/visibility.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import { parseQuery } from '../moderation/queue.ts'
 import { counter, ReviewError } from '../moderation/review-short.ts'
@@ -28,7 +29,7 @@ export async function reviewComment(input: ReturnType<typeof parseCommentReview>
       input.action === 'reject' ? status === 'pending' : input.action === 'remove' ? status === 'approved' : status === 'removed'
     if (!valid) throw new ReviewError('stale-review')
     const short = await tx.get('shorts/' + commentId(comment.shortId))
-    if (['approve','restore'].includes(input.action) && short?.moderationStatus !== 'published') throw new ReviewError('short-unavailable',404)
+    if (['approve','restore'].includes(input.action) && (short?.moderationStatus !== 'published' || !await shortGameVisible(short, tx))) throw new ReviewError('short-unavailable',404)
     const now = options.now()
     if (!Number.isFinite(now.getTime())) throw new Error('invalid-clock')
     const next = input.action === 'approve' || input.action === 'restore' ? 'approved' : input.action === 'reject' ? 'rejected' : 'removed'

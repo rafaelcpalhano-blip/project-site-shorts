@@ -52,7 +52,22 @@ export function createRestStore(options: Options): AtomicStore {
     if (!response.ok) throw new FirestoreError(result.error?.status || 'UNAVAILABLE')
     return result
   }
+  const decodeDocument = (document: {name:string;fields?:Record<string,Value>}) => ({ id:document.name.split('/').at(-1)!, data:Object.fromEntries(Object.entries(document.fields || {}).map(([key,value]) => [key,decode(value)])) })
   return {
+    async get(path) {
+      const result = await request('batchGet', {documents:[name(path)]})
+      const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
+      return found ? decodeDocument(found).data : null
+    },
+    async publicPage(query) {
+      if (!['shorts','comments'].includes(query.kind) || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > (query.kind === 'shorts' ? 30 : 21) || query.parentId !== undefined && !/^[\w-]{1,128}$/.test(query.parentId) || query.kind === 'comments' && !query.parentId || query.cursor && (!/^[\w-]{1,128}$/.test(query.cursor.id) || !Number.isFinite(Date.parse(query.cursor.time)))) throw new Error('Consulta pública inválida')
+      const filters = [{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'EQUAL',value:encode(query.kind === 'shorts' ? 'published' : 'approved')}},
+        ...(query.parentId ? [{fieldFilter:{field:{fieldPath:query.kind === 'shorts' ? 'gameId' : 'shortId'},op:'EQUAL',value:encode(query.parentId)}}] : [])]
+      const selected = query.kind === 'shorts' ? ['title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName','moderationStatus'] : ['shortId','content','createdAt','moderationStatus']
+      const result = await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected.map(fieldPath=>({fieldPath}))},where:{compositeFilter:{op:'AND',filters}},orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
+        ...(query.cursor ? {startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}} : {})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
     async scanShorts(after) {
       if(after!==undefined&&!/^[\w-]{1,128}$/.test(after))throw new Error('Cursor inválido')
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,

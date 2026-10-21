@@ -1,11 +1,16 @@
+import { createRestStore } from '../../server/firestore/rest-store.ts'
+import { createPublicReadClient } from '../../src/lib/firebase/public-read-api.ts'
+import { createPublicApi } from '../../server/http/public-api.ts'
 import { before, after, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebase/rules-unit-testing'
+import { initializeTestEnvironment, assertFails } from '@firebase/rules-unit-testing'
 import { doc, setDoc, deleteDoc, updateDoc, getDoc, getDocs, collection, query, where, limit, Timestamp } from 'firebase/firestore'
 import { createPublicRepository } from '../../src/lib/firebase/public-repository.ts'
 let environment
 let database
+let reads
+const repositoryFor = db => createPublicRepository(db, reads)
 before(async () => {
   const host = process.env.FIRESTORE_EMULATOR_HOST
   if (host !== '127.0.0.1:8081') throw new Error('Testes exigem emulador em 127.0.0.1:8081')
@@ -15,6 +20,14 @@ before(async () => {
   })
   await environment.clearFirestore()
   database = environment.unauthenticatedContext().firestore()
+  const origin='https://clipzone.test',store=createRestStore({projectId:'demo-clipzone-tests',emulatorPort:8081})
+  const api=await createPublicApi({origin,store,now:()=>new Date(),visitorSecret:'ab'.repeat(32),maximumAttempts:100,attemptWindowMs:60000,allowSessionIssuance:async()=>true,verify:async()=>{throw Error('not-used')}})
+  let cookie=''
+  reads=createPublicReadClient(async(path,options)=>{
+    const response=await api(new Request(origin+path,{...options,headers:{...options.headers,origin,cookie}}))
+    const issued=response.headers.get('set-cookie');if(issued)cookie=issued.split(';')[0]
+    return response
+  })
   await environment.withSecurityRulesDisabled(async context => {
     const db = context.firestore()
     const date = Timestamp.fromMillis(100000)
@@ -40,7 +53,7 @@ before(async () => {
 })
 after(async () => { await environment?.cleanup() })
 test('feed pagina 15/15/4 sem repetir itens com datas iguais', async () => {
-  const repository = createPublicRepository(database)
+  const repository = repositoryFor(database)
   const first = await repository.listShorts()
   const second = await repository.listShorts(undefined, first.next)
   const third = await repository.listShorts(undefined, second.next)
@@ -53,14 +66,14 @@ test('feed pagina 15/15/4 sem repetir itens com datas iguais', async () => {
   assert.deepEqual((await repository.listShorts()).items, first.items)
 })
 test('filtro usa consulta por um jogo sem carregar a coleção inteira', async () => {
-  const repository = createPublicRepository(database)
+  const repository = repositoryFor(database)
   const first = await repository.listShorts('game-a')
   const second = await repository.listShorts('game-a', first.next)
   assert.equal(first.items.length, 15); assert.equal(second.items.length, 2)
   assert.ok([...first.items, ...second.items].every(item => item.gameId === 'game-a'))
 })
 test('catálogo público exclui jogos inativos', async () => {
-  const repository = createPublicRepository(database)
+  const repository = repositoryFor(database)
   assert.equal((await repository.listGames()).items.length, 2)
   assert.equal((await repository.getGame('game-a')).name, 'game-a')
   await assertFails(getDoc(doc(database, 'games', 'hidden')))
@@ -70,14 +83,14 @@ test('leituras de shorts pendentes e consultas sem restrições são negadas', a
   await assertFails(getDocs(query(collection(database, 'shorts'), limit(16))))
   await assertFails(getDocs(query(collection(database, 'shorts'), where('moderationStatus', '==', 'published'))))
   await assertFails(getDocs(query(collection(database, 'shorts'), where('moderationStatus', '==', 'published'), limit(17))))
-  await assertSucceeds(getDoc(doc(database, 'shorts', 's00')))
+  await assertFails(getDoc(doc(database, 'shorts', 's00')))
 })
 test('somente comentários aprovados de shorts públicos são lidos', async () => {
-  const repository = createPublicRepository(database)
+  const repository = repositoryFor(database)
   const page = await repository.listComments('s00')
   assert.deepEqual(page.items.map(item => item.id), ['approved'])
   for (const id of ['pending', 'rejected', 'removed', 'hidden-parent']) await assertFails(getDoc(doc(database, 'comments', id)))
-  await assertFails(repository.listComments('hidden'))
+  await assert.rejects(repository.listComments('hidden'), /indisponível/)
 })
 test('coleções privadas não podem ser lidas nem listadas', async () => {
   for (const name of ['gameRequests', 'submissionLimits', 'moderationLogs', 'adminConfig', 'videoIdentities', 'submissionOwners']) {
@@ -96,7 +109,28 @@ test('visitantes e clientes com claim admin não podem gravar, alterar ou exclui
   }
 })
 test('feed vazio retorna página vazia sem cursor', async () => {
-  const result = await createPublicRepository(database).listShorts('does-not-exist')
-  assert.deepEqual(result, { items: [], next: null })
+  const result = await repositoryFor(database).listShorts('does-not-exist')
+  assert.deepEqual(result, { items: [], next: null, limited: false })
 })
 
+
+test('estado do jogo bloqueia API e leitura direta; restauração não ressuscita vídeo removido', async () => {
+  const store=createRestStore({projectId:'demo-clipzone-tests',emulatorPort:8081})
+  const repository=repositoryFor(database)
+  for(const status of ['hidden','banned']) {
+    await store.transact(async tx=>{const game=await tx.get('games/game-b');tx.set('games/game-b',{...game,status})})
+    assert.equal((await repository.listShorts('game-b')).items.length,0)
+    const feed=await repository.listShorts();assert.ok(feed.items.every(short=>short.gameId!=='game-b'))
+    await assert.rejects(repository.getShort('s00'),/indisponível/)
+    await assert.rejects(repository.listComments('s00'),/indisponível/)
+    await assertFails(getDoc(doc(database,'games','game-b')))
+    await assertFails(getDoc(doc(database,'shorts','s00')))
+    await assertFails(getDocs(query(collection(database,'shorts'),where('moderationStatus','==','published'),limit(16))))
+    await assertFails(getDoc(doc(environment.authenticatedContext('owner',{admin:true}).firestore(),'shorts','s00')))
+  }
+  await store.transact(async tx=>{const game=await tx.get('games/game-b');tx.set('games/game-b',{...game,status:'active'})})
+  assert.equal((await repository.getShort('s00')).id,'s00')
+  await store.transact(async tx=>{const short=await tx.get('shorts/s00');tx.set('shorts/s00',{...short,moderationStatus:'removed'})})
+  await assert.rejects(repository.getShort('s00'),/indisponível/)
+  assert.equal((await store.get('comments/approved')).content,'approved')
+})

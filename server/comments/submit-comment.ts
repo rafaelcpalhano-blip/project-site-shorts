@@ -1,3 +1,4 @@
+import { shortGameVisible } from '../games/visibility.ts'
 import { validateCommentSubmission } from '../../src/lib/validation/comment-input.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import { moderateText } from './moderate-text.ts'
@@ -21,7 +22,7 @@ export async function submitComment(input: unknown, visitorHash: string, options
     const now = options.now()
     if (!Number.isSafeInteger(now.getTime()) || now.getTime() < 0) throw new Error('invalid-clock')
     const short = await tx.get('shorts/' + data.shortId)
-    if (short?.moderationStatus !== 'published') throw new CommentError('short-unavailable', 404)
+    if (short?.moderationStatus !== 'published' || !await shortGameVisible(short, tx)) throw new CommentError('short-unavailable', 404)
     const receipt = await tx.get('commentRequests/' + id)
     const previous = await tx.get('comments/' + id)
     const recent = await tx.get('commentDedup/' + fingerprint)

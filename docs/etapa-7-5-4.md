@@ -1,6 +1,49 @@
 # Etapa 7.5.4 — proposta técnica para aprovação
 
-Situação: análise concluída; implementação não iniciada. Data: 21/10/2026.
+Situação: subentrega A implementada e validada localmente após autorização explícita.
+Subentregas B/C continuam não implementadas. Data: 21/10/2026.
+
+## Resultado da subentrega A
+
+- POST /api/feed, /api/shorts/detail e /api/comments/list com origem HTTPS, sessão
+  assinada, corpo limitado, limitador independente publicReadAttempts, DTO público
+  e respostas sem cache. Falhas internas não expõem metadados privados.
+- Feed busca até dois lotes de 15 candidatos (máximo 30), retorna até 15, verifica
+  jogo ativo e reutiliza sua leitura dentro da chamada. Cursor vinculado ao jogo;
+  comentários em lotes de 20 com consulta até 21 e cursor vinculado ao short.
+  DTO inclui nome do jogo, evitando releitura do nome por card no caminho ativo.
+- Nenhum índice adicional necessário: consultas reutilizam os filtros/ordenações
+  existentes. Nenhum novo campo persistente em games/shorts/comments. A coleção
+  privada publicReadAttempts reutiliza o mecanismo de limites já existente.
+- Repositório usa API para shorts/comentários e mantém SDK apenas para catálogo/fichas.
+  Firestore nega leituras diretas de shorts/comments, inclusive clientes com claim admin;
+  administração autorizada continua pela API. Regras aplicadas somente no emulador.
+- Política compartilhada isVisibleGame/shortGameVisible. Comentários/denúncias
+  verificam jogo na transação; aprovação/restauração de comentários também. Publicação,
+  confirmação IGDB e restauração de shorts reutilizam a condição ativa já existente.
+- Modal só monta player/formulários após leitura autorizada; indisponibilidade impede
+  exibição do player. Atualizações de estado são percebidas nas próximas consultas,
+  sem monitoramento em tempo real ou revogação de conteúdo já entregue ao navegador.
+- Página pode ficar parcial/vazia com continuação; lote exato pode exigir chamada
+  final vazia. Nunca informar esgotamento apenas por atingir 30 candidatos.
+- O orçamento exclui leituras/gravações do limitador, mínimos de consultas e tentativas
+  transacionais. Comentários verificam short+jogo antes de consultar aprovados.
+  Limitação por sessão não garante identidade única por pessoa nem substitui a
+  preparação de antiautomação/retenção da etapa de produção.
+- 61 testes relacionados aprovados: 38 unitários/HTTP/cliente/regressões e 23 no
+  emulador isolado (9 acesso público, 6 comentários, 2 denúncias, 6 pesquisa preservada
+  e publicação/deduplicação/cota). Reexecuções limitadas aos casos/fixtures corrigidos.
+  Lint completo e build aprovados pela integração estrutural; último ajuste em teste
+  conferido com ESLint localizado. Nenhuma suíte completa de todos os testes.
+- API de desenvolvimento reiniciada; HTTPS real conferido: feed 200 com 3 registros,
+  comentários 200 e pesquisa textual 404. Dados existentes preservados; sem migração,
+  exclusão, publicação de conteúdo, dependências, configuração externa ou deploy.
+- Conferência visual final pelo proprietário ainda necessária: atualizar feed,
+  filtrar por jogo, abrir short, carregar/enviar comentário normal. Sessões locais
+  em memória encerraram com o reinício.
+
+As seções abaixo registram o desenho aprovado e as partes ainda pendentes.
+
 Especificação aprovada: Clipzone_Prompt_Etapa_7_5_Atualizado.md, anexada pelo proprietário.
 Não reabre publicação automática, classificação declarada pelo visitante ou suporte provisório.
 
@@ -14,7 +57,7 @@ Não reabre publicação automática, classificação declarada pelo visitante o
 - Regras Firestore não são filtros. Consultas globais não podem simplesmente descartar registros proibidos; depender de consultas cruzadas também introduz limites de acessos às regras.
 - Não atualizar todos os shorts numa única transação nem apagar vídeos/vínculos. Bases grandes e interrupções exigiriam propagação retomável; esta proposta evita essa dependência.
 
-## Ajuste arquitetural proposto — requer aprovação
+## Ajuste arquitetural aprovado — implementado na subentrega A
 
 Usar a API existente para leituras públicas de shorts e comentários. Firestore permanece único banco;
 sem novo serviço, biblioteca, plano pago, deploy ou infraestrutura adicional.
@@ -133,8 +176,8 @@ Lint/build quando integração estrutural ocorrer; sem repetir suítes sem alter
 
 ## Decisões solicitadas
 
-1. Aprovar ajuste das leituras públicas de shorts/comentários pela API e negar leituras diretas,
-   com orçamento explícito e páginas eventualmente parciais, antes da implementação da subentrega A.
+1. Aprovado e implementado localmente: leituras públicas pela API, bloqueio das leituras diretas,
+   orçamento explícito e páginas eventualmente parciais.
 2. Posteriormente aprovar limite operacional de cadastro e execução local do preenchimento das
    reservas de nomes legados. Não executar diagnóstico/escrita migratória sem escopo autorizado.
 3. Sem deploy, faturamento ou alterações externas. Demais regras do documento permanecem aprovadas.

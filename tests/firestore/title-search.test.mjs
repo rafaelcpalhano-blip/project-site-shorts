@@ -2,7 +2,7 @@ import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
 import {test,before,after} from 'node:test'
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
-import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/rules-unit-testing'
+import {initializeTestEnvironment,assertFails} from '@firebase/rules-unit-testing'
 import {getDoc,setDoc,doc,getDocs,query,collection,where,limit} from 'firebase/firestore'
 import {createRestStore} from '../../server/firestore/rest-store.ts'
 import {searchTitles} from '../../server/search/search-titles.ts'
@@ -59,7 +59,7 @@ test('publicação respeita ativação dos fragmentos sem alterar deduplicação
  const saved=await read('shorts/'+first.id)
  if(TITLE_SEARCH_ENABLED) assert.ok(saved.searchFragments.includes('vit'))
  else {assert.equal(saved.searchFragments,undefined);assert.equal(saved.titleSearchVersion,undefined)}
- await assertSucceeds(getDoc(doc(db,'shorts',first.id)))
+ await assertFails(getDoc(doc(db,'shorts',first.id)))
  if(TITLE_SEARCH_ENABLED) assert.equal((await searchTitles({query:'final 0'},store)).items[0].id,first.id)
  else assert.equal((await searchTitles({query:'final 0'},store)).items.length,0)
  await assert.rejects(submitShort(input(0),visitor,deps),/duplicate-video/)

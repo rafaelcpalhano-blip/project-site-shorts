@@ -1,3 +1,4 @@
+import { isVisibleGame } from '../games/visibility.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
 import { titleSearchFields } from '../../src/lib/validation/title-search.ts'
 import { validateSubmissionInput, validateVideoTitle } from '../../src/lib/validation/public-input.ts'
@@ -39,7 +40,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     const dateKey = saoPauloDayKey(now)
     const quotaPath = 'submissionLimits/' + visitorHash + '-' + dateKey
     const game = await transaction.get('games/' + submission.gameId)
-    if (!game || game.status !== 'active') throw new SubmissionError('invalid-game')
+    if (!game || !isVisibleGame(game)) throw new SubmissionError('invalid-game')
     const reserved = await transaction.get('videoIdentities/' + identityId)
     if (reserved) {
       const existing = await transaction.get('shorts/' + identityId)

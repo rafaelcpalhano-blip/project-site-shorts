@@ -16,7 +16,7 @@ before(async()=>{
 after(async()=>{await environment?.cleanup()})
 test('concurrent reports deduplicate per visitor, aggregate distinct visitors and leave publication untouched',async()=>{
  await environment.clearFirestore()
- await environment.withSecurityRulesDisabled(async context=>{await setDoc(doc(context.firestore(),'shorts',shortId),{moderationStatus:'published'})})
+ await environment.withSecurityRulesDisabled(async context=>{await setDoc(doc(context.firestore(),'shorts',shortId),{gameId:'portal',moderationStatus:'published'});await setDoc(doc(context.firestore(),'games','portal'),{status:'active'})})
  const results=await Promise.all([reportShort(input,visitor,options),reportShort(input,visitor,options),reportShort(input,'c'.repeat(64),options)])
  assert.equal(results.filter(result=>!result.duplicate).length,2)
  await environment.withSecurityRulesDisabled(async context=>{
@@ -31,7 +31,7 @@ test('concurrent reports deduplicate per visitor, aggregate distinct visitors an
   await assertFails(getDocs(collection(publicDb,'reports')))
   await assertFails(getDoc(doc(publicDb,'reportSummaries',shortId)))
   await assertFails(setDoc(doc(publicDb,'reports','forged'),{shortId}))
-  assert.equal((await getDoc(doc(publicDb,'shorts',shortId))).exists(),true)
+  await assertFails(getDoc(doc(publicDb,'shorts',shortId)))
  })
 })
 test('unavailable content and forged input cannot create reports',async()=>{

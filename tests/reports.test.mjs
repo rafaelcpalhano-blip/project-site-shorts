@@ -5,7 +5,7 @@ import { createReportClient } from '../src/features/reports/report-api.ts'
 import { SubmissionError } from '../server/submissions/submit-short.ts'
 const origin='https://clipzone.example', input={shortId:'a'.repeat(64),reason:'spam'}
 const request=(body=input,headers={})=>new Request(origin+'/api/reports',{method:'POST',headers:{origin,'content-type':'application/json',...headers},body:JSON.stringify(body)})
-const deps={origin,now:()=>new Date(),resolveVisitor:async()=> 'b'.repeat(64),checkAbuse:async()=>{},store:{transact:async work=>work({get:async path=>path.startsWith('shorts/')?{moderationStatus:'published'}:null,create(){},set(){}})}}
+const deps={origin,now:()=>new Date(),resolveVisitor:async()=> 'b'.repeat(64),checkAbuse:async()=>{},store:{transact:async work=>work({get:async path=>path.startsWith('shorts/')?{gameId:'portal',moderationStatus:'published'}:path==='games/portal'?{status:'active'}:null,create(){},set(){}})}}
 test('HTTP requires trusted session, origin, JSON, rate limit and bounded body',async()=>{
  assert.equal((await handleReport(request())).status,503)
  assert.equal((await handleReport(new Request(origin),deps)).status,405)

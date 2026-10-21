@@ -1,3 +1,4 @@
+import { isVisibleGame } from './visibility.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import type { CatalogGame } from './igdb.ts'
 export class GameConfirmationError extends Error {
@@ -23,7 +24,7 @@ export async function confirmGame(input: unknown, dependencies: {
   const result = await dependencies.store.transact(async transaction => {
     const existing = await transaction.get('games/' + id)
     if (existing) {
-      if (existing.status !== 'active' || existing.externalId !== externalId || existing.source !== 'IGDB') throw new GameConfirmationError('game-unavailable')
+      if (!isVisibleGame(existing) || existing.externalId !== externalId || existing.source !== 'IGDB') throw new GameConfirmationError('game-unavailable')
       return { id, name: String(existing.officialName), created: false }
     }
     transaction.create('games/' + id, {
