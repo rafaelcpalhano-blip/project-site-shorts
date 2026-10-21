@@ -1,3 +1,4 @@
+import { RefreshButton } from './RefreshButton'
 import { useEffect, useRef, useState } from 'react'
 import type { User } from 'firebase/auth'
 import { fetchQueue, fetchDetail, sendReview, AdminRequestError } from '../services/moderation-api'
@@ -30,6 +31,10 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       setError(failure instanceof Error ? failure.message : 'Operação indisponível. Tente novamente.')
     } finally { lock.current = false; if (active.current) setWorking(false) }
   }
+  const load = async (selectedQueue: 'reports' | 'pending' | 'removed' = queue) => {
+    const result = await fetchQueue(user, selectedQueue)
+    if (active.current) { setPage(result); setHistory([]); setDetail(null); setAction(null); setReason('') }
+  }
   const open = async (id: string) => {
     const result = await fetchDetail(user, id)
     if (active.current) { setDetail(result); setAction(null); setReason('') }
@@ -42,13 +47,11 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
     <h2 id="moderation-heading">Denúncias e revisão</h2>
     <p>Denúncias entram para análise e mantêm o vídeo visível. Os totais representam sessões anônimas, não pessoas verificadas.</p>
     <div className={styles.actions}>
-      {(['reports', 'pending', 'removed'] as const).map(value => <button key={value} disabled={working} aria-pressed={queue === value} onClick={() => {
-        setQueue(value); setPage(null); setDetail(null); setHistory([]); setAction(null); setReason(''); setError(''); setFeedback('')
-      }}>{value === 'reports' ? 'Denúncias abertas' : value === 'pending' ? 'Vídeos pendentes' : 'Vídeos removidos'}</button>)}
-      <button disabled={working} onClick={() => void run(async () => {
-        const result = await fetchQueue(user, queue)
-        if (active.current) { setPage(result); setHistory([]); setDetail(null); setAction(null) }
-      })}>{page ? 'Atualizar fila' : 'Carregar fila'}</button>
+      {(['reports', 'pending', 'removed'] as const).map(value => <button key={value} disabled={working} aria-pressed={queue === value} onClick={() => void run(async () => {
+        setQueue(value); setPage(null); setDetail(null); setHistory([]); setAction(null); setReason('')
+        await load(value)
+      })}>{value === 'reports' ? 'Denúncias abertas' : value === 'pending' ? 'Vídeos pendentes' : 'Vídeos removidos'}</button>)}
+      <RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working} onClick={() => void run(() => load())} />
     </div>
     {working && <p role="status">Consultando o servidor…</p>}
     {error && <p role="alert" className="error">{error}</p>}
@@ -117,7 +120,7 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
             await sendReview(user, detail, action, reason)
             if (!active.current) return
             setDetail(null); setAction(null); setReason(''); setPage(null); setHistory([])
-            setFeedback('Decisão registrada. Carregue a fila para continuar.')
+            setFeedback('Decisão registrada. Use o botão de atualização para recarregar a fila.')
           })}>Confirmar decisão</button>
           <button disabled={working} onClick={() => setAction(null)}>Cancelar</button>
         </div>

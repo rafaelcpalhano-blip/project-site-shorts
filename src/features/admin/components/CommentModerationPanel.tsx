@@ -1,3 +1,4 @@
+import { RefreshButton } from './RefreshButton'
 import { useEffect, useRef, useState } from 'react'
 import type { User } from 'firebase/auth'
 import { AdminRequestError } from '../services/moderation-api'
@@ -28,17 +29,20 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
       setError(failure instanceof Error?failure.message:'Não foi possível concluir a operação.')
     }finally{lock.current=false;if(active.current)setWorking(false)}
   }
-  const load=async(cursor?:CommentCursor)=>{
-    const result=await fetchCommentQueue(user,status,cursor)
+  const load=async(cursor?:CommentCursor,selectedStatus:CommentStatus=status)=>{
+    const result=await fetchCommentQueue(user,selectedStatus,cursor)
     if(active.current){setPage(result);setDetail(null);setAction(null);setReason('')}
   }
   return <section className={styles.panel} aria-labelledby="comment-review-heading">
     <h2 id="comment-review-heading">Comentários e revisão de texto</h2>
     <p>A triagem local pode errar ou deixar passar conteúdo. Confira o contexto antes de decidir.</p>
     <div className={styles.actions}>{(Object.keys(statuses) as CommentStatus[]).map(value=><button key={value} disabled={working}
-      aria-pressed={status===value} onClick={()=>{setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setError('');setMessage('')}}>
+      aria-pressed={status===value} onClick={()=>void run(async()=>{
+        setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('')
+        await load(undefined,value)
+      })}>
       {statuses[value]}</button>)}
-      <button disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})}>{page?'Atualizar comentários':'Carregar comentários'}</button>
+      <RefreshButton label="Atualizar comentários" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />
     </div>
     {working&&<p role="status">Consultando comentários…</p>}
     {error&&<p role="alert">{error}</p>}
