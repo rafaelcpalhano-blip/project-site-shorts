@@ -6,6 +6,8 @@ const messages: Record<string, string> = {
   'abuse-limit': 'Muitas tentativas. Aguarde antes de tentar novamente.',
   'invalid-game': 'Selecione um jogo disponível no catálogo.',
   'video-not-found': 'O vídeo não foi encontrado.',
+  'verification-incomplete': 'Não foi possível confirmar os requisitos técnicos do vídeo. Tente novamente mais tarde; a tentativa não consumiu sua cota.',
+  'embedding-disabled': 'A fonte não permite incorporar este vídeo. Escolha outro vídeo.',
   'not-a-short': 'O vídeo não possui um formato curto aceito.',
   'invalid-session': 'Não foi possível validar sua sessão. Tente novamente.',
   'invalid-input': 'Confira o link, o jogo e o nome do canal.',

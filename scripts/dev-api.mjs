@@ -7,9 +7,8 @@ import { createServer as createViteServer } from 'vite'
 import { createPublicApi } from '../server/http/public-api.ts'
 import { createRestStore } from '../server/firestore/rest-store.ts'
 import { createIgdbCatalog } from '../server/games/igdb.ts'
-import { createMetadataVerifier } from '../server/videos/verify.ts'
+import { createConfiguredVideoVerifier } from '../server/videos/configured.ts'
 import { createTwitchClipVerifier } from '../server/videos/twitch.ts'
-import { createTwitchGameResolver } from '../server/games/twitch-mapping.ts'
 import { localApiBridge } from './local-api-bridge.mjs'
 
 const origin = 'https://127.0.0.1:5174'
@@ -27,7 +26,6 @@ try {
   const catalog = clientId && clientSecret ? createIgdbCatalog({ clientId, clientSecret }) : undefined
   const store = createRestStore({ projectId: 'demo-clipzone', emulatorPort: 8080 })
   const twitch = catalog ? createTwitchClipVerifier({ clientId, accessToken: catalog.accessToken,
-    twitchGameId: createTwitchGameResolver({ store, clientId, accessToken: catalog.accessToken }),
   }) : undefined
   const adminKey = process.env.FIREBASE_AUTH_API_KEY?.trim()
   const adminAppId = process.env.FIREBASE_AUTH_APP_ID?.trim()
@@ -42,8 +40,8 @@ try {
     origin, visitorSecret: randomBytes(32).toString('hex'),
     store, admin,
     now: () => new Date(), maximumAttempts: 20, attemptWindowMs: 60_000,
-    // Technical confirmation permits publication; flagged or inconclusive evidence stays pending.
-    verify: createMetadataVerifier(twitch ? { Twitch: twitch } : {}),
+    // Technical confirmation permits publication; flags require review, uncertainty permits retry.
+    verify: createConfiguredVideoVerifier({ twitch, youtubeApiKey: process.env.YOUTUBE_API_KEY }),
     gameSearch: catalog ? { ...catalog, maximumAttempts: 20, windowMs: 60_000 } : undefined,
     allowSessionIssuance: async () => {
       if (Date.now() - windowStarted >= 60_000) { windowStarted = Date.now(); issued = 0 }

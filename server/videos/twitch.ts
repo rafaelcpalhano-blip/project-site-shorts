@@ -3,8 +3,8 @@ import type { VideoEvidence } from '../submissions/decision.ts'
 interface Options {
   clientId: string
   accessToken: () => Promise<string>
-  // Mapping must come from the verified server catalog, never submission JSON.
-  twitchGameId: (gameId: string) => Promise<string | null>
+  // Optional informational enrichment, never a publication requirement.
+  twitchGameId?: (gameId: string) => Promise<string | null>
   fetcher?: typeof fetch
 }
 const unknown = (): VideoEvidence => ({ existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] })
@@ -34,12 +34,12 @@ export function createTwitchClipVerifier(options: Options) {
       if (typeof clip.duration === 'number' && Number.isFinite(clip.duration) && clip.duration > 0) evidence.shortFormat = 'confirmed'
       if (typeof clip.title === 'string' && clip.title.trim() && clip.title.length <= 500 &&
           ![...clip.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = clip.title.trim()
-      const expected = await options.twitchGameId(submission.gameId)
+      const expected = await options.twitchGameId?.(submission.gameId)
       if (expected && /^[1-9]\d*$/.test(expected) && typeof clip.game_id === 'string' && /^[1-9]\d*$/.test(clip.game_id)) {
         evidence.gameMatch = expected === clip.game_id ? 'confirmed' : 'mismatch'
       }
       // Category and title metadata do not analyze video/audio or prove embed availability.
-      // Moderation remains unavailable, preventing automatic publication from metadata alone.
+      // Moderation remains unavailable; this does not imply an audiovisual safety verdict.
       return evidence
     } catch { return evidence }
   }

@@ -30,6 +30,18 @@ test('cliente interrompe sem sessão, ignora mensagens internas e não repete en
   await assert.rejects(() => networkFailure(input))
   assert.equal(calls, 2)
 })
+test('cliente orienta nova tentativa técnica sem repetir envio nem confiar na mensagem do servidor',async()=>{
+  for(const [code,message] of [['verification-incomplete',/não consumiu sua cota/],['embedding-disabled',/não permite incorporar/]]){
+    let calls=0
+    const send=createSubmissionClient(async path=>{
+      calls++
+      return path==='/api/session'?new Response(null,{status:204}):Response.json({error:code,message:'private details'},{status:code==='verification-incomplete'?503:422})
+    })
+    await assert.rejects(send(input),message)
+    assert.equal(calls,2)
+  }
+})
+
 test('cliente rejeita sucesso inconsistente e valida entrada antes da rede', async () => {
   const malformed = createSubmissionClient(async path => path === '/api/session' ? new Response(null, { status: 204 }) : Response.json({ id: 'a'.repeat(64), status: 'published', remaining: 4 }, { status: 202 }))
   await assert.rejects(() => malformed(input), /Resposta de envio inesperada/)

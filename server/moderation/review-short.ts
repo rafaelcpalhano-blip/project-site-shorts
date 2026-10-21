@@ -1,5 +1,6 @@
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
+import { hasTechnicalEligibility } from '../submissions/decision.ts'
 import { validateSubmissionInput } from '../../src/lib/validation/public-input.ts'
 import { saoPauloDayKey } from '../../src/lib/validation/day-key.ts'
 import type { ReviewAction } from '../../src/features/admin/types/moderation.ts'
@@ -55,7 +56,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
     if (input.action === 'approve' || restoreStatus === 'published') {
       const evidence = await options.verify(submission)
       // Human review may resolve content flags; technical uncertainty cannot be overridden.
-      if (evidence.existence !== 'confirmed' || evidence.shortFormat !== 'confirmed' || evidence.gameMatch !== 'confirmed') {
+      if (!hasTechnicalEligibility(evidence)) {
         throw new ReviewError('verification-incomplete', 422)
       }
     }

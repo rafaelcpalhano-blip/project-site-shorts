@@ -9,7 +9,7 @@ import { loadQueue, loadDetail } from '../../server/moderation/queue.ts'
 import { reportShort } from '../../server/reports/report-short.ts'
 import { submitShort } from '../../server/submissions/submit-short.ts'
 const projectId='demo-clipzone-tests', visitor='b'.repeat(64), now=()=>new Date('2026-10-21T12:00:00Z')
-const clean={existence:'confirmed',shortFormat:'confirmed',gameMatch:'confirmed',moderation:'unavailable',flags:[]}
+const clean={existence:'confirmed',shortFormat:'confirmed',gameMatch:'unknown',moderation:'unavailable',flags:[]}
 const store=createRestStore({projectId,emulatorPort:8081}), options={store,now,verify:async()=>clean}
 let environment
 before(async()=>{
@@ -24,7 +24,7 @@ async function seed(status='published', quota=0) {
   tx.set('submissionLimits/'+visitor+'-2026-10-21',{identifierHash:visitor,dateKey:'2026-10-21',count:quota})
  })
  return submitShort({url:'https://clips.twitch.tv/AdminReviewClip',gameId:'lol',title:'Jogada gamer'},
-  visitor,{...options,checkAbuse:async()=>{},verify:async()=>({...clean,gameMatch:status==='pending'?'unknown':'confirmed'})})
+  visitor,{...options,checkAbuse:async()=>{},verify:async()=>({...clean,gameMatch:'unknown',flags:status==='pending'?['threat']:[]})})
 }
 const action=(id,patch={})=>({shortId:id,action:'dismiss',reason:'Análise humana concluída',revision:0,reportCount:1,...patch})
 async function read(path){return store.transact(tx=>tx.get(path))}
@@ -98,6 +98,9 @@ test('quota exhaustion, technical uncertainty and inactive game leave pending vi
  const input=action(id,{action:'approve',reportCount:0})
  await assert.rejects(reviewShort(input,'owner',options),/daily-limit/)
  await assert.rejects(reviewShort(input,'owner',{...options,verify:async()=>({...clean,existence:'unknown'})}),/verification-incomplete/)
+ for (const embedding of ['blocked','unknown']) {
+  await assert.rejects(reviewShort(input,'owner',{...options,verify:async()=>({...clean,embedding})}),/verification-incomplete/)
+ }
  await store.transact(async tx=>tx.set('games/lol',{status:'disabled'}))
  await assert.rejects(reviewShort(input,'owner',options),/invalid-video/)
  assert.equal((await read('shorts/'+id)).moderationStatus,'pending')
@@ -177,6 +180,9 @@ test('failed technical checks, inactive game and data changes preserve removed s
  const input=action(id,{action:'restore',revision:1,reportCount:0})
  const quota=await read('submissionLimits/'+visitor+'-2026-10-21')
  await assert.rejects(reviewShort(input,'owner',{...options,verify:async()=>({...clean,existence:'missing'})}),/verification-incomplete/)
+ for (const embedding of ['blocked','unknown']) {
+  await assert.rejects(reviewShort(input,'owner',{...options,verify:async()=>({...clean,embedding})}),/verification-incomplete/)
+ }
  await store.transact(async tx=>tx.set('games/lol',{status:'disabled'}))
  await assert.rejects(reviewShort(input,'owner',options),/invalid-video/)
  await store.transact(async tx=>tx.set('games/lol',{status:'active'}))

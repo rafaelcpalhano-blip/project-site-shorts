@@ -48,6 +48,8 @@ const publicErrors: Record<string, { status: number; message: string }> = {
   'daily-limit': { status: 429, message: 'Você atingiu o limite de cinco publicações hoje.' },
   'invalid-game': { status: 422, message: 'Selecione um jogo disponível no catálogo.' },
   'video-not-found': { status: 422, message: 'O vídeo não foi encontrado.' },
+  'verification-incomplete': { status: 503, message: 'Não foi possível confirmar os requisitos técnicos do vídeo. Tente novamente mais tarde; a tentativa não consumiu sua cota.' },
+  'embedding-disabled': { status: 422, message: 'A fonte não permite incorporar este vídeo. Escolha outro vídeo.' },
   'not-a-short': { status: 422, message: 'O vídeo não possui um formato curto aceito.' },
   'abuse-limit': { status: 429, message: 'Muitas tentativas. Aguarde antes de tentar novamente.' },
 }

@@ -8,7 +8,7 @@ const messages: Record<string, string> = {
   'restore-unavailable': 'Não há histórico seguro para restaurar este registro. O vídeo permanece removido.',
   'stale-review': 'O vídeo ou as denúncias mudaram. Reabra os detalhes antes de decidir.',
   'daily-limit': 'O autor já atingiu cinco publicações hoje. O estado do vídeo foi preservado.',
-  'verification-incomplete': 'A fonte ainda não confirmou existência, formato curto e jogo. O estado do vídeo foi preservado.',
+  'verification-incomplete': 'A fonte ainda não confirmou existência, formato curto e condições técnicas. O estado do vídeo foi preservado.',
   'invalid-video': 'O vídeo ou o jogo não pode ser publicado com os dados atuais.',
   'short-unavailable': 'Vídeo indisponível. Atualize a fila.',
   'invalid-input': 'Confira o motivo e os dados da revisão.',

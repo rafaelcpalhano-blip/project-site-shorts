@@ -13,6 +13,6 @@ test('metadata composition publishes technically confirmed clips but preserves f
 })
 test('missing adapters and provider failures never authorize publication', async () => {
   for (const adapters of [{}, {Twitch:async()=>{throw new Error('offline')}}]) {
-    assert.equal(decidePublication(await createMetadataVerifier(adapters)(input)).status,'pending')
+    assert.equal(decidePublication(await createMetadataVerifier(adapters)(input)).status,'retry')
   }
 })

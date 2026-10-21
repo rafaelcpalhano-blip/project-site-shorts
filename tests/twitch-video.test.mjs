@@ -42,6 +42,14 @@ test('Twitch não infere jogo nem formato quando metadados faltam', async () => 
   assert.equal(result.title, undefined)
   assert.equal((await verifier({ data: [clip] }, { twitchGameId: async () => null })(input)).gameMatch, 'unknown')
 })
+test('Twitch game mapping is optional and mismatch or lookup failure does not block valid clips',async()=>{
+  for(const patch of [{twitchGameId:undefined},{twitchGameId:async()=>null},{twitchGameId:async()=>'999'},
+    {twitchGameId:async()=>{throw new Error('mapping unavailable')}}]){
+    const result=await verifier({data:[clip]},patch)(input)
+    assert.equal(decidePublication(result).status,'published')
+  }
+})
+
 test('links não Twitch ou host arbitrário não provocam requisições', async () => {
   let calls = 0
   const verify = verifier(null, { fetcher: async () => { calls++; return Response.json({ data: [] }) } })

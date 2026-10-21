@@ -29,7 +29,8 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
   try { evidence = await dependencies.verify(submission) }
   catch { evidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] } }
   const decision = decidePublication(evidence)
-  if (decision.status === 'rejected') throw new SubmissionError(decision.reason)
+  // Unverified attempts never reserve an identity, create a pending item or spend quota.
+  if (decision.status === 'rejected' || decision.status === 'retry') throw new SubmissionError(decision.reason)
   const identityId = await hash(submission.identity)
   return dependencies.store.transact(async transaction => {
     const now = dependencies.now()

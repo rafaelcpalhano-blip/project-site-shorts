@@ -19,7 +19,7 @@ test('TikTok consulta URL canônica no oEmbed oficial e retorna somente evidênc
   assert.ok(calls[0].options.signal)
   assert.equal(result.existence, 'confirmed')
   assert.equal(result.title, 'Jogada')
-  assert.equal(decidePublication(result).status, 'pending')
+  assert.equal(decidePublication(result).status, 'retry')
   assert.ok(!JSON.stringify(result).includes('script'))
   assert.ok(!JSON.stringify(result).includes('evil.example'))
 })
@@ -51,9 +51,9 @@ test('roteador seleciona a URL e publica evidência técnica completa sem afirma
   assert.equal(result.moderation, 'unavailable')
   assert.equal(decidePublication(result).status, 'published')
 })
-test('roteador mantém adaptador ausente, erro ou URL inválida pendentes', async () => {
+test('roteador permite nova tentativa para adaptador ausente, erro ou URL inválida', async () => {
   for (const verify of [createMetadataVerifier({}), createMetadataVerifier({ TikTok: async () => { throw new Error('private') } })]) {
-    assert.equal(decidePublication(await verify(input)).status, 'pending')
+    assert.equal(decidePublication(await verify(input)).status, 'retry')
   }
-  assert.equal(decidePublication(await createMetadataVerifier({})({ ...input, url: 'invalid' })).status, 'pending')
+  assert.equal(decidePublication(await createMetadataVerifier({})({ ...input, url: 'invalid' })).status, 'retry')
 })

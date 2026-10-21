@@ -43,10 +43,27 @@ test('HTTP distingue publicado de pendente e não permite cache', async () => {
   assert.equal(published.status, 201)
   assert.equal((await published.json()).status, 'published')
   assert.equal(published.headers.get('cache-control'), 'no-store')
-  const pending = await handleSubmission(request(), dependencies({ verify: async () => { throw new Error('provider down') } }))
+  const pending = await handleSubmission(request(), dependencies({ verify: async () => ({
+    existence:'confirmed',shortFormat:'confirmed',gameMatch:'unknown',moderation:'flagged',flags:['threat'],
+  }) }))
   assert.equal(pending.status, 202)
   assert.equal((await pending.json()).status, 'pending')
 })
+test('HTTP returns retryable technical failures without transactions, quota consumption or private errors', async()=>{
+  for (const verify of [
+    async()=>{throw new Error('private provider details')},
+    async()=>({existence:'confirmed',shortFormat:'unknown',gameMatch:'unknown',moderation:'unavailable',flags:[]}),
+  ]) {
+    const result=await handleSubmission(request(),dependencies({verify,
+      store:{transact:async()=>assert.fail('must not reserve a video or spend quota')}}))
+    assert.equal(result.status,503)
+    const body=await result.json()
+    assert.equal(body.error,'verification-incomplete')
+    assert.match(body.message,/não consumiu sua cota/)
+    assert.ok(!JSON.stringify(body).includes('private provider details'))
+  }
+})
+
 test('HTTP apresenta limites e duplicatas públicas sem revelar falhas internas', async () => {
   for (const [code, expected] of [['daily-limit', 429], ['abuse-limit', 429], ['duplicate-video', 409]]) {
     const result = await handleSubmission(request(), dependencies({ checkAbuse: async () => { throw new SubmissionError(code) } }))

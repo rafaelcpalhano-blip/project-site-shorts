@@ -24,6 +24,9 @@ export function parseVideoUrl(value: string) {
     if (id) { platform = 'Twitch'; canonical = 'https://clips.twitch.tv/' + id }
   }
   if (!id || !platform || !canonical) {
+    if (['youtube.com', 'www.youtube.com', 'm.youtube.com', 'youtu.be', 'www.youtu.be'].includes(host)) {
+      throw new Error('Use o link https://www.youtube.com/shorts/ID. Abra o Short e copie o link no menu Compartilhar; links /watch e youtu.be não são aceitos.')
+    }
     throw new Error('Use um link completo de YouTube Shorts, TikTok (/video/) ou Twitch Clips. Links encurtados não são resolvidos neste protótipo.')
   }
   return { identity: platform + ':' + id, platform, url: canonical }

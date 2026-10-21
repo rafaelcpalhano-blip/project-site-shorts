@@ -7,7 +7,7 @@ import { createRestStore } from '../../server/firestore/rest-store.ts'
 import { submitShort } from '../../server/submissions/submit-short.ts'
 let environment
 const visitor = 'a'.repeat(64)
-const clean = { existence:'confirmed', shortFormat:'confirmed', gameMatch:'confirmed', moderation:'unavailable', flags:[], title:'Jogada verificada' }
+const clean = { existence:'confirmed', shortFormat:'confirmed', gameMatch:'unknown', moderation:'unavailable', flags:[], title:'Jogada verificada' }
 const input = id => ({ url:'https://clips.twitch.tv/' + id, gameId:'lol', channelName:'Canal' })
 const store = createRestStore({ projectId:'demo-clipzone-tests', emulatorPort:8081 })
 const dependencies = { store, checkAbuse:async () => {}, verify:async () => clean, now:() => new Date('2026-10-19T12:00:00Z') }
@@ -40,12 +40,32 @@ test('publicações concorrentes não ultrapassam cinco por dia', async () => sc
   assert.equal((await getDocs(collection(db,'shorts'))).size,5)
 }))
 test('pendentes e rejeitados não gastam cota; pendentes não são publicados', async () => scenario(async db => {
-  const result = await submitShort(input('Pending'),visitor,{...dependencies,verify:async()=>({...clean,gameMatch:'unknown'})})
+  const result = await submitShort(input('Pending'),visitor,{...dependencies,verify:async()=>({...clean,gameMatch:'unknown',flags:['threat']})})
   assert.equal(result.status,'pending')
   assert.equal((await getDocs(collection(db,'submissionLimits'))).size,0)
   await assert.rejects(submitShort(input('Missing'),visitor,{...dependencies,verify:async()=>({...clean,existence:'missing'})}),{code:'video-not-found'})
   assert.equal((await getDocs(collection(db,'shorts'))).size,1)
 }))
+test('technical failures and rejections leave no reservation, owner, audit or quota; same video can retry',async()=>scenario(async db=>{
+  const submission=input('RetrySameIdentity')
+  for(const verify of [
+    async()=>({...clean,existence:'unknown'}),
+    async()=>({...clean,shortFormat:'unknown'}),
+    async()=>({...clean,embedding:'unknown'}),
+    async()=>{throw new Error('provider timeout')},
+    async()=>({...clean,shortFormat:'invalid'}),
+    async()=>({...clean,embedding:'blocked'}),
+  ]){
+    await assert.rejects(submitShort(submission,visitor,{...dependencies,verify}))
+    for(const name of ['shorts','videoIdentities','submissionOwners','moderationLogs','submissionLimits']){
+      assert.equal((await getDocs(collection(db,name))).size,0,name)
+    }
+  }
+  const result=await submitShort(submission,visitor,dependencies)
+  assert.equal(result.status,'published')
+  assert.equal((await getDocs(collection(db,'submissionLimits'))).docs[0].data().count,1)
+}))
+
 test('remoção preserva reserva e impede republicação sem revelar link privado', async () => scenario(async db => {
   const result = await submitShort(input('Removed'),visitor,dependencies)
   await updateDoc(doc(db,'shorts',result.id),{moderationStatus:'removed'})
