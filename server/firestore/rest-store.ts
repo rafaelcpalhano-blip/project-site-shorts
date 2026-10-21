@@ -59,6 +59,24 @@ export function createRestStore(options: Options): AtomicStore {
       const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
       return found ? decodeDocument(found).data : null
     },
+    async gameCatalogPage(query) {
+      if(!['all','active','provisional','hidden','banned'].includes(query.filter)||!Number.isSafeInteger(query.limit)||query.limit<1||query.limit>21||query.cursor&&(!/^[\w-]{1,128}$/.test(query.cursor.id)||!Number.isFinite(Date.parse(query.cursor.time))))throw new Error('Consulta de catálogo inválida')
+      const filters = query.filter==='all'?[]:[{fieldFilter:{field:{fieldPath:'status'},op:query.filter==='hidden'?'IN':'EQUAL',value:encode(query.filter==='hidden'?['hidden','disabled','inactive']:query.filter==='provisional'?'active':query.filter)}},
+        ...(query.filter==='provisional'?[{fieldFilter:{field:{fieldPath:'reviewStatus'},op:'EQUAL',value:encode('provisional')}}]:[])]
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status','reviewStatus','source','createdAt','reviewVersion'].map(fieldPath=>({fieldPath}))},
+        ...(filters.length?{where:{compositeFilter:{op:'AND',filters}}}:{}),orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
+        ...(query.cursor?{startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name('games/'+query.cursor.id)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
+    async countGameShorts(gameId) {
+      if(!/^[\w-]{1,128}$/.test(gameId))throw new Error('Jogo inválido')
+      const result=await request('runAggregationQuery',{structuredAggregationQuery:{structuredQuery:{from:[{collectionId:'shorts'}],where:{fieldFilter:{field:{fieldPath:'gameId'},op:'EQUAL',value:encode(gameId)}}},aggregations:[{alias:'total',count:{}}]}})
+      const rows=Array.isArray(result)?result:[result]
+      const value=rows.find(row=>row.result?.aggregateFields?.total)?.result.aggregateFields.total
+      const total=value?decode(value):null
+      if(!Number.isSafeInteger(total)||Number(total)<0)throw new Error('Contagem indisponível')
+      return Number(total)
+    },
     async publicPage(query) {
       if (!['shorts','comments'].includes(query.kind) || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > (query.kind === 'shorts' ? 30 : 21) || query.parentId !== undefined && !/^[\w-]{1,128}$/.test(query.parentId) || query.kind === 'comments' && !query.parentId || query.cursor && (!/^[\w-]{1,128}$/.test(query.cursor.id) || !Number.isFinite(Date.parse(query.cursor.time)))) throw new Error('Consulta pública inválida')
       const filters = [{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'EQUAL',value:encode(query.kind === 'shorts' ? 'published' : 'approved')}},

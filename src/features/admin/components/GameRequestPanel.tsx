@@ -34,7 +34,7 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
   if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason(emptyReason())}
  }
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
-  <h2 id="game-requests-heading">Catálogo e solicitações de jogos</h2>
+  <h2 id="game-requests-heading">Solicitações de jogos</h2>
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
   <div className={styles.actions}>{(Object.keys(labels) as RequestStatus[]).map(value=><button key={value} disabled={busy} aria-pressed={status===value}
    onClick={()=>void run(async()=>{

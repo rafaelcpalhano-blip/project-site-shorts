@@ -298,3 +298,50 @@ https://firebase.google.com/docs/firestore/security/rules-query
 https://docs.cloud.google.com/firestore/native/docs/security/rules-conditions
 https://firebase.google.com/docs/firestore/query-data/aggregation-queries
 https://firebase.google.com/docs/firestore/pricing
+
+## Entrega C — 21/10/2026
+
+- Rotas /api/admin/games/catalog, /detail e /moderate reutilizam autorização UID +
+  Google/TOTP e proteção contra abuso; nenhuma permissão pública nova.
+- Paginação 20/consulta 21, filtros e cursor vinculado à aba. Todos usa índice padrão
+  createdAt; dois índices compostos de games adicionados ao manifesto para status e
+  status + reviewStatus, ambos com createdAt/ID decrescentes. Não publicados.
+- Ativos abrange provisórios visíveis; Provisórios é esse subconjunto. Ocultos também
+  inclui legados disabled/inactive. Registro sem createdAt não participa da ordenação;
+  leitura local conferiu os 6 jogos existentes com data, sem modificar nenhum deles.
+- Aprovar provisório marca reviewed sem mudar origem/ID. Ocultação lógica (também
+  usada para desativação/exclusão do catálogo), banimento e restauração não apagam
+  jogos, shorts, nomes reservados, vínculos, cotas ou histórico. Sem cascade writes.
+- Desbanir volta ao estado anterior: oculto permanece oculto; ativo/provisório recupera
+  visibilidade com a qualificação anterior. Banido sem histórico privado válido não
+  recebe destino inventado. Restauração não altera moderação própria de nenhum short.
+- Confirmação explícita, motivo 5–500 sem controles/invisíveis e revisão concorrente;
+  uma decisão vencedora por revisão. gameModerationStates e moderationLogs privados
+  guardam UID/motivo/datas; esses dados não são gravados no documento público games.
+- Reservas exatas/visuais permanecem, inclusive ao ocultar/banir. Nenhum ID é mesclado.
+- Detalhes consultam agregação COUNT dos shorts daquele jogo, incluindo todos os estados.
+  Falha/ausência = Não calculado, nunca zero fictício. A contagem é uma fotografia,
+  pode variar com novas publicações e não é utilizada como prova de segurança.
+- Custo: lista até 21 leituras; detalhe 2 documentos + até 21 eventos + agregação.
+  COUNT usa entradas de índice em vez de carregar os shorts; seu custo cresce com
+  o total de vínculos, somente quando o administrador abre detalhes. Decisão típica:
+  5 leituras (jogo, estado, prontidão, duas reservas), mais referências ambíguas se
+  existentes; 3 escritas (jogo, estado, evento), salvo reserva ausente reparada. Retentativas
+  de transação podem adicionar leituras. Não se criou contador ou índice de curtidas.
+- Histórico na UI mostra até 20 eventos recentes, sem apagar os anteriores. Páginas
+  abertas/players já carregados não são revogados em tempo real; próximas leituras
+  públicas respeitam o estado do jogo. Registro sem data exige correção específica,
+  nunca data inventada. Índices reais exigirão futura publicação autorizada.
+- Verificação: 10 testes unitários/HTTP + 7 testes REST/regras no emulador isolado,
+  incluindo paginação, transições, concorrência, nomes/IGDB, exposição pública,
+  auditoria privada e regressões de cota/duplicatas. Lint/build aprovados. Teste final
+  localizado cobre banido sem histórico; ajuste de checkbox isolado. Sem suíte geral.
+- Pendente apenas conferência visual do proprietário em /admin, após nova verificação
+  de acesso se necessária. As transições foram conferidas em fixtures do emulador
+  isolado, sem ocultar/banir conteúdos do ambiente de desenvolvimento.
+- Próxima subetapa: 7.5.5 — curtidas, começando por proposta de armazenamento,
+  proteção contra manipulação e custos. Não implementada nem iniciada nesta entrega.
+
+Conferência HTTPS após reinício: sessão local 204; as três novas rotas retornaram
+401 sem token administrativo, mesmo com cookie de visitante válido; feed 200. Nenhum
+token administrativo foi solicitado ou manipulado pelo teste.

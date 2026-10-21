@@ -10,3 +10,6 @@
 @media (max-width: 600px) { .list li { align-items: flex-start; flex-direction: column; } .detail { padding: 14px; } }
 
 .refresh { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 10px; }
+
+.confirmation { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.confirmation input { flex: 0 0 auto; width: 18px; height: 18px; padding: 0; margin: 3px 0 0; accent-color: var(--color-accent); }

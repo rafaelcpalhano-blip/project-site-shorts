@@ -1,5 +1,25 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.4-C — catálogo administrativo implementado localmente (21/10/2026)
+
+Catálogo protegido pela autorização existente de UID + Google/TOTP: todos, ativos,
+provisórios, ocultos e banidos; 20 itens/página, consulta 21, createdAt DESC + ID DESC.
+Ativos inclui provisórios visíveis. Aprovar provisório, ocultar, banir, desbanir e
+restaurar exigem motivo, confirmação explícita e revisão atual; transação conserva
+metadados/vínculos/cotas, reservas e grava UID/motivo/data no histórico privado.
+Desbanir recupera visibilidade anterior; oculto continua oculto. Vídeos removidos ou
+pendentes não são publicados pela restauração do jogo. Sem exclusão física/cascata.
+Contagem total por agregação somente ao consultar detalhes; falha = não calculada.
+Histórico exibe até 20 eventos recentes; todos os eventos ficam preservados.
+Novos índices locais documentados, sem deploy. Nenhuma dependência/serviço criado.
+17 testes relacionados aprovados: 10 unitários/HTTP e 7 no emulador isolado. Lint e
+build aprovados; ajuste final localizado verificado. HTTPS: novas rotas 401 para
+visitante; feed 200. Conferência visual pelo dono
+pendente em /admin → Catálogo administrativo de jogos. Reinício da API local pode
+exigir verificar novamente Google/TOTP. Próxima: planejar 7.5.5 (curtidas), somente
+com autorização própria. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.5.4-B — cadastro manual autônomo concluído localmente (21/10/2026)
 
 Proprietário aprovou 3 novas criações/identidade/dia São Paulo, 20 tentativas/minuto

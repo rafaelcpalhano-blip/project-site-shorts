@@ -13,7 +13,11 @@ export interface StoreQuery {
 }
 export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time:string;id:string};limit:number}
 export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string}; limit: number }
+export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'banned'
+export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
 export interface AtomicStore {
+  gameCatalogPage?: (query:GameCatalogQuery)=>Promise<Array<{id:string;data:RecordData}>>
+  countGameShorts?: (gameId:string)=>Promise<number>
   scanGames?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   get?: (path: string) => Promise<RecordData | null>
   publicPage?: (query: PublicPageQuery) => Promise<Array<{id:string;data:RecordData}>>

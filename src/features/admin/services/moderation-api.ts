@@ -5,6 +5,9 @@ export class AdminRequestError extends Error {
   constructor(message: string, unauthorized: boolean) { super(message); this.unauthorized = unauthorized }
 }
 const messages: Record<string, string> = {
+  'game-unavailable': 'Jogo indisponível. Atualize o catálogo.',
+  'game-action-unavailable': 'Esta decisão não é permitida no estado atual. Reabra os detalhes.',
+  'game-names-preparing': 'O registro seguro de nomes ainda não está pronto. Tente novamente mais tarde.',
   'restore-unavailable': 'Não há histórico seguro para restaurar este registro. O vídeo permanece removido.',
   'stale-review': 'O conteúdo ou as denúncias mudaram. Reabra os detalhes antes de decidir.',
   'daily-limit': 'O autor já atingiu cinco publicações hoje. O estado do vídeo foi preservado.',
