@@ -1,6 +1,25 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — fontes e títulos entregues localmente (21/10/2026)
+## Estado vigente — Etapa 5 concluída e validada localmente (21/10/2026)
+
+Comentários persistentes conectados ao formulário e ao servidor. Textos sem sinais
+detectados publicam automaticamente; suspeitas de ameaça/discriminação/spam e
+palavrões isolados ficam ocultos para revisão, conforme escolha do proprietário.
+UUID de tentativa, deduplicação de texto recente e limite separado preservam o envio
+contra reenvios e abuso; autor/recibos/sinais são privados. Sem cota de vídeo consumida.
+Novo painel de comentários reutiliza Google/TOTP/UID por chamada, com filas paginadas,
+aprovação/rejeição/remoção/restauração, motivo obrigatório e revisão transacional.
+Regras Firestore existentes preservadas, índice apenas local, sem novos serviços/deps.
+30 testes distintos relacionados passaram, incluindo 6 no emulador isolado; lint/build
+passaram. API local reiniciada. Formulário real publicou teste normal e ocultou palavrão.
+Conferência final com login Google/TOTP do proprietário concluída: fila pendente,
+detalhe/sinal de triagem e rejeição motivada do comentário de teste funcionaram.
+Painel confirmou Decisão registrada e fila pendente vazia, sem alterar outros conteúdos.
+Detalhes, arquivos, limitações de triagem e retenção em docs/comentarios.md.
+Não avançar para outra etapa sem autorização. Aviso React de chave repetida no feed
+continua como pendência separada, sem refatoração nesta implementação.
+
+## Checkpoint anterior — fontes e títulos entregues localmente (21/10/2026)
 
 TikTok: proprietário aprovou explicitamente a publicação automática sem comprovação
 de duração, desde que as demais verificações oficiais e de segurança sejam atendidas.

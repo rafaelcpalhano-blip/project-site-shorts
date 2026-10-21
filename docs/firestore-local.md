@@ -1,5 +1,14 @@
 # Firestore local — etapa 4
 
+## Atualização — comentários persistentes (21/10/2026)
+
+A API HTTPS local já permite publicações e comentários persistentes no emulador,
+com triagem e revisão administrativa. Comentários aprovados usam a leitura paginada
+existente; dados privados e escritas diretas continuam bloqueados.
+Consulte [comentarios.md](comentarios.md) e [api-local.md](api-local.md).
+As seções seguintes registram a implantação original de leitura; a indisponibilidade
+de envio nelas descrita foi superada pelo backend local, sem deploy na nuvem.
+
 ## Estado
 
 Integração de leitura no emulador oficial, sem conta Firebase, login, cobrança,

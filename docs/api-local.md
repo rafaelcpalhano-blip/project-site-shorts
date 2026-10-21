@@ -1,5 +1,11 @@
 # API local com HTTPS
 
+Etapa 5: formulário de comentários conectado a POST /api/comments. Triagem local
+publica textos sem sinais e oculta suspeitos, inclusive palavrões isolados.
+Nova revisão em /api/admin/comments/{queue,detail,review}, com Google/TOTP/UID
+existentes e acesso privado. Sem alteração de serviços externos.
+Fluxos, limites, privacidade e verificação: [comentarios.md](comentarios.md).
+
 Execute a partir da raiz do projeto. Este ambiente usa exclusivamente o emulador
 `demo-clipzone` na porta 8080. Não faça deploy nem exponha por túneis.
 

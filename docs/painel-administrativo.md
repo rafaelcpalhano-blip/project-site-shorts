@@ -1,5 +1,10 @@
 # Painel administrativo de denúncias e revisão
 
+Etapa 5 adiciona o painel separado “Comentários e revisão de texto”: filas de
+pendentes/publicados/rejeitados/removidos, detalhe e motivo obrigatório para ações.
+Todas as chamadas usam a mesma autorização Google/TOTP/UID do painel de vídeos.
+Regras, limites e evidências em [comentarios.md](comentarios.md).
+
 Etapa autorizada em 21/10/2026. Implementação local; sem deploy ou alteração de serviços externos.
 
 ## Uso
