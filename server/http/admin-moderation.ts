@@ -1,3 +1,4 @@
+import { GameNameError } from '../games/name-keys.ts'
 import { loadGameRequests, reviewGameRequest } from '../games/requests.ts'
 import { loadCommentQueue, loadCommentDetail } from '../comments/queue.ts'
 import { parseCommentReview, reviewComment } from '../comments/review-comment.ts'
@@ -35,6 +36,7 @@ export async function handleAdminModeration(request: Request, options: {
     return reply(404, { error: 'not-found' })
   } catch (error) {
     if (error instanceof BodyError) return reply(error.status, { error: 'invalid-body' })
+    if (error instanceof GameNameError) return reply(error.status, {error:error.message})
     if (error instanceof ReviewError) return reply(error.status, { error: error.message })
     if (error instanceof AdminAuthError) return reply(error.status, { error: error.message })
     if (error instanceof SubmissionError && error.code === 'abuse-limit') return reply(429, { error: 'abuse-limit' })

@@ -1,7 +1,7 @@
 # Etapa 7.5.4 — proposta técnica para aprovação
 
-Situação: subentrega A implementada e validada localmente após autorização explícita.
-Subentregas B/C continuam não implementadas. Data: 21/10/2026.
+Situação: subentregas A e B implementadas e validadas localmente após autorização explícita.
+Subentrega C continua não implementada. Data: 21/10/2026.
 
 ## Resultado da subentrega A
 
@@ -99,7 +99,7 @@ nenhuma aplicação parcial em produção.
 
 ### B — Inclusão manual autônoma
 
-#### Parâmetros propostos — aguardando aprovação específica
+#### Parâmetros aprovados e implementados
 
 - Manter o limite existente de 20 tentativas por minuto por identidade assinada,
   com contador separado de tentativas de cadastro; sem aumentar esse teto.
@@ -121,7 +121,7 @@ nenhuma aplicação parcial em produção.
 - Centralizar o suporte fictício de desenvolvimento, sem mailto/envio. Cadastro autônomo
   não implica que já há um canal de suporte operacional ou que houve aprovação humana.
 
-#### Preparação local proposta — autorização condicionada solicitada
+#### Preparação local aprovada e executada sem colisões
 
 Preparar e executar diagnóstico paginado somente no emulador demo-clipzone:8080,
 sem ler a coleção inteira de uma vez, identificando nomes/variantes conflitantes e
@@ -135,8 +135,7 @@ nova rota. Se houver colisão ou inconsistência, apresentar o caso e aguardar a
 de qualquer correção/migração correspondente; não escolher automaticamente um ID.
 
 Ativar a nova inclusão somente quando a preparação estiver íntegra. Nada em produção,
-sem serviços externos, sem deploy. A proposta exige aprovação de limites e deste
-preenchimento local; autorização genérica para avançar à B não executou migração.
+sem serviços externos, sem deploy. Limites e preenchimento local receberam aprovação explícita antes da execução.
 
 Testes previstos: normalização/colisões, concorrência, repetição entre visitantes,
 3 criações/dia, falhas/reuso sem consumo, meia-noite São Paulo, jogos bloqueados,
@@ -174,6 +173,72 @@ banimentos automaticamente. Nova inclusão recebe histórico de criação autom�
 Centralizar placeholder teste.suporte@clipzone.com como contato fictício não operacional no
 ambiente local, sem envio de email/mailto. Configuração real e verificação de todas as aparições
 são requisitos de lançamento, não tarefa de serviço externo desta etapa.
+
+#### Resultado da subentrega B (21/10/2026)
+
+- POST /api/games/manual usa o handler seguro já existente: sessão assinada, mesma
+  origem, JSON/corpo limitado e gameRequestAttempts (20/min configurados na API local).
+  API antiga /api/games/requests e todos os registros/estados legados preservados.
+- createManualGame valida nome de 1–100 caracteres, rejeita controles/invisíveis e
+  usa triagem de texto local existente, com suas limitações. Suspeitas são recusadas
+  para correção do nome; não se afirma haver classificador semântico ou revisão de
+  nomes implementada. Nenhum serviço de moderação externo adicionado.
+- 3 criações aceitas por identidade/dia São Paulo, em transação com nome, jogo e
+  auditoria privada. Reuso/repetições/recusas não gastam cota de criação; tentativas
+  continuam limitadas. Shorts conservam sua própria cota de cinco por dia.
+- Registro manual novo: ID determinístico compatível com o padrão anterior, status
+  ativo + reviewStatus provisional, sem descrição/imagens/metadados inventados.
+  Seleção automática no formulário e ficha pública identificada como provisória.
+- Reservas privadas gameNameKeys: duas chaves SHA-256 por nome (exata normalizada e
+  comparação visual conservadora); cada chave suporta até dez IDs oficiais distintos,
+  sem mesclá-los. Ambiguidade impede inclusão manual automática; visitante deve
+  selecionar um cadastro existente ou conferir o nome. Reuso exige correspondência
+  real do nome com a referência, não apenas confiança no índice.
+- Banidos/inativos, reserva órfã, estado de preparação inválido, quota ou referência
+  corrompida falham fechados. Confirmação IGDB e criação administrativa compartilham
+  as reservas para não contornar bloqueios. Origem oficial continua com ID IGDB.
+- Comparação visual cobre acentos, caixa, compatibilidade, espaços/pontuação e um
+  conjunto limitado/versionado de caracteres confundíveis e leetspeak. Pode gerar
+  falso positivo e não detecta qualquer grafia, alias, tradução ou similaridade
+  semântica. Não unificar automaticamente jogos diferentes por esse critério.
+- Cadastro comum é automático, sem aprovação administrativa, conta do visitante ou
+  autorização do criador. É preciso tentar a busca oficial na interface; falha da
+  fonte não é apresentada como ausência comprovada e não impede acesso à inclusão.
+  Backend não confia em declaração do frontend de que o jogo existe ou foi aprovado.
+- Suporte fictício centralizado em src/config/support.ts, operational false; nenhum
+  mailto, envio, criação de conta ou apresentação como canal operacional.
+- Preparação: diagnóstico local 6 jogos/12 chaves/zero colisões; API parada antes de
+  apply; 6 jogos processados e prontidão true. Apenas reservas e marcador privados
+  escritos; jogos/IDs/solicitações preservados. Diagnóstico posterior confirmou os
+  mesmos 6 jogos e zero colisões. Scripts têm destino demo-clipzone:8080 fixo.
+- Aplicação de reservas tem lease de dois minutos, propriedade por execução, releitura
+  transacional de cada jogo e retomada idempotente; falha mantém prontidão false.
+  Diagnóstico retém apenas nomes/IDs/estado necessários em memória, proporcional ao
+  catálogo, com páginas de até 30 e sem carregar metadados completos. Campo games
+  no marcador é o total da preparação, não um contador vivo do catálogo.
+- Ferramenta seed-firestore invalida prontidão antes de escrever fixtures diretamente,
+  impedindo uso de um índice desatualizado; não foi executada nesta entrega. Depois
+  de usá-la, diagnosticar novamente com API parada antes de preparar as reservas.
+- Custo típico de criação: 5 leituras + 5 gravações na transação, mais 1 leitura e
+  1 gravação do limitador; reuso único: 4 leituras + limitador (1 leitura/1 gravação).
+  Estimativas excluem repetições transacionais e armazenamento/indexação automática.
+  Zero novos índices compostos, bibliotecas, bancos ou serviços; sem tradução/API
+  externa para cadastro manual. Retenção das quotas e proteção adicional contra
+  recriação de identidade permanecem requisitos operacionais da etapa 8.
+- 53 testes relacionados distintos aprovados: 39 unitários/HTTP/cliente/regressões
+  e 14 no emulador isolado (5 novos, 3 confirmação IGDB, 6 solicitações legadas).
+  Incluem concorrência, limite diário, meia-noite São Paulo, variantes banidas,
+  integridade/retomada, dados privados, duplicatas e cinco shorts por dia.
+  Lint e build aprovados; últimos ajustes locais com ESLint/tipagem e script syntax.
+  Verificação temporária React confirmou botão/seleção/campos preservados e suporte
+  sem mailto. Sem suíte completa repetida ou novas dependências.
+- HTTPS local: inclusão de Portal retornou 200/reused, sem criar jogo ou gastar
+  quota diária; feed retornou 200. Novas criações reais foram testadas no emulador
+  isolado, sem inserir jogo fictício adicional no ambiente de desenvolvimento.
+- Conferência visual final pelo proprietário ainda necessária. A nova API local foi
+  reiniciada, encerrando sessões administrativas em memória. Nenhum deploy ou
+  configuração externa alterada. C continua aguardando autorização; ainda não há
+  catálogo administrativo completo de provisórios/banidos nesta entrega.
 
 ### C — Catálogo e decisões administrativas
 
@@ -223,8 +288,8 @@ Lint/build quando integração estrutural ocorrer; sem repetir suítes sem alter
 
 1. Aprovado e implementado localmente: leituras públicas pela API, bloqueio das leituras diretas,
    orçamento explícito e páginas eventualmente parciais.
-2. Posteriormente aprovar limite operacional de cadastro e execução local do preenchimento das
-   reservas de nomes legados. Não executar diagnóstico/escrita migratória sem escopo autorizado.
+2. Aprovados e executados na B: três criações/dia e preparação local condicionada a diagnóstico
+   sem colisões. Manutenções ou migrações fora desse escopo exigem nova autorização.
 3. Sem deploy, faturamento ou alterações externas. Demais regras do documento permanecem aprovadas.
 
 ## Fontes técnicas

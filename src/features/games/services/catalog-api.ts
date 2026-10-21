@@ -8,6 +8,11 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
       let code = ''
       try { code = (await response.json()).error } catch { /* No provider details displayed. */ }
       const messages: Record<string, string> = { 'abuse-limit': 'Muitas consultas. Aguarde antes de tentar novamente.',
+        'game-daily-limit': 'Você já cadastrou três jogos novos hoje. Jogos existentes continuam disponíveis.',
+        'game-names-preparing': 'O cadastro de jogos está sendo preparado. Seus campos foram preservados.',
+        'game-name-conflict': 'Há um nome semelhante cadastrado. Selecione o jogo existente ou confira o nome oficial.',
+        'game-name-not-allowed': 'Confira o nome do jogo. A triagem de texto identificou conteúdo não permitido.',
+        'invalid-game-name': 'Informe um nome válido para o jogo.',
         'game-not-found': 'O jogo não foi encontrado no catálogo oficial.', 'game-unavailable': 'Este jogo não está disponível para cadastro.' }
       throw new Error(messages[code] || 'Catálogo indisponível no momento. Seus campos foram preservados.')
     }
@@ -22,6 +27,13 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
         !game || typeof game.externalId !== 'string' || !/^[1-9]\d{0,9}$/.test(game.externalId) || typeof game.officialName !== 'string' || !game.officialName.trim() || game.officialName.length > 500 ||
         (game.releaseDate !== null && typeof game.releaseDate !== 'string') || !Array.isArray(game.platforms) || game.platforms.some(platform => typeof platform !== 'string'))) throw new Error('Resposta de catálogo inválida.')
       return result.games
+    },
+    async includeManual(value: string): Promise<{game:{id:string;name:string};created:boolean}> {
+      const {name}=validateGameRequestInput({name:value})
+      await call('/api/session','POST')
+      const result=await (await call('/api/games/manual','POST',{name})).json()
+      if(!result?.game||typeof result.game.id!=='string'||!/^[\w-]{1,128}$/.test(result.game.id)||typeof result.game.name!=='string'||!result.game.name.trim()||result.game.name.length>500||typeof result.created!=='boolean')throw new Error('Resposta de inclusão inválida.')
+      return {game:result.game,created:result.created}
     },
     async request(value: string): Promise<{status:'pending'|'linked'|'rejected';game:{id:string;name:string}|null}> {
       const {name}=validateGameRequestInput({name:value})

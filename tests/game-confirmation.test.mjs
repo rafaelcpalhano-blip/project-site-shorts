@@ -22,7 +22,8 @@ test('confirmação usa dados oficiais e identidade determinística para submiss
   const deps = setup()
   const results = await Promise.all([confirmGame({ externalId: '1' }, deps), confirmGame({ externalId: '1' }, deps)])
   assert.equal(results.filter(result => result.created).length, 1)
-  assert.equal(deps.docs.size, 1)
+  assert.equal([...deps.docs.keys()].filter(path => path.startsWith('games/')).length, 1)
+  assert.equal([...deps.docs.keys()].filter(path => path.startsWith('gameNameKeys/')).length, 2)
   assert.equal(deps.docs.get('games/igdb-1').officialName, 'Official Game')
 })
 test('confirmação rejeita metadados do cliente, ausência e catálogo inconsistente sem gravar', async () => {

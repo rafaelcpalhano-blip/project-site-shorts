@@ -1,5 +1,30 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.4-B — cadastro manual autônomo concluído localmente (21/10/2026)
+
+Proprietário aprovou 3 novas criações/identidade/dia São Paulo, 20 tentativas/minuto
+existentes e preparação local sem colisões. Inclusão usa /api/games/manual, cria
+jogo ativo/provisório sem metadados inventados e seleciona-o no formulário. Reuso,
+falhas e recusas não gastam cota de criação nem de shorts. Triagem textual local
+existente aplicada a nomes; limitações explícitas, sem fornecedor externo.
+Reservas privadas exatas/visuais compartilhadas com criação IGDB e administração;
+IDs existentes mantidos, fontes oficiais não mescladas por nome, dados corrompidos/
+órfãos fecham o cadastro. Comparação é conservadora, não universal ou semântica.
+Fluxo antigo de solicitações preservado. Suporte fictício centralizado e sinalizado
+como não operacional. Fonte IGDB indisponível não exige prova inventada de ausência.
+Diagnóstico: 6 jogos, 12 chaves, zero colisões. API parada, reservas preenchidas para
+os 6, prontidão true, sem alterar jogos/IDs/solicitações. Script retomável com lease;
+seed de fixtures invalida prontidão antes de alterações (não executado nesta entrega).
+API HTTPS reiniciada; rota manual conferida por reuso de Portal (200, sem cota diária),
+feed 200. Nenhum jogo fictício criado no desenvolvimento para teste de inclusão.
+53 testes relacionados aprovados (39 unitários/HTTP/cliente e 14 no emulador), lint/
+build aprovados; verificações finais localizadas. Conferência visual final pendente.
+Detalhes/custos em [etapa-7-5-4.md](etapa-7-5-4.md). Sessão administrativa em memória
+pode precisar nova verificação após reinício. Sem serviços externos, dependências,
+novos bancos ou deploy. Próxima 7.5.4-C: catálogo administrativo/banimento/restauração,
+ainda não implementado e aguardando autorização. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.5.4-B — parâmetros preparados; execução pendente (21/10/2026)
 
 Proprietário pediu avanço à B; Git limpo. Foi detalhada proposta de 3 novos jogos

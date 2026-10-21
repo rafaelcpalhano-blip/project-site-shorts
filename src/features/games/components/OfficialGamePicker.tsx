@@ -1,3 +1,4 @@
+import { supportContact } from '../../../config/support'
 import { useId, useRef, useState } from 'react'
 import { createGameCatalogClient } from '../services/catalog-api'
 import type { OfficialGame } from '../services/catalog-api'
@@ -23,7 +24,7 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
     finally { lock.current = false; setWorking(false); onBusyChange(false) }
   }
   const search = () => run(async () => {
-    setResults([]); setSelected(''); setSearched(false)
+    setResults([]); setSelected(''); setSearched(true)
     const games = await catalog.search(query)
     setResults(games); setSearched(true)
   })
@@ -50,14 +51,18 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
       const game = await catalog.confirm(selected)
       onSelected(game); setResults([]); setSelected(''); setSearched(false)
     })}>Confirmar este jogo</button>}
-    {searched && !results.length && <>
-      <p>Nenhum jogo encontrado. Tente o nome original ou outro nome conhecido.</p>
-      {allowRequest && <button type="button" onClick={()=>void run(async()=>{
-        const result=await catalog.request(query)
-        if(result.status==='linked' && result.game){onSelected(result.game);setMessage('Solicitação já vinculada. Jogo selecionado.')}
-        else setMessage(result.status==='rejected'?'Esta solicitação foi rejeitada. Confira o nome e pesquise novamente.':
-          'Solicitação registrada para análise. Seus campos continuam neste formulário enquanto ele permanecer aberto. Depois da análise, pesquise novamente o jogo; o vídeo ainda não foi enviado.')
-      })}>Solicitar inclusão deste jogo</button>}
+    {searched && !working && <>
+      {!results.length && !error && <p>Nenhum jogo encontrado. Tente o nome original ou outro nome conhecido.</p>}
+      {allowRequest && <>
+        {!!results.length && <p>Se nenhum resultado corresponde ao seu jogo, confira o nome antes de fazer a inclusão manual.</p>}
+        <p>Os administradores irão avaliar se o jogo cadastrado é legítimo. Caso não seja, poderá ser bloqueado. Para adicionar informações do jogo, entre em contato pelo e-mail de suporte.</p>
+        <small>{supportContact.operational ? 'Suporte: ' : 'Suporte em preparação: '}{supportContact.email}{!supportContact.operational && ' é um endereço fictício de desenvolvimento e não recebe mensagens.'}</small>
+        <button type="button" onClick={()=>void run(async()=>{
+          const result=await catalog.includeManual(query)
+          onSelected(result.game);setSearched(false);setResults([]);setSelected('')
+          setMessage(result.created?'Jogo provisório cadastrado e selecionado. Você pode continuar o envio do short.':'Jogo existente selecionado. Você pode continuar o envio do short.')
+        })}>Fazer a inclusão manual deste jogo</button>
+      </>}
     </>}
     {message && <p role="status">{message}</p>}
     {error && <p role="alert" className="error">{error}</p>}

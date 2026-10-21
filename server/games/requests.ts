@@ -1,3 +1,5 @@
+import { prepareGameClaim, writeNameKeys } from './name-keys.ts'
+import { manualGameRecord } from './manual-game.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import { validateGameRequestInput } from '../../src/lib/validation/public-input.ts'
 import { parseQuery, cursor, shortId } from '../moderation/queue.ts'
@@ -56,13 +58,11 @@ export async function reviewGameRequest(input:unknown,actorUid:string,options:{s
     const game=targetId?await tx.get('games/'+targetId):null
     if(data.action==='link' && (!game||game.status!=='active'||game.source!=='IGDB'||game.externalId!==String(data.gameId).slice(5)))throw new ReviewError('invalid-game',409)
     if(manual&&game&&(game.status!=='active'||game.source!=='manual'||game.normalizedName!==manual.normalizedName))throw new ReviewError('invalid-game',409)
+    const claim=targetId?await prepareGameClaim(tx,game?.officialName??manual?.name,targetId,game):null
     const now=options.now()
     if(!Number.isSafeInteger(now.getTime())||now.getTime()<0)throw new Error('invalid-clock')
-    if(manual&&!game)tx.create('games/'+targetId,{
-      officialName:manual.name,normalizedName:manual.normalizedName,source:'manual',externalId:null,
-      description:'',aliases:[],genres:[],gameModes:[],platforms:[],releaseDate:null,imageUrl:null,sourceUrl:null,
-      status:'active',createdAt:now,
-    })
+    if(claim&&targetId)writeNameKeys(tx,claim.identity,claim.records,targetId,now)
+    if(manual&&!game)tx.create('games/'+targetId,manualGameRecord(manual.name,manual.normalizedName,now))
     const status=data.action==='reject'?'rejected':'linked'
     tx.set('gameRequests/'+id,{...record,status,revision:current.revision+1,reason,updatedAt:now,...(targetId?{gameId:targetId}:{})})
     tx.create('moderationLogs/'+crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-',''),{

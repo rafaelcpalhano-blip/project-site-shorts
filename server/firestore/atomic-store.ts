@@ -14,6 +14,7 @@ export interface StoreQuery {
 export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time:string;id:string};limit:number}
 export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string}; limit: number }
 export interface AtomicStore {
+  scanGames?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   get?: (path: string) => Promise<RecordData | null>
   publicPage?: (query: PublicPageQuery) => Promise<Array<{id:string;data:RecordData}>>
   searchShorts?: (query:SearchShortsQuery)=>Promise<Array<{id:string;data:RecordData}>>

@@ -87,8 +87,8 @@ test('confirmação permite tradução opcional de jogo existente ou novo e falh
  const get=async()=>({...game,genres:[],gameModes:[],platforms:[],releaseDate:null,imageUrl:null,sourceUrl:null})
  const options={...deps,get,translateGame:async id=>{assert.equal(id,'igdb-1');calls++;throw new Error('unavailable')}}
  assert.equal((await confirmGame({externalId:'1'},options)).created,false)
- deps.records.delete('games/igdb-1');assert.equal((await confirmGame({externalId:'1'},options)).created,true)
- assert.equal(calls,2);assert.equal(deps.records.get('games/igdb-1').description,game.description)
+ const fresh=memory();fresh.records.clear();assert.equal((await confirmGame({externalId:'1'},{...options,store:fresh.store})).created,true)
+ assert.equal(calls,2);assert.equal(fresh.records.get('games/igdb-1').description,game.description)
 })
 test('ficha exige tradução vinculada ao original e ao nome atuais; metadados antigos permanecem válidos',()=>{
  assert.equal(mapGameDetails('id',game).descriptionPtBr,null)

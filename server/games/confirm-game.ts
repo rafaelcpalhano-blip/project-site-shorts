@@ -1,3 +1,4 @@
+import { prepareGameClaim, writeNameKeys } from './name-keys.ts'
 import { isVisibleGame } from './visibility.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import type { CatalogGame } from './igdb.ts'
@@ -23,10 +24,13 @@ export async function confirmGame(input: unknown, dependencies: {
   const id = 'igdb-' + externalId
   const result = await dependencies.store.transact(async transaction => {
     const existing = await transaction.get('games/' + id)
+    const claim = await prepareGameClaim(transaction, existing?.officialName ?? official.officialName, id, existing)
     if (existing) {
       if (!isVisibleGame(existing) || existing.externalId !== externalId || existing.source !== 'IGDB') throw new GameConfirmationError('game-unavailable')
+      writeNameKeys(transaction, claim.identity, claim.records, id, dependencies.now())
       return { id, name: String(existing.officialName), created: false }
     }
+    writeNameKeys(transaction, claim.identity, claim.records, id, dependencies.now())
     transaction.create('games/' + id, {
       externalId, source: 'IGDB', officialName: official.officialName.trim(),
       description: official.description, aliases: official.aliases, genres: official.genres,

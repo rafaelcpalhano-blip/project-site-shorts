@@ -9,6 +9,8 @@ const environment = await initializeTestEnvironment({
 try {
   await environment.withSecurityRulesDisabled(async context => {
     const database = context.firestore()
+    // This fixture writer bypasses the API: invalidate name readiness before any catalog write.
+    await setDoc(doc(database, 'gameNameState', 'v1'), { version: 1, ready: false })
     const games = [{ id: 'lol', name: 'League of Legends' }, { id: 'valorant', name: 'VALORANT' }]
     const date = Timestamp.fromDate(new Date('2026-10-19T12:00:00Z'))
     for (const game of games) await setDoc(doc(database, 'games', game.id), {
@@ -30,6 +32,7 @@ try {
       shortId: 'local-031', content: 'Este comentário de teste não deve aparecer.', createdAt: date, moderationStatus: 'pending',
     })
   })
+  console.log('Reservas de nomes precisam de nova preparação local. Pare a API e execute scripts/prepare-game-names.mjs diagnose antes de apply.')
   console.log('32 shorts fictícios, 2 jogos e 2 comentários gravados somente no emulador. URLs ilustrativas.')
 } finally { await environment.cleanup() }
 

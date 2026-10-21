@@ -70,6 +70,9 @@ export async function createPublicApi(options: PublicApiOptions) {
         return true
       },
     })
+    if (path === '/api/games/manual') return handleGameRequest(request, {
+      manual:true, origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:gameRequestLimit,
+    })
     if (path === '/api/games/requests') return handleGameRequest(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })

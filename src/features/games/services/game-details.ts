@@ -1,6 +1,6 @@
 import type { Game } from '../../shorts/types/models.ts'
 export interface GameDetails extends Game {
-  description: string; descriptionPtBr: string | null; aliases: string[]; genres: string[]; gameModes: string[]; platforms: string[]
+  provisional: boolean; description: string; descriptionPtBr: string | null; aliases: string[]; genres: string[]; gameModes: string[]; platforms: string[]
   releaseDate: string | null; imageUrl: string | null; sourceUrl: string | null; source: 'IGDB' | 'manual' | null
 }
 const text = (value: unknown, max: number) => typeof value === 'string' ? value.slice(0, max) : ''
@@ -31,7 +31,7 @@ export function mapGameDetails(id: string, data: Record<string, unknown>): GameD
     translation.text.length <= 24000 ? translation.text : null
   const date = typeof data.releaseDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data.releaseDate) &&
     Number.isFinite(Date.parse(data.releaseDate)) && new Date(data.releaseDate).toISOString().slice(0,10) === data.releaseDate ? data.releaseDate : null
-  return {id, name: text(data.officialName,500), description: data.source==='manual'?'':text(data.description,20000), descriptionPtBr, aliases:list(data.aliases),
+  return {id, provisional: data.source==='manual'&&data.reviewStatus==='provisional', name: text(data.officialName,500), description: data.source==='manual'?'':text(data.description,20000), descriptionPtBr, aliases:list(data.aliases),
     genres:list(data.genres), gameModes:list(data.gameModes), platforms:list(data.platforms), releaseDate:date,
     imageUrl:official ? officialUrl(data.imageUrl,true):null, sourceUrl:official ? officialUrl(data.sourceUrl):null, source:official?'IGDB':data.source==='manual'?'manual':null}
 }

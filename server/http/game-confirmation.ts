@@ -1,3 +1,4 @@
+import { GameNameError } from '../games/name-keys.ts'
 import { BodyError, readInput } from './submissions.ts'
 import { confirmGame, GameConfirmationError } from '../games/confirm-game.ts'
 import { SubmissionError } from '../submissions/submit-short.ts'
@@ -26,6 +27,7 @@ export async function handleGameConfirmation(request: Request, dependencies?: Ga
     return reply(result.created ? 201 : 200, result)
   } catch (error) {
     if (error instanceof BodyError) return reply(error.status, { error: 'invalid-body' })
+    if (error instanceof GameNameError) return reply(error.status, {error:error.message})
     if (error instanceof GameConfirmationError) {
       const statuses: Record<string, number> = { 'invalid-input': 400, 'game-not-found': 404, 'game-unavailable': 409 }
       return reply(statuses[error.code] || 503, { error: statuses[error.code] ? error.code : 'unavailable' })

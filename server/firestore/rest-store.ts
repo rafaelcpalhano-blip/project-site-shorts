@@ -68,6 +68,12 @@ export function createRestStore(options: Options): AtomicStore {
         ...(query.cursor ? {startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}} : {})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
+    async scanGames(after) {
+      if(after!==undefined&&!/^[\w-]{1,128}$/.test(after))throw new Error('Cursor inválido')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status','source'].map(fieldPath=>({fieldPath}))},orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,
+        ...(after?{startAt:{before:false,values:[{referenceValue:name('games/'+after)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
     async scanShorts(after) {
       if(after!==undefined&&!/^[\w-]{1,128}$/.test(after))throw new Error('Cursor inválido')
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,
