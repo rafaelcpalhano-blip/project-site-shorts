@@ -1,6 +1,52 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — Etapa 5 concluída e validada localmente (21/10/2026)
+## Cadastro manual de jogos — implementado; conferência visual pendente (21/10/2026)
+
+Proprietário esclareceu e autorizou aceitar solicitações sem cadastro na IGDB.
+Painel agora permite vínculo IGDB ou cadastro manual com nome e motivo, exclusivamente
+com autorização administrativa existente. Identidade manual determinística; criação,
+vínculo e auditoria transacionais. Ficha sem descrição/capa, com justificativa e contato
+provisório teste.suporte@clipzone.com explicitamente ainda indisponível, sem envio/email.
+30 testes relacionados passaram (6 no emulador), lint/build e verificações finais
+localizadas aprovados. Sem serviços novos/deploy. API local reiniciada para teste;
+sessão administrativa precisa de nova verificação. Conferir manualmente a aceitação e
+Abrir ficha do jogo. Detalhes/arquivos em [catalogo-jogos.md](catalogo-jogos.md).
+
+
+## Ajuste vigente — tradução pt-BR configurada e amostras locais conferidas pelo proprietário
+
+Proprietário autorizou Workers AI gratuito com persistência única por versão da fonte.
+Adaptador, reservas/limites privados, integração no cadastro e ficha pt-BR/original
+implementados. Original e nomes oficiais preservados; falhas não impedem cadastro.
+20 testes relacionados aprovados (3 no emulador), lint/build e checagens finais do
+servidor aprovados. Credencial criada pessoalmente pelo proprietário. Portal/Tibia traduzidos na API real
+e salvos somente no emulador, com originais preservados. Glossário/proteção de nomes
+ajustados após a primeira amostra. Proprietário informou a conferência e autorizou
+seguir em 21/10/2026; manter limitações conhecidas, sem garantia universal de tradução.
+API local reiniciada; sem mudança de plano ou deploy. Conferência das fichas/traduções encerrada pelo proprietário.
+Próximo passo nesta etapa: conferir solicitação de jogo e revisão administrativa
+no navegador. Não iniciar pesquisa global/produção sem autorização individual.
+Não imprimir segredos; não usar plano pago/AI Gateway/créditos. Detalhes e arquivos
+em [traducao-jogos.md](traducao-jogos.md). Alterações anteriores do catálogo preservadas.
+
+
+## Estado vigente — Catálogo e fichas IGDB implementados; aceite visual pendente (21/10/2026)
+
+Bloco autorizado pelo proprietário, Etapa 6 no relatório original. Reutiliza a busca
+IGDB e a confirmação existentes. Ficha pública exibe metadados já armazenados;
+solicitação privada de jogo sem resultados preserva o formulário aberto. Novo painel
+usa Google/TOTP/UID por chamada, com filas paginadas, vínculo a jogo IGDB ativo,
+rejeição motivada, revisão concorrente e auditoria. Nenhuma publicação de vídeo é
+aprovada por esse painel; políticas, cota e duplicatas permanecem iguais.
+25 testes relacionados passaram, incluindo 4 no emulador isolado; lint/build passaram.
+Ferramenta de navegador bloqueou acesso local: conferência visual pendente com o
+proprietário, sem contorno. API HTTPS e Firestore de desenvolvimento iniciados.
+Detalhes, roteiro, arquivos e limitações em [catalogo-jogos.md](catalogo-jogos.md).
+Sem dependências, configurações externas, deploy ou commit. Próxima etapa do plano:
+pesquisa global por trecho, somente após autorização individual.
+
+
+## Checkpoint anterior — Etapa 5 concluída e validada localmente (21/10/2026)
 
 Comentários persistentes conectados ao formulário e ao servidor. Textos sem sinais
 detectados publicam automaticamente; suspeitas de ameaça/discriminação/spam e

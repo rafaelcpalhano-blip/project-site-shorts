@@ -1,5 +1,9 @@
 # API local com HTTPS
 
+Catálogo: POST /api/games/requests e revisão privada em /api/admin/games/{queue,review}.
+Ficha /jogos/:gameId exibe metadados persistidos. Solicitações não publicam vídeos;
+revisão usa Google/TOTP/UID existentes. [Fluxo e limitações](catalogo-jogos.md).
+
 Etapa 5: formulário de comentários conectado a POST /api/comments. Triagem local
 publica textos sem sinais e oculta suspeitos, inclusive palavrões isolados.
 Nova revisão em /api/admin/comments/{queue,detail,review}, com Google/TOTP/UID

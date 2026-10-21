@@ -1,5 +1,9 @@
 # Painel administrativo de denúncias e revisão
 
+Catálogo: POST /api/games/requests e revisão privada em /api/admin/games/{queue,review}.
+Ficha /jogos/:gameId exibe metadados persistidos. Solicitações não publicam vídeos;
+revisão usa Google/TOTP/UID existentes. [Fluxo e limitações](catalogo-jogos.md).
+
 Etapa 5 adiciona o painel separado “Comentários e revisão de texto”: filas de
 pendentes/publicados/rejeitados/removidos, detalhe e motivo obrigatório para ações.
 Todas as chamadas usam a mesma autorização Google/TOTP/UID do painel de vídeos.
@@ -86,3 +90,9 @@ O audit log inclui restauração, motivo, ator verificado e estados anterior/pos
 Validação da restauração: 3 testes focados de entrada/HTTP e 10 testes transacionais
 passaram; lint e build passaram. Não repetidas suítes de Auth sem alterações.
 A fila de removidos foi conferida pelo proprietário em 21/10/2026, sem erros; vazia no ambiente de desenvolvimento. Casos com conteúdo e restauração foram validados no emulador isolado, sem inserir dados artificiais no ambiente de desenvolvimento. Etapa 2 concluída localmente.
+
+## Navegação das filas — ajuste de 21/10/2026
+
+Nos três painéis (jogos, comentários e denúncias/vídeos), clicar na aba carrega diretamente a primeira página da fila escolhida e reinicia paginação/detalhes. A consulta usa explicitamente a nova seleção, evitando estado anterior. O botão manual agora é um ícone de atualização com descrição acessível e tooltip próprios de cada painel. Nenhum polling, consulta inicial automática ou repetição de requisição foi adicionado. Travas durante operações, limites e autorização por chamada preservados. Mensagens de muitas operações continuam sujeitas ao intervalo de segurança existente.
+
+Cadastro manual autorizado: no detalhe da solicitação, escolher Cadastro manual — jogo sem registro no IGDB, revisar nome e motivo, clicar Aceitar solicitação e Confirmar decisão do jogo. Registro e vínculo são atômicos/auditados. Ficha pública sem descrição/capa IGDB, com aviso de fonte ausente e suporte provisório ainda indisponível. Pesquisa e vínculo IGDB continuam disponíveis.
