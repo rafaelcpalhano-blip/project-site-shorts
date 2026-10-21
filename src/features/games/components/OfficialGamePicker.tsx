@@ -3,8 +3,8 @@ import { createGameCatalogClient } from '../services/catalog-api'
 import type { OfficialGame } from '../services/catalog-api'
 import styles from './OfficialGamePicker.module.css'
 const catalog = createGameCatalogClient()
-export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRequest = true }: {
-  allowRequest?: boolean; disabled: boolean; onBusyChange: (busy: boolean) => void; onSelected: (game: { id: string; name: string }) => void
+export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRequest = true, collapsible = false }: {
+  collapsible?: boolean; allowRequest?: boolean; disabled: boolean; onBusyChange: (busy: boolean) => void; onSelected: (game: { id: string; name: string }) => void
 }) {
   const choiceGroup = useId()
   const [query, setQuery] = useState('')
@@ -27,8 +27,8 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
     const games = await catalog.search(query)
     setResults(games); setSearched(true)
   })
-  return <fieldset disabled={disabled || working} className="form-field">
-    <legend>Não encontrou seu jogo?</legend>
+  const content = <fieldset disabled={disabled || working} className="form-field">
+    <legend>{collapsible ? 'Pesquisa oficial e inclusão de jogos' : 'Não encontrou seu jogo?'}</legend>
     <label htmlFor="official-game-query">Pesquisar nome oficial</label>
     <input id="official-game-query" value={query} maxLength={100} onChange={event => {
       setQuery(event.target.value); setResults([]); setSelected(''); setSearched(false); setError(''); setMessage('')
@@ -63,4 +63,8 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
     {error && <p role="alert" className="error">{error}</p>}
     <small>Dados de jogos: <a href="https://www.igdb.com/" target="_blank" rel="noreferrer">IGDB</a>. Confira o título antes de confirmar.</small>
   </fieldset>
+  return collapsible ? <details className={styles.disclosure}>
+    <summary>Não encontrou seu jogo?</summary>
+    {content}
+  </details> : content
 }

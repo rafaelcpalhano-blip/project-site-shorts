@@ -1,5 +1,20 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.2 — seção de inclusão de jogos recolhida (21/10/2026)
+
+Formulário público usa opção collapsible do OfficialGamePicker, com details/summary
+nativo inicialmente fechado. Texto do controle: Não encontrou seu jogo? Conteúdo
+permanece montado para preservar consulta, seleção, resultados e campos do formulário
+ao abrir/recolher, sem requisições decorrentes da expansão. Semântica nativa informa
+estado expandido e fornece interação por teclado. Administração permanece aberta.
+Fluxos de pesquisa, confirmação e solicitação existentes intactos; cadastro manual
+autônomo pertence à 7.5.4, ainda não implementada. Sem mudanças de backend/dados.
+ESLint localizado, tipagem do frontend e verificação temporária de renderização
+aprovados; sem build/suíte completa. Conferência visual final: abrir, preencher,
+recolher e expandir novamente; conferir campos preservados. Git estava limpo antes
+da alteração. Nenhum commit realizado pelo agente. 7.5.3 aguarda autorização.
+
+
 ## Etapa 7.5.1 — seleção visual IGDB implementada (21/10/2026)
 
 Autorizado apenas o refinamento dos resultados do OfficialGamePicker. Cada resultado

@@ -88,7 +88,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted }: {
         }}>Recarregar catálogo</button></p>}
         {!loading && !catalogError && !games.length && <p role="status">Nenhum jogo disponível para publicação.</p>}
       </div>
-      <OfficialGamePicker disabled={sending || loading} onBusyChange={setChoosing} onSelected={game => {
+      <OfficialGamePicker collapsible disabled={sending || loading} onBusyChange={setChoosing} onSelected={game => {
         setGames(current => [...current.filter(item => item.id !== game.id), game]); setGameId(game.id); setError('')
       }} />
       <div className="form-field"><label htmlFor="persistent-channel">Nome do canal</label>

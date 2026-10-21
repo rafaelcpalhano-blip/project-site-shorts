@@ -10,3 +10,7 @@
   .choice:hover .radio:not(:disabled) + .option { background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface)); }
   .choice:hover .radio:checked:not(:disabled) + .option { background: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface)); }
 }
+
+.disclosure { min-width: 0; }
+.disclosure > summary { width: fit-content; max-width: 100%; cursor: pointer; font-size: .85rem; overflow-wrap: anywhere; }
+.disclosure[open] > summary { margin-bottom: 12px; }
