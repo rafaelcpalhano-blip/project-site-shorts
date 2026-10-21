@@ -34,13 +34,21 @@ configurado, mas grava apenas no emulador. Vídeos tecnicamente confirmados pode
 Validação local já realizada: pesquisa/seleção IGDB, envio pendente e duplicidade; depois, título original editável e publicação Twitch com validação técnica. Denúncias também foram verificadas no navegador. Evidências e limites em [continuidade.md](continuidade.md). Isso não certifica o ambiente de produção.
 
 O runner agora verifica metadados de clipes Twitch quando as credenciais estão
-configuradas, incluindo a categoria cruzada com o IGDB. Clipes com existência, formato e jogo confirmados podem ser publicados automaticamente, conforme decisão do usuário. Análise audiovisual continua indisponível. Outras fontes permanecem
-inconclusivas nesta composição local.
+configuradas. A categoria é declarada pelo visitante por seleção obrigatória de jogo ativo;
+a publicação não depende do mapeamento Twitch/IGDB. Clipes tecnicamente elegíveis são
+publicados automaticamente, preservando sinais de moderação. Análise audiovisual
+continua indisponível; metadados não constituem certificação de conteúdo seguro.
 
 
 Título automático: ao colar um link aceito, o formulário consulta `/api/shorts/preview`
 após breve pausa e oferece edição. A prévia requer sessão e tem limite próprio.
 O envio consulta novamente a fonte e preserva `originalTitle` separado de `title`.
-No runner atual, a consulta real disponível é Twitch; fontes não configuradas
-exibem indisponibilidade. O teste completo de preenchimento, edição e publicação
+O runner também consulta YouTube/TikTok oEmbed para títulos, quando a fonte retorna esse campo.
+Para publicar YouTube, YOUTUBE_API_KEY privada e a Data API são obrigatórias: URL /shorts/ID,
+vídeo público/não listado processado, duração positiva até 180 segundos e incorporação permitida.
+Sem esses dados, HTTP 503 permite nova tentativa sem reservar identidade nem consumir cota;
+oEmbed sozinho nunca aprova publicação. Nenhum serviço/chave foi configurado nesta alteração.
+TikTok continua sem evidência de duração no oEmbed: publicação não habilitada automaticamente;
+essa limitação exige decisão específica, não revisão administrativa obrigatória.
+Detalhes em [fontes-titulos.md](fontes-titulos.md). O teste completo de preenchimento, edição e publicação
 local foi realizado com um clipe Twitch, sem gravações na nuvem.

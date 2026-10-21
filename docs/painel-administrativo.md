@@ -11,14 +11,20 @@ Etapa autorizada em 21/10/2026. Implementação local; sem deploy ou alteração
 
 Arquivar denúncias não muda a visibilidade. Novas denúncias de outras sessões reabrem a fila.
 Remover muda o estado para removed; preserva a reserva de identidade e não devolve a cota já consumida.
-Publicar só se aplica a pendentes: exige nova confirmação técnica de existência, formato curto e jogo,
+Publicar só se aplica a pendentes: exige nova confirmação técnica de existência, formato curto e incorporação quando verificada pela fonte,
 jogo ativo e reserva/autor válidos. Consome um dos cinco lugares do autor no dia civil da aprovação
 em São Paulo. Cota esgotada ou verificação inconclusiva mantém o vídeo pendente. O cliente não
 escolhe o autor nem a data da cota. Restauração administrativa do registro original foi aprovada e implementada; regras abaixo.
 
 Combate fictício normal do jogo é distinto de violência real, ameaça e discriminação.
 Análise humana pode resolver sinais de conteúdo, mas não substitui evidência técnica inconclusiva.
-No runner local atual, Twitch é a fonte conectada; outras fontes podem continuar pendentes.
+O jogo é declaração do visitante e precisa permanecer ativo no catálogo; comprovação externa
+da correspondência não é exigida na aprovação nem na restauração.
+No runner atual, Twitch valida metadados de clipes; YouTube requer Data API, duração positiva
+até 180 segundos e incorporação permitida. oEmbed serve apenas para título.
+Novos envios tecnicamente inconclusivos retornam falha recuperável sem criar pendência/reserva;
+pendências já existentes não são migradas ou publicadas em massa.
+TikTok ainda carece de evidência de duração; não foi introduzida lista de criadores confiáveis.
 
 ## Segurança e consistência
 
@@ -59,7 +65,7 @@ moderationStates/{shortId}, coleção privada no mesmo Firestore. O cliente não
 o estado de destino. Remoção e gravação desse marco são atômicas; a restauração exige
 que removedRevision coincida com a revisão atual do vídeo.
 
-Se antes estava publicado, fonte/formato/jogo são revalidados e o jogo deve estar
+Se antes estava publicado, existência/formato/incorporação são revalidados e o jogo deve estar
 ativo. Se antes estava pendente, volta para a fila pendente sem aprovação automática.
 Reserva de identidade e cotas são preservadas: não há novo registro, novo envio ou
 nova cobrança de publicação, inclusive se a restauração ocorrer em outro dia.

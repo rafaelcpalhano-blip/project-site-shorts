@@ -1,6 +1,25 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — Etapa 3 concluída localmente (21/10/2026)
+## Estado vigente — Etapa 4 em andamento (21/10/2026)
+
+Política aprovada e implementada localmente: seleção obrigatória de jogo ativo é declaração
+do visitante, sem exigir comprovação externa, OAuth ou confiança por criador.
+YouTube: somente URL /shorts/ID, Data API com identidade/disponibilidade confirmadas,
+duração positiva máxima de 180 segundos (sem tolerância) e incorporação explicitamente
+permitida. O critério não certifica universalmente a classificação oficial Shorts.
+Falhas técnicas inconclusivas permitem nova tentativa sem gravar/reservar vídeo nem
+consumir cota. Sinais de moderação preservam revisão preventiva; denúncias, duplicatas
+permanentes, cotas e autorização Google/TOTP/UID continuam preservadas.
+Não houve migração de pendentes antigos, configuração externa, dependências ou deploy.
+Validação: 70 testes distintos relacionados passaram (53 localizados + 17 transacionais
+no emulador isolado), lint/build e git diff --check aprovados. API HTTPS local reiniciada.
+Manifesto dos arquivos alterados e limitações em docs/fontes-titulos.md. Git sem staging,
+commit ou push; alterações anteriores preservadas.
+
+Pendências da Etapa 4: configurar Data API/chave YouTube com participação do proprietário
+e autorização para qualquer mudança externa; resolver especificamente a comprovação
+técnica do formato TikTok (oEmbed não fornece duração), sem alegar que a seleção de jogo
+ou um criador confiável resolvem isso. Não avançar para outra etapa sem autorização.
 
 Etapa 0 regularizada. Etapa 1 autorizada individualmente e concluída no ambiente
 local: Google, cadastro/desafio TOTP e autorização administrativa no servidor.
@@ -14,15 +33,15 @@ ENABLED e adjacentIntervals 1; SMS não configurado. Plano Spark mantido, sem
 faturamento ativado. Firestore da aplicação continua somente no emulador local.
 
 Onze testes focados, lint e build já passaram na implementação; não repetidos
-para alterações documentais. Painel de denúncias e revisão autorizado em 21/10/2026 e implementado; três filas conferidas no navegador, incluindo removidos. Restauração aprovada, implementada e testada. Etapa 2 concluída localmente; Etapa 3 autorizada e concluída localmente: players oficiais e elegibilidade. Próxima etapa: completar fontes YouTube/TikTok e títulos, aguardando autorização individual. Sem deploy,
-commit, push ou alteração das regras de negócio neste fechamento.
+para alterações documentais. Painel de denúncias e revisão autorizado em 21/10/2026 e implementado; três filas conferidas no navegador, incluindo removidos. Restauração aprovada, implementada e testada. Etapa 2 concluída localmente; Etapa 3 autorizada e concluída localmente: players oficiais e elegibilidade. Etapa 4 autorizada e em andamento: fontes/títulos conectados; política atual implementada conforme resumo acima e docs/fontes-titulos.md. Proposta de confiança por origem superada. Sem deploy,
+commit, push ou ativação de serviços neste fechamento.
 
 Os checkpoints abaixo são históricos; este resumo prevalece sobre estados antigos.
 
 ## Decisões confirmadas pelo proprietário
 
 - Publicação automática de shorts válidos de games das plataformas aceitas.
-- Revisão somente para denúncias, inconsistências, sinais de abuso ou verificação inconclusiva.
+- Revisão para denúncias, inconsistências e sinais de abuso; novas verificações técnicas inconclusivas permitem tentar novamente sem criar pendência.
 - Combate fictício normal do jogo não equivale a ameaça, discurso de ódio ou violência real.
 - Vídeos removidos mantêm sua reserva de identidade e não podem ser republicados.
 - Apenas shorts efetivamente publicados consomem a cota de cinco no dia civil de São Paulo.
@@ -734,3 +753,34 @@ Arquivos temporários player-check.html/tsx removidos. Sem posts de teste no 808
 sem nova dependência, commit/push/deploy ou contadores internos de visualizações.
 Limites de erros cross-origin/restrições e fontes oficiais em docs/players-oficiais.md.
 Etapa 4 (fontes YouTube/TikTok e títulos) aguarda autorização individual.
+## Checkpoint — fontes e títulos conectados; avaliação de automação (21/10/2026)
+
+Retomado do formulário sem refazer funções existentes. Conectados TikTok oEmbed,
+YouTube oEmbed sem chave e adaptador Data API opcional; Twitch preservado.
+YouTube Data API consulta duração sem inferir formato/jogo positivo. Duração maior
+que 181s rejeita formato, com tolerância documentada de um segundo. Nenhuma chave,
+serviço externo ou faturamento foi ativado. Inconclusivos continuam pendentes.
+18 testes focados, lint e build passaram. Ajuste localizado da tolerância teve cinco
+testes YouTube aprovados; demais suítes não repetidas. Título YouTube preenchido na
+tela; edição manual preservada quando TikTok não retornou título. Sem publicar,
+criar jogos ou consumir cota de publicação. Formulário cancelado; API local ativa.
+
+Proprietário autorizou avaliar verificação adicional para automação, sem ativar
+serviços/custos. Referências oficiais consultadas: dados públicos não comprovam
+sempre formato e jogo; OAuth de criador TikTok limita vídeos ao dono; Research API
+não é alternativa geral. Opções, impactos e limites em docs/fontes-titulos.md.
+Etapa 4 continua incompleta quanto à publicação automática YouTube/TikTok.
+Aguardar escolha de política/acesso antes de implementar alternativa ou avançar.
+Git preservado sem staging, commit, push, deploy ou novas dependências.
+## Checkpoint — proposta de confiança por origem (21/10/2026)
+
+Proprietário autorizou detalhar política de origens previamente avaliadas, sem
+ativar serviços ou custos. Elaborada docs/politica-origens-avaliadas.md: confiança
+por criador/jogo e escopo, ID oficial estável, avaliação inicial, validade proposta,
+auditoria, suspensão/expiração, proteção contra concorrência e cotas preservadas.
+Confiança não é confirmação técnica; autorizar exceção de formato exige decisão
+expressa. Recomendado piloto de jogo único com formato ainda técnico. TikTok continua
+limitado pela ausência de verificação oficial estável de autoria na composição atual.
+Nenhuma regra ou código alterado neste bloco, nem novas permissões, serviços, tokens,
+commit ou deploy. Sem repetir testes funcionais: somente documentação e diff check.
+Aguardar aprovação/ajustes da política e escopo do piloto antes de implementar.
