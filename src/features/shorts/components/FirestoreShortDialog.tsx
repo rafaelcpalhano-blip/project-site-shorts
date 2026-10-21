@@ -5,7 +5,7 @@ import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
 import type { Cursor, PublicComment } from '../../../lib/firebase/public-repository'
 import type { Short } from '../types/models'
-import { parseVideoUrl } from '../../submissions/services/video-url'
+import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
 export function FirestoreShortDialog({ short, onClose }: { short: Short; onClose: () => void }) {
   const [reporting, setReporting] = useState(false)
@@ -15,8 +15,6 @@ export function FirestoreShortDialog({ short, onClose }: { short: Short; onClose
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [attempt, setAttempt] = useState(0)
-  let source: string | undefined
-  try { source = parseVideoUrl(short.url || '').url } catch { /* No unsafe origin links. */ }
   useEffect(() => {
     let active = true
     repository.listComments(short.id, cursor).then(page => {
@@ -26,8 +24,7 @@ export function FirestoreShortDialog({ short, onClose }: { short: Short; onClose
     return () => { active = false }
   }, [short.id, cursor, attempt])
   return <Modal title={short.title} closeDisabled={reporting} onClose={() => { if (!reporting) onClose() }}>
-    <p className="muted">Ambiente local de leitura. A reprodução incorporada não está implementada.</p>
-    {source && <a href={source} target="_blank" rel="noopener noreferrer">Assistir na plataforma ↗</a>}
+    <OfficialPlayer key={short.id} short={short} />
     <ReportForm key={short.id} shortId={short.id} onBusyChange={setReporting} />
     <h3>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>

@@ -1,3 +1,4 @@
+import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 import { validateCommentInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
 import { Modal } from '../../../components/ui/Modal'
@@ -9,13 +10,7 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
   const [message, setMessage] = useState('')
   const comments = state.comments.filter(item => item.shortId === short.id && item.status === 'approved')
   return <Modal title={short.title} onClose={onClose}>
-    <div className="inset">
-      <p>Prévia ilustrativa · {short.platform}</p>
-      <p>Este protótipo não reproduz vídeos.</p>
-      {short.url
-        ? <a href={short.url} target="_blank" rel="noopener noreferrer">Assistir na plataforma ↗</a>
-        : <p className="muted">Publicação fictícia, sem vídeo de origem.</p>}
-    </div>
+    <OfficialPlayer key={short.id} short={short} />
     <h3>Comentários ({comments.length})</h3>
     {comments.length ? comments.map(item => <p key={item.id}>{item.content}</p>) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
     <form className="form" onSubmit={event => {

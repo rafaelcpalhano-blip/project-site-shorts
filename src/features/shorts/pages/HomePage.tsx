@@ -19,7 +19,7 @@ export function HomePage() {
     <div className={styles.notice}>
       {usesFirestore ? <>FIRESTORE LOCAL · Leitura de dados do emulador. Envios dependem da API configurada; comentários e busca persistente ainda estão em desenvolvimento.</> : <>
       PROTÓTIPO · Feed fictício. Publicações e comentários duram apenas nesta sessão; não são enviados a um servidor.
-      <br />Reprodução simulada: links enviados abrem a origem real. Comentários enviados ficam pendentes.</>}
+      <br />Links válidos podem usar o player oficial após sua escolha. Comentários enviados ficam pendentes.</>}
     </div>
     {message && <p role="status">{message}</p>}
     <Suspense fallback={<p role="status">Carregando fonte de dados...</p>}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
