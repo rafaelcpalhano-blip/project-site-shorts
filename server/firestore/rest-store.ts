@@ -54,7 +54,7 @@ export function createRestStore(options: Options): AtomicStore {
   }
   return {
     async query(query) {
-      const allowed = { comments: ['moderationStatus', 'createdAt'], shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
+      const allowed = { gameRequests: ['status', 'createdAt'], comments: ['moderationStatus', 'createdAt'], shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
       const fieldsAllowed = allowed[query.collection]
       if (!fieldsAllowed || query.filter.field !== fieldsAllowed[0] || query.orderBy !== fieldsAllowed[1] ||
           !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 21) throw new Error('Consulta inválida')

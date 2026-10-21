@@ -1,3 +1,4 @@
+import { loadGameRequests, reviewGameRequest } from '../games/requests.ts'
 import { loadCommentQueue, loadCommentDetail } from '../comments/queue.ts'
 import { parseCommentReview, reviewComment } from '../comments/review-comment.ts'
 import type { AdminConfiguration } from './admin.ts'
@@ -23,6 +24,8 @@ export async function handleAdminModeration(request: Request, options: {
     const admin = await options.admin.authorize(request)
     const input = await readInput(request)
     const path = new URL(request.url).pathname
+    if (path === '/api/admin/games/queue') return reply(200, await loadGameRequests(input, options.store))
+    if (path === '/api/admin/games/review') return reply(200, await reviewGameRequest(input, admin.uid, options))
     if (path === '/api/admin/comments/queue') return reply(200, await loadCommentQueue(input, options.store))
     if (path === '/api/admin/comments/detail') return reply(200, await loadCommentDetail(input, options.store))
     if (path === '/api/admin/comments/review') return reply(200, await reviewComment(parseCommentReview(input), admin.uid, options))

@@ -60,6 +60,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         <select id="persistent-game" value={filter} onChange={event => {
           setFilter(event.target.value); setIndex(0); setCursors([undefined]); setLoading(true); setError('')
         }}><option value="">Todos os jogos</option>{games.map(game => <option key={game.id} value={game.id}>{game.name}</option>)}</select>
+        {filter && <Link to={'/jogos/' + encodeURIComponent(filter)}>Ver ficha do jogo</Link>}
         {gameCursor && <button disabled={catalogLoading} onClick={async () => {
           setCatalogLoading(true)
           try { const result = await repository.listGames(gameCursor); setGames(current => [...current, ...result.items]); setGameCursor(result.next); setCatalogError('') }

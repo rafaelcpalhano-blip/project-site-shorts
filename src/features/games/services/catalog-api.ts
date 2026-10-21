@@ -2,7 +2,7 @@ import { validateGameRequestInput } from '../../../lib/validation/public-input.t
 export interface OfficialGame { externalId: string; officialName: string; releaseDate: string | null; platforms: string[] }
 export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
   async function call(path: string, method: 'GET' | 'POST', body?: unknown) {
-    const response = await fetcher(path, { method, credentials: 'same-origin', redirect: 'error', signal: AbortSignal.timeout(20000),
+    const response = await fetcher(path, { method, credentials: 'same-origin', redirect: 'error', signal: AbortSignal.timeout(45000),
       headers: { 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) })
     if (!response.ok) {
       let code = ''
@@ -22,6 +22,15 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
         !game || typeof game.externalId !== 'string' || !/^[1-9]\d{0,9}$/.test(game.externalId) || typeof game.officialName !== 'string' || !game.officialName.trim() || game.officialName.length > 500 ||
         (game.releaseDate !== null && typeof game.releaseDate !== 'string') || !Array.isArray(game.platforms) || game.platforms.some(platform => typeof platform !== 'string'))) throw new Error('Resposta de catálogo inválida.')
       return result.games
+    },
+    async request(value: string): Promise<{status:'pending'|'linked'|'rejected';game:{id:string;name:string}|null}> {
+      const {name}=validateGameRequestInput({name:value})
+      await call('/api/session','POST')
+      const result=await (await call('/api/games/requests','POST',{name})).json()
+      if(!['pending','linked','rejected'].includes(result?.status) || (result.game!==null &&
+        (!result.game || typeof result.game.id!=='string' || !/^(?:igdb-[1-9]\d{0,9}|manual-[a-f0-9]{64})$/.test(result.game.id) ||
+        typeof result.game.name!=='string'||!result.game.name.trim()||result.game.name.length>500))) throw new Error('Resposta de solicitação inválida.')
+      return {status:result.status,game:result.game}
     },
     async confirm(externalId: string): Promise<{ id: string; name: string }> {
       if (!/^[1-9]\d{0,9}$/.test(externalId)) throw new Error('Selecione um jogo válido.')

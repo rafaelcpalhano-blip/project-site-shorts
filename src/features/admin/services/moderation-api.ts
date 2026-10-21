@@ -10,6 +10,8 @@ const messages: Record<string, string> = {
   'daily-limit': 'O autor já atingiu cinco publicações hoje. O estado do vídeo foi preservado.',
   'verification-incomplete': 'A fonte ainda não confirmou existência, formato curto e condições técnicas. O estado do vídeo foi preservado.',
   'invalid-video': 'O vídeo ou o jogo não pode ser publicado com os dados atuais.',
+  'request-unavailable': 'Solicitação indisponível. Atualize a fila.',
+  'invalid-game': 'Confirme um jogo IGDB ativo antes de vincular.',
   'comment-unavailable': 'Comentário indisponível. Atualize a fila.',
   'short-unavailable': 'Vídeo indisponível. Atualize a fila.',
   'invalid-input': 'Confira o motivo e os dados da revisão.',

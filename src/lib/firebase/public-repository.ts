@@ -1,3 +1,5 @@
+import { mapGameDetails } from '../../features/games/services/game-details.ts'
+import type { GameDetails } from '../../features/games/services/game-details.ts'
 import {
   collection, doc, getDocFromServer, getDocsFromServer, query, where, orderBy,
   documentId, limit, startAfter,
@@ -47,10 +49,10 @@ export function createPublicRepository(database: Firestore) {
       where('status', '==', 'active'), orderBy('officialName'), orderBy(documentId()),
       ...(cursor ? [startAfter(cursor)] : []),
     ], 50, mapGame),
-    getGame: async (id: string): Promise<Game | null> => {
+    getGame: async (id: string): Promise<GameDetails | null> => {
       if (!id || id.includes('/')) throw new Error('Identificador de jogo inválido')
       const result = await getDocFromServer(doc(database, 'games', id))
-      return result.exists() ? { id: result.id, name: requiredString(result.data(), 'officialName') } : null
+      return result.exists() ? mapGameDetails(result.id, result.data()) : null
     },
     listComments: (shortId: string, cursor?: Cursor) => page(database, 'comments', [
       where('shortId', '==', shortId), where('moderationStatus', '==', 'approved'),

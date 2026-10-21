@@ -1,0 +1,8 @@
+.card { display:grid; grid-template-columns:minmax(0,160px) minmax(0,1fr); gap:1.5rem; margin-block:1.5rem 2rem; overflow-wrap:anywhere; }
+.cover { width:100%; height:auto; max-height:240px; object-fit:contain; border-radius:12px; }
+.card:not(:has(img:not([hidden]))) { grid-template-columns:minmax(0,1fr); }
+.description { white-space:pre-wrap; }
+.facts { display:grid; grid-template-columns:auto minmax(0,1fr); gap:.5rem 1rem; }
+.facts dt { font-weight:600; }
+.facts dd { margin:0; }
+@media(max-width:520px) { .card { grid-template-columns:minmax(0,1fr); } .cover { max-width:140px; } .facts { grid-template-columns:minmax(0,1fr); } .facts dd { margin-bottom:.5rem; } }

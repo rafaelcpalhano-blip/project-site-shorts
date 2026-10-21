@@ -1,3 +1,4 @@
+import { handleGameRequest } from './game-requests.ts'
 import { handleComment } from './comments.ts'
 import { handleAdminModeration } from './admin-moderation.ts'
 import { handleAdmin } from './admin.ts'
@@ -13,6 +14,7 @@ import { handleSession } from './session.ts'
 import { handleSubmission } from './submissions.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 export interface PublicApiOptions {
+  gameTranslation?: (id: string) => Promise<void>
   admin?: AdminConfiguration
   gameSearch?: { get?: (id: string) => Promise<CatalogGame | null>; search: (name: string) => Promise<CatalogGame[]>; maximumAttempts: number; windowMs: number }
   origin: string
@@ -35,6 +37,8 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'admin-auth' })
   const reportLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
+  const gameRequestLimit = createAttemptLimiter({ store: options.store, now: options.now,
+    maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'game-request' })
   const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
@@ -49,7 +53,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       await adminLimit(visitor)
       return true
     })
-    if (['/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
+    if (['/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
       origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
       checkAbuse: async candidate => {
         const visitor = await identity.resolveVisitor(candidate)
@@ -57,6 +61,9 @@ export async function createPublicApi(options: PublicApiOptions) {
         await adminLimit(visitor)
         return true
       },
+    })
+    if (path === '/api/games/requests') return handleGameRequest(request, {
+      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
@@ -69,7 +76,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     })
     if (path === '/api/games/confirm') return handleGameConfirmation(request, options.gameSearch?.get && searchLimit ? {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor,
-      checkAbuse: searchLimit, get: options.gameSearch.get,
+      checkAbuse: searchLimit, get: options.gameSearch.get, translateGame: options.gameTranslation,
     } : undefined)
     if (path === '/api/games/search') return handleGameSearch(request, options.gameSearch && searchLimit ? {
       origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: searchLimit, search: options.gameSearch.search,

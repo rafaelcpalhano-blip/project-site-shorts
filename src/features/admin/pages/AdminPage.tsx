@@ -1,3 +1,4 @@
+import { GameRequestPanel } from '../components/GameRequestPanel'
 import { CommentModerationPanel } from '../components/CommentModerationPanel'
 import { ModerationPanel } from '../components/ModerationPanel'
 import { useEffect, useRef, useState } from 'react'
@@ -109,6 +110,7 @@ export function AdminPage() {
     </form>}
     {authorized && user && <>
       <p role="status">Acesso administrativo verificado.</p>
+      <GameRequestPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('Verifique novamente o acesso com Google/TOTP.') }} />
       <CommentModerationPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('Verifique novamente o acesso administrativo com Google/TOTP.') }} />
       <ModerationPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('A sessão administrativa não é mais válida. Verifique o acesso novamente ou entre com Google e TOTP.') }} />
     </>}
