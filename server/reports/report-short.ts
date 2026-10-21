@@ -18,7 +18,7 @@ export async function reportShort(input: unknown, visitor: string, options: { st
     const now = options.now()
     if (!Number.isFinite(now.getTime())) throw new Error('invalid-clock')
     tx.create('reports/' + id, { ...report, visitorHash: visitor, createdAt: now, status: 'pending' })
-    tx.set('reportSummaries/' + report.shortId, { shortId: report.shortId, count: Number(count) + 1,
+    tx.set('reportSummaries/' + report.shortId, { ...(summary ?? {}), shortId: report.shortId, count: Number(count) + 1,
       firstReportedAt: summary?.firstReportedAt ?? now, lastReportedAt: now, status: 'pending' })
     // Reporting never changes publication, video reservations or daily quotas.
     return { received: true, duplicate: false }

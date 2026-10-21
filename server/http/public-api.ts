@@ -1,3 +1,4 @@
+import { handleAdminModeration } from './admin-moderation.ts'
 import { handleAdmin } from './admin.ts'
 import type { AdminConfiguration } from './admin.ts'
 import { handleReport } from './reports.ts'
@@ -44,6 +45,15 @@ export async function createPublicApi(options: PublicApiOptions) {
       if (!visitor) return false
       await adminLimit(visitor)
       return true
+    })
+    if (['/api/admin/queue', '/api/admin/detail', '/api/admin/review'].includes(path)) return handleAdminModeration(request, {
+      origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
+      checkAbuse: async candidate => {
+        const visitor = await identity.resolveVisitor(candidate)
+        if (!visitor) return false
+        await adminLimit(visitor)
+        return true
+      },
     })
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,

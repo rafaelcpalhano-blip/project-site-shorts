@@ -1,3 +1,4 @@
+import { ModerationPanel } from '../components/ModerationPanel'
 import { useEffect, useRef, useState } from 'react'
 import {
   GoogleAuthProvider, signInWithPopup, signOut, getMultiFactorResolver, multiFactor,
@@ -82,7 +83,7 @@ export function AdminPage() {
       </div>}
       {!secret && <button disabled={working} onClick={() => void run(async () => {
         const uid = await checkAdminAccess(await user.getIdToken(true))
-        if (active.current && uid === user.uid) { setAuthorized(true); setStatus('Identidade, TOTP e permissão confirmados pelo servidor. O painel de moderação será implementado na próxima etapa.') }
+        if (active.current && uid === user.uid) { setAuthorized(true); setStatus('Identidade, TOTP e permissão confirmados pelo servidor.') }
       })}>Verificar acesso administrativo</button>}
     </>}
     {(resolver || secret) && <form className="form" onSubmit={event => {
@@ -105,7 +106,10 @@ export function AdminPage() {
         inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" required minLength={6} maxLength={6} disabled={working} />
       <button className="primary" disabled={working || code.length !== 6}>Confirmar código TOTP</button>
     </form>}
-    {authorized && <p role="status">Acesso administrativo verificado.</p>}
+    {authorized && user && <>
+      <p role="status">Acesso administrativo verificado.</p>
+      <ModerationPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('A sessão administrativa não é mais válida. Verifique o acesso novamente ou entre com Google e TOTP.') }} />
+    </>}
     {auth && (user || resolver) && <button disabled={working} onClick={() => void run(async () => {
       await signOut(auth); if (active.current) { setUser(null); setResolver(null); setSecret(null); setCode(''); setStatus('Sessão encerrada.') }
     })}>Sair / cancelar autenticação</button>}

@@ -79,6 +79,60 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "fields": [
+        {
+          "order": "ASCENDING",
+          "fieldPath": "status"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "lastReportedAt"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "__name__"
+        }
+      ],
+      "collectionGroup": "reportSummaries",
+      "queryScope": "COLLECTION"
+    },
+    {
+      "fields": [
+        {
+          "order": "ASCENDING",
+          "fieldPath": "shortId"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "createdAt"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "__name__"
+        }
+      ],
+      "collectionGroup": "reports",
+      "queryScope": "COLLECTION"
+    },
+    {
+      "fields": [
+        {
+          "order": "ASCENDING",
+          "fieldPath": "contentId"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "createdAt"
+        },
+        {
+          "order": "DESCENDING",
+          "fieldPath": "__name__"
+        }
+      ],
+      "collectionGroup": "moderationLogs",
+      "queryScope": "COLLECTION"
     }
   ],
   "fieldOverrides": []
