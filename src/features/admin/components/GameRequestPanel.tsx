@@ -1,3 +1,5 @@
+import { ReasonShortcuts } from './ReasonShortcuts'
+import { emptyReason, formatReason } from '../services/reason-shortcuts'
 import { RefreshButton } from './RefreshButton'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -11,12 +13,13 @@ const labels:Record<RequestStatus,string>={pending:'Pendentes',linked:'Vinculada
 export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}) {
  const [status,setStatus]=useState<RequestStatus>('pending'),[page,setPage]=useState<GameRequestPage|null>(null)
  const [history,setHistory]=useState<Array<RequestCursor|undefined>>([]),[item,setItem]=useState<GameRequestItem|null>(null)
- const [game,setGame]=useState<{id:string;name:string}|null>(null),[reason,setReason]=useState('')
+ const [game,setGame]=useState<{id:string;name:string}|null>(null),[reasonDraft,setReason]=useState(emptyReason)
  const [action,setAction]=useState<'link'|'create'|'reject'|null>(null),[working,setWorking]=useState(false),[picking,setPicking]=useState(false)
  const [manual,setManual]=useState(false),[manualName,setManualName]=useState('')
  const [error,setError]=useState(''),[message,setMessage]=useState('')
  const lock=useRef(false),active=useRef(true)
  useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
+ const reason=formatReason(reasonDraft)
  const busy=working||picking
  const run=async(work:()=>Promise<void>)=>{
   if(lock.current||picking)return
@@ -28,14 +31,14 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
  }
  const load=async(cursor?:RequestCursor,selectedStatus:RequestStatus=status)=>{
   const result=await fetchGameRequests(user,selectedStatus,cursor)
-  if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason('')}
+  if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason(emptyReason())}
  }
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
   <h2 id="game-requests-heading">Catálogo e solicitações de jogos</h2>
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
   <div className={styles.actions}>{(Object.keys(labels) as RequestStatus[]).map(value=><button key={value} disabled={busy} aria-pressed={status===value}
    onClick={()=>void run(async()=>{
-    setStatus(value);setPage(null);setItem(null);setGame(null);setReason('');setAction(null);setHistory([])
+    setStatus(value);setPage(null);setItem(null);setGame(null);setReason(emptyReason());setAction(null);setHistory([])
     await load(undefined,value)
    })}>{labels[value]}</button>)}
    <RefreshButton label="Atualizar solicitações de jogos" disabled={busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />
@@ -45,7 +48,7 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
    <ul className={styles.list}>{page.items.map(value=><li key={value.id}>
     <p>{value.name} · {labels[value.status]} · {new Date(value.createdAt).toLocaleString('pt-BR')}</p>
     {value.reason&&<p>Motivo: {value.reason}</p>}{value.gameId&&<Link to={'/jogos/'+value.gameId}>Abrir ficha do jogo</Link>}
-    {value.status==='pending'&&<button disabled={busy} onClick={()=>{setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason('');setAction(null);setMessage('')}}>Analisar solicitação</button>}
+    {value.status==='pending'&&<button disabled={busy} onClick={()=>{setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason(emptyReason());setAction(null);setMessage('')}}>Analisar solicitação</button>}
    </li>)}</ul>
    <div className={styles.actions}><button disabled={busy||!history.length} onClick={()=>void run(async()=>{
     const previous=history.slice(0,-1);await load(previous.at(-1));if(active.current)setHistory(previous)
@@ -71,11 +74,11 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
     await reviewGameRequest(user,item,reason,action==='create'?{kind:'manual',name:manualName}:action==='link'&&game?{kind:'igdb',gameId:game.id}:undefined)
     await load();if(active.current){setHistory([]);setMessage('Decisão da solicitação registrada.')}
    })}}>
-    <label htmlFor="game-request-reason">Motivo da decisão</label><textarea id="game-request-reason" required minLength={5} maxLength={500} disabled={busy} value={reason} onChange={event=>setReason(event.target.value)} />
+    <ReasonShortcuts value={reasonDraft} onChange={setReason} disabled={busy} />
     <div className={styles.actions}><button type="button" disabled={busy||(manual?!manualName.trim():!game)} aria-describedby={!game?'game-request-help':undefined} aria-pressed={action==='link'||action==='create'} onClick={()=>setAction(manual?'create':'link')}>Aceitar solicitação</button>
      <button type="button" disabled={busy} aria-pressed={action==='reject'} onClick={()=>setAction('reject')}>Rejeitar solicitação</button></div>
     {action&&<p>Confirmar: {action==='create'?'aceitar o cadastro manual de '+manualName:action==='link'?'aceitar e vincular a '+game?.name:'rejeitar a solicitação'}. A decisão ficará no histórico privado.</p>}
-    <button className="primary" disabled={busy||!action||reason.trim().length<5||(action==='link'&&!game)||(action==='create'&&!manualName.trim())}>Confirmar decisão do jogo</button>
+    <button className="primary" disabled={busy||!action||reason.trim().length<5||reason.length>500||(action==='link'&&!game)||(action==='create'&&!manualName.trim())}>Confirmar decisão do jogo</button>
    </form>
   </article>}
  </section>

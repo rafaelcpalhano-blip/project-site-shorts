@@ -1,5 +1,25 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.3 — atalhos de motivos administrativos (21/10/2026)
+
+Painel de solicitações de jogos usa ReasonShortcuts: seis opções aprovadas em dois
+grupos, positivos e negativos. Estado separa opções selecionadas e observações
+livres; texto composto usa vírgula/espaço e segue enviado ao endpoint existente.
+Desmarcar não apaga observações; frases já escritas manualmente não são duplicadas.
+Editar uma frase gerada transforma o trecho editado em texto livre, preservando o
+conteúdo. Motivos mistos mostram aviso acessível, sem decisão automática. Limite de
+500 caracteres preservado; atalhos que excederiam o limite ficam indisponíveis,
+sem truncar o texto. Reinício da análise/fila limpa o rascunho como anteriormente.
+Autenticação, confirmação, registro de motivo e auditoria no servidor intactos.
+6 testes de estado/texto aprovados; verificação localizada de renderização confirmou
+seis checkboxes, grupos, aviso, limite e bloqueio enquanto ocupado. ESLint localizado,
+tipagem frontend e diff aprovados. Sem build/suíte completa, dependências, serviços
+externos ou deploy. Conferência visual no painel aguarda proprietário.
+Git estava limpo ao iniciar; commit permanece a cargo do proprietário. Próxima:
+7.5.4, cadastro manual autônomo/catálogo/bloqueio; apresentar desenho técnico e
+subtarefas antes da implementação conforme os impactos de integridade já apontados.
+
+
 ## Etapa 7.5.2 — seção de inclusão de jogos recolhida (21/10/2026)
 
 Formulário público usa opção collapsible do OfficialGamePicker, com details/summary

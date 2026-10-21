@@ -1,0 +1,7 @@
+.field { display: grid; gap: 8px; min-width: 0; }
+.shortcuts { display: grid; gap: 12px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--color-border); border-radius: 9px; }
+.group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.option { display: flex; align-items: flex-start; gap: 8px; min-width: 0; cursor: pointer; overflow-wrap: anywhere; }
+.option input { flex: 0 0 auto; width: 18px; height: 18px; margin: 1px 0 0; padding: 0; accent-color: var(--color-accent); }
+.option:has(input:disabled) { cursor: not-allowed; opacity: .6; }
+@media (max-width: 700px) { .group { grid-template-columns: minmax(0, 1fr); } }
