@@ -1,5 +1,32 @@
 # Fontes e títulos — política vigente (21/10/2026)
 
+## Configuração real YouTube concluída (21/10/2026)
+
+YouTube Data API v3 ativada em clipzone-db02a após participação do proprietário.
+Chave dedicada criada por ele, restrita somente à API e IPs de saída IPv4/IPv6.
+YOUTUBE_API_KEY guardada no ambiente privado ignorado pelo Git, sem prefixo VITE.
+Nenhuma alteração na chave Firebase, ativação de faturamento ou deploy.
+
+Primeira consulta foi bloqueada por IP; o backend utiliza IPv6. Após o proprietário
+salvar esse endereço exato nas restrições, a consulta retornou HTTP 200.
+Short fornecido N2sTV8SekIs: duração PT36S, público/processado e embeddable=true.
+Decisão automática publicada com jogo declarado, sem afirmar análise audiovisual.
+Submissão com metadados reais em memória isolada preservou originalTitle e title editado,
+contabilizando uma vaga. Vídeo longo Im69kzhpR3I foi confirmado e recusado como not-a-short.
+Nenhuma gravação no Firestore de desenvolvimento/nuvem durante esses testes.
+
+API local reiniciada para carregar a chave; navegador preencheu título pela Data API.
+Primeiro envio cancelado por catálogo vazio. Depois, proprietário publicou o Short pelo
+formulário e informou Dimraeth como jogo. Não foi criada outra publicação pelo agente.
+Conferência por leitura no emulador demo-clipzone:8080: registro published, Dimraeth
+ativo (igdb-249202), identidade permanentemente reservada e uma publicação na cota diária.
+originalTitle preservado. Feed manteve o registro após recarregar. Player oficial foi
+encontrado aberto no navegador; não iniciada reprodução pelo agente.
+Aceitação local YouTube concluída. Nenhuma escrita adicional nesta conferência.
+Evidências no workspace do chat: youtube-data-api-titulo-real.png e
+youtube-dimraeth-publicado.png.
+Nenhum código alterado nem suíte já aprovada repetida nesta configuração.
+
 ## Publicação automática aprovada
 
 O visitante seleciona obrigatoriamente um jogo ativo do catálogo. A categoria é sua
@@ -48,16 +75,27 @@ Referências: [recurso videos](https://developers.google.com/youtube/v3/docs/vid
 
 ## Twitch e TikTok
 
+Exceção de duração TikTok aprovada e implementada; decisão e avaliação em
+[validacao-tiktok.md](validacao-tiktok.md). O proprietário aceita temporariamente vídeos
+TikTok disponíveis na fonte oficial sem comprovar duração. Isso não certifica que
+sejam curtos; o refinamento fica para atualização futura, sem bloquear a primeira versão.
+
 Twitch reutiliza o adaptador oficial de clips; o runner não consulta mapeamento
 Twitch/IGDB para autorizar publicação. O resolver existente permanece disponível,
 sem recriar ou apagar código funcional.
 
-TikTok oEmbed fornece metadados/título, mas não comprova duração curta.
-A fonte permanece conectada para títulos e player; publicação automática de links
-arbitrários ainda não é liberada sem evidência técnica suficiente. Novas tentativas
-inconclusivas não criam uma fila de aprovação manual nem bloqueio permanente.
-Esta limitação requer decisão específica antes de ampliar a política; não implementar
-OAuth obrigatório ou confiança por criador como alternativa sem autorização.
+TikTok usa URLs canônicas /@usuario/video/ID e resposta oEmbed oficial válida
+(version 1.0, type video e fornecedor esperado); se embed_product_id vier na resposta,
+deve corresponder ao ID solicitado. A ausência de duração não bloqueia publicação.
+A exceção formatPolicy é gerada exclusivamente no servidor e só aceita para TikTok
+pela plataforma derivada da URL. Não pode vir do JSON do visitante nem liberar YouTube.
+shortFormat continua unknown, e a auditoria registra tiktok-platform-policy.
+Fonte inacessível/resposta inválida continuam sem publicar/reservar/consumir cota.
+Sinais de moderação existentes, jogo ativo, limite diário, duplicatas permanentes,
+denúncias e autorização administrativa permanecem. Aprovação/restauração usam a mesma
+exceção, sem nova cota na restauração. Nenhum OAuth ou lista de criadores foi adicionado.
+Título ausente na fonte permite edição manual ou título padrão; não bloqueia por duração.
+44 testes relacionados, lint/build e consulta real do vídeo fornecido passaram.
 
 ## Títulos, segurança e dados
 
@@ -75,9 +113,10 @@ dia em São Paulo, autoria privada e histórico. Remoção mantém bloqueio de r
 restauração do registro original exige autorização administrativa e nova verificação técnica.
 Pendências antigas permanecem intactas; nenhuma migração ou publicação em massa.
 
-Nenhuma API/conta/chave foi criada, serviço ativado, dependência instalada ou deploy
-realizado nesta implementação. A validação real da Data API aguarda configuração
-autorizada com participação do proprietário; os testes usam respostas controladas.
+A implementação de código original não ativou serviços nem criou credenciais.
+Posteriormente, a configuração YouTube foi autorizada e concluída com participação
+do proprietário, conforme registro acima. Testes automatizados usam respostas controladas;
+a validação real é registrada separadamente. Nenhuma dependência instalada ou deploy.
 
 ## Validação desta implementação
 

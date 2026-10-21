@@ -1,6 +1,45 @@
 # Continuidade da aplicação — checkpoint
 
-## Estado vigente — Etapa 4 em andamento (21/10/2026)
+## Estado vigente — fontes e títulos entregues localmente (21/10/2026)
+
+TikTok: proprietário aprovou explicitamente a publicação automática sem comprovação
+de duração, desde que as demais verificações oficiais e de segurança sejam atendidas.
+Exceção implementada no adaptador existente e na decisão compartilhada, restrita à
+plataforma extraída da URL no servidor. shortFormat permanece unknown; o motivo de
+auditoria tiktok-platform-policy registra a decisão consciente, sem inventar duração.
+YouTube mantém /shorts/ e 180 segundos; Twitch mantém suas regras.
+44 testes relacionados passaram, incluindo segurança, cota, duplicatas, revisão e
+restauração; lint/build passaram. Consulta real do TikTok fornecido resultou em
+publicação elegível pela exceção, sem gravar o vídeo no emulador ou na nuvem.
+Detalhes e limitações em docs/validacao-tiktok.md.
+API local reiniciada. Pendência separada: logs anteriores mostraram aviso React de
+chave repetida no feed; componente não alterado nesta etapa. Investigar com escopo
+próprio, preservando o bloqueio transacional de duplicatas.
+Refinamento futuro de duração TikTok não bloqueia a primeira versão. Não avançar para
+outra etapa sem autorização; sem dependências, novos serviços, OAuth ou deploy.
+
+Checkpoint de configuração YouTube (21/10/2026): proprietário revisou e aceitou os termos
+iniciais do Google Cloud; YouTube Data API v3 ativada em clipzone-db02a, status Ativado
+confirmado no console. Sem adesão ao teste gratuito, faturamento ou deploy.
+Credencial dedicada criada pelo proprietário e YOUTUBE_API_KEY presente no ambiente
+privado ignorado pelo Git; chave limitada a YouTube Data API v3 e endereços IP.
+Browser key do Firebase preservada. O primeiro HTTP 403 por IP foi diagnosticado:
+backend usa IPv6. Proprietário salvou o IPv6 exato junto ao IPv4, mantendo as restrições.
+Nova consulta real retornou HTTP 200; N2sTV8SekIs tem 36 segundos, incorporação permitida
+e título disponível, com decisão automática publicada sem comprovação externa do jogo.
+Submissão com metadados reais validada em memória isolada: publicação, título original,
+edição preservada e uma unidade de cota. Vídeo longo Im69kzhpR3I consultado e recusado
+como not-a-short. Nenhuma publicação gravada no Firestore de desenvolvimento ou nuvem.
+API local reiniciada e formulário preencheu o título via Data API. Na primeira conferência,
+o catálogo estava vazio e o envio foi cancelado. Depois o proprietário publicou o Short
+pelo formulário e informou Dimraeth como jogo; registro existente preservado sem novo envio.
+Aceitação conferida por leitura no emulador: status published, jogo Dimraeth ativo
+(igdb-249202), título original preservado, reserva permanente e uma publicação na cota.
+A publicação permaneceu no feed após recarregar; player oficial encontrado aberto,
+sem iniciar reprodução pelo agente. Evidência: youtube-dimraeth-publicado.png no workspace.
+Nenhuma gravação adicional pelo agente nesta conferência nem alteração na nuvem.
+Chave não exibida nem copiada para o repositório; sem faturamento, OAuth ou deploy.
+Aceitação local YouTube concluída. TikTok segue a exceção aprovada no resumo acima.
 
 Política aprovada e implementada localmente: seleção obrigatória de jogo ativo é declaração
 do visitante, sem exigir comprovação externa, OAuth ou confiança por criador.
@@ -10,16 +49,19 @@ permitida. O critério não certifica universalmente a classificação oficial S
 Falhas técnicas inconclusivas permitem nova tentativa sem gravar/reservar vídeo nem
 consumir cota. Sinais de moderação preservam revisão preventiva; denúncias, duplicatas
 permanentes, cotas e autorização Google/TOTP/UID continuam preservadas.
-Não houve migração de pendentes antigos, configuração externa, dependências ou deploy.
+A implementação da política não exigiu migração de pendentes antigos, dependências ou deploy.
+A configuração externa YouTube foi posteriormente autorizada e validada, conforme checkpoint acima.
 Validação: 70 testes distintos relacionados passaram (53 localizados + 17 transacionais
 no emulador isolado), lint/build e git diff --check aprovados. API HTTPS local reiniciada.
 Manifesto dos arquivos alterados e limitações em docs/fontes-titulos.md. Git sem staging,
 commit ou push; alterações anteriores preservadas.
 
-Pendências da Etapa 4: configurar Data API/chave YouTube com participação do proprietário
-e autorização para qualquer mudança externa; resolver especificamente a comprovação
-técnica do formato TikTok (oEmbed não fornece duração), sem alegar que a seleção de jogo
-ou um criador confiável resolvem isso. Não avançar para outra etapa sem autorização.
+Avaliação TikTok em docs/validacao-tiktok.md preservada como contexto da decisão.
+oEmbed não fornece duração e o player não comprova esse valor ao servidor; proprietário
+aceitou conscientemente essa limitação exclusivamente para TikTok. Não exigir aprovação
+de criadores, OAuth ou revisão administrativa para publicações comuns.
+A seleção obrigatória de jogo ativo continua sendo declaração do visitante.
+Filtros audiovisuais não implementados não são presumidos como existentes.
 
 Etapa 0 regularizada. Etapa 1 autorizada individualmente e concluída no ambiente
 local: Google, cadastro/desafio TOTP e autorização administrativa no servidor.

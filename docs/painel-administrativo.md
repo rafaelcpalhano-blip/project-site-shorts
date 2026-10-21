@@ -21,10 +21,13 @@ Análise humana pode resolver sinais de conteúdo, mas não substitui evidência
 O jogo é declaração do visitante e precisa permanecer ativo no catálogo; comprovação externa
 da correspondência não é exigida na aprovação nem na restauração.
 No runner atual, Twitch valida metadados de clipes; YouTube requer Data API, duração positiva
-até 180 segundos e incorporação permitida. oEmbed serve apenas para título.
+até 180 segundos e incorporação permitida. Para YouTube, oEmbed serve apenas para título.
 Novos envios tecnicamente inconclusivos retornam falha recuperável sem criar pendência/reserva;
 pendências já existentes não são migradas ou publicadas em massa.
-TikTok ainda carece de evidência de duração; não foi introduzida lista de criadores confiáveis.
+TikTok tem exceção de duração explicitamente aprovada: fonte oficial validada e demais
+controles permitem publicação automática mesmo com shortFormat unknown. Aprovação e
+restauração respeitam essa exceção somente para URLs TikTok; a regra YouTube não muda.
+Não foi introduzida lista de criadores confiáveis nem análise audiovisual inexistente.
 
 ## Segurança e consistência
 

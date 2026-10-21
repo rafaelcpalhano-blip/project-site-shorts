@@ -47,8 +47,14 @@ O runner também consulta YouTube/TikTok oEmbed para títulos, quando a fonte re
 Para publicar YouTube, YOUTUBE_API_KEY privada e a Data API são obrigatórias: URL /shorts/ID,
 vídeo público/não listado processado, duração positiva até 180 segundos e incorporação permitida.
 Sem esses dados, HTTP 503 permite nova tentativa sem reservar identidade nem consumir cota;
-oEmbed sozinho nunca aprova publicação. Nenhum serviço/chave foi configurado nesta alteração.
-TikTok continua sem evidência de duração no oEmbed: publicação não habilitada automaticamente;
-essa limitação exige decisão específica, não revisão administrativa obrigatória.
+oEmbed sozinho nunca aprova publicação. YouTube Data API e chave dedicada já foram configuradas com participação do proprietário,
+restritas à API e IPs de saída IPv4/IPv6. Consulta real retornou HTTP 200 e preencheu título.
+Se a conexão/IP mudar, revisar a restrição; não desativá-la como atalho.
+A criação de credenciais e alterações externas continuam exigindo autorização.
+TikTok publica automaticamente sob exceção de duração aprovada: exige URL canônica
+segura, resposta oficial válida e todos os demais controles de publicação. A duração
+permanece desconhecida; não exige OAuth ou aprovação de criador. Título pode ser
+preenchido manualmente quando ausente na fonte. Detalhes em [validacao-tiktok.md](validacao-tiktok.md).
+A exceção não altera o limite de 180 segundos do YouTube nem as regras Twitch.
 Detalhes em [fontes-titulos.md](fontes-titulos.md). O teste completo de preenchimento, edição e publicação
 local foi realizado com um clipe Twitch, sem gravações na nuvem.
