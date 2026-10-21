@@ -31,9 +31,7 @@ O limite local de novas sessões é 20/minuto, global ao processo; não substitu
 proteção antiabuso para implantação pública. O catálogo consulta IGDB real quando
 configurado, mas grava apenas no emulador. Vídeos tecnicamente confirmados podem ser publicados automaticamente no emulador. O modo demo existente continua igual.
 
-Validação manual pendente: pesquisar jogo, confirmar seleção, enviar short,
-conferir persistência pendente e retorno de duplicidade. Sem certificado local
-confiável, não considerar o fluxo no navegador validado.
+Validação local já realizada: pesquisa/seleção IGDB, envio pendente e duplicidade; depois, título original editável e publicação Twitch com validação técnica. Denúncias também foram verificadas no navegador. Evidências e limites em [continuidade.md](continuidade.md). Isso não certifica o ambiente de produção.
 
 O runner agora verifica metadados de clipes Twitch quando as credenciais estão
 configuradas, incluindo a categoria cruzada com o IGDB. Clipes com existência, formato e jogo confirmados podem ser publicados automaticamente, conforme decisão do usuário. Análise audiovisual continua indisponível. Outras fontes permanecem

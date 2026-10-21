@@ -1,5 +1,25 @@
 # Continuidade da aplicação — checkpoint
 
+## Estado vigente — Etapa 1 concluída localmente (21/10/2026)
+
+Etapa 0 regularizada. Etapa 1 autorizada individualmente e concluída no ambiente
+local: Google, cadastro/desafio TOTP e autorização administrativa no servidor.
+Proprietário confirmou "Acesso administrativo verificado." em 21/10/2026.
+UID único na allowlist privada; autenticação em memória e exigência de TOTP
+preservadas. Chaves e códigos do autenticador não foram coletados pelo agente.
+
+Identity Platform ativo; Google habilitado, app Web registrado sem Hosting e
+127.0.0.1 autorizado. TOTP ativado pelo proprietário no Cloud Shell: provedor
+ENABLED e adjacentIntervals 1; SMS não configurado. Plano Spark mantido, sem
+faturamento ativado. Firestore da aplicação continua somente no emulador local.
+
+Onze testes focados, lint e build já passaram na implementação; não repetidos
+para alterações documentais. Próxima etapa recomendada: painel administrativo
+para denúncias e revisão, sujeito a nova autorização individual. Sem deploy,
+commit, push ou alteração das regras de negócio neste fechamento.
+
+Os checkpoints abaixo são históricos; este resumo prevalece sobre estados antigos.
+
 ## Decisões confirmadas pelo proprietário
 
 - Publicação automática de shorts válidos de games das plataformas aceitas.
@@ -10,7 +30,7 @@
 - Tentativas rejeitadas precisam de proteção antiabuso independente.
 - Pesquisa persistente deve continuar encontrando qualquer trecho do título.
 - Priorizar IGDB, com atribuição visível quando a integração estiver ativa.
-- Não existem ainda projetos Firebase/Cloudflare configurados para esta aplicação.
+- Firebase clipzone-db02a e conta Cloudflare gratuita configurados; sem deploy ou faturamento. Firestore continua o único banco aprovado.
 
 ## Entregue e verificado localmente
 
@@ -449,3 +469,205 @@ gravação na nuvem. Screenshot titulo-automatico-validado.png no workspace do c
 Próximo: botão de denúncias e persistência privada com deduplicação/limites; fila
 administrativa e notificações pendentes. Não ativar ocultação por volume até
 limiar/proteções serem definidos. Outras fontes ainda precisam integração técnica.
+
+## Checkpoint — denúncias privadas sem ocultação (2026-10-20)
+
+Adicionado botão Denunciar vídeo dentro de FirestoreShortDialog, formulário com
+motivos definidos, confirmação de envio e bloqueio de submissão/fechamento durante
+requisição. Cliente estabelece sessão, não repete gravações automaticamente e
+aceita resposta idempotente. Fluxo demonstrativo permanece inalterado.
+
+POST /api/reports exige origem, sessão assinada, JSON limitado e contador separado
+reportAttempts. Serviço usa transação: reports/{hash(shortId,visitor)} registra
+uma denúncia por identidade e reportSummaries/{shortId} agrega contagem privada
+para futura fila administrativa. Somente shorts publicados são denunciáveis.
+Nenhuma denúncia altera visibilidade, cota ou reserva de vídeo. Identidades são
+sessões anônimas, não pessoas comprovadamente distintas; não ativar ocultação por
+contagem simples. Painel autenticado, notificação e limiar de ocultação continuam
+pendentes conforme decisões do usuário.
+
+Cinco testes HTTP/cliente/composição e dois testes reais no emulador passaram:
+concorrência/deduplicação, agregação, publicação preservada, cotas intactas e
+regras negando leitura/gravação de denúncias ao visitante. Lint completo e build
+passaram. Servidor HTTPS reiniciado; validação visual do formulário ainda pendente.
+Nenhum deploy, nova dependência ou alteração no Firestore da nuvem.
+
+## Checkpoint — denúncia validada no navegador (2026-10-20)
+
+Teste visual concluído sobre registro fictício criado exclusivamente no emulador:
+short ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+jogo report-test, título TESTE LOCAL — fluxo de denúncias. O emulador estava vazio;
+nenhum conteúdo real ou registro na nuvem foi denunciado.
+
+Formulário exibiu motivos, recebeu denúncia e bloqueou repetição da mesma sessão
+com confirmação visível. Leitura REST confirmou count=1 e vídeo published após
+duas tentativas. Acesso sem credencial ao resumo privado retornou 403. Evidência
+visual denuncia-validada.png no workspace do chat. Não houve alteração de código;
+testes/lint/build anteriores não repetidos. Próximo: autenticação administrativa
+para consultar a fila privada; notificações e ocultação automática seguem pendentes.
+
+## Checkpoint — avaliação Firebase Authentication/MFA (2026-10-20)
+
+Authentication inicializado pelo botão Vamos começar no projeto clipzone-db02a.
+Nenhum provedor habilitado, usuário criado, credencial emitida ou faturamento
+ativado. Assistente de upgrade Identity Platform inspecionado até confirmação
+final, SEM confirmar. Console confirma manutenção do Spark e cota de 3.000
+usuários autenticados/dia, mas avisa que upgrade NÃO pode ser revertido.
+Naquela inspeção, a aprovação ainda estava pendente. Posteriormente o proprietário autorizou e o upgrade foi concluído; consulte o estado vigente no início deste documento.
+Não clicar em upgrade Blaze. Não confundir ativação de Identity Platform com
+MFA configurado: TOTP ainda exige configuração adicional e cadastro do usuário.
+Referência oficial: https://firebase.google.com/docs/auth/web/totp-mfa
+Proposta: Firebase Auth + segundo fator TOTP, autorização administrativa no
+servidor por identidade explicitamente permitida; visitantes sem login continuam
+na sessão assinada atual. Nenhum acesso administrativo foi liberado.
+Evidência: firebase-auth-confirmacao.png no workspace do chat. Nenhuma alteração
+de código ou repetição de testes neste bloco. Após aprovação, concluir configuração
+gratuita, validar disponibilidade TOTP e solicitar participação na conta/credenciais.
+
+## Checkpoint — Etapa 0 regularizada
+
+Escopo autorizado: expectativa antiga do teste, documentação vigente e organização
+do versionamento do trabalho existente. Nenhuma implementação funcional alterada.
+
+Alterações desta etapa:
+- tests/tiktok-video.test.mjs: caso do roteador renomeado e expectativa alterada
+  para published quando existência/formato/jogo estão confirmados; a asserção
+  moderation=unavailable permanece. O teste do oEmbed incompleto continua pending.
+- docs/continuidade.md: estado vigente do Identity Platform e aprovação por etapa.
+- docs/api-local.md: removida a indicação antiga de validação local ainda pendente.
+
+Verificação executada:
+node --test tests/tiktok-video.test.mjs tests/metadata-publication.test.mjs tests/publication-decision.test.mjs
+Resultado: 10 testes passaram, zero falhas. Nenhuma suíte completa, lint/build ou
+novo teste visual executado: código funcional e arquivos de denúncias não mudaram.
+Resultados anteriores das denúncias (HTTP, concorrência/regras no emulador e
+navegador) permanecem aplicáveis. Os 10 arquivos desse bloco foram conferidos
+por hash antes/depois e preservados integralmente, inclusive os não rastreados.
+
+### Versionamento organizado — dois commits propostos, nesta ordem
+
+1. feat: adiciona denúncias privadas com deduplicação por sessão
+   Incluir somente os arquivos do bloco preexistente:
+   - server/http/public-api.ts
+   - server/security/attempt-limit.ts
+   - server/http/reports.ts
+   - server/reports/report-short.ts
+   - src/features/shorts/components/FirestoreShortDialog.tsx
+   - src/features/reports/ReportForm.tsx
+   - src/features/reports/report-api.ts
+   - src/lib/validation/report-input.ts
+   - tests/reports.test.mjs
+   - tests/firestore/reports.test.mjs
+
+2. test: regulariza expectativa de publicação e documentação da etapa zero
+   - tests/tiktok-video.test.mjs
+   - docs/continuidade.md (inclui os checkpoints históricos ainda não commitados)
+   - docs/api-local.md
+
+Nenhum git add, commit, push, reset ou stash foi executado nesta regularização.
+Não incluir arquivos de ambiente, certificados, logs ou dados do emulador.
+A separação mantém código e testes de denúncias juntos; documentação e correção
+da expectativa antiga ficam no segundo commit. Etapa 1 recomendada: autenticação
+administrativa, TOTP e autorização no servidor; aguarda autorização individual.
+
+## Checkpoint — Etapa 1 em implementação: Google/TOTP/autorização
+
+Proprietário autorizou Etapa 1 e escolheu Conta Google. Implementada tela /admin
+com SDK Firebase existente: login Google, desafio TOTP, cadastro manual no app
+autenticador sem biblioteca QR, autenticação apenas em memória e saída. Nenhum
+código/chave TOTP foi obtido, armazenado em arquivo ou preenchido pelo agente.
+Nenhum painel ou ação de moderação foi implementado nesta etapa.
+
+Adicionados server/auth/firebase-admin.ts e server/http/admin.ts: validação
+RS256 via crypto nativo Node com certificados oficiais Firebase, issuer/audience/
+timestamps, e-mail verificado, UID explicitamente autorizado, Google, TOTP e estado
+atual da conta via API oficial (desativação/revogação/fator removido). Certificados
+com cache; estado de conta não é cacheado. Rotas /api/admin/config (config pública
+somente) e /api/admin/session (origem, sessão assinada e limite separado). O runner
+local usa FIREBASE_AUTH_API_KEY, FIREBASE_AUTH_APP_ID e CLIPZONE_ADMIN_UIDS; sem
+configuração ou UID, acesso fica bloqueado. Firestore e regras existentes intactos.
+Adaptador crypto Node exige revisão de compatibilidade no runtime do deploy futuro.
+
+Validação: nove testes focados de autorização/composição e dois novos de rotas
+administrativas passaram. Lint completo e build passaram após ajuste de lint na
+nova tela. Não repetidas suítes Firestore ou testes visuais anteriores.
+
+Configuração externa AINDA NÃO CONCLUÍDA: formulário do provedor Google está
+preparado no console, sem salvar, aguardando confirmação no momento da alteração
+de acesso e aprovação do e-mail de suporte rafaelcpalhano@gmail.com. Solicitação
+assíncrona enviada. TOTP do projeto ainda não ativado; app Web/API config e UID
+ainda não configurados. gcloud não encontrado; nada instalado. Referência e roteiro
+em docs/autenticacao-admin.md. Próximo: confirmar provedor/suporte, obter config
+pública do app, ativar TOTP com autenticação do proprietário, login real, confirmar
+UID e cadastrar fator pelo próprio proprietário. Não declarar a etapa completa
+antes de validação real. Nenhum deploy/commit/push/faturamento.
+
+## Checkpoint — provedor Google ativado; app Web aguardando proprietário
+
+Autorização explícita recebida para nome público Clipzone e suporte no e-mail
+atual, provisoriamente. Provedor Google salvo e confirmado ativado. Configurações
+gerais confirmaram Spark, US$ 0/mês; SMS permanece desativado. Nome/suporte não
+são critérios de autorização: mudanças futuras não alteram o UID administrativo.
+Evidência: google-ativado.png no workspace do chat. Nenhuma informação pessoal
+adicional foi publicada; nenhum deploy ou acesso ao Firestore real.
+
+Console não tinha apps registrados. Preparado formulário Clipzone Web, sem
+Hosting; Registrar app NÃO foi acionado pelo agente. Solicitada participação do
+proprietário na criação/configuração de credenciais conforme condição anterior.
+Próximo: proprietário clicar Registrar app e avisar quando configuração estiver
+exibida; não enviar senhas/tokens/chaves pelo chat. Depois configurar valores
+públicos no ambiente local, ativar TOTP, efetuar login real, aprovar UID e cadastrar
+fator. Sem testes repetidos neste bloco: somente configuração externa/documentação.
+Documentação atualizada em docs/autenticacao-admin.md; etapa continua pendente.
+
+## Checkpoint — app Web registrado; domínio local pendente
+
+Proprietário confirmou registro de Clipzone Web. Configuração pública do Firebase
+adicionada a .env.server.local, com exclusão Git verificada e demais valores
+preservados; nenhuma credencial privada foi exibida. Servidor HTTPS local e
+emulador Firestore iniciados. Nenhum serviço de produção foi publicado.
+
+Login pelo proprietário retornou domínio não autorizado. Console confirmou
+localhost autorizado e ausência de 127.0.0.1. Formulário preparado apenas para
+127.0.0.1; proprietário autorizou, domínio salvo e confirmado no console.
+Depois: repetir login Google, confirmar UID autorizado, ativar TOTP do projeto
+com participação do proprietário e validar cadastro/desafio/autorização real.
+TOTP ainda não ativado; acesso administrativo não foi concedido.
+Nenhum teste repetido: somente configuração local e documentação. Sem commit,
+push, deploy ou faturamento. Etapa 1 permanece em andamento.
+## Checkpoint — login Google informado; UID e TOTP pendentes
+
+Proprietário informou login Google bem-sucedido após autorizar 127.0.0.1.
+A aba local acessível ao agente ainda mostra Entrar com Google; não foi recarregada
+neste bloco. Solicitado somente UID da página conectada para identificar a conta
+administrativa, sem solicitar tokens ou códigos. Allowlist não alterada.
+
+Cloud Shell oficial aberto pelo console Firebase para preparar ativação TOTP via
+API documentada. Primeiro uso exige revisão dos termos; checkbox e botão Iniciar
+não acionados pelo agente. Participação do proprietário solicitada para revisar,
+aceitar se concordar e concluir eventuais autorizações. Nenhuma chamada de
+configuração TOTP executada. Não ativar faturamento, SMS ou novos serviços pagos.
+Sem alterações funcionais, testes repetidos, instalação, commit ou deploy.
+## Checkpoint — UID configurado; consulta MFA aguardando proprietário
+
+Proprietário informou o UID da conta conectada. Configurado somente esse UID em
+CLIPZONE_ADMIN_UIDS no .env.server.local; exclusão Git reconfirmada, demais valores
+preservados. API HTTPS local reiniciada; TOTP obrigatório permanece sem bypass.
+Proprietário iniciou Cloud Shell. Controle da aba falhou ao operar terminal embutido;
+a entrada inicial da consulta ficou incompleta, sem resultado de execução. Solicitado
+Ctrl+C e execução manual de consulta GET que mostra somente a configuração MFA.
+Não houve PATCH nem ativação TOTP neste bloco. Próximo: obter configuração MFA
+atual, preservar demais opções na ativação, proprietário cadastrar autenticador,
+refazer login com Google/TOTP e verificar autorização no servidor.
+Somente ambiente local e documentação alterados; sem testes repetidos ou deploy.
+## Checkpoint — autenticação administrativa validada (21/10/2026)
+
+Proprietário executou PATCH de configuração MFA no Cloud Shell e compartilhou
+somente resposta de configuração: state ENABLED, TOTP ENABLED, adjacentIntervals 1.
+Máscara de atualização limitada a mfa.state e mfa.providerConfigs; SMS não adicionado.
+Proprietário cadastrou o autenticador e informou "Acesso administrativo verificado."
+A confirmação é do proprietário; o agente não capturou tela de segredo/código nem
+obteve tokens. Etapa 1 concluída localmente; próxima etapa aguarda autorização.
+Neste fechamento, apenas docs/autenticacao-admin.md e docs/continuidade.md alterados;
+verificação de whitespace, sem repetir testes funcionais já aprovados.
+Alterações anteriores preservadas, sem staging, commit, push ou deploy.
