@@ -1,10 +1,12 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { createGameCatalogClient } from '../services/catalog-api'
 import type { OfficialGame } from '../services/catalog-api'
+import styles from './OfficialGamePicker.module.css'
 const catalog = createGameCatalogClient()
 export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRequest = true }: {
   allowRequest?: boolean; disabled: boolean; onBusyChange: (busy: boolean) => void; onSelected: (game: { id: string; name: string }) => void
 }) {
+  const choiceGroup = useId()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<OfficialGame[]>([])
   const [selected, setSelected] = useState('')
@@ -33,10 +35,17 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
     }} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void search() } }} />
     <button type="button" disabled={!query.trim()} onClick={() => void search()}>Pesquisar no IGDB</button>
     {working && <p role="status">Consultando catálogo...</p>}
-    {results.map(game => <label key={game.externalId}>
-      <input type="radio" name="official-game-choice" value={game.externalId} checked={selected === game.externalId} onChange={() => setSelected(game.externalId)} />
-      {game.officialName}{game.releaseDate ? ' · ' + game.releaseDate.slice(0, 4) : ''}{game.platforms.length ? ' · ' + game.platforms.join(', ') : ''}
-    </label>)}
+    {results.length > 0 && <div className={styles.results} role="radiogroup" aria-label="Jogos encontrados no IGDB">
+      {results.map(game => <label key={game.externalId} className={styles.choice}>
+        <input className={styles.radio} type="radio" name={choiceGroup} value={game.externalId} checked={selected === game.externalId} onChange={() => setSelected(game.externalId)} />
+        <span className={styles.option}>
+          <strong>{game.officialName}</strong>
+          {(game.releaseDate || game.platforms.length > 0) && <span className={styles.details}>
+            {[game.releaseDate?.slice(0, 4), game.platforms.join(', ')].filter(Boolean).join(' · ')}
+          </span>}
+        </span>
+      </label>)}
+    </div>}
     {results.length > 0 && <button type="button" disabled={!selected} onClick={() => void run(async () => {
       const game = await catalog.confirm(selected)
       onSelected(game); setResults([]); setSelected(''); setSearched(false)

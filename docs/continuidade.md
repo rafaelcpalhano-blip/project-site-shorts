@@ -1,5 +1,22 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.1 — seleção visual IGDB implementada (21/10/2026)
+
+Autorizado apenas o refinamento dos resultados do OfficialGamePicker. Cada resultado
+agora é um label clicável com nome e metadados; radio nativo fica visualmente oculto,
+sem removê-lo da navegação por teclado/leitor de tela. Grupo com nome único por
+instância, hover discreto, estado selecionado e foco visível no item inteiro.
+Styles isolados em OfficialGamePicker.module.css. Confirmação, IDs oficiais,
+requisições e regras de duplicatas intactos. Nenhuma alteração de backend ou dados.
+ESLint localizado e tipagem do frontend aprovados. Verificação temporária com React
+e cliente simulado confirmou renderização, seleção, habilitação/confirmacão e
+callback; sem chamadas externas ou novas dependências. Diff sem erros.
+Conferência visual/teclado no navegador pendente com proprietário. Não executado
+build/suíte completa por ser alteração localizada. Etapas 7.5.2 em diante aguardam
+autorização individual. Especificação de referência: texto anexado pelo proprietário
+como Clipzone_Prompt_Etapa_7_5_Atualizado.md; manter decisões aprovadas da Etapa 7.5.
+
+
 ## Descoberta cronológica — pesquisa textual desativada por decisão de produto (21/10/2026)
 
 Proprietário confirmou publicação e pesquisa funcionando localmente, encerrando a
