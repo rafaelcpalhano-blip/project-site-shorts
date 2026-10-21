@@ -16,7 +16,12 @@ export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time
 export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string}; limit: number }
 export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'banned'
 export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
+export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?:string;generationId?:string;readTime?:string;cursor?:{id:string;time:string;value?:number};limit:15}
 export interface AtomicStore {
+  rankingItemsPage?: (generationId:string)=>Promise<Array<{id:string;data:RecordData}>>
+  rankingSourcePage?: (after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
+  snapshotGet?: (path:string,readTime:string)=>Promise<RecordData|null>
+  rankingPage?: (query:RankingQuery)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   scanLikeRecords?: (collection:'shortLikes'|'likeAttempts',after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   gameCatalogPage?: (query:GameCatalogQuery)=>Promise<Array<{id:string;data:RecordData}>>
   countGameShorts?: (gameId:string)=>Promise<number>

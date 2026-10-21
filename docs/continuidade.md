@@ -1,5 +1,26 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.6-B — base local concluída, integração C pendente (21/10/2026)
+
+Aprovada variante 24h/12h/6h e gerações horárias com controle de orçamento. Base interna
+implementada: preparo idempotente, métricas validadas, snapshot único, staging/lease,
+promoção só de geração completa, consultas nos quatro modos e retenção por lote.
+Nada conectado ao HTTP/UI; nenhum agendamento/serviço/deploy. Métricas pendentes não
+viram engajamento zero: gerador recusa, preservando geração anterior.
+Limites locais: 100 vídeos ativos/300 fontes, sem truncar ranking; reserva por tentativa
+762 leituras/124 gravações; teto diário UTC do módulo 20k leituras/4k gravações/4k
+exclusões, conservador e separado do consumo do restante do site. Não é medidor de
+faturamento; retentativas/índices/controle exigem margem e monitoramento.
+19 testes passaram (11 unitários + 8 emulador), lint/build aprovados e ajuste final
+localizado. Diagnóstico/aplicação local: 10 shorts preparados, demais metadados
+preservados, 10 métricas ready:false. Sem geração real, curtidas ou vídeos fictícios.
+API reiniciada; novas publicações nascem com likeCount=0. HTTPS feed 200; modos novos
+continuam desativados (400 no endpoint antigo). Sem conferência visual nesta subetapa.
+Detalhes em [etapa-7-5-6-b.md](etapa-7-5-6-b.md). Próxima C, mediante autorização:
+coleta transacional de métricas/admissões e integração segura das quatro ordenações.
+Checkpoints abaixo históricos.
+
+
 ## Etapa 7.5.6-A — avaliação concluída, estratégia da B aguardando decisão (21/10/2026)
 
 Somente experimentos locais e documentação. Código da aplicação, dados 8080/nuvem,

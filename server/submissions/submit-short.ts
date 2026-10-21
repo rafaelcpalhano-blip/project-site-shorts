@@ -59,7 +59,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
       platform: submission.platform, platformVideoId: submission.identity.slice(submission.platform.length + 1),
       ...(TITLE_SEARCH_ENABLED ? titleSearchFields(title) : {}),
       title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
-      createdAt: now, moderationStatus: decision.status,
+      createdAt: now, moderationStatus: decision.status, likeCount: 0,
     })
     // Private ownership supports later quota accounting on approval; never in public short documents.
     transaction.create('submissionOwners/' + identityId, { visitorHash, createdAt: now })

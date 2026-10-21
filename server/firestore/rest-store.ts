@@ -54,6 +54,34 @@ export function createRestStore(options: Options): AtomicStore {
   }
   const decodeDocument = (document: {name:string;fields?:Record<string,Value>}) => ({ id:document.name.split('/').at(-1)!, data:Object.fromEntries(Object.entries(document.fields || {}).map(([key,value]) => [key,decode(value)])) })
   return {
+    async snapshotGet(path,readTime) {
+      if(!Number.isFinite(Date.parse(readTime)))throw new Error('Snapshot inválido')
+      const result=await request('batchGet',{documents:[name(path)],readTime})
+      const found=(Array.isArray(result)?result:[result]).find(item=>item.found)?.found
+      return found?decodeDocument(found).data:null
+    },
+    async rankingItemsPage(generationId) {
+      if(!/^[a-f0-9]{32}$/.test(generationId))throw new Error('Geração inválida')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'rankingItems'}],select:{fields:[{fieldPath:'generationId'}]},where:{fieldFilter:{field:{fieldPath:'generationId'},op:'EQUAL',value:encode(generationId)}},orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
+    async rankingSourcePage(after,readTime) {
+      if(after!==undefined&&!/^[\w-]{1,128}$/.test(after)||readTime!==undefined&&!Number.isFinite(Date.parse(readTime)))throw new Error('Snapshot inválido')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'shorts'}],select:{fields:['gameId','moderationStatus','createdAt','likeCount'].map(fieldPath=>({fieldPath}))},orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,...(after?{startAt:{before:false,values:[{referenceValue:name('shorts/'+after)}]}}:{})},...(readTime?{readTime}:{})})
+      const rows=Array.isArray(result)?result:[result],point=readTime??rows.find(item=>item.readTime)?.readTime
+      if(!point)throw new Error('Snapshot ausente')
+      return {items:rows.filter(item=>item.document).map(item=>decodeDocument(item.document)),readTime:point}
+    },
+    async rankingPage(query) {
+      if(!['latest','oldest','likes','relevant'].includes(query.mode)||query.limit!==15||query.gameId!==undefined&&!/^[\w-]{1,128}$/.test(query.gameId)||query.mode==='relevant'&&!/^[a-f0-9]{32}$/.test(query.generationId??'')||query.readTime!==undefined&&!Number.isFinite(Date.parse(query.readTime))||query.cursor&&(!(query.mode==='relevant'?/^[\w-]{1,192}$/:/^[\w-]{1,128}$/).test(query.cursor.id)||!Number.isFinite(Date.parse(query.cursor.time))||['likes','relevant'].includes(query.mode)&&(!Number.isFinite(query.cursor.value)||Number(query.cursor.value)<0)))throw new Error('Ordenação inválida')
+      const relevant=query.mode==='relevant',collection=relevant?'rankingItems':'shorts',primary=query.mode==='likes'?'likeCount':'score',direction=query.mode==='oldest'?'ASCENDING':'DESCENDING'
+      const filters=[{fieldFilter:{field:{fieldPath:relevant?'generationId':'moderationStatus'},op:'EQUAL',value:encode(relevant?query.generationId:'published')}},...(query.gameId?[{fieldFilter:{field:{fieldPath:'gameId'},op:'EQUAL',value:encode(query.gameId)}}]:[])]
+      const orderBy=[...(['likes','relevant'].includes(query.mode)?[{field:{fieldPath:primary},direction:'DESCENDING'}]:[]),{field:{fieldPath:'createdAt'},direction},{field:{fieldPath:'__name__'},direction}]
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:collection}],select:{fields:(relevant?['shortId','gameId','createdAt','score']:['gameId','createdAt','likeCount','moderationStatus']).map(fieldPath=>({fieldPath}))},where:{compositeFilter:{op:'AND',filters}},orderBy,limit:15,...(query.cursor?{startAt:{before:false,values:[...(['likes','relevant'].includes(query.mode)?[encode(query.cursor.value)]:[]),encode(new Date(query.cursor.time)),{referenceValue:name(collection+'/'+query.cursor.id)}]}}:{})},...(query.readTime?{readTime:query.readTime}:{})})
+      const rows=Array.isArray(result)?result:[result],point=query.readTime??rows.find(item=>item.readTime)?.readTime
+      if(!point)throw new Error('Snapshot ausente')
+      return {items:rows.filter(item=>item.document).map(item=>decodeDocument(item.document)),readTime:point}
+    },
     async get(path) {
       const result = await request('batchGet', {documents:[name(path)]})
       const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
