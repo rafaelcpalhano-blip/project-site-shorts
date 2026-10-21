@@ -1,5 +1,26 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.6-A — avaliação concluída, estratégia da B aguardando decisão (21/10/2026)
+
+Somente experimentos locais e documentação. Código da aplicação, dados 8080/nuvem,
+API, índices e serviços preservados; nada habilitado ou agendado. ReadTime provado no
+emulador 8081 para os quatro modos/escopos, com cursor temporal e moderação atual.
+Pior caso: 90 leituras observadas + leitura do limitador estimada = 91. Não é cobrança
+medida; índices/retentativas/sessões podem acrescentar consumo.
+A simulação refutou a suficiência do decaimento comum de 24h: sem eventos novos a
+ordem permanece fixa e o bônus mantém vantagem percentual permanente. Variante
+24h publicação / 12h interações / 6h bônus corrige esse efeito, mas exige atualização
+por tempo. Recomendação para aprovação: detalhar gerações completas horárias, fora
+das visitas, com promoção só após conclusão e orçamento explícito. Não implementada.
+Piso para 100 vídeos: 2.424 gravações/dia; 1.000: 24.024, acima da franquia de gravações
+antes das demais ações. Atualização horária também traz atraso de até aproximadamente
+1h nesse modo. Ataques com identidades renovadas continuam sendo limitação conhecida.
+23 testes distintos passaram (16 simulações + 7 provas no emulador); lint localizado
+aprovado. Sem build geral pois não houve integração. Nenhuma mudança visual a conferir.
+Detalhes em [etapa-7-5-6-a.md](etapa-7-5-6-a.md) e relatório de simulações ao lado.
+Aguardar aprovação explícita da variante/estratégia antes da B. Checkpoints abaixo históricos.
+
+
 ## Etapa 7.5.5 — curtidas implementadas localmente (21/10/2026)
 
 Proposta aprovada: contador nos cards, curtir/descurtir no visualizador e persistência
