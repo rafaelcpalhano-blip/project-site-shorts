@@ -1,3 +1,6 @@
+import { handleAdmin } from './admin.ts'
+import type { AdminConfiguration } from './admin.ts'
+import { handleReport } from './reports.ts'
 import { handleVideoPreview } from './video-preview.ts'
 import { handleGameConfirmation } from './game-confirmation.ts'
 import { handleGameSearch } from './game-search.ts'
@@ -8,6 +11,7 @@ import { handleSession } from './session.ts'
 import { handleSubmission } from './submissions.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 export interface PublicApiOptions {
+  admin?: AdminConfiguration
   gameSearch?: { get?: (id: string) => Promise<CatalogGame | null>; search: (name: string) => Promise<CatalogGame[]>; maximumAttempts: number; windowMs: number }
   origin: string
   visitorSecret: string
@@ -25,12 +29,25 @@ export async function createPublicApi(options: PublicApiOptions) {
   const identity = await createVisitorIdentity(options.visitorSecret, options.now)
   const checkAbuse = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs })
+  const adminLimit = createAttemptLimiter({ store: options.store, now: options.now,
+    maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'admin-auth' })
+  const reportLimit = createAttemptLimiter({ store: options.store, now: options.now,
+    maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
   const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'video-preview' })
   const searchLimit = options.gameSearch ? createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.gameSearch.maximumAttempts, windowMs: options.gameSearch.windowMs, scope: 'game-search' }) : undefined
   return async (request: Request): Promise<Response> => {
     const path = new URL(request.url).pathname
+    if (path === '/api/admin/config' || path === '/api/admin/session') return handleAdmin(request, options.origin, options.admin, async candidate => {
+      const visitor = await identity.resolveVisitor(candidate)
+      if (!visitor) return false
+      await adminLimit(visitor)
+      return true
+    })
+    if (path === '/api/reports') return handleReport(request, {
+      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
+    })
     if (path === '/api/shorts/preview') return handleVideoPreview(request, {
       origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: options.verify,
     })
@@ -51,4 +68,3 @@ export async function createPublicApi(options: PublicApiOptions) {
     return Response.json({ error: 'not-found' }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
   }
 }
-

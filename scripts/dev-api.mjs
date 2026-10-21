@@ -1,3 +1,4 @@
+import { createAdminAuthorizer } from '../server/auth/firebase-admin.ts'
 // Development only. Never deploy this runner or expose it through a tunnel.
 import { readFile } from 'node:fs/promises'
 import { randomBytes } from 'node:crypto'
@@ -28,11 +29,18 @@ try {
   const twitch = catalog ? createTwitchClipVerifier({ clientId, accessToken: catalog.accessToken,
     twitchGameId: createTwitchGameResolver({ store, clientId, accessToken: catalog.accessToken }),
   }) : undefined
+  const adminKey = process.env.FIREBASE_AUTH_API_KEY?.trim()
+  const adminAppId = process.env.FIREBASE_AUTH_APP_ID?.trim()
+  const admin = adminKey && adminAppId ? {
+    publicConfig: { apiKey: adminKey, appId: adminAppId, projectId: 'clipzone-db02a', authDomain: 'clipzone-db02a.firebaseapp.com' },
+    authorize: createAdminAuthorizer({ projectId: 'clipzone-db02a', apiKey: adminKey,
+      allowedUids: (process.env.CLIPZONE_ADMIN_UIDS || '').split(',').map(value => value.trim()).filter(Boolean) }),
+  } : undefined
   let issued = 0
   let windowStarted = Date.now()
   const api = await createPublicApi({
     origin, visitorSecret: randomBytes(32).toString('hex'),
-    store,
+    store, admin,
     now: () => new Date(), maximumAttempts: 20, attemptWindowMs: 60_000,
     // Technical confirmation permits publication; flagged or inconclusive evidence stays pending.
     verify: createMetadataVerifier(twitch ? { Twitch: twitch } : {}),
