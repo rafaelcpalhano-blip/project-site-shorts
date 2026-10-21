@@ -11,6 +11,7 @@ export function confirmationId(input: unknown): string {
   return id
 }
 export async function confirmGame(input: unknown, dependencies: {
+  translateGame?: (id: string) => Promise<void>
   store: AtomicStore; get: (id: string) => Promise<CatalogGame | null>; now: () => Date
 }) {
   const externalId = confirmationId(input)
@@ -19,7 +20,7 @@ export async function confirmGame(input: unknown, dependencies: {
   if (!official) throw new GameConfirmationError('game-not-found')
   if (official.externalId !== externalId || typeof official.officialName !== 'string' || !official.officialName.trim() || official.officialName.length > 500) throw new GameConfirmationError('invalid-catalog')
   const id = 'igdb-' + externalId
-  return dependencies.store.transact(async transaction => {
+  const result = await dependencies.store.transact(async transaction => {
     const existing = await transaction.get('games/' + id)
     if (existing) {
       if (existing.status !== 'active' || existing.externalId !== externalId || existing.source !== 'IGDB') throw new GameConfirmationError('game-unavailable')
@@ -33,4 +34,8 @@ export async function confirmGame(input: unknown, dependencies: {
     })
     return { id, name: official.officialName.trim(), created: true }
   })
+  if (dependencies.translateGame) {
+    try { await dependencies.translateGame(id) } catch { /* Translation cannot undo a confirmed game. */ }
+  }
+  return result
 }

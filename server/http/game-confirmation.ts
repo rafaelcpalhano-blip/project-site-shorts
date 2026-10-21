@@ -4,6 +4,7 @@ import { SubmissionError } from '../submissions/submit-short.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import type { CatalogGame } from '../games/igdb.ts'
 export interface GameConfirmationDependencies {
+  translateGame?: (id: string) => Promise<void>
   origin: string; store: AtomicStore; now: () => Date
   resolveVisitor: (request: Request) => Promise<string | null>
   checkAbuse: (visitor: string) => Promise<void>

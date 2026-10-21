@@ -1,3 +1,5 @@
+import { createDescriptionTranslator } from '../server/games/translate-description.ts'
+import { createGameTranslation } from '../server/games/translation-store.ts'
 import { createAdminAuthorizer } from '../server/auth/firebase-admin.ts'
 // Development only. Never deploy this runner or expose it through a tunnel.
 import { readFile } from 'node:fs/promises'
@@ -25,6 +27,11 @@ try {
   const clientSecret = process.env.TWITCH_CLIENT_SECRET?.trim()
   const catalog = clientId && clientSecret ? createIgdbCatalog({ clientId, clientSecret }) : undefined
   const store = createRestStore({ projectId: 'demo-clipzone', emulatorPort: 8080 })
+  const translationEnabled = process.env.CLIPZONE_TRANSLATION_ENABLED === 'true'
+  const gameTranslation = translationEnabled && process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_AI_TOKEN ? createGameTranslation({
+    store, now: () => new Date(), maximumPerDay: 20,
+    translate: createDescriptionTranslator({ accountId: process.env.CLOUDFLARE_ACCOUNT_ID.trim(), token: process.env.CLOUDFLARE_AI_TOKEN.trim() }),
+  }) : undefined
   const twitch = catalog ? createTwitchClipVerifier({ clientId, accessToken: catalog.accessToken,
   }) : undefined
   const adminKey = process.env.FIREBASE_AUTH_API_KEY?.trim()
@@ -38,7 +45,7 @@ try {
   let windowStarted = Date.now()
   const api = await createPublicApi({
     origin, visitorSecret: randomBytes(32).toString('hex'),
-    store, admin,
+    store, admin, gameTranslation,
     now: () => new Date(), maximumAttempts: 20, attemptWindowMs: 60_000,
     // Technical confirmation permits publication; flags require review, uncertainty permits retry.
     verify: createConfiguredVideoVerifier({ twitch, youtubeApiKey: process.env.YOUTUBE_API_KEY }),
@@ -61,6 +68,7 @@ try {
   })
   console.log('Ambiente local: ' + origin + ' | Firestore demo-clipzone:8080')
   console.log('Publicação após validação técnica; sessões expiram ao reiniciar. Nenhuma gravação na nuvem.')
+  console.log(gameTranslation ? 'Tradução pt-BR habilitada: até 20 tentativas/dia UTC, somente no cadastro/confirmação.' : 'Tradução pt-BR desativada ou sem credenciais: descrições originais preservadas.')
   if (!catalog) console.log('Catálogo IGDB indisponível: configure as variáveis privadas do servidor.')
   const close = async () => { server.close(); server.closeAllConnections(); await vite.close() }
   process.once('SIGINT', close)
