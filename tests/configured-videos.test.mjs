@@ -9,7 +9,7 @@ const youtube='https://www.youtube.com/shorts/abcdefghijk'
 const tiktok='https://www.tiktok.com/@gamer/video/12345'
 const yt={type:'video',provider_name:'YouTube',provider_url:'https://www.youtube.com/',title:'Título da fonte',html:'<script>bad()</script>',thumbnail_url:'https://evil.test'}
 const tt={...yt,version:'1.0',provider_name:'TikTok',provider_url:'https://www.tiktok.com/'}
-test('default composition retrieves titles without keys but does not authorize unverified publication',async()=>{
+test('default composition retrieves titles and applies only the approved TikTok platform exception',async()=>{
  const calls=[]
  const verify=createConfiguredVideoVerifier({fetcher:async(url,options)=>{
   calls.push(url)
@@ -22,7 +22,7 @@ test('default composition retrieves titles without keys but does not authorize u
   assert.equal(result.title,'Título da fonte')
   assert.equal(result.existence,'confirmed')
   assert.equal(result.gameMatch,'unknown');assert.equal(result.shortFormat,'unknown')
-  assert.equal(decidePublication(result).status,'retry')
+  assert.equal(decidePublication(result, url === tiktok ? 'TikTok' : 'YouTube').status,url === tiktok ? 'published' : 'retry')
   assert.ok(!JSON.stringify(result).includes('script'));assert.ok(!JSON.stringify(result).includes('evil.test'))
  }
  assert.equal(calls[0].origin+calls[0].pathname,'https://www.youtube.com/oembed')

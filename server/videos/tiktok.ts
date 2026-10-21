@@ -13,10 +13,15 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       const result = await response.json()
       if (!result || result.type !== 'video' || result.version !== '1.0' || result.provider_name !== 'TikTok' ||
           !['https://www.tiktok.com', 'https://www.tiktok.com/'].includes(result.provider_url)) return evidence
+      // Optional identity returned by TikTok must match the requested canonical video ID.
+      if (result.embed_product_id !== undefined &&
+          result.embed_product_id !== video.identity.slice('TikTok:'.length)) return evidence
       evidence.existence = 'confirmed'
+      evidence.formatPolicy = 'tiktok-platform-exception'
       if (typeof result.title === 'string' && result.title.trim() && result.title.length <= 500 &&
           ![...result.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = result.title.trim()
       // Do not store, render or execute oEmbed HTML/scripts, or fetch thumbnail/author URLs.
+      // The approved platform exception permits unknown duration, not invented confirmation.
       // oEmbed does not prove short duration, game identity or content safety.
       return evidence
     } catch { return evidence }

@@ -28,7 +28,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
   let evidence: VideoEvidence
   try { evidence = await dependencies.verify(submission) }
   catch { evidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] } }
-  const decision = decidePublication(evidence)
+  const decision = decidePublication(evidence, submission.platform)
   // Unverified attempts never reserve an identity, create a pending item or spend quota.
   if (decision.status === 'rejected' || decision.status === 'retry') throw new SubmissionError(decision.reason)
   const identityId = await hash(submission.identity)

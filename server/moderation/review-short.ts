@@ -56,7 +56,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
     if (input.action === 'approve' || restoreStatus === 'published') {
       const evidence = await options.verify(submission)
       // Human review may resolve content flags; technical uncertainty cannot be overridden.
-      if (!hasTechnicalEligibility(evidence)) {
+      if (!hasTechnicalEligibility(evidence, submission.platform)) {
         throw new ReviewError('verification-incomplete', 422)
       }
     }
