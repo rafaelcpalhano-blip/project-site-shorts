@@ -55,3 +55,23 @@ test('edited title is stored independently of fresh trusted original; forged ori
     await assert.rejects(submitShort({url:video,gameId:'game',title:'bad\u0000title'},'a'.repeat(64),options))
   }
 })
+
+
+test('prévia TikTok confirmada sem título retorna ausência explícita, sem confundir com falha temporária',async()=>{
+ const url='https://www.tiktok.com/@gamer/video/123456789',verify=async()=>({...evidence,title:undefined,shortFormat:'unknown',formatPolicy:'tiktok-platform-exception'})
+ const result=await handleVideoPreview(request({url}),{...deps,verify})
+ assert.equal(result.status,200);assert.deepEqual(await result.json(),{title:null});assert.equal(result.headers.get('cache-control'),'no-store')
+ for(const existence of ['unknown','missing'])assert.equal((await handleVideoPreview(request({url}),{...deps,verify:async()=>({...await verify(),existence})})).status,existence==='missing'?404:503)
+ assert.equal((await handleVideoPreview(request(),{...deps,verify})).status,503)
+ assert.equal((await handleVideoPreview(request({url:'https://www.youtube.com/shorts/abcdefghijk'}),{...deps,verify})).status,503)
+})
+
+test('cliente aceita título nulo apenas para TikTok e conserva o caminho de título normal e cancelamento',async()=>{
+ const fetcher=async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({title:null})
+ const client=createVideoPreviewClient(fetcher),signal=new AbortController().signal
+ assert.equal(await client('https://www.tiktok.com/@gamer/video/123456789',signal),null)
+ await assert.rejects(client(video,signal))
+ await assert.rejects(client('https://www.youtube.com/shorts/abcdefghijk',signal))
+ for(const title of ['',undefined,42,'bad\u0000title'])await assert.rejects(createVideoPreviewClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({title}))('https://www.tiktok.com/@gamer/video/123456789',signal))
+ const controller=new AbortController();controller.abort();await assert.rejects(createVideoPreviewClient(async(path,options)=>{options.signal.throwIfAborted();return new Response(null,{status:204})})('https://www.tiktok.com/@gamer/video/123456789',controller.signal))
+})

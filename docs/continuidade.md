@@ -1,5 +1,11 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.6-B — TikTok concluído (22/10/2026)
+
+Três vídeos reais retornaram oEmbed 200 com identidade confirmada, mas sem title/thumbnail_url; ausência comprovada na fonte nesses casos, sem atribuir a CORS. Normalização segura de títulos presentes com quebras e NFC; limite 500 sem truncamento. Prévia TikTok confirmada sem título responde ausência explícita, formulário orienta edição manual e preserva o texto. Demais fontes/políticas inalteradas. Diagnóstico CLI manual, sem scraping/player adicional. Manutenção limitada de thumbnails existente reaproveitada; sem refresh em massa. [Evidências, URLs, custos e limites](etapa-7-6-6-b.md).
+29 testes relacionados, lint/build aprovados. Formulário real conferido em aba temporária/cancelado, sem envio ou iframe; aba do proprietário preservada. API reiniciada com segredos persistentes; dados locais mantidos. Próximo 7.6.6-C aguarda autorização individual; fallback pela capa do jogo ainda não implementado neste bloco. Sem serviços externos/deploy.
+
+
 ## Etapa 7.6.6-A — segurança local concluída (22/10/2026)
 
 Identidade anônima preservada entre reinícios por segredos privados em .env.security.local. Proteção HMAC por rede/dia/finalidade, limites de sessões/tentativas e contribuições aceitas transacionais; IPv6 /64, sem IP bruto/fingerprinting. Cinco publicações por identidade, desfazer/recurtir, duplicatas e restauração preservados. Retenção local limitada e índices mínimos; não ativado Turnstile nem infraestrutura remota. Uma pessoa única não é comprovada; limites por rede exigem calibração antes da produção.

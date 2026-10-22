@@ -1,3 +1,4 @@
+import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
 import type { VideoEvidence } from '../submissions/decision.ts'
@@ -19,8 +20,11 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
           result.embed_product_id !== video.identity.slice('TikTok:'.length)) return evidence
       evidence.existence = 'confirmed'
       evidence.formatPolicy = 'tiktok-platform-exception'
-      if (typeof result.title === 'string' && result.title.trim() && result.title.length <= 500 &&
-          ![...result.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = result.title.trim()
+      // Captions can contain ordinary line breaks/tabs. Normalize presentation only;
+      // preserve accents/emoji, reject remaining controls and never truncate the source title.
+      if (typeof result.title === 'string' && result.title.length <= 4096) try {
+        evidence.title = validateVideoTitle(result.title.replace(/[\t\r\n\u2028\u2029]+/g, ' ').replace(/ {2,}/g, ' '))
+      } catch { /* Missing/unusable optional titles do not invalidate verified identity. */ }
       const image=thumbnailUrl(result.thumbnail_url,video.platform,video.identity)
       if(image)evidence.thumbnailUrl=image
       // Never execute oEmbed HTML/scripts or fetch image/author destinations on the server.

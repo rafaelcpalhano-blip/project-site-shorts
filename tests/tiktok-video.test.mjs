@@ -59,3 +59,30 @@ test('roteador permite nova tentativa para adaptador ausente, erro ou URL invál
   }
   assert.equal(decidePublication(await createMetadataVerifier({})({ ...input, url: 'invalid' })).status, 'retry')
 })
+
+
+test('TikTok normaliza quebras de linha e NFC sem perder acentos, emoji ou pontuação',async()=>{
+ for(const [title,expected]of [['  Olá 👾\r\nTíbia\t#jogada  ','Olá 👾 Tíbia #jogada'],['Vito\u0301ria!\u2028GG 🏆','Vitória! GG 🏆']]){
+  const result=await createTikTokVerifier(async()=>Response.json({...data,title}))(input)
+  assert.equal(result.title,expected);assert.equal(result.existence,'confirmed');assert.equal(decidePublication(result,'TikTok').status,'published')
+ }
+})
+
+test('títulos ausentes, extensos e controles inseguros ficam opcionais sem truncamento ou título inventado',async()=>{
+ for(const title of [undefined,null,'', '  ', 'x'.repeat(501), 'x'.repeat(4097),'bad\u0000title','bad\u000btitle','bad\u007ftitle']){
+  const result=await createTikTokVerifier(async()=>Response.json({...data,title}))(input)
+  assert.equal(result.title,undefined);assert.equal(result.existence,'confirmed');assert.equal(decidePublication(result,'TikTok').status,'published')
+ }
+})
+
+test('resposta atual com iframe e sem título/miniatura não executa HTML nem rejeita identidade confirmada',async()=>{
+ const actualShape={version:'1.0',type:'video',width:'100%',height:'100%',provider_name:'TikTok',provider_url:'https://www.tiktok.com/',embed_product_id:'123456789',embed_type:'video',html:'<iframe src="https://www.tiktok.com/player/v1/123456789"></iframe>'}
+ const result=await createTikTokVerifier(async()=>Response.json(actualShape))(input)
+ assert.equal(result.existence,'confirmed');assert.equal(result.title,undefined);assert.equal(result.thumbnailUrl,undefined);assert.ok(!JSON.stringify(result).includes('iframe'));assert.equal(decidePublication(result,'TikTok').status,'published')
+})
+
+test('links TikTok encurtados e URLs com credenciais não geram resolução de redirecionamentos',async()=>{
+ let calls=0;const verify=createTikTokVerifier(async()=>{calls++;return Response.json(data)})
+ for(const url of ['https://vm.tiktok.com/example/','https://vt.tiktok.com/example/','https://www.tiktok.com/t/example/','https://user:pass@www.tiktok.com/@gamer/video/123456789'])assert.equal((await verify({url})).existence,'unknown')
+ assert.equal(calls,0)
+})

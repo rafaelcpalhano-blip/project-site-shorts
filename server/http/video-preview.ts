@@ -28,7 +28,9 @@ export async function handleVideoPreview(request: Request, dependencies?: Depend
     // Preview has no chosen game and never authorizes publication or reserves a video.
     const evidence = await dependencies.verify(submission)
     if (evidence.existence === 'missing') return reply(404, { error: 'video-not-found' })
-    if (evidence.existence !== 'confirmed' || !evidence.title) return reply(503, { error: 'metadata-unavailable' })
+    if (evidence.existence !== 'confirmed') return reply(503, { error: 'metadata-unavailable' })
+    // A valid TikTok oEmbed may omit title/thumbnail entirely. Absence is not a service failure.
+    if (!evidence.title) return submission.platform === 'TikTok' ? reply(200, { title: null }) : reply(503, { error: 'metadata-unavailable' })
     return reply(200, { title: validateVideoTitle(evidence.title) })
   } catch (error) {
     if (error instanceof BodyError) return reply(error.status, { error: 'invalid-body' })

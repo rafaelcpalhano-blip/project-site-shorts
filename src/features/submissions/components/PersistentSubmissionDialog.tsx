@@ -45,6 +45,10 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted }: {
       setTitleNotice('Buscando título original...')
       preview(url, controller.signal).then(original => {
         if (!active) return
+        if (original === null) {
+          setTitleNotice('O TikTok não forneceu um título utilizável. Informe-o manualmente; o vídeo será validado no envio.')
+          return
+        }
         if (!titleEdited.current) setTitle(original)
         setTitleNotice('Título original carregado. Você pode editar o título.')
       }).catch(() => {
