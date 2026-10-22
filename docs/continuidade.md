@@ -1,5 +1,13 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.4 — revisão técnica concluída (22/10/2026)
+
+Duas correções: seleção de motivo da denúncia agora participa da proteção de rascunhos na troca de vídeo; foco do modal exclui desabilitação herdada/ocultos e considera iframe. 11 testes relacionados aprovados, lint/build/diff conferidos. Sem suítes repetidas de segurança sem alteração correspondente.
+Conferência real no navegador: YouTube iniciou reprodução, troca por teclado teve um iframe, encerrar/fechar deixou zero e restaurou foco; comentário/denúncia preservados ao cancelar descarte. Filtro/ordem de Valheim manteve sequência, TikTok/Twitch carregaram iframes; Twitch estreito usou fallback sem transbordamento. Formulário, ficha pt-BR/capa nítida e /admin sem privilégios conferidos. Viewport/filtros restaurados e aba temporária fechada; nenhum conteúdo enviado ou moderado.
+Conferência positiva Google/TOTP/filas administrativas e reprodução efetiva TikTok/Twitch, wheel físico/movimento reduzido permanecem com o proprietário; não alegar homologação total. Detalhes, evidências e limitações em [etapa-7-6-4.md](etapa-7-6-4.md). Capturas fora do repositório no workspace da conversa.
+Próxima recomendação: Etapa 8 — levantamento de produção e pendências operacionais, aguardando autorização individual. Sem deploy, serviços adicionais ou mudanças de custo por esta conclusão. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.3 implementada — 22/10/2026
 
 Player oficial carrega ao abrir explicitamente o short e tenta autoplay com controles, sem loop. TikTok diferencia bloqueio de autoplay de erro de vídeo; fallback/link seguros preservados. Uma lease, desmontagem anterior e observers/timers limpos. Navegação local pelos até 15 itens da página, na ordem/filtro recebidos; setas laterais/touch, teclado e gesto único de wheel apenas na faixa indicada. Operações/seleção administrativa bloqueiam troca; texto não enviado exige descarte confirmado. Slide usa poster estático anterior, sem dois players, e respeita movimento reduzido.

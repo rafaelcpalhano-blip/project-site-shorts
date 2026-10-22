@@ -20,3 +20,11 @@ export function createWheelNavigation(now:()=>number=Date.now){
   fired=true;return total>0?1:-1
  }
 }
+
+export function hasUnsavedViewerFields(fields:Iterable<{tagName:string;type?:string;value:string;disabled?:boolean}>):boolean{
+ for(const field of fields){
+  if(field.disabled||['hidden','checkbox','radio','button','submit','reset'].includes(field.type??''))continue
+  if(['INPUT','TEXTAREA','SELECT'].includes(field.tagName.toUpperCase())&&field.value.trim())return true
+ }
+ return false
+}

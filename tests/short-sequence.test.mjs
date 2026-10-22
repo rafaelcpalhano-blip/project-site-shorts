@@ -1,6 +1,6 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
-import {sequenceTarget,keyDirection,createWheelNavigation} from '../src/features/shorts/services/sequence-navigation.ts'
+import {sequenceTarget,keyDirection,createWheelNavigation,hasUnsavedViewerFields} from '../src/features/shorts/services/sequence-navigation.ts'
 const items=Array.from({length:15},(_,index)=>({id:String(index),gameId:'game',title:'Vídeo '+index}))
 test('navegação respeita exatamente a sequência recebida e os dois limites, sem circular',()=>{
  assert.equal(sequenceTarget(items,'0',-1),null);assert.equal(sequenceTarget(items,'14',1),null);assert.equal(sequenceTarget(items,'7',-1),items[6]);assert.equal(sequenceTarget(items,'7',1),items[8]);assert.equal(sequenceTarget([],'7',1),null);assert.equal(sequenceTarget(items,'ausente',1),null)
@@ -18,4 +18,14 @@ test('um gesto contínuo de wheel dispara só uma troca, mesmo após inércia lo
 test('wheel respeita direção, unidades e ignora zoom, valores inválidos ou gesto horizontal',()=>{
  let now=0;const wheel=createWheelNavigation(()=>now);assert.equal(wheel({deltaY:40}),null);assert.equal(wheel({deltaY:-40}),null);assert.equal(wheel({deltaY:-40}),-1);now+=301;assert.equal(wheel({deltaY:5,deltaMode:1}),1);now+=301;assert.equal(wheel({deltaY:-1,deltaMode:2}),-1);now+=301;
  for(const event of [{deltaY:100,ctrlKey:true},{deltaY:100,metaKey:true},{deltaY:NaN},{deltaY:Infinity},{deltaY:30,deltaX:100}])assert.equal(wheel(event),null)
+})
+
+test('seleção de denúncia e texto não enviado exigem confirmação antes de trocar',()=>{
+ for(const field of [{tagName:'SELECT',value:'spam'},{tagName:'TEXTAREA',value:'Rascunho'},{tagName:'INPUT',type:'text',value:'Motivo'}])assert.equal(hasUnsavedViewerFields([field]),true)
+})
+test('valores vazios e controles sem rascunho não bloqueiam navegação',()=>{
+ assert.equal(hasUnsavedViewerFields([{tagName:'SELECT',value:''},{tagName:'TEXTAREA',value:'   '},{tagName:'INPUT',type:'checkbox',value:'on'},{tagName:'INPUT',type:'hidden',value:'request-id'},{tagName:'TEXTAREA',value:'Não editável',disabled:true}]),false)
+})
+test('campo de texto ou seleção preenchida é preservado mesmo com outros campos vazios',()=>{
+ assert.equal(hasUnsavedViewerFields([{tagName:'TEXTAREA',value:''},{tagName:'SELECT',value:'wrong-game'},{tagName:'TEXTAREA',value:' '}]),true)
 })

@@ -17,8 +17,8 @@ export function Modal({ title, onClose, children, closeDisabled = false, wide = 
       onKeyDown?.(event)
       if (event.key !== 'Tab') return
       const elements = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
-      ))
+        'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), iframe, [tabindex="0"]:not(:disabled)',
+      )).filter(element=>!element.closest('[hidden],[inert]')&&element.getClientRects().length>0)
       const first = elements[0]
       const last = elements[elements.length - 1]
       if (event.shiftKey && document.activeElement === first) {

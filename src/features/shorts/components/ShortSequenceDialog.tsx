@@ -2,7 +2,7 @@ import {useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react'
 import {Modal} from '../../../components/ui/Modal'
 import {playback} from '../../players/services/playback'
 import {validThumbnail} from '../../../lib/validation/thumbnail'
-import {sequenceTarget,keyDirection,createWheelNavigation} from '../services/sequence-navigation'
+import {sequenceTarget,keyDirection,createWheelNavigation,hasUnsavedViewerFields} from '../services/sequence-navigation'
 import type {Direction} from '../services/sequence-navigation'
 import type {Short} from '../types/models'
 import {FirestoreShortContent} from './FirestoreShortDialog'
@@ -17,7 +17,7 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
  const move=(direction:Direction,discard=false)=>{
   if(busyNow.current||moving.current)return
   const target=sequenceTarget(items,short.id,direction);if(!target)return
-  const draft=Array.from(content.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('textarea,input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"])')??[]).some(field=>field.value.trim())
+  const draft=hasUnsavedViewerFields(Array.from(content.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>('textarea,input,select')??[]).map(field=>({tagName:field.tagName,type:field.type,value:field.value,disabled:field.matches(':disabled')})))
   if(draft&&!discard){setPending(direction);return}
   const owner=playback.getSnapshot();if(owner)playback.release(owner)
   moving.current=true;setPending(null);setTransition({direction,previous:short});onNavigate(target)
