@@ -12,7 +12,7 @@ export function HomePage() {
   const [feedVersion, setFeedVersion] = useState(0)
   return <>
     <div className={styles.hero}>
-      <PageIntro title="Pequenos clipes. Grandes jogadas."
+      <PageIntro compact title="Pequenos clipes. Grandes jogadas."
         description="Descubra, compartilhe e comente. Sem criar uma conta." />
       <button className={"primary " + styles.shareButton} type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
     </div>

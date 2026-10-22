@@ -1,3 +1,5 @@
+import {AdminFilters} from './AdminFilters'
+import {queueDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
 import type {AdminSort} from '../types/list-order'
 import { RefreshButton } from './RefreshButton'
@@ -8,6 +10,7 @@ import type { QueueCursor, QueuePage, ReviewDetail, ReviewAction } from '../type
 import { reportReasons } from '../../../lib/validation/report-input'
 import { parseVideoUrl } from '../../../lib/validation/video-url'
 import styles from './ModerationPanel.module.css'
+const queueLabels = {reports:'Denúncias abertas',pending:'Vídeos pendentes / bloqueados',removed:'Vídeos removidos'}
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
 const labels: Record<ReviewAction, string> = { block:'Bloquear vídeo', dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
 export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauthorized: () => void }) {
@@ -48,15 +51,9 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
   }
   return <section className={styles.panel} aria-labelledby="moderation-heading">
     <h2 id="moderation-heading">Denúncias e revisão</h2>
- <AdminOrder value={sort} disabled={working} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />
+
     <p>Denúncias entram para análise e mantêm o vídeo visível. Os totais representam sessões anônimas, não pessoas verificadas.</p>
-    <div className={styles.actions}>
-      {(['reports', 'pending', 'removed'] as const).map(value => <button key={value} disabled={working} aria-pressed={queue === value} onClick={() => void run(async () => {
-        setQueue(value); setPage(null); setDetail(null); setHistory([]); setAction(null); setReason('')
-        await load(value)
-      })}>{value === 'reports' ? 'Denúncias abertas' : value === 'pending' ? 'Vídeos pendentes / bloqueados' : 'Vídeos removidos'}</button>)}
-      <RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working} onClick={() => void run(() => load())} />
-    </div>
+    <AdminFilters labels={queueLabels} descriptions={queueDescriptions} value={queue} disabled={working} onChange={value=>void run(async()=>{setQueue(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />} refresh={<RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working} onClick={() => void run(() => load())} />} />
     {working && <p role="status">Consultando o servidor…</p>}
     {error && <p role="alert" className="error">{error}</p>}
     {feedback && <p role="status">{feedback}</p>}

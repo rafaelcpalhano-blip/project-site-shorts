@@ -1,3 +1,5 @@
+import {AdminFilters} from './AdminFilters'
+import {requestDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
 import type {AdminSort} from '../types/list-order'
 import { ReasonShortcuts } from './ReasonShortcuts'
@@ -38,15 +40,9 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
  }
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
   <h2 id="game-requests-heading">Solicitações de jogos</h2>
- <AdminOrder value={sort} disabled={busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />
+
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
-  <div className={styles.actions}>{(Object.keys(labels) as RequestStatus[]).map(value=><button key={value} disabled={busy} aria-pressed={status===value}
-   onClick={()=>void run(async()=>{
-    setStatus(value);setPage(null);setItem(null);setGame(null);setReason(emptyReason());setAction(null);setHistory([])
-    await load(undefined,value)
-   })}>{labels[value]}</button>)}
-   <RefreshButton label="Atualizar solicitações de jogos" disabled={busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />
-  </div>
+  <AdminFilters labels={labels} descriptions={requestDescriptions} value={status} disabled={busy} onChange={value=>void run(async()=>{setStatus(value);setPage(null);setItem(null);setGame(null);setReason(emptyReason());setAction(null);setHistory([]);await load(undefined,value)})} order={<AdminOrder value={sort} disabled={busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />} refresh={<RefreshButton label="Atualizar solicitações de jogos" disabled={busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
   {busy&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {page&&<>{!page.items.length&&<p>Nenhuma solicitação nesta fila.</p>}
    <ul className={styles.list}>{page.items.map(value=><li key={value.id}>

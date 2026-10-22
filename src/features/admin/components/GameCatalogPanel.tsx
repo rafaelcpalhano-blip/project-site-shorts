@@ -1,3 +1,5 @@
+import {AdminFilters} from './AdminFilters'
+import {catalogDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
 import type {AdminSort} from '../types/list-order'
 import { useEffect, useRef, useState } from 'react'
@@ -30,12 +32,10 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
  const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
  return <section className={styles.panel} aria-labelledby="catalog-heading">
   <h2 id="catalog-heading">Catálogo administrativo de jogos</h2>
- <AdminOrder value={sort} disabled={working} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />
+
   <p>Ocultar ou banir retira também os shorts das próximas consultas públicas. Os registros, vínculos e estados de moderação dos vídeos são preservados.</p>
   <p className="muted">Ativos inclui provisórios visíveis. Contagens são consultadas somente ao abrir detalhes e incluem shorts em todos os estados.</p>
-  <div className={styles.actions}>{(Object.keys(tabs) as CatalogFilter[]).map(value=><button key={value} disabled={working} aria-pressed={filter===value} onClick={()=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})}>{tabs[value]}</button>)}
-   <RefreshButton label="Atualizar catálogo de jogos" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />
-  </div>
+  <AdminFilters labels={tabs} descriptions={catalogDescriptions} value={filter} disabled={working} onChange={value=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />} refresh={<RefreshButton label="Atualizar catálogo de jogos" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
   {working&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><li key={game.id}>
    <p>{game.name} · {game.source==='IGDB'?'IGDB':'Manual'} · {state(game)} · {date(game.createdAt)}</p>

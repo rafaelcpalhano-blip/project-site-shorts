@@ -12,3 +12,5 @@
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+
+.intro h1.compact { color: var(--color-accent); font-size: clamp(1.2rem, 3vw, 1.65rem); line-height: 1.35; text-wrap: pretty; }

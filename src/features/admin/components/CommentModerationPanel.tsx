@@ -1,3 +1,5 @@
+import {AdminFilters} from './AdminFilters'
+import {commentDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
 import type {AdminSort} from '../types/list-order'
 import { RefreshButton } from './RefreshButton'
@@ -38,16 +40,9 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
   }
   return <section className={styles.panel} aria-labelledby="comment-review-heading">
     <h2 id="comment-review-heading">Comentários e revisão de texto</h2>
- <AdminOrder value={sort} disabled={working} textLabel="Texto" dateLabel="Data de publicação" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />
+
     <p>A triagem local pode errar ou deixar passar conteúdo. Confira o contexto antes de decidir.</p>
-    <div className={styles.actions}>{(Object.keys(statuses) as CommentStatus[]).map(value=><button key={value} disabled={working}
-      aria-pressed={status===value} onClick={()=>void run(async()=>{
-        setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('')
-        await load(undefined,value)
-      })}>
-      {statuses[value]}</button>)}
-      <RefreshButton label="Atualizar comentários" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />
-    </div>
+    <AdminFilters labels={statuses} descriptions={commentDescriptions} value={status} disabled={working} onChange={value=>void run(async()=>{setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(undefined,value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Texto" dateLabel="Data de publicação" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />} refresh={<RefreshButton label="Atualizar comentários" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
     {working&&<p role="status">Consultando comentários…</p>}
     {error&&<p role="alert">{error}</p>}
     {message&&<p role="status">{message}</p>}

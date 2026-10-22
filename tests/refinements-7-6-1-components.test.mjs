@@ -25,5 +25,5 @@ test('cabeçalho preserva texto e acesso ao conteúdo sem link administrativo p�
  const html=render(h(layout));assert.ok(html.includes('Comunidade de Games'));assert.ok(!html.includes('Modo administrador'));assert.ok(!html.includes('href="/admin"'));assert.ok(html.includes('Pular para o conteúdo'));assert.ok(html.includes('id="main-content"'))
 })
 test('página inicial remove slogan antigo e aviso técnico extenso sem perder título semântico',()=>{
- const html=render(h(provider,null,h(home)));assert.ok(html.includes('<h1>Pequenos clipes. Grandes jogadas.</h1>'));assert.ok(!html.includes('O próximo GG está aqui.'));assert.ok(!html.includes('AMBIENTE LOCAL'));assert.ok(html.includes('Compartilhar short'));assert.ok(html.includes('Desenvolvimento ·'))
+ const html=render(h(provider,null,h(home)));assert.ok(/<h1[^>]*>Pequenos clipes\. Grandes jogadas\.<\/h1>/.test(html));assert.ok(!html.includes('O próximo GG está aqui.'));assert.ok(!html.includes('AMBIENTE LOCAL'));assert.ok(html.includes('Compartilhar short'));assert.ok(html.includes('Desenvolvimento ·'))
 })

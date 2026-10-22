@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.5-D concluída — 22/10/2026
+
+Quatro seções administrativas com filtros/refresh e ordenação compacta à direita, responsivos. Descrições aprovadas abaixo dos controles, por hover/foco/seleção e aria-describedby; seleção com indicador adicional. Mesmos callbacks, ordenações e travas. Título inicial menor e roxo; rodapé centralizado em fluxo flexível.
+Quatro testes focados, lint/build aprovados. Página inicial desktop/mobile e controles administrativos conferidos em prévia isolada removida após uso; sem operações administrativas ou alterações de registros. Detalhes e limites em [etapa-7-6-5-d.md](etapa-7-6-5-d.md).
+Próxima: 7.6.5-E — validação integrada, aguardando autorização individual. Etapas 8/9 não iniciadas. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.5-C concluída — 22/10/2026
 
 Comentários com divisores e numeração por posição/offset, sem números persistidos. Primeiro comentário identificado transacionalmente pelo servidor, com marco histórico no short e consulta limitada para registros anteriores; reenvios/pendências e aprovação administrativa não disparam celebração. Interface só anima após encontrar o ID confirmado na listagem pública. Sem consultas de contagem/polling, coleção/índice/dependência nova ou deploy.

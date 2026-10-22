@@ -1,4 +1,6 @@
 .shell {
+  display: flex;
+  flex-direction: column;
   max-width: 1120px;
   min-height: calc(100svh - 16px);
   margin: 8px auto;
@@ -37,9 +39,12 @@
   text-decoration: none;
 }
 .adminLink[aria-current='page'] { border-color: var(--color-accent); }
-.main { padding: 28px 24px; }
+.main { flex: 1; min-width: 0; padding: 28px 24px; }
 .footer {
-  padding: 24px;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 24px 16px 28px;
+  margin-top: 12px;
   color: var(--color-muted);
   font-size: .8rem;
   text-align: center;
