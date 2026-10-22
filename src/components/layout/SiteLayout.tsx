@@ -1,9 +1,11 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { useAdminSession } from '../../features/admin/context/admin-session-context'
 import { useEffect, useRef } from 'react'
 import styles from './SiteLayout.module.css'
 
 export function SiteLayout() {
   const { key } = useLocation()
+  const { user, authorized, checking } = useAdminSession()
   const mainRef = useRef<HTMLElement>(null)
   const previousPath = useRef(key)
 
@@ -22,6 +24,7 @@ export function SiteLayout() {
           clip<span>zone</span> ↗
         </Link>
         <p className={styles.tagline}>Comunidade de Games</p>
+        {user && authorized && !checking && <NavLink className={"primary " + styles.adminLink} to="/admin">Administrar</NavLink>}
       </header>
       <main id="main-content" className={styles.main} ref={mainRef} tabIndex={-1}>
         <Outlet />

@@ -4,17 +4,18 @@ import {createServer} from 'vite'
 import {createElement as h,Fragment} from 'react'
 import {renderToStaticMarkup} from 'react-dom/server'
 import {MemoryRouter} from 'react-router-dom'
-let server,picker,card,layout,home,provider
+let server,picker,card,layout,home,provider,AdminContext
 before(async()=>{
  server=await createServer({cacheDir:'node_modules/.cache/refinements-7-6-1',server:{middlewareMode:true,watch:null,hmr:false},appType:'custom',clearScreen:false})
  picker=(await server.ssrLoadModule('/src/features/games/components/OfficialGamePicker.tsx')).OfficialGamePicker
  card=(await server.ssrLoadModule('/src/features/shorts/components/ShortCard.tsx')).ShortCard
+ AdminContext=(await server.ssrLoadModule('/src/features/admin/context/admin-session-context.ts')).AdminContext
  layout=(await server.ssrLoadModule('/src/components/layout/SiteLayout.tsx')).SiteLayout
  home=(await server.ssrLoadModule('/src/features/shorts/pages/HomePage.tsx')).HomePage
  provider=(await server.ssrLoadModule('/src/app/providers/DemoProvider.tsx')).DemoProvider
 });after(async()=>{await server?.close()})
 const props={disabled:false,onBusyChange:()=>{},onSelected:()=>{},collapsible:true}
-const render=node=>renderToStaticMarkup(h(MemoryRouter,null,node))
+const render=node=>renderToStaticMarkup(h(MemoryRouter,null,h(AdminContext.Provider,{value:{user:null,authorized:false,checking:false}},node)))
 test('pesquisa tem nome curto, labels únicos e status fora da seção que será recolhida',()=>{
  const html=renderToStaticMarkup(h(Fragment,null,h(picker,props),h(picker,props))),labels=[...html.matchAll(/<label for="([^"]+)">Pesquisar nome oficial<\/label>/g)].map(m=>m[1]);assert.equal(labels.length,2);assert.notEqual(labels[0],labels[1]);assert.ok(labels.every(id=>html.includes('id="'+id+'"')));assert.match(html,/>Pesquisar<\/button>/);assert.ok(!html.includes('Pesquisar no IGDB'));assert.ok(html.indexOf('role="status"')>html.indexOf('</details>'));assert.ok(html.includes('<summary'))
 })

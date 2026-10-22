@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.6-E — concluída localmente com complemento de navegação (22/10/2026)
+
+Git iniciou limpo; welcome-preference.ts já commitado corretamente (6e01672). 14 testes focados de integração passaram, reaproveitando os 76 da etapa D sem repetir transações/suítes completas. Navegador confirmou rascunho/cancelar/descartar, player único e cleanup, comentários #3/#2/#1 após atualizar, logo/reset de filtros e ordem, desktop/390px sem overflow e 404 do Clipper. Smoke TLS: home/asset 200, arquivos privados 403, rotas administrativas sem token 401 com sessão temporária. Sem alterações funcionais, dados de negócio, serviços remotos ou deploy. [Detalhes e limitações](etapa-7-6-6-e.md).
+
+Proprietário relatou funcionamento aparentemente correto e solicitou retorno interno ao painel. Cabeçalho ganhou Administrar, lilás e alinhado à direita, somente para usuário com autorização confirmada; NavLink preserva a navegação React, sem reload ou exposição de login público. 3 testes novos e 4 regressões de layout aprovados, além dos 7 testes de sessão novamente verificados (21 casos distintos em E ao todo). Build/lint localizado aprovados. Estado autorizado do novo atalho coberto por renderização controlada; aba acessível ao agente permaneceu visitante. A conferência visual autenticada do novo botão fica disponível no próximo acesso do proprietário. Apresentar Etapa 8 para autorização; não iniciar automaticamente. Capturas fora do Git; complemento limitado ao layout/testes e documentação. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.6-D — concluída localmente (22/10/2026)
 
 Numeração de comentários persistida por primeira publicação em transação; removidos/restaurados conservam número e novas aprovações recebem o próximo. Listagem decrescente por número, 20 por página e cursor vinculado ao short. Migração histórica aproximada autorizada por data de envio/ID, restrita ao emulador: 9 shorts, zero comentários antigos; 9 contadores inicializados em zero, segunda execução sem mudanças. Sem alteração remota ou estados de moderação. [Detalhes, custos e limitações](etapa-7-6-6-d.md).
