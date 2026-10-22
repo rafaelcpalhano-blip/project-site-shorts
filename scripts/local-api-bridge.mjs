@@ -19,7 +19,7 @@ export function localApiBridge(api, origin) {
         method: incoming.method, headers,
         ...(hasBody ? { body: Readable.toWeb(incoming), duplex: 'half' } : {}),
       })
-      const response = await api(request)
+      const response = await api(request, {clientAddress: incoming.socket?.remoteAddress})
       outgoing.writeHead(response.status, Object.fromEntries(response.headers))
       outgoing.end(Buffer.from(await response.arrayBuffer()))
     } catch {

@@ -1,3 +1,5 @@
+import {createNetworkProtection} from '../security/network-abuse.ts'
+import {SubmissionError} from '../submissions/submit-short.ts'
 import {createRankingCursor} from '../ranking/cursor.ts'
 import { handleLike } from './likes.ts'
 import { handlePublicRead } from './public-read.ts'
@@ -19,6 +21,8 @@ import { handleSession } from './session.ts'
 import { handleSubmission } from './submissions.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 export interface PublicApiOptions {
+  // Trusted transport context is supplied as the second argument, never parsed from HTTP.
+  network?: {secret:string}
   // Server-only opt-in for isolated tests/future approved reactivation; never read from HTTP.
   titleSearchEnabled?: boolean
   gameTranslation?: (id: string) => Promise<void>
@@ -37,6 +41,7 @@ export interface PublicApiOptions {
 export async function createPublicApi(options: PublicApiOptions) {
   const origin = new URL(options.origin)
   if (origin.protocol !== 'https:' || origin.origin !== options.origin) throw new Error('Expected canonical HTTPS origin')
+  const network=options.network?await createNetworkProtection({secret:options.network.secret,store:options.store,now:options.now}):undefined
   const rankingCursor = await createRankingCursor(options.visitorSecret,options.origin)
   const identity = await createVisitorIdentity(options.visitorSecret, options.now)
   const checkAbuse = createAttemptLimiter({ store: options.store, now: options.now,
@@ -57,8 +62,9 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'video-preview' })
   const searchLimit = options.gameSearch ? createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.gameSearch.maximumAttempts, windowMs: options.gameSearch.windowMs, scope: 'game-search' }) : undefined
-  return async (request: Request): Promise<Response> => {
+  return async (request: Request, trusted?: {clientAddress?:string}): Promise<Response> => {
     const path = new URL(request.url).pathname
+    const address=trusted?.clientAddress
     if (path === '/api/admin/config' || path === '/api/admin/session') return handleAdmin(request, options.origin, options.admin, async candidate => {
       const visitor = await identity.resolveVisitor(candidate)
       if (!visitor) return false
@@ -85,7 +91,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })
-    if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:likeLimit})
+    if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'like-attempts');await likeLimit(visitor)},...(network?{prepareNetworkLike:(tx,shortId)=>network.prepareContribution(tx,address,'like',shortId)}:{})})
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })
@@ -100,11 +106,15 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: searchLimit, search: options.gameSearch.search,
     } : undefined)
     if (path === '/api/session') return handleSession(request, {
-      origin: options.origin, identity, allowIssuance: options.allowSessionIssuance,
+      origin: options.origin, identity, allowIssuance: async candidate=>{
+        if(network)try{await network.attempt(address,'sessions')}catch(error){if(error instanceof SubmissionError&&error.code==='abuse-limit')return false;throw error}
+        return options.allowSessionIssuance(candidate)
+      },
     })
     if (path === '/api/shorts') return handleSubmission(request, {
       origin: options.origin, store: options.store, verify: options.verify, now: options.now,
-      resolveVisitor: identity.resolveVisitor, checkAbuse,
+      resolveVisitor: identity.resolveVisitor, checkAbuse:async visitor=>{if(network)await network.attempt(address,'submission-attempts');await checkAbuse(visitor)},
+      ...(network?{prepareNetworkPublication:tx=>network.prepareContribution(tx,address,'publication')}:{})
     })
     return Response.json({ error: 'not-found' }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
   }

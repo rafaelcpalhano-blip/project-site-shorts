@@ -72,3 +72,18 @@ test('HTTP rejects foreign origin, missing configuration and admission; never re
  const failure=await handleAdmin(request(token()),'https://clipzone.test',{...config,authorize:async()=>{throw new Error('secret')}},async()=>true)
  assert.equal((await failure.text()).includes('secret'),false)
 })
+
+
+test('todas as APIs administrativas recusam chamadas diretas sem token, outro UID ou MFA ausente antes de ler dados privados',async()=>{
+ const {createPublicApi}=await import('../server/http/public-api.ts')
+ const records=new Map(),authorize=setup().authorize,origin='https://clipzone.test'
+ const store={transact:async work=>work({get:async path=>{assert.match(path,/^adminAuthAttempts\//);return records.get(path)??null},set:(path,data)=>{assert.match(path,/^adminAuthAttempts\//);records.set(path,data)},create:()=>assert.fail('Nenhuma operação privilegiada permitida')})}
+ const api=await createPublicApi({origin,store,now:()=>new Date(time*1000),visitorSecret:'ab'.repeat(32),maximumAttempts:200,attemptWindowMs:60000,allowSessionIssuance:async()=>true,verify:async()=>assert.fail('Não verificar vídeo sem autorização'),admin:{publicConfig:{},authorize}})
+ const post=(path,authorization,cookie='')=>api(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json',Cookie:cookie,...(authorization?{Authorization:authorization}:{})},body:'{}'}))
+ const session=await post('/api/session'),cookie=session.headers.get('set-cookie').split(';')[0]
+ const paths=['/api/admin/session','/api/admin/games/catalog','/api/admin/games/detail','/api/admin/games/moderate','/api/admin/games/queue','/api/admin/games/review','/api/admin/queue','/api/admin/detail','/api/admin/review','/api/admin/comments/queue','/api/admin/comments/detail','/api/admin/comments/review']
+ for(const path of paths)for(const authorization of [undefined,'Bearer invalid','Bearer '+token({sub:'other-user'}),'Bearer '+token({firebase:{sign_in_provider:'google.com'}})]){
+  const response=await post(path,authorization,cookie);assert.ok([401,403].includes(response.status),path+' '+response.status)
+  const data=await response.json();assert.ok(!data.items&&!data.logs&&!data.uid)
+ }
+})

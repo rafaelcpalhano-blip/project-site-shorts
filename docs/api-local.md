@@ -36,7 +36,7 @@ prefixo VITE para segredos. Não copie certificados/chaves para o projeto.
 5. Abra `https://127.0.0.1:5174`.
 
 A interface e `/api` compartilham HTTPS; os cookies Secure/HttpOnly de produção
-são preservados. A chave de sessão é aleatória em memória e muda a cada reinício.
+são preservados. Os segredos de identidade anônima são persistidos em .env.security.local (privado, ignorado pelo Git e bloqueado pelo Vite). Reinícios normais preservam os cookies; a primeira troca do runner antigo exige renovação. Não apague nem divulgue esse arquivo.
 O limite local de novas sessões é 20/minuto, global ao processo; não substitui
 proteção antiabuso para implantação pública. O catálogo consulta IGDB real quando
 configurado, mas grava apenas no emulador. Vídeos tecnicamente confirmados podem ser publicados automaticamente no emulador. O modo demo existente continua igual.
@@ -68,3 +68,5 @@ preenchido manualmente quando ausente na fonte. Detalhes em [validacao-tiktok.md
 A exceção não altera o limite de 180 segundos do YouTube nem as regras Twitch.
 Detalhes em [fontes-titulos.md](fontes-titulos.md). O teste completo de preenchimento, edição e publicação
 local foi realizado com um clipe Twitch, sem gravações na nuvem.
+
+Proteção de rede, limites adicionais e retenção local: [Etapa 7.6.6-A](etapa-7-6-6-a.md). O IP vem do socket local, nunca de cabeçalhos reenviados pelo visitante. Configuração da borda e manutenção de produção precisam de aprovação na Etapa 8.

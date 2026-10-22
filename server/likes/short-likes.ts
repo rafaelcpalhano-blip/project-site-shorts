@@ -1,5 +1,5 @@
 import { prepareEngagement } from '../ranking/engagement.ts'
-import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
+import type { AtomicStore, AtomicTransaction, RecordData } from '../firestore/atomic-store.ts'
 import { isVisibleGame } from '../games/visibility.ts'
 export class LikeError extends Error {
  readonly status:number
@@ -27,7 +27,7 @@ export function likeRecord(record:RecordData|null,shortId:string){
  if(record.createdAt.getTime()>record.changedAt.getTime())throw new Error('invalid-like-record')
  return {liked:record.liked,revision:Number(record.revision)}
 }
-export async function shortLike(value:unknown,visitor:string,options:{store:AtomicStore;now:()=>Date},write=false){
+export async function shortLike(value:unknown,visitor:string,options:{store:AtomicStore;now:()=>Date;prepareNetworkLike?:(tx:AtomicTransaction,shortId:string)=>Promise<()=>void>},write=false){
  const input=parse(value,write),path=await likePath(input.shortId,visitor)
  return options.store.transact(async tx=>{
   const short=await tx.get('shorts/'+input.shortId)
@@ -43,7 +43,9 @@ export async function shortLike(value:unknown,visitor:string,options:{store:Atom
   const now=options.now()
   if(!Number.isFinite(now.getTime())||record&&now.getTime()<(record.changedAt as Date).getTime())throw new Error('invalid-like-clock')
   const nextCount=count+(input.liked?1:-1),revision=state.revision+1
+  const applyNetwork=input.liked&&!record&&options.prepareNetworkLike?await options.prepareNetworkLike(tx,input.shortId):()=>{}
   const applyRanking=await prepareEngagement(tx,{shortId:input.shortId,gameId:short.gameId as string,kind:'like',sourceId:path.split('/')[1],identity:path.split('/')[1],at:(record?.createdAt as Date|undefined)??now,now,active:input.liked})
+  applyNetwork()
   applyRanking()
   tx.set(path,{shortId:input.shortId,liked:input.liked,revision,createdAt:record?.createdAt??now,changedAt:now})
   tx.set('shorts/'+input.shortId,{...short,likeCount:nextCount})

@@ -730,6 +730,21 @@
       "collectionGroup": "shorts",
       "fieldPath": "administrativeBlock",
       "indexes": []
+    },
+    {
+      "collectionGroup": "networkAbuse",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "networkAbuse",
+      "fieldPath": "expiresAt",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        }
+      ]
     }
   ]
 }

@@ -21,6 +21,7 @@ export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string
 export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?:string;generationId?:string;readTime?:string;cursor?:{id:string;time:string;value?:number};limit:15}
 export interface AdminListQuery {kind:'games'|'gameRequests'|'comments'|'shorts'|'reportSummaries';filter:string;sort:AdminSort;cursor?:AdminListCursor;limit:21}
 export interface AtomicStore {
+  expiredNetworkRecords?: (now:Date)=>Promise<Array<{id:string;data:RecordData}>>
   adminListPage?: (query:AdminListQuery)=>Promise<Array<{id:string;data:RecordData}>>
   scanReportSummaries?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   rankingBootstrapPage?: (collection:'shorts'|'games'|'shortLikes'|'comments'|'commentRequests',after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>

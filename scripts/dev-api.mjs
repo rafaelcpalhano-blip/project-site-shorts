@@ -1,10 +1,11 @@
+import {localSecuritySecrets} from './local-security.mjs'
+import {startLocalNetworkRetention} from './local-network-retention.mjs'
 import {startLocalRanking} from './local-ranking.mjs'
 import { createDescriptionTranslator } from '../server/games/translate-description.ts'
 import { createGameTranslation } from '../server/games/translation-store.ts'
 import { createAdminAuthorizer } from '../server/auth/firebase-admin.ts'
 // Development only. Never deploy this runner or expose it through a tunnel.
 import { readFile } from 'node:fs/promises'
-import { randomBytes } from 'node:crypto'
 import { createServer as createHttpsServer } from 'node:https'
 import { createServer as createViteServer } from 'vite'
 import { createPublicApi } from '../server/http/public-api.ts'
@@ -18,6 +19,7 @@ const origin = 'https://127.0.0.1:5174'
 let vite
 let server
 let stopRanking
+let stopNetworkRetention
 try {
   if (!process.env.LOCAL_TLS_CERT || !process.env.LOCAL_TLS_KEY) {
     throw new Error('missing-local-certificate')
@@ -45,8 +47,9 @@ try {
   } : undefined
   let issued = 0
   let windowStarted = Date.now()
+  const secrets=await localSecuritySecrets()
   const api = await createPublicApi({
-    origin, visitorSecret: randomBytes(32).toString('hex'),
+    origin, visitorSecret: secrets.visitor, network:{secret:secrets.network},
     store, admin, gameTranslation,
     now: () => new Date(), maximumAttempts: 20, attemptWindowMs: 60_000,
     // Technical confirmation permits publication; flags require review, uncertainty permits retry.
@@ -57,6 +60,7 @@ try {
       return ++issued <= 20
     },
   })
+  stopNetworkRetention=startLocalNetworkRetention(store)
   stopRanking=await startLocalRanking({store,now:()=>new Date()})
   process.env.VITE_DATA_MODE = 'firestore-emulator'
   server = createHttpsServer({ cert, key, requestTimeout: 30_000, headersTimeout: 10_000 })
@@ -70,17 +74,18 @@ try {
     server.listen(5174, '127.0.0.1', resolve)
   })
   console.log('Ambiente local: ' + origin + ' | Firestore demo-clipzone:8080')
-  console.log('Publicação após validação técnica; sessões expiram ao reiniciar. Nenhuma gravação na nuvem.')
+  console.log('Publicação após validação técnica; identidade anônima preservada nos reinícios normais. Nenhuma gravação na nuvem.')
   console.log(gameTranslation ? 'Tradução pt-BR habilitada: até 20 tentativas/dia UTC, somente no cadastro/confirmação.' : 'Tradução pt-BR desativada ou sem credenciais: descrições originais preservadas.')
   if (!catalog) console.log('Catálogo IGDB indisponível: configure as variáveis privadas do servidor.')
-  const close = async () => { stopRanking?.(); server.close(); server.closeAllConnections(); await vite.close() }
+  const close = async () => { stopRanking?.(); stopNetworkRetention?.(); server.close(); server.closeAllConnections(); await vite.close() }
   process.once('SIGINT', close)
   process.once('SIGTERM', close)
 } catch {
   stopRanking?.()
+  stopNetworkRetention?.()
   server?.close()
   await vite?.close()
-  console.error('Não foi possível iniciar. Confira certificado/chave locais confiáveis e porta 5174 livre. Consulte docs/api-local.md. Nenhuma credencial foi exibida.')
+  console.error('Não foi possível iniciar. Confira certificado/chave locais confiáveis, segredos locais e porta 5174 livre. Consulte docs/api-local.md. Nenhuma credencial foi exibida.')
   process.exitCode = 1
 }
 

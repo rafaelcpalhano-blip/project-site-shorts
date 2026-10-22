@@ -1,8 +1,8 @@
 import { LikeError, shortLike } from '../likes/short-likes.ts'
 import { BodyError, readInput } from './submissions.ts'
 import { SubmissionError } from '../submissions/submit-short.ts'
-import type { AtomicStore } from '../firestore/atomic-store.ts'
-export async function handleLike(request:Request,options:{origin:string;store:AtomicStore;now:()=>Date;resolveVisitor:(request:Request)=>Promise<string|null>;checkAbuse:(visitor:string)=>Promise<void>}){
+import type { AtomicStore, AtomicTransaction } from '../firestore/atomic-store.ts'
+export async function handleLike(request:Request,options:{origin:string;store:AtomicStore;now:()=>Date;prepareNetworkLike?:(tx:AtomicTransaction,shortId:string)=>Promise<()=>void>;resolveVisitor:(request:Request)=>Promise<string|null>;checkAbuse:(visitor:string)=>Promise<void>}){
  const reply=(status:number,body:unknown)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',...(status===405?{Allow:'POST'}:{})}})
  if(request.method!=='POST')return reply(405,{error:'method-not-allowed'})
  if(request.headers.get('origin')!==options.origin||request.headers.get('sec-fetch-site')==='cross-site')return reply(403,{error:'invalid-origin'})
