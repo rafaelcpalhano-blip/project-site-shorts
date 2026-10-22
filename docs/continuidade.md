@@ -1,5 +1,23 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.7-B — avaliação concluída, fallback mantido (21/10/2026)
+
+Compatibilidade conferida com documentação oficial e implementação atual. Área
+compacta de artwork não comporta players oficiais mantendo layout/controles;
+YouTube mínimo 200x200, Twitch 400x300. TikTok: mínimo 200x200 existente no Clipzone
+é precaução de legibilidade, não mínimo oficial comprovado. Mantidas miniaturas
+com zoom/fade nas três plataformas, conforme ramo de fallback aprovado.
+Nenhum player de hover/código de timer cinco segundos foi criado ou ativado;
+não alegar teste de autoplay/reprodução real. Principal permanece voluntário.
+Seis testes localizados de players passaram; 36 combinações compactas recusaram
+iframe no validador. Somente dois documentos alterados, sem dados/serviços/deploy.
+Detalhes e limites em [etapa-7-5-7-b.md](etapa-7-5-7-b.md). 7.5.7 encerrada para o
+layout atual com fallback; conferência visual da A ainda cabe ao proprietário.
+Próxima geral: Etapa 8 — começar pelo levantamento/plano de produção, aguardando
+autorização. Não iniciar deploy, faturamento ou novo serviço por esta conclusão.
+Checkpoints seguintes são históricos.
+
+
 ## Etapa 7.5.7-A — miniaturas implementadas e verificadas localmente (21/10/2026)
 
 URLs oficiais opcionais obtidas nos adaptadores existentes e armazenadas com data e
