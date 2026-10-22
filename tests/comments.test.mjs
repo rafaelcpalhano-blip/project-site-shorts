@@ -269,3 +269,22 @@ test('legado sem contador não inventa total zero ao receber comentário',async(
  await submitComment(input(),visitor,{store,now})
  assert.equal(records.get('shorts/'+shortId).commentCount,undefined)
 })
+
+test('triagem cobre relatos e evasões limitadas sem atingir substrings legítimas',()=>{
+ for(const text of ['bosta','SEU BOIOLA','caganera','BÓSTA','ｂｏｓｔａ','b0st@','b.o.s.t.a','b_o_s_t_a','b o s t a','p o r r a','b\u200bosta','vou   te matar','odeio g.a.y.s'])assert.equal(moderateText(text).status,'pending',text)
+ for(const text of ['documento','cultura','computador','disputa','merdamente'.replace('merda','alegre'),'O boss caiu. Parabéns!','Olá! Excelente gameplay.','O personagem derrotou o chefe.'])assert.equal(moderateText(text).status,'approved',text)
+})
+
+test('servidor mantém novos relatos pendentes sem contador, número ou celebração e com auditoria',async()=>{
+ const {store,records}=memory()
+ for(const content of ['bosta','b.o.s.t.a','boiola']){
+  const result=await submitComment(input({content}),visitor,{store,now})
+  assert.equal(result.status,'pending');assert.equal(result.firstPublished,false)
+  assert.equal(records.get('comments/'+result.id).content,content)
+  assert.equal(records.get('comments/'+result.id).publicationNumber,undefined)
+  assert.ok(records.get('commentRequests/'+result.id).flags.includes('offensive-language'))
+ }
+ assert.equal(records.get('shorts/'+shortId).commentCount,0)
+ assert.equal((await loadCommentQueue({status:'pending'},store)).items.length,3)
+ assert.equal([...records.values()].filter(item=>item.reasonCode==='local-text-review').length,3)
+})
