@@ -1,3 +1,4 @@
+import { AdminSessionProvider } from '../../features/admin/context/AdminSessionProvider'
 import { createBrowserRouter } from 'react-router-dom'
 import { SiteLayout } from '../../components/layout/SiteLayout'
 import { NotFoundPage } from '../../components/ui/NotFoundPage'
@@ -7,7 +8,7 @@ import { AdminPage } from '../../features/admin/pages/AdminPage'
 
 export const router = createBrowserRouter([
   {
-    element: <SiteLayout />,
+    element: <AdminSessionProvider><SiteLayout /></AdminSessionProvider>,
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/jogos/:gameId', element: <GamePage /> },

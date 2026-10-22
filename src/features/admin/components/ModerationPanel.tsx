@@ -1,17 +1,20 @@
+import {AdminOrder} from './AdminOrder'
+import type {AdminSort} from '../types/list-order'
 import { RefreshButton } from './RefreshButton'
 import { useEffect, useRef, useState } from 'react'
 import type { User } from 'firebase/auth'
 import { fetchQueue, fetchDetail, sendReview, AdminRequestError } from '../services/moderation-api'
-import type { AdminCursor, QueuePage, ReviewDetail, ReviewAction } from '../types/moderation'
+import type { QueueCursor, QueuePage, ReviewDetail, ReviewAction } from '../types/moderation'
 import { reportReasons } from '../../../lib/validation/report-input'
 import { parseVideoUrl } from '../../../lib/validation/video-url'
 import styles from './ModerationPanel.module.css'
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
-const labels: Record<ReviewAction, string> = { dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
+const labels: Record<ReviewAction, string> = { block:'Bloquear vídeo', dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
 export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauthorized: () => void }) {
-  const [queue, setQueue] = useState<'reports' | 'pending' | 'removed'>('reports')
+  const [sort,setSort]=useState<AdminSort>('date-desc')
+ const [queue, setQueue] = useState<'reports' | 'pending' | 'removed'>('reports')
   const [page, setPage] = useState<QueuePage | null>(null)
-  const [history, setHistory] = useState<Array<AdminCursor | undefined>>([])
+  const [history, setHistory] = useState<Array<QueueCursor | undefined>>([])
   const [detail, setDetail] = useState<ReviewDetail | null>(null)
   const [reason, setReason] = useState('')
   const [action, setAction] = useState<ReviewAction | null>(null)
@@ -31,8 +34,8 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       setError(failure instanceof Error ? failure.message : 'Operação indisponível. Tente novamente.')
     } finally { lock.current = false; if (active.current) setWorking(false) }
   }
-  const load = async (selectedQueue: 'reports' | 'pending' | 'removed' = queue) => {
-    const result = await fetchQueue(user, selectedQueue)
+  const load = async (selectedQueue: 'reports' | 'pending' | 'removed' = queue,selectedSort:AdminSort=sort) => {
+    const result = await fetchQueue(user, selectedQueue,undefined,selectedSort)
     if (active.current) { setPage(result); setHistory([]); setDetail(null); setAction(null); setReason('') }
   }
   const open = async (id: string) => {
@@ -45,12 +48,13 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
   }
   return <section className={styles.panel} aria-labelledby="moderation-heading">
     <h2 id="moderation-heading">Denúncias e revisão</h2>
+ <AdminOrder value={sort} disabled={working} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />
     <p>Denúncias entram para análise e mantêm o vídeo visível. Os totais representam sessões anônimas, não pessoas verificadas.</p>
     <div className={styles.actions}>
       {(['reports', 'pending', 'removed'] as const).map(value => <button key={value} disabled={working} aria-pressed={queue === value} onClick={() => void run(async () => {
         setQueue(value); setPage(null); setDetail(null); setHistory([]); setAction(null); setReason('')
         await load(value)
-      })}>{value === 'reports' ? 'Denúncias abertas' : value === 'pending' ? 'Vídeos pendentes' : 'Vídeos removidos'}</button>)}
+      })}>{value === 'reports' ? 'Denúncias abertas' : value === 'pending' ? 'Vídeos pendentes / bloqueados' : 'Vídeos removidos'}</button>)}
       <RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working} onClick={() => void run(() => load())} />
     </div>
     {working && <p role="status">Consultando o servidor…</p>}
@@ -66,13 +70,13 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       <div className={styles.actions}>
         <button disabled={working || !history.length} onClick={() => void run(async () => {
           const previous = history.slice(0, -1)
-          const result = await fetchQueue(user, queue, previous.at(-1))
+          const result = await fetchQueue(user, queue, previous.at(-1),sort)
           if (active.current) { setPage(result); setHistory(previous); setDetail(null); setAction(null) }
         })}>Anterior</button>
         <span>Página {history.length + 1} · até 20 itens</span>
         <button disabled={working || !page.next} onClick={() => void run(async () => {
           const next = page.next!
-          const result = await fetchQueue(user, queue, next)
+          const result = await fetchQueue(user, queue, next,sort)
           if (active.current) { setPage(result); setHistory([...history, next]); setDetail(null); setAction(null) }
         })}>Próxima</button>
       </div>
@@ -86,6 +90,7 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       {detail.short.status === 'removed' && <p>{detail.short.restoreStatus ?
         'Restauração disponível para o estado original: ' + (detail.short.restoreStatus === 'published' ? 'publicado' : 'pendente') + '.' :
         'Sem histórico seguro para restauração. O registro permanece removido.'}</p>}
+      {detail.short.blocked && <p>Bloqueado administrativamente. A liberação não consome novamente a cota do autor.</p>}
       <h4>Denúncias recebidas</h4>
       {!detail.reports.length && <p>Nenhuma denúncia registrada.</p>}
       <ul>{detail.reports.map((report, index) => <li key={index}>
@@ -105,13 +110,14 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       <div className={styles.actions}>
         {detail.count > detail.reviewedCount && ['published', 'pending'].includes(detail.short.status) &&
           <button disabled={working || reason.trim().length < 5} onClick={() => setAction('dismiss')}>Arquivar denúncias</button>}
+        {detail.short.status === 'published' && <button disabled={working || reason.trim().length < 5} onClick={()=>setAction('block')}>Bloquear vídeo</button>}
         {detail.short.status === 'pending' && <button disabled={working || reason.trim().length < 5} onClick={() => setAction('approve')}>Publicar vídeo</button>}
         {['published', 'pending'].includes(detail.short.status) &&
           <button disabled={working || reason.trim().length < 5} onClick={() => setAction('remove')}>Remover vídeo</button>}
         {detail.short.restoreStatus && <button disabled={working || reason.trim().length < 5} onClick={() => setAction('restore')}>Restaurar vídeo</button>}
       </div>
       {action && <div className={styles.confirm} role="group" aria-label="Confirmar decisão">
-        <p><strong>{labels[action]}?</strong> {action === 'remove' ? 'O vídeo sairá do feed e continuará bloqueado contra republicação.' :
+        <p><strong>{labels[action]}?</strong> {action==='block'?'O vídeo ficará oculto na fila de revisão, mantendo sua identidade reservada.':action === 'remove' ? 'O vídeo sairá do feed e continuará bloqueado contra republicação.' :
           action === 'restore' ? 'O registro voltará ao estado anterior à remoção, sem nova cobrança de cota. O link continuará bloqueado para novos envios.' :
           action === 'approve' ? 'A fonte será validada novamente e a publicação consumirá a cota do autor de hoje.' : 'A visibilidade não será alterada. Novas denúncias reabrirão a análise.'}</p>
         <p>Motivo: {reason}</p>

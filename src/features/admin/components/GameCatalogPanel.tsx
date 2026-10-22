@@ -1,3 +1,5 @@
+import {AdminOrder} from './AdminOrder'
+import type {AdminSort} from '../types/list-order'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { User } from 'firebase/auth'
@@ -13,6 +15,7 @@ const actions:Record<CatalogAction,string>={approve:'Aprovar cadastro provisóri
 const date=(value:string|null)=>value?new Date(value).toLocaleString('pt-BR'):'Data não informada'
 const state=(game:CatalogGame)=>game.status==='active'?(game.provisional?'Provisório':'Ativo'):game.status==='banned'?'Banido':'Oculto'
 export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}){
+ const [sort,setSort]=useState<AdminSort>('date-desc')
  const [filter,setFilter]=useState<CatalogFilter>('all'),[page,setPage]=useState<CatalogPage|null>(null),[history,setHistory]=useState<Array<CatalogCursor|undefined>>([])
  const [detail,setDetail]=useState<CatalogDetail|null>(null),[action,setAction]=useState<CatalogAction|null>(null),[draft,setDraft]=useState(emptyReason),[confirmed,setConfirmed]=useState(false)
  const [working,setWorking]=useState(false),[error,setError]=useState(''),[message,setMessage]=useState(''),lock=useRef(false),active=useRef(true)
@@ -24,9 +27,10 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
   lock.current=true;setWorking(true);setError('');setMessage('')
   try{await work()}catch(failure){if(active.current){if(failure instanceof AdminRequestError&&failure.unauthorized){onUnauthorized();return}setError(failure instanceof Error?failure.message:'Operação indisponível.')}}finally{lock.current=false;if(active.current)setWorking(false)}
  }
- const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor)=>{const result=await fetchCatalog(user,selected,cursor);if(active.current){setPage(result);reset()}}
+ const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
  return <section className={styles.panel} aria-labelledby="catalog-heading">
   <h2 id="catalog-heading">Catálogo administrativo de jogos</h2>
+ <AdminOrder value={sort} disabled={working} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />
   <p>Ocultar ou banir retira também os shorts das próximas consultas públicas. Os registros, vínculos e estados de moderação dos vídeos são preservados.</p>
   <p className="muted">Ativos inclui provisórios visíveis. Contagens são consultadas somente ao abrir detalhes e incluem shorts em todos os estados.</p>
   <div className={styles.actions}>{(Object.keys(tabs) as CatalogFilter[]).map(value=><button key={value} disabled={working} aria-pressed={filter===value} onClick={()=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})}>{tabs[value]}</button>)}

@@ -1,3 +1,4 @@
+import {loadAdminList} from '../admin/list-page.ts'
 import { prepareGameClaim, writeNameKeys } from './name-keys.ts'
 import { manualGameRecord } from './manual-game.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
@@ -29,8 +30,9 @@ export async function requestGame(input:unknown, visitor:string, options:{store:
   })
 }
 export async function loadGameRequests(input:unknown,store:AtomicStore) {
-  const data=parseQuery(input,['status','cursor'])
+  const data=parseQuery(input,['status','cursor','sort'])
   if(!statuses.includes(String(data.status)))throw new ReviewError('invalid-input',400)
+  if(data.sort!==undefined){const result=await loadAdminList('gameRequests',String(data.status),data.sort,data.cursor,store);return {items:result.rows.map(row=>map(row.id,row.data)),next:result.next}}
   if(!store.query)throw new Error('query-unavailable')
   const rows=await store.query({collection:'gameRequests',filter:{field:'status',value:String(data.status)},orderBy:'createdAt',limit:21,cursor:cursor(data.cursor)})
   const items=rows.slice(0,20).map(row=>map(row.id,row.data)),last=items.at(-1)

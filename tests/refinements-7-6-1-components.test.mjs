@@ -21,8 +21,8 @@ test('pesquisa tem nome curto, labels únicos e status fora da seção que será
 test('card apresenta tempo relativo e tolera data inválida sem interromper renderização',()=>{
  const short={id:'s1',identity:'demo:1',platform:'YouTube',title:'Jogada',channelName:'Canal',gameId:'game',createdAt:Date.now()-3600000},html=render(h(card,{short,onOpen:()=>{}}));assert.match(html,/>há 1 hora<\/time>/);assert.ok(html.includes('aria-label="Abrir vídeo: Jogada"'));const invalid=render(h(card,{short:{...short,createdAt:NaN},onOpen:()=>{}}));assert.ok(invalid.includes('Data indisponível'));assert.ok(!invalid.includes('datetime="Invalid'))
 })
-test('cabeçalho usa texto solicitado e preserva link administrativo para o bloco 7.6.2',()=>{
- const html=render(h(layout));assert.ok(html.includes('Comunidade de Games'));assert.ok(html.includes('Modo administrador'));assert.ok(html.includes('Pular para o conteúdo'));assert.ok(html.includes('id="main-content"'))
+test('cabeçalho preserva texto e acesso ao conteúdo sem link administrativo público',()=>{
+ const html=render(h(layout));assert.ok(html.includes('Comunidade de Games'));assert.ok(!html.includes('Modo administrador'));assert.ok(!html.includes('href="/admin"'));assert.ok(html.includes('Pular para o conteúdo'));assert.ok(html.includes('id="main-content"'))
 })
 test('página inicial remove slogan antigo e aviso técnico extenso sem perder título semântico',()=>{
  const html=render(h(provider,null,h(home)));assert.ok(html.includes('<h1>Pequenos clipes. Grandes jogadas.</h1>'));assert.ok(!html.includes('O próximo GG está aqui.'));assert.ok(!html.includes('AMBIENTE LOCAL'));assert.ok(html.includes('Compartilhar short'));assert.ok(html.includes('Desenvolvimento ·'))

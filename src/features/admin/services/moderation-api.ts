@@ -1,10 +1,12 @@
+import type {AdminSort} from '../types/list-order'
 import type { User } from 'firebase/auth'
-import type { AdminCursor, QueuePage, ReviewAction, ReviewDetail } from '../types/moderation'
+import type { AdminCursor, QueueCursor, QueuePage, ReviewAction, ReviewDetail } from '../types/moderation'
 export class AdminRequestError extends Error {
   readonly unauthorized: boolean
   constructor(message: string, unauthorized: boolean) { super(message); this.unauthorized = unauthorized }
 }
 const messages: Record<string, string> = {
+  'admin-order-preparing': 'A ordenação por título ainda está em preparação. Atualize após o preenchimento dos resumos.',
   'game-unavailable': 'Jogo indisponível. Atualize o catálogo.',
   'game-action-unavailable': 'Esta decisão não é permitida no estado atual. Reabra os detalhes.',
   'game-names-preparing': 'O registro seguro de nomes ainda não está pronto. Tente novamente mais tarde.',
@@ -31,8 +33,8 @@ export async function request<T>(user: User, path: string, body: unknown): Promi
     response.status === 401 || response.status === 403)
   return data as T
 }
-export const fetchQueue = (user: User, queue: 'reports' | 'pending' | 'removed', cursor?: AdminCursor) =>
-  request<QueuePage>(user, 'queue', { queue, cursor })
+export const fetchQueue = (user: User, queue: 'reports' | 'pending' | 'removed', cursor?: QueueCursor, sort?:AdminSort) =>
+  request<QueuePage>(user, 'queue', { queue, cursor, sort })
 export const fetchDetail = (user: User, shortId: string, cursor?: AdminCursor) =>
   request<ReviewDetail>(user, 'detail', { shortId, cursor })
 export const sendReview = (user: User, detail: ReviewDetail, action: ReviewAction, reason: string) =>

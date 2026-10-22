@@ -1,3 +1,4 @@
+import {loadAdminList} from '../admin/list-page.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import { parseQuery } from '../moderation/queue.ts'
 import { ReviewError } from '../moderation/review-short.ts'
@@ -10,8 +11,9 @@ function parseCursor(value: unknown) {
   return {time:new Date(data.time).toISOString(),id:commentId(data.id)}
 }
 export async function loadCommentQueue(input:unknown, store:AtomicStore) {
-  const data = parseQuery(input,['status','cursor'])
+  const data = parseQuery(input,['status','cursor','sort'])
   if (!commentStatuses.includes(data.status as typeof commentStatuses[number])) throw new ReviewError('invalid-input',400)
+  if(data.sort!==undefined){const result=await loadAdminList('comments',String(data.status),data.sort,data.cursor,store);return {items:result.rows.map(row=>mapComment(row.id,row.data)),next:result.next}}
   if (!store.query) throw new Error('query-unavailable')
   const rows = await store.query({collection:'comments',filter:{field:'moderationStatus',value:String(data.status)},
     orderBy:'createdAt',limit:21,cursor:parseCursor(data.cursor)})

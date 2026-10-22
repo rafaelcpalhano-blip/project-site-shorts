@@ -16,7 +16,7 @@ export function parseReview(input: unknown): ReviewInput {
   const data = input as RecordData
   if (Object.keys(data).some(key => !['shortId', 'action', 'reason', 'revision', 'reportCount'].includes(key)) ||
       typeof data.shortId !== 'string' || !/^[a-f0-9]{64}$/.test(data.shortId) ||
-      !['dismiss', 'approve', 'remove', 'restore'].includes(String(data.action)) ||
+      !['dismiss', 'approve', 'remove', 'restore', 'block'].includes(String(data.action)) ||
       typeof data.reason !== 'string' || data.reason.trim().length < 5 || data.reason.trim().length > 500 ||
       [...data.reason].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127) ||
       !Number.isSafeInteger(data.revision) || Number(data.revision) < 0 ||
@@ -31,6 +31,12 @@ export function counter(value: unknown): number {
 export function restoreTarget(short: RecordData, state: RecordData | null): 'published' | 'pending' | null {
   if (short.moderationStatus !== 'removed' || state?.removedRevision !== counter(short.reviewVersion ?? 0)) return null
   return state?.previousStatus === 'published' || state?.previousStatus === 'pending' ? state.previousStatus : null
+}
+export function publishedBeforeBlock(short:RecordData):boolean {
+ if(short.administrativeBlock===undefined)return false
+ const value=short.administrativeBlock as RecordData|null
+ if(!value||typeof value!=='object'||Array.isArray(value)||value.previousStatus!=='published'||!(value.blockedAt instanceof Date)||!Number.isFinite(value.blockedAt.getTime()))throw Error('invalid-block-state')
+ return true
 }
 export async function reviewShort(input: ReviewInput, uid: string, options: {
   store: AtomicStore; now: () => Date; verify: SubmissionDependencies['verify']
@@ -73,7 +79,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
     if (revision !== input.revision || count !== input.reportCount) throw new ReviewError('stale-review')
     if (revision >= Number.MAX_SAFE_INTEGER) throw new Error('invalid-revision')
     const status = short.moderationStatus
-    if (input.action === 'restore' ? status !== 'removed' : input.action === 'approve' ? status !== 'pending' :
+    if (input.action === 'restore' ? status !== 'removed' : input.action === 'approve' ? status !== 'pending' : input.action === 'block' ? status !== 'published' :
       !['published', 'pending'].includes(String(status))) throw new ReviewError('stale-review')
     if (input.action === 'restore' && (!restoreStatus || restoreTarget(short, state) !== restoreStatus)) throw new ReviewError('restore-unavailable')
     if (input.action === 'dismiss' && (!summary || summary.status !== 'pending')) throw new ReviewError('stale-review')
@@ -90,7 +96,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
         const game = await tx.get('games/' + String(short.gameId))
         if (!isVisibleGame(game)) throw new ReviewError('invalid-video', 422)
       }
-      if (input.action === 'approve') {
+      if (input.action === 'approve' && !publishedBeforeBlock(short)) {
         const owner = await tx.get('submissionOwners/' + input.shortId)
         if (typeof owner?.visitorHash !== 'string' || !/^[a-f0-9]{64}$/.test(owner.visitorHash)) throw new Error('invalid-owner')
         ownerHash = owner.visitorHash
@@ -100,8 +106,11 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
       }
     }
     const nextStatus = input.action === 'restore' ? restoreStatus! :
-      input.action === 'approve' ? 'published' : input.action === 'remove' ? 'removed' : String(status)
-    tx.set(path, { ...short, moderationStatus: nextStatus, reviewVersion: revision + 1 })
+      input.action === 'approve' ? 'published' : input.action === 'remove' ? 'removed' : input.action === 'block' ? 'pending' : String(status)
+    const updated:RecordData={...short,moderationStatus:nextStatus,reviewVersion:revision+1}
+    if(input.action==='block')updated.administrativeBlock={previousStatus:'published',blockedAt:now}
+    if(input.action==='approve')delete updated.administrativeBlock
+    tx.set(path,updated)
     if (input.action === 'remove') tx.set('moderationStates/' + input.shortId, { previousStatus: status, removedRevision: revision + 1 })
     if (input.action === 'restore') tx.set('moderationStates/' + input.shortId, { ...state, restoredAt: now, restoredRevision: revision + 1 })
     if (summary) tx.set('reportSummaries/' + input.shortId, { ...summary, status: 'reviewed',

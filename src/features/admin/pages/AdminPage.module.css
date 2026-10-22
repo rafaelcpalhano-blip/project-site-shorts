@@ -1,0 +1,5 @@
+.totpForm { display: grid; grid-template-columns: minmax(0, 13rem) max-content; align-items: end; gap: 10px; margin-block: 16px; }
+.totpForm label { grid-column: 1 / -1; }
+.totpForm input { min-height: 44px; text-align: center; letter-spacing: .25em; }
+.totpForm button { min-height: 44px; padding: 8px 12px; }
+@media (max-width: 480px) { .totpForm { grid-template-columns: minmax(0, 13rem); } .totpForm button { justify-self: start; max-width: 100%; } }

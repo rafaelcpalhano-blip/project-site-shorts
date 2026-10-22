@@ -1,3 +1,5 @@
+import {AdminOrder} from './AdminOrder'
+import type {AdminSort} from '../types/list-order'
 import { ReasonShortcuts } from './ReasonShortcuts'
 import { emptyReason, formatReason } from '../services/reason-shortcuts'
 import { RefreshButton } from './RefreshButton'
@@ -11,6 +13,7 @@ import type { RequestStatus, RequestCursor, GameRequestPage, GameRequestItem } f
 import styles from './ModerationPanel.module.css'
 const labels:Record<RequestStatus,string>={pending:'Pendentes',linked:'Vinculadas',rejected:'Rejeitadas'}
 export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}) {
+ const [sort,setSort]=useState<AdminSort>('date-desc')
  const [status,setStatus]=useState<RequestStatus>('pending'),[page,setPage]=useState<GameRequestPage|null>(null)
  const [history,setHistory]=useState<Array<RequestCursor|undefined>>([]),[item,setItem]=useState<GameRequestItem|null>(null)
  const [game,setGame]=useState<{id:string;name:string}|null>(null),[reasonDraft,setReason]=useState(emptyReason)
@@ -29,12 +32,13 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
    setError(failure instanceof Error?failure.message:'Operação indisponível.')
   }}finally{lock.current=false;if(active.current)setWorking(false)}
  }
- const load=async(cursor?:RequestCursor,selectedStatus:RequestStatus=status)=>{
-  const result=await fetchGameRequests(user,selectedStatus,cursor)
+ const load=async(cursor?:RequestCursor,selectedStatus:RequestStatus=status,selectedSort:AdminSort=sort)=>{
+  const result=await fetchGameRequests(user,selectedStatus,cursor,selectedSort)
   if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason(emptyReason())}
  }
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
   <h2 id="game-requests-heading">Solicitações de jogos</h2>
+ <AdminOrder value={sort} disabled={busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
   <div className={styles.actions}>{(Object.keys(labels) as RequestStatus[]).map(value=><button key={value} disabled={busy} aria-pressed={status===value}
    onClick={()=>void run(async()=>{

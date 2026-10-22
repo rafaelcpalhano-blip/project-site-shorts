@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import styles from './SiteLayout.module.css'
 
@@ -22,9 +22,6 @@ export function SiteLayout() {
           clip<span>zone</span> ↗
         </Link>
         <p className={styles.tagline}>Comunidade de Games</p>
-        <nav aria-label="Navegação principal">
-          <NavLink className={styles.adminLink} to="/admin">Modo administrador</NavLink>
-        </nav>
       </header>
       <main id="main-content" className={styles.main} ref={mainRef} tabIndex={-1}>
         <Outlet />

@@ -1,6 +1,7 @@
+import {loadAdminList} from '../admin/list-page.ts'
 import type { AtomicStore, RecordData, StoreQuery } from '../firestore/atomic-store.ts'
 import type { AdminCursor, QueuePage, ReviewDetail, ReviewShort } from '../../src/features/admin/types/moderation.ts'
-import { counter, ReviewError, restoreTarget } from './review-short.ts'
+import { counter, ReviewError, restoreTarget, publishedBeforeBlock } from './review-short.ts'
 export function parseQuery(input: unknown, keys: string[]): RecordData {
   if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(key => !keys.includes(key))) throw new ReviewError('invalid-input', 400)
   return input as RecordData
@@ -27,9 +28,13 @@ async function page(store: AtomicStore, query: StoreQuery) {
   return { rows: visible, next: rows.length > 20 && last ? { id: last.id, time: time(last.data[query.orderBy]) } : null }
 }
 export async function loadQueue(input: unknown, store: AtomicStore): Promise<QueuePage> {
-  const data = parseQuery(input, ['queue', 'cursor'])
+  const data = parseQuery(input, ['queue', 'cursor', 'sort'])
   if (data.queue !== 'reports' && data.queue !== 'pending' && data.queue !== 'removed') throw new ReviewError('invalid-input', 400)
   const reports = data.queue === 'reports'
+  if(data.sort!==undefined){
+    const result=await loadAdminList(reports?'reportSummaries':'shorts',data.queue==='removed'?'removed':'pending',data.sort,data.cursor,store)
+    return {items:result.rows.map(({id,data:item})=>reports?{id:shortId(id),title:typeof item.title==='string'?item.title:'',count:counter(item.count),reviewedCount:counter(item.reviewedCount??0),time:time(item.firstReportedAt)}:{id:shortId(id),title:String(item.title||''),status:String(item.moderationStatus),time:time(item.createdAt)}),next:result.next}
+  }
   const result = await page(store, { collection: reports ? 'reportSummaries' : 'shorts',
     filter: { field: reports ? 'status' : 'moderationStatus', value: data.queue === 'removed' ? 'removed' : 'pending' },
     orderBy: reports ? 'lastReportedAt' : 'createdAt', limit: 21, cursor: cursor(data.cursor) })
@@ -54,6 +59,7 @@ export async function loadDetail(input: unknown, store: AtomicStore): Promise<Re
   const item: ReviewShort = { id, title: String(short.title || ''), originalTitle: typeof short.originalTitle === 'string' ? short.originalTitle : null,
     url: typeof short.normalizedUrl === 'string' ? short.normalizedUrl : '', platform: String(short.platform || ''),
     gameId: String(short.gameId || ''), status: String(short.moderationStatus), createdAt: time(short.createdAt),
+    ...(short.moderationStatus==='pending'&&publishedBeforeBlock(short)?{blocked:true}:{}),
     revision: counter(short.reviewVersion ?? 0), restoreStatus: restoreTarget(short, state) }
   return { short: item, count: counter(summary?.count ?? 0), reviewedCount: counter(summary?.reviewedCount ?? 0),
     logs: logs.map(({ data: log }) => ({ action: String(log.action || ''), reason: String(log.reason || log.reasonCode || ''), createdAt: time(log.createdAt) })),

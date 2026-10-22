@@ -1,0 +1,3 @@
+.navigation { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin: 24px auto; }
+.navigation button { min-height: 44px; }
+.navigation button[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-accent); }

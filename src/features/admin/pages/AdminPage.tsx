@@ -1,15 +1,13 @@
-import { GameCatalogPanel } from '../components/GameCatalogPanel'
-import { GameRequestPanel } from '../components/GameRequestPanel'
-import { CommentModerationPanel } from '../components/CommentModerationPanel'
-import { ModerationPanel } from '../components/ModerationPanel'
+import { useAdminSession } from '../context/admin-session-context'
+import { AdminSections } from '../components/AdminSections'
+import styles from './AdminPage.module.css'
 import { useEffect, useRef, useState } from 'react'
 import {
-  GoogleAuthProvider, signInWithPopup, signOut, getMultiFactorResolver, multiFactor,
-  TotpMultiFactorGenerator, onIdTokenChanged,
+  GoogleAuthProvider, signInWithPopup, getMultiFactorResolver, multiFactor,
+  TotpMultiFactorGenerator,
 } from 'firebase/auth'
-import type { Auth, MultiFactorError, MultiFactorResolver, TotpSecret, User } from 'firebase/auth'
+import type { MultiFactorError, MultiFactorResolver, TotpSecret } from 'firebase/auth'
 import { PageIntro } from '../../../components/ui/PageIntro'
-import { loadAdminAuth, checkAdminAccess } from '../services/admin-auth'
 function message(error: unknown): string {
   const code = (error as { code?: string })?.code
   const messages: Record<string, string> = {
@@ -26,42 +24,34 @@ function message(error: unknown): string {
     error instanceof Error && error.name === 'Error' ? error.message : 'Autenticação indisponível. Tente novamente.'
 }
 export function AdminPage() {
-  const [auth, setAuth] = useState<Auth | null>(null)
-  const [user, setUser] = useState<User | null>(null)
+  const {auth,user,authorized,checking,error:sessionError,initialize,verify,invalidate,beginSignIn,endSession}=useAdminSession()
   const [resolver, setResolver] = useState<MultiFactorResolver | null>(null)
   const [secret, setSecret] = useState<TotpSecret | null>(null)
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [status, setStatus] = useState('Carregando autenticação...')
   const [working, setWorking] = useState(false)
-  const [authorized, setAuthorized] = useState(false)
   const lock = useRef(false)
   const active = useRef(true)
   useEffect(() => {
     active.current = true
-    let unsubscribe: (() => void) | undefined
-    loadAdminAuth().then(value => {
-      if (!active.current) return
-      setAuth(value); setStatus('')
-      unsubscribe = onIdTokenChanged(value, current => {
-        if (!active.current) return
-        setUser(current); setAuthorized(false)
-        if (!current) { setSecret(null); setCode('') }
-      })
-    }).catch(failure => { if (active.current) { setError(message(failure)); setStatus('') } })
-    return () => { active.current = false; unsubscribe?.() }
-  }, [])
+    initialize().then(()=>{if(active.current)setStatus('')}).catch(failure=>{if(active.current){setError(message(failure));setStatus('')}})
+    return()=>{active.current=false}
+  },[initialize])
   const run = async (work: () => Promise<void>) => {
     if (lock.current) return
-    lock.current = true; setWorking(true); setError(''); setAuthorized(false)
+    lock.current = true; setWorking(true); setError(''); invalidate()
     try { await work() } catch (failure) { if (active.current) setError(message(failure)) }
     finally { lock.current = false; if (active.current) setWorking(false) }
   }
   return <>
     <PageIntro title="Administração" description="Acesso exclusivo à conta autorizada, com Google e aplicativo autenticador." />
-    {status && <p role="status">{status}</p>}
+    {!authorized && status && <p role="status">{status}</p>}
+    {checking && <p role="status">Verificando acesso administrativo…</p>}
+    {sessionError && <p role="alert" className="error">{sessionError}</p>}
     {error && <p role="alert" className="error">{error}</p>}
     {auth && !user && !resolver && <button className="primary" disabled={working} onClick={() => void run(async () => {
+      beginSignIn()
       const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' })
       try { await signInWithPopup(auth, provider) }
       catch (failure) {
@@ -73,7 +63,7 @@ export function AdminPage() {
     })}>Entrar com Google</button>}
     {user && <>
       <p>Conta conectada: {user.email}</p>
-      <p className="muted">UID da sua conta: <code>{user.uid}</code>. Estar conectado não concede privilégios administrativos.</p>
+      <p>{authorized?'Acesso administrativo autorizado.':'Conta conectada. Aguardando autorização administrativa.'}</p>
       {!user.emailVerified && <p role="alert">Confirme seu e-mail antes de configurar o TOTP.</p>}
       {!multiFactor(user).enrolledFactors.some(factor => factor.factorId === TotpMultiFactorGenerator.FACTOR_ID) && user.emailVerified && !secret &&
         <button disabled={working} onClick={() => void run(async () => {
@@ -84,22 +74,19 @@ export function AdminPage() {
         <p>Adicione uma conta TOTP chamada Clipzone no aplicativo autenticador. A chave abaixo é privada; não envie pelo chat nem inclua em capturas.</p>
         <p>Chave de configuração: <code>{secret.secretKey}</code></p>
       </div>}
-      {!secret && <button disabled={working} onClick={() => void run(async () => {
-        const uid = await checkAdminAccess(await user.getIdToken(true))
-        if (active.current && uid === user.uid) { setAuthorized(true); setStatus('Identidade, TOTP e permissão confirmados pelo servidor.') }
-      })}>Verificar acesso administrativo</button>}
+      {!secret && !authorized && <button disabled={working||checking} onClick={()=>void verify()}>Verificar acesso administrativo</button>}
     </>}
-    {(resolver || secret) && <form className="form" onSubmit={event => {
+    {(resolver || secret) && <form className={styles.totpForm} onSubmit={event => {
       event.preventDefault()
       void run(async () => {
         if (resolver) {
           const factor = resolver.hints.find(hint => hint.factorId === TotpMultiFactorGenerator.FACTOR_ID)!
           await resolver.resolveSignIn(TotpMultiFactorGenerator.assertionForSignIn(factor.uid, code))
-          if (active.current) { setResolver(null); setCode(''); setStatus('Login com TOTP concluído. Verifique o acesso no servidor.') }
+          if (active.current) { setResolver(null); setCode(''); setStatus('') }
         } else if (secret && user) {
           await multiFactor(user).enroll(TotpMultiFactorGenerator.assertionForEnrollment(secret, code), 'Autenticador Clipzone')
           if (active.current) { setSecret(null); setCode('') }
-          await signOut(auth!)
+          await endSession()
           if (active.current) setStatus('TOTP cadastrado. Entre novamente com Google e confirme o código para acessar.')
         }
       })
@@ -109,15 +96,9 @@ export function AdminPage() {
         inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" required minLength={6} maxLength={6} disabled={working} />
       <button className="primary" disabled={working || code.length !== 6}>Confirmar código TOTP</button>
     </form>}
-    {authorized && user && <>
-      <p role="status">Acesso administrativo verificado.</p>
-      <GameCatalogPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('Verifique novamente o acesso com Google/TOTP.') }} />
-      <GameRequestPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('Verifique novamente o acesso com Google/TOTP.') }} />
-      <CommentModerationPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('Verifique novamente o acesso administrativo com Google/TOTP.') }} />
-      <ModerationPanel user={user} onUnauthorized={() => { setAuthorized(false); setError('A sessão administrativa não é mais válida. Verifique o acesso novamente ou entre com Google e TOTP.') }} />
-    </>}
-    {auth && (user || resolver) && <button disabled={working} onClick={() => void run(async () => {
-      await signOut(auth); if (active.current) { setUser(null); setResolver(null); setSecret(null); setCode(''); setStatus('Sessão encerrada.') }
+    {authorized && user && <AdminSections key={user.uid} user={user} onUnauthorized={()=>invalidate('A sessão administrativa não é mais válida. Verifique o acesso novamente.')} />}
+    {auth && (user || resolver) && <button disabled={working} onClick={()=>void run(async()=>{
+      await endSession();if(active.current){setResolver(null);setSecret(null);setCode('');setStatus('Sessão encerrada.')}
     })}>Sair / cancelar autenticação</button>}
     <p className="muted">O cadastro e os códigos do autenticador são tratados pelo Firebase. Esta página não concede acesso direto às coleções privadas.</p>
   </>

@@ -114,7 +114,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    {selected && <FirestoreShortDialog short={selected} onLikeCount={updateLikeCount} onClose={() => setSelected(null)} />}
+    {selected && <FirestoreShortDialog short={selected} onLikeCount={updateLikeCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
   </>
 }
 

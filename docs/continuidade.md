@@ -1,5 +1,36 @@
 # Continuidade da aplicação — checkpoint
 
+## Refinamentos 7.6.2 implementados — 22/10/2026
+
+Seções centralizadas e selecionadas; ordenação completa das quatro áreas com cursores vinculados e páginas de 20 (consulta até 21). Denúncias recebem título no resumo; preparação local privada concluída (0 registros antigos). 17 índices adicionais definidos, não publicados. Comparação textual nativa, sem colação pt-BR.
+Ações do vídeo ao final, exclusão de comentários por seleção/contador/cancelamento, confirmação e motivo. Reutiliza transações individuais: falha parcial e limite de requisições são informados, sem repetição automática ou enfraquecer autorização/auditoria/ranking/restauração. Chaves React dos elementos irmãos do visualizador diferenciadas.
+47 testes relacionados desta rodada, lint/build e verificações finais localizadas aprovados; sem suíte completa, serviço remoto ou deploy. API HTTPS local reiniciada; necessário entrar novamente Google/TOTP. Conferência visual/interativa destes refinamentos pendente. Detalhes, comando de preparação local, custos e limitações em [etapa-7-6-2.md](etapa-7-6-2.md).
+Próxima 7.6.3 somente após conferência e autorização individual.
+
+
+## Etapa 7.6.2 — administração implementada, conferência interativa pendente (22/10/2026)
+
+Sessão administrativa em memória compartilhada acima das rotas, validação automática
+no servidor, expiração e proteção contra respostas atrasadas/logout. Mantidos Google,
+UID e TOTP no servidor em toda ação. Reload/fechamento exige login; não há promessa
+de revogação imediata de token emitido ao encerrar página. Login TOTP compacto, UID
+fora da tela principal e sem link administrativo na navegação pública. Painel com
+quatro seções montadas sob demanda, estados preservados ao alternar e filtros/refresh
+existentes, sem consultas de áreas nunca abertas.
+Visualizador oferece Excluir (restaurável) e Bloquear (ocultação pendente), distinção
+confirmada pelo proprietário. Ambas exigem motivo/confirmar e geram histórico comum
+com UID do servidor. Reserva e registro original preservados; liberar bloqueado não
+cobra cota novamente, inclusive após excluir/restaurar bloqueado. Comentários têm
+exclusão administrativa via serviço existente, mantendo restauração/ranking.
+56 testes relacionados distintos, lint/build e HTTP local sem credencial conferidos;
+sem conteúdo 8080 alterado, serviço externo modificado ou deploy. API local reiniciada.
+Ver [etapa-7-6-2.md](etapa-7-6-2.md) para arquivos/conceitos, limites de sessão e passos
+Google/TOTP solicitados ao proprietário; aceitação interativa ainda pendente.
+Log anterior continha avisos de chaves React duplicadas, anteriores ao bloco: causa
+não identificada, diagnóstico registrado para 7.6.4; não houve correção fora do escopo.
+Próxima 7.6.3, aguardando autorização individual. Checkpoints seguintes são históricos.
+
+
 ## Etapa 7.6.1 — interface implementada, aceitação visual pendente (22/10/2026)
 
 Bloco autorizado de refinamentos públicos: Comunidade de Games, retirada do slogan

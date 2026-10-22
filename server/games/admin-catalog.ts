@@ -1,3 +1,4 @@
+import {loadAdminList} from '../admin/list-page.ts'
 import type { AtomicStore, GameCatalogFilter, RecordData } from '../firestore/atomic-store.ts'
 import { ReviewError, counter } from '../moderation/review-short.ts'
 import { nameIdentity, readNameKeys, validateNameReference, writeNameKeys, nameStatePath } from './name-keys.ts'
@@ -18,8 +19,9 @@ function item(gameId:string,game:RecordData){
  return {id:gameId,name:game.officialName,source:game.source==='IGDB'?'IGDB':'manual',status:String(game.status),provisional:game.reviewStatus==='provisional',createdAt:time(game.createdAt),revision:counter(game.reviewVersion??0)}
 }
 export async function loadGameCatalog(input:unknown,store:AtomicStore){
- const data=object(input,['filter','cursor']),filter=data.filter as GameCatalogFilter
+ const data=object(input,['filter','cursor','sort']),filter=data.filter as GameCatalogFilter
  if(!filters.includes(filter))throw new ReviewError('invalid-input',400)
+ if(data.sort!==undefined){const result=await loadAdminList('games',filter,data.sort,data.cursor,store);return {items:result.rows.map(row=>item(row.id,row.data)),next:result.next}}
  let cursor:{time:string;id:string}|undefined
  if(data.cursor!==undefined){const c=object(data.cursor,['time','id','scope']);if(c.scope!==filter||typeof c.time!=='string'||!Number.isFinite(Date.parse(c.time)))throw new ReviewError('invalid-input',400);cursor={time:c.time,id:id(c.id)}}
  if(!store.gameCatalogPage)throw new Error('query-unavailable')

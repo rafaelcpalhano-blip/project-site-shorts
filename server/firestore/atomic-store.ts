@@ -1,3 +1,4 @@
+import type {AdminSort,AdminListCursor} from '../../src/features/admin/types/list-order.ts'
 export type RecordData = Record<string, unknown>
 export interface AtomicTransaction {
   get(path: string): Promise<RecordData | null>
@@ -17,7 +18,10 @@ export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: strin
 export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'banned'
 export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
 export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?:string;generationId?:string;readTime?:string;cursor?:{id:string;time:string;value?:number};limit:15}
+export interface AdminListQuery {kind:'games'|'gameRequests'|'comments'|'shorts'|'reportSummaries';filter:string;sort:AdminSort;cursor?:AdminListCursor;limit:21}
 export interface AtomicStore {
+  adminListPage?: (query:AdminListQuery)=>Promise<Array<{id:string;data:RecordData}>>
+  scanReportSummaries?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   rankingBootstrapPage?: (collection:'shorts'|'games'|'shortLikes'|'comments'|'commentRequests',after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   rankingItemsPage?: (generationId:string)=>Promise<Array<{id:string;data:RecordData}>>
   rankingSourcePage?: (after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>

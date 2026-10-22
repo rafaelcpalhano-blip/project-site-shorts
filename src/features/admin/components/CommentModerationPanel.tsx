@@ -1,3 +1,5 @@
+import {AdminOrder} from './AdminOrder'
+import type {AdminSort} from '../types/list-order'
 import { RefreshButton } from './RefreshButton'
 import { useEffect, useRef, useState } from 'react'
 import type { User } from 'firebase/auth'
@@ -9,7 +11,8 @@ const statuses:Record<CommentStatus,string>={pending:'Pendentes',approved:'Publi
 const actions:Record<CommentAction,string>={approve:'Publicar comentário',reject:'Rejeitar comentário',remove:'Remover comentário',restore:'Restaurar comentário'}
 const flags:Record<string,string>={threat:'Possível ameaça',hate:'Possível discriminação','offensive-language':'Linguagem ofensiva',spam:'Possível spam'}
 export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}) {
-  const [status,setStatus]=useState<CommentStatus>('pending')
+  const [sort,setSort]=useState<AdminSort>('date-desc')
+ const [status,setStatus]=useState<CommentStatus>('pending')
   const [page,setPage]=useState<CommentPage|null>(null)
   const [history,setHistory]=useState<Array<CommentCursor|undefined>>([])
   const [detail,setDetail]=useState<CommentDetail|null>(null)
@@ -29,12 +32,13 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
       setError(failure instanceof Error?failure.message:'Não foi possível concluir a operação.')
     }finally{lock.current=false;if(active.current)setWorking(false)}
   }
-  const load=async(cursor?:CommentCursor,selectedStatus:CommentStatus=status)=>{
-    const result=await fetchCommentQueue(user,selectedStatus,cursor)
+  const load=async(cursor?:CommentCursor,selectedStatus:CommentStatus=status,selectedSort:AdminSort=sort)=>{
+    const result=await fetchCommentQueue(user,selectedStatus,cursor,selectedSort)
     if(active.current){setPage(result);setDetail(null);setAction(null);setReason('')}
   }
   return <section className={styles.panel} aria-labelledby="comment-review-heading">
     <h2 id="comment-review-heading">Comentários e revisão de texto</h2>
+ <AdminOrder value={sort} disabled={working} textLabel="Texto" dateLabel="Data de publicação" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />
     <p>A triagem local pode errar ou deixar passar conteúdo. Confira o contexto antes de decidir.</p>
     <div className={styles.actions}>{(Object.keys(statuses) as CommentStatus[]).map(value=><button key={value} disabled={working}
       aria-pressed={status===value} onClick={()=>void run(async()=>{
