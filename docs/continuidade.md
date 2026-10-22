@@ -1,4 +1,15 @@
+## 22/10/2026 — Complemento aprovado: preferência de áudio da sessão
+
+Implementados controle oficial YouTube, mensagens oficiais TikTok e preferência sonora em memória. Twitch Clips mantém API não interativa e controles nativos. Evidências, testes e limitações em [audio-sessao.md](audio-sessao.md). TikTok ainda pode exigir Play nativo; título ausente no oEmbed continua manual. Sem deploy/Firestore/dependências. Alterações da 7.6.7-A anteriores ainda estavam sem commit e foram preservadas. Próxima: 7.6.7-B, somente após autorização.
+
 # Continuidade da aplicação — checkpoint
+
+## Etapa 7.6.7-A — concluída localmente (22/10/2026)
+
+Canal junto às curtidas; preferência de áudio explícita para TikTok/Twitch e ajuda Sem som?, sem forçar autoplay com áudio. YouTube indicou som habilitado; TikTok/Twitch ainda exigiram controle nativo no navegador conferido. Cursor piscando confirmado pelo proprietário como navegação por cursor do Chrome; desativá-la resolveu, sem mexer em foco/CSS do botão. TikTok reutiliza title e descrição textual opcional do mesmo JSON; duas consultas reais sem title/description/caption, mantendo edição manual e publicação autônoma conforme política. [Evidências e limites](etapa-7-6-7-a.md).
+
+Formulário com Enter/colagem e foco intencional, select nativo, edição manual preservada, confirmação personalizada com Cancelar/Escape e bloqueio de envio concorrente. 36 testes focados, build/lint/diff aprovados; conferências interativas isoladas sem publicação real, incluindo sucesso/falha simulados e 390px. Fixtures temporárias removidas; API reiniciada com emulador/segredos preservados. Sem dependências, serviços, migração ou deploy. Próximo 7.6.7-B aguarda autorização individual; C–F e produção não iniciados. Checkpoints abaixo são históricos.
+
 
 ## Etapa 7.6.6-E — concluída localmente com complemento de navegação (22/10/2026)
 
