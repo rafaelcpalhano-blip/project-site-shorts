@@ -1,7 +1,7 @@
 import { validThumbnail } from '../../../lib/validation/thumbnail.ts'
 import type {PublicShort} from '../../../lib/firebase/public-read-api'
 import {publicId} from '../../../lib/validation/public-read.ts'
-export const feedOrderLabels={latest:'Ultimo Postado',oldest:'Primeiro postado',likes:'Mais Curtidos',relevant:'Mais Relevante'} as const
+export const feedOrderLabels={latest:'Últimos Postados',oldest:'Primeiro Postado',likes:'Mais Curtidos',relevant:'Mais Relevante'} as const
 export type FeedOrder=keyof typeof feedOrderLabels
 export interface OrderedPage {items:PublicShort[];next:string|null;order:FeedOrder;orderingAt:string;limited:boolean}
 export function createOrderedFeedClient(fetcher:typeof fetch=fetch){

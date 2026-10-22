@@ -27,7 +27,6 @@
   margin: 0;
   color: var(--color-muted);
   font-size: .75rem;
-  text-transform: uppercase;
 }
 .adminLink {
   display: inline-block;

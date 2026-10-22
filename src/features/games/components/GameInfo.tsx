@@ -1,15 +1,15 @@
-import { supportContact } from '../../../config/support'
+import { supportEmailForDisplay } from '../../../config/support'
 import { gameLabel } from '../services/game-labels'
 import type { GameDetails } from '../services/game-details'
 import styles from './GameInfo.module.css'
 export function GameInfo({game}:{game:GameDetails}) {
+  const supportEmail=supportEmailForDisplay(import.meta.env.DEV)
   return <section className={styles.card} aria-label="Informações do jogo">
     {game.imageUrl && <img className={styles.cover} src={game.imageUrl} alt={'Capa de '+game.name} loading="lazy" referrerPolicy="no-referrer" onError={event=>{event.currentTarget.hidden=true}} />}
     <div><h2>Sobre o jogo</h2>
       {game.source === 'manual' ? <>
         <p>{game.provisional ? 'Jogo cadastrado provisoriamente pela comunidade, sujeito à moderação posterior.' : 'Jogo cadastrado manualmente.'} Sem cadastro associado à fonte IGDB. Descrição e imagem não disponíveis.</p>
-        <p>Para solicitar informações e imagens de um jogo novo ou de sua autoria, o contato de suporte previsto é <strong>{supportContact.email}</strong>.</p>
-        {!supportContact.operational && <small>Suporte em preparação: este endereço ainda não existe e não recebe mensagens.</small>}
+        <p>Para solicitar informações e imagens de um jogo novo ou de sua autoria, entre em contato {supportEmail?<>pelo e-mail de suporte: <strong>{supportEmail}</strong>.</>:<>com o suporte.</>}</p>
       </> : <p className={styles.description}>{game.descriptionPtBr || game.description || 'Descrição não disponível no catálogo.'}</p>}
       {game.descriptionPtBr && <>
         <small>Tradução automática para português brasileiro; pode conter imprecisões.</small>

@@ -25,7 +25,7 @@ export function FirestoreShortDialog({ short, onClose, onLikeCount }: { short: S
     repository.listComments(short.id, cursor).then(page => {
       if (!active) return
       setAvailable(true); setComments(page.items); setNext(page.next); setLoading(false)
-    }).catch(() => { if (active) { setAvailable(false); setError('Não foi possível carregar os comentários. Verifique o emulador.'); setLoading(false) } })
+    }).catch(() => { if (active) { setAvailable(false); setError('Não foi possível carregar os comentários. Tente novamente.'); setLoading(false) } })
     return () => { active = false }
   }, [short.id, cursor, attempt])
   return <Modal title={short.title} closeDisabled={reporting || commenting || liking} onClose={() => { if (!reporting && !commenting && !liking) onClose() }}>

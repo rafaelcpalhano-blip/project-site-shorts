@@ -14,3 +14,8 @@
 .disclosure { min-width: 0; }
 .disclosure > summary { width: fit-content; max-width: 100%; cursor: pointer; font-size: .85rem; overflow-wrap: anywhere; }
 .disclosure[open] > summary { margin-bottom: 12px; }
+
+.success { color: #a4e5b0; overflow-wrap: anywhere; margin: 0; }
+.disclosure > summary { min-height: 44px; padding-block: 8px; }
+
+.success:empty { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }

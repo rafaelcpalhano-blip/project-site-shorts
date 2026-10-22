@@ -34,8 +34,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
       </div>}
     </div>
     <div className={styles.heading}>
-      <h2>Últimos compartilhados</h2>
-      <p role="status">{matching.length} shorts · mais recentes primeiro · 15 por página</p>
+      <h2>Últimos Postados</h2>
     </div>
     {matching.length ? <div className={styles.grid}>
       {matching.slice((currentPage - 1) * 15, currentPage * 15).map(short => <ShortCard key={short.id} short={short} gameName={games.find(game => game.id === short.gameId)?.name}

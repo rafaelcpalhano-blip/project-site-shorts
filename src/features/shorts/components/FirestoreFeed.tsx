@@ -63,7 +63,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       if (!active) return
       setNames(Object.fromEntries(resolved)); setPage(result); setLoading(false)
     }).catch(failure => {
-      if (active) { setError(failure instanceof Error?failure.message:TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Verifique se o emulador está em execução.'); setLoading(false) }
+      if (active) { setError(failure instanceof Error?failure.message:TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Tente novamente.'); setLoading(false) }
     })
     return () => { active = false; controller.abort() }
   }, [selectedGame, cursor, attempt, query, order])
@@ -114,7 +114,6 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    <p className="muted">Página {index + 1} · até 15 shorts · somente conteúdo publicado no emulador.</p>
     {selected && <FirestoreShortDialog short={selected} onLikeCount={updateLikeCount} onClose={() => setSelected(null)} />}
   </>
 }

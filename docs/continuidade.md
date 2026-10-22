@@ -1,5 +1,27 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.1 — interface implementada, aceitação visual pendente (22/10/2026)
+
+Bloco autorizado de refinamentos públicos: Comunidade de Games, retirada do slogan
+antigo e aviso local extenso, indicação DEV discreta, botão Compartilhar compacto,
+rótulos Últimos Postados/Primeiro Postado e paginação sem frase técnica redundante.
+Tempo relativo compartilhado usa minutos/horas/dias/meses de 30 dias; datas inválidas
+não interrompem card. Pesquisa mantém Enter/serviços atuais, texto conciso, labels
+únicos e retorno acessível. Inclusão manual mantém seleção/campos, sucesso verde
+fora do details e recolhimento cancelável após 5s com devolução de foco quando cabe.
+Contato fictício documentado e ocultado em UI de build se não operacional; removida
+linha redundante. Dez testes localizados distintos, lint/build e HTTP local 200
+aprovados; sem testes gerais de backend, dados, reinício de sessões ou deploy.
+Conferência visual/interativa pelo proprietário ainda pendente. Critérios permanentes
+de acessibilidade e passos em [etapa-7-6-1.md](etapa-7-6-1.md).
+Git estava limpo no início; alterações desta entrega ainda não commitadas.
+Próxima 7.6.2 — Administração, aguardando autorização. Definir diferença operacional
+entre Excluir e Bloquear antes de implementar ações diretas. Autenticação/UID/TOTP,
+moderação, link administrativo e players foram preservados neste bloco.
+Etapa 8 fica após 7.6.2/7.6.3/7.6.4, conforme nova sequência aprovada.
+Checkpoints seguintes são históricos.
+
+
 ## Etapa 7.5.7-B — avaliação concluída, fallback mantido (21/10/2026)
 
 Compatibilidade conferida com documentação oficial e implementação atual. Área

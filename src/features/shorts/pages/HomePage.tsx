@@ -12,15 +12,11 @@ export function HomePage() {
   const [feedVersion, setFeedVersion] = useState(0)
   return <>
     <div className={styles.hero}>
-      <PageIntro eyebrow="Pequenos clipes. Grandes jogadas." title="O próximo GG está aqui."
+      <PageIntro title="Pequenos clipes. Grandes jogadas."
         description="Descubra, compartilhe e comente. Sem criar uma conta." />
-      <button className="primary" type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
+      <button className={"primary " + styles.shareButton} type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
     </div>
-    <div className={styles.notice}>
-      {usesFirestore ? <>AMBIENTE LOCAL · Publicações e comentários ficam neste ambiente. Explore os shorts mais recentes e filtre por jogo.</> : <>
-      PROTÓTIPO · Feed fictício. Publicações e comentários duram apenas nesta sessão; não são enviados a um servidor.
-      <br />Links válidos podem usar o player oficial após sua escolha. Comentários enviados ficam pendentes.</>}
-    </div>
+    {import.meta.env.DEV && <small className={styles.environment}>{usesFirestore?'Desenvolvimento · dados locais':'Desenvolvimento · modo demonstrativo'}</small>}
     {message && <p role="status">{message}</p>}
     <Suspense fallback={<p role="status">Carregando fonte de dados...</p>}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
     {sharing && !usesFirestore && <SubmissionDialog onClose={() => setSharing(false)} onPublished={() => {

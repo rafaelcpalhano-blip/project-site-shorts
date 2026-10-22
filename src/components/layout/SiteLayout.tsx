@@ -21,7 +21,7 @@ export function SiteLayout() {
         <Link className={styles.brand} to="/" aria-label="Clipzone — página inicial">
           clip<span>zone</span> ↗
         </Link>
-        <p className={styles.tagline}>Games · em comunidade</p>
+        <p className={styles.tagline}>Comunidade de Games</p>
         <nav aria-label="Navegação principal">
           <NavLink className={styles.adminLink} to="/admin">Modo administrador</NavLink>
         </nav>
