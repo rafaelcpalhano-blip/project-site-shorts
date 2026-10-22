@@ -11,7 +11,7 @@ export function createConfiguredVideoVerifier(options: {
   const key = options.youtubeApiKey?.trim()
   return createMetadataVerifier({
     ...(options.twitch ? { Twitch: options.twitch } : {}),
-    // oEmbed is title-only: shortFormat stays unknown and cannot authorize a submission.
+    // oEmbed supplies optional public metadata: unknown shortFormat cannot authorize publication.
     YouTube: key ? createYouTubeVerifier({ apiKey: key, fetcher }) : createYouTubeOEmbedVerifier(fetcher),
     TikTok: createTikTokVerifier(fetcher),
   })

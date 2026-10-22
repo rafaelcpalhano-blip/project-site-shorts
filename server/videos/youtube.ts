@@ -1,3 +1,4 @@
+import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
 import type { VideoEvidence } from '../submissions/decision.ts'
@@ -14,7 +15,7 @@ export function createYouTubeVerifier(options: Options) {
       const endpoint = new URL('https://www.googleapis.com/youtube/v3/videos')
       endpoint.searchParams.set('id', id)
       endpoint.searchParams.set('part', 'snippet,status,contentDetails')
-      endpoint.searchParams.set('fields', 'items(id,snippet(title),status(privacyStatus,uploadStatus,embeddable),contentDetails(duration))')
+      endpoint.searchParams.set('fields', 'items(id,snippet(title,thumbnails),status(privacyStatus,uploadStatus,embeddable),contentDetails(duration))')
       // This server-only URL must never be logged or returned to the browser.
       endpoint.searchParams.set('key', options.apiKey)
       const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
@@ -31,6 +32,11 @@ export function createYouTubeVerifier(options: Options) {
       if (typeof item.snippet?.title === 'string' && item.snippet.title.trim() && item.snippet.title.length <= 500 &&
           ![...item.snippet.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) {
         evidence.title = item.snippet.title.trim()
+      }
+      const thumbnails=item.snippet?.thumbnails
+      if(thumbnails&&typeof thumbnails==='object')for(const quality of ['maxres','standard','high','medium','default']){
+        const image=thumbnailUrl(thumbnails[quality]?.url,video.platform,video.identity)
+        if(image){evidence.thumbnailUrl=image;break}
       }
       const duration = typeof item.contentDetails?.duration === 'string' ?
         item.contentDetails.duration.match(/^P(?:(\d+)D)?(?:T(?=\d)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/) : null
@@ -65,6 +71,8 @@ export function createYouTubeOEmbedVerifier(fetcher: typeof fetch = fetch) {
           !['https://www.youtube.com', 'https://www.youtube.com/'].includes(result.provider_url)) return evidence
       evidence.existence = 'confirmed'
       evidence.title = validateVideoTitle(result.title)
+      const image=thumbnailUrl(result.thumbnail_url,video.platform,video.identity)
+      if(image)evidence.thumbnailUrl=image
     } catch { /* Unavailable titles never authorize publication. */ }
     return evidence
   }

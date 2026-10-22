@@ -1,3 +1,4 @@
+import { validThumbnail } from '../validation/thumbnail.ts'
 import type { Short } from '../../features/shorts/types/models.ts'
 import { publicCursor, publicId } from '../validation/public-read.ts'
 import type { PublicCursor } from '../validation/public-read.ts'
@@ -18,7 +19,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  function checkShort(value:unknown):PublicShort {
   const row=value as PublicShort
   if(!row||typeof row!=='object'||typeof row.title!=='string'||typeof row.gameName!=='string'||!Number.isSafeInteger(row.likeCount)||row.likeCount<0||typeof row.url!=='string'||typeof row.channelName!=='string'||typeof row.identity!=='string'||!['YouTube','TikTok','Twitch'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.')
-  publicId(row.id);publicId(row.gameId);return row
+  publicId(row.id);publicId(row.gameId);const {thumbnail,...rest}=row;const image=validThumbnail(thumbnail,row.platform,row.identity);return {...rest,...(image?{thumbnail:image}:{})}
  }
  return {
   async listShorts(gameId?:string,cursor?:PublicCursor,signal?:AbortSignal):Promise<ReadPage<PublicShort>> {

@@ -1,3 +1,4 @@
+import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
 import type { VideoEvidence } from '../submissions/decision.ts'
 export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
@@ -20,7 +21,9 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       evidence.formatPolicy = 'tiktok-platform-exception'
       if (typeof result.title === 'string' && result.title.trim() && result.title.length <= 500 &&
           ![...result.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = result.title.trim()
-      // Do not store, render or execute oEmbed HTML/scripts, or fetch thumbnail/author URLs.
+      const image=thumbnailUrl(result.thumbnail_url,video.platform,video.identity)
+      if(image)evidence.thumbnailUrl=image
+      // Never execute oEmbed HTML/scripts or fetch image/author destinations on the server.
       // The approved platform exception permits unknown duration, not invented confirmation.
       // oEmbed does not prove short duration, game identity or content safety.
       return evidence

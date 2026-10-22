@@ -1,3 +1,4 @@
+import { createThumbnail } from '../videos/thumbnail.ts'
 import { emptyRankingMetric } from '../ranking/engagement.ts'
 import { isVisibleGame } from '../games/visibility.ts'
 import { TITLE_SEARCH_ENABLED } from '../../src/lib/features/title-search.ts'
@@ -54,12 +55,14 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     const originalTitle = typeof evidence.title === 'string' && evidence.title.trim() ? validateVideoTitle(evidence.title) : null
     const title = submission.title || originalTitle || 'Short de ' + String(game.officialName || 'game')
     if (title.length > 500) throw new SubmissionError('invalid-metadata')
+    const thumbnail=createThumbnail(evidence.thumbnailUrl,submission.platform,submission.identity,now)
     const ranking=await transaction.get('rankingState/metrics')
     transaction.create('videoIdentities/' + identityId, { shortId: identityId, identity: submission.identity, createdAt: now })
     transaction.create('shorts/' + identityId, {
       originalUrl: submission.originalUrl, normalizedUrl: submission.url,
       platform: submission.platform, platformVideoId: submission.identity.slice(submission.platform.length + 1),
       ...(TITLE_SEARCH_ENABLED ? titleSearchFields(title) : {}),
+      ...(thumbnail?{thumbnail}:{}),
       title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
       createdAt: now, moderationStatus: decision.status, likeCount: 0,
     })

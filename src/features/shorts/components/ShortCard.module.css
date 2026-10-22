@@ -12,3 +12,14 @@
 .comments { padding: 4px 0; border: 0; background: none; color: var(--color-muted); font-size: .7rem; }
 .gameLink { display: block; margin-top: 7px; font-size: .7rem; color: var(--color-muted); }
 
+
+.preview:has(.artwork) { display: grid; grid-template-rows: auto minmax(96px, 1fr) auto auto; gap: 6px; }
+.preview:has(.artwork) .platform { justify-self: start; }
+.artwork { position: relative; display: block; width: 100%; min-height: 96px; }
+.artwork img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transform: scale(.96); transition: opacity 200ms ease, transform 220ms ease; }
+.artwork img.loaded { opacity: 1; }
+.preview:has(.artwork) .game { margin: 0; font-size: .85rem; }
+.preview:has(.artwork) .caption { margin: 0; }
+.preview:has(.artwork)::before { display: none; }
+@media (hover: hover) and (pointer: fine) { .preview:hover .artwork img { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .artwork img { transition: none; transform: none; } .preview:hover .artwork img { transform: none; } }

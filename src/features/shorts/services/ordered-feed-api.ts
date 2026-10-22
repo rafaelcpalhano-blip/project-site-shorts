@@ -1,3 +1,4 @@
+import { validThumbnail } from '../../../lib/validation/thumbnail.ts'
 import type {PublicShort} from '../../../lib/firebase/public-read-api'
 import {publicId} from '../../../lib/validation/public-read.ts'
 export const feedOrderLabels={latest:'Ultimo Postado',oldest:'Primeiro postado',likes:'Mais Curtidos',relevant:'Mais Relevante'} as const
@@ -16,6 +17,7 @@ export function createOrderedFeedClient(fetcher:typeof fetch=fetch){
   if(!data||data.order!==order||!Array.isArray(data.items)||data.items.length>15||typeof data.orderingAt!=='string'||!Number.isFinite(Date.parse(data.orderingAt))||typeof data.limited!=='boolean'||!Number.isSafeInteger(data.candidatesRead)||data.candidatesRead<0||data.candidatesRead>30||!Number.isSafeInteger(data.candidatesExamined)||data.candidatesExamined<0||data.candidatesExamined>data.candidatesRead||data.next!==null&&(typeof data.next!=='string'||data.next.length>4096||!data.next.startsWith('v1.')))throw Error('Resposta de ordenação inválida.')
   for(const row of data.items){publicId(row?.id);publicId(row?.gameId);if(typeof row.title!=='string'||typeof row.url!=='string'||typeof row.gameName!=='string'||typeof row.identity!=='string'||typeof row.channelName!=='string'||!['YouTube','Twitch','TikTok'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0||!Number.isSafeInteger(row.likeCount)||row.likeCount<0||gameId&&row.gameId!==gameId)throw Error('Resposta de ordenação inválida.')}
   if(new Set(data.items.map((row:PublicShort)=>row.id)).size!==data.items.length)throw Error('Resposta de ordenação inválida.')
-  return {items:data.items,next:data.next,order:data.order,orderingAt:data.orderingAt,limited:data.limited}
+  const items=data.items.map((row:PublicShort)=>{const {thumbnail,...rest}=row;const image=validThumbnail(thumbnail,row.platform,row.identity);return {...rest,...(image?{thumbnail:image}:{})}})
+  return {items,next:data.next,order:data.order,orderingAt:data.orderingAt,limited:data.limited}
  }
 }

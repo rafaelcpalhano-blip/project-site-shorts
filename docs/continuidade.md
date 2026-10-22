@@ -1,5 +1,26 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.5.7-A — miniaturas implementadas e verificadas localmente (21/10/2026)
+
+URLs oficiais opcionais obtidas nos adaptadores existentes e armazenadas com data e
+validade, sem alterar política de publicação. Parser/hosts/identidade e DTO validados;
+imagens ausentes, vencidas ou quebradas usam fallback. Card usa lazy/contain,
+zoom/fade discreto sem corte e respeita movimento reduzido. Sem player/autoplay no
+hover nesta A. Quatro ordenações e detalhe entregam os metadados opcionais.
+Manutenção local limitada a 30 candidatos, inspecionar/aplicar com cursor;
+idempotência e releitura transacional preservam dados concorrentes. Nenhuma chamada
+externa de metadados por visita. Renovação/remoção operacional em produção depende
+da Etapa 8; validade visual não equivale a TTL do Firestore.
+45 testes distintos relacionados passaram; build completo e lint localizado após
+correção do único erro do lint geral aprovados. HTTPS conferido: 10 shorts, 8 imagens
+(6 YouTube/2 Twitch) e fallback nos 2 TikToks. Hashes comprovaram preservação dos
+outros campos. API reiniciada, sem alterações na nuvem/deploy/dependências.
+Conferência visual do proprietário pendente. Detalhes/custos/comandos em
+[etapa-7-5-7-a.md](etapa-7-5-7-a.md). Próxima 7.5.7-B, mediante autorização:
+compatibilidade de prévias oficiais por fonte; nenhum contorno de restrições.
+Checkpoints seguintes são históricos.
+
+
 ## Etapa 7.5.6-C — implementação e validação local concluídas (21/10/2026)
 
 Quatro ordenações integradas ao feed/filtro/ficha, padrão Ultimo Postado; busca

@@ -402,6 +402,11 @@
       "collectionGroup": "rankingDays",
       "fieldPath": "*",
       "indexes": []
+    },
+    {
+      "collectionGroup": "shorts",
+      "fieldPath": "thumbnail",
+      "indexes": []
     }
   ]
 }

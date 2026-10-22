@@ -8,6 +8,7 @@ export interface VideoEvidence {
   embedding?: 'allowed' | 'blocked' | 'unknown'
   moderation: 'clear' | 'flagged' | 'unavailable'
   flags: Array<'gameplay-violence' | 'real-violence' | 'threat' | 'hate' | 'name-inconsistency'>
+  thumbnailUrl?: string
   title?: string
 }
 export interface PublicationDecision { status: 'published' | 'pending' | 'rejected' | 'retry'; reason: string }
