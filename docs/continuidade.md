@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.5-E — rodada técnica concluída; pausa solicitada (22/10/2026)
+
+Integração conferida: rascunhos de comentário/denúncia, sequência, filtro/ordem + ficha, numeração, ausência de comemoração ao reabrir, player oficial único/limpeza, formulário e layout estreito. Corrigida omissão de summary no ciclo de foco do Modal, reproduzida antes e validada depois. Três testes localizados e lint/build aprovados; suítes anteriores reaproveitadas.
+Pausa por hoje. Próxima sessão: conferências manuais com proprietário (Google/TOTP, quatro filas/ordenações, seleção e decisões administrativas com dados de teste, reprodução efetiva, celular/movimento reduzido), seguidas de ajustes conforme evidência. Não afirmar homologação completa da aplicação. Detalhes em [etapa-7-6-5-e.md](etapa-7-6-5-e.md).
+Nenhum conteúdo enviado em E, nenhum deploy/serviço novo. Página inicial restaurada sem player; servidor local preservado. Etapas 8/9 não iniciadas; aguardam aprovação individual. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.5-D concluída — 22/10/2026
 
 Quatro seções administrativas com filtros/refresh e ordenação compacta à direita, responsivos. Descrições aprovadas abaixo dos controles, por hover/foco/seleção e aria-describedby; seleção com indicador adicional. Mesmos callbacks, ordenações e travas. Título inicial menor e roxo; rodapé centralizado em fluxo flexível.
