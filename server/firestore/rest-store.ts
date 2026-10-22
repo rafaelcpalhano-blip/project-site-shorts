@@ -192,6 +192,19 @@ export function createRestStore(options: Options): AtomicStore {
         const { transaction } = await request('beginTransaction', { options: { readWrite: previous ? { retryTransaction: previous } : {} } })
         const writes: unknown[] = []
         const port: AtomicTransaction = {
+          async hasPublishedComment(shortId) {
+            if (writes.length) throw new Error('Todas as leituras devem preceder as gravações')
+            if (!/^[\w-]{1,128}$/.test(shortId)) throw new Error('Vídeo inválido')
+            const result = await request('runQuery', { transaction, structuredQuery: {
+              from: [{ collectionId: 'comments' }], limit: 1,
+              orderBy: [{field: {fieldPath: 'createdAt'}, direction: 'DESCENDING'}, {field: {fieldPath: '__name__'}, direction: 'DESCENDING'}],
+              where: { compositeFilter: { op: 'AND', filters: [
+                { fieldFilter: { field: { fieldPath: 'shortId' }, op: 'EQUAL', value: encode(shortId) } },
+                { fieldFilter: { field: { fieldPath: 'moderationStatus' }, op: 'IN', value: encode(['approved', 'removed']) } },
+              ] } },
+            } })
+            return (Array.isArray(result) ? result : [result]).some(item => item.document)
+          },
           async get(path) {
             if (writes.length) throw new Error('Todas as leituras devem preceder as gravações')
             const result = await request('batchGet', { documents: [name(path)], transaction })

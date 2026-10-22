@@ -1,5 +1,5 @@
 import { validateCommentSubmission } from '../../../lib/validation/comment-input.ts'
-export interface CommentResult { id: string; status: 'approved' | 'pending' | 'rejected' | 'removed'; repeated: boolean }
+export interface CommentResult { id: string; status: 'approved' | 'pending' | 'rejected' | 'removed'; repeated: boolean; firstPublished: boolean }
 const messages: Record<string,string> = {
   'invalid-input':'Confira seu comentário (até 500 caracteres).',
   'invalid-session':'Não foi possível validar a sessão. Tente novamente.',
@@ -27,9 +27,9 @@ export function createCommentClient(fetcher:typeof fetch=fetch) {
     const response=await post('/api/comments',body)
     const data=await response.json()
     if(!data || !/^[a-f0-9]{64}$/.test(data.id) || !['approved','pending','rejected','removed'].includes(data.status) ||
-       typeof data.repeated!=='boolean' || response.status !== (data.repeated ? 200 : data.status==='approved' ? 201 : 202)) {
+       typeof data.repeated!=='boolean' || typeof data.firstPublished!=='boolean' || data.firstPublished&&(data.repeated||data.status!=='approved') || response.status !== (data.repeated ? 200 : data.status==='approved' ? 201 : 202)) {
       throw new Error('Resposta inesperada. Seu texto foi preservado; atualize os comentários antes de tentar novamente.')
     }
-    return {id:data.id,status:data.status,repeated:data.repeated}
+    return {id:data.id,status:data.status,repeated:data.repeated,firstPublished:data.firstPublished}
   }
 }

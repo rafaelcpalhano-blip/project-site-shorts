@@ -40,6 +40,7 @@ export async function reviewComment(input: ReturnType<typeof parseCommentReview>
       if(short&&typeof short.gameId==='string')applyRanking=await prepareEngagement(tx,{shortId:String(comment.shortId),gameId:short.gameId,kind:'comment',sourceId:input.commentId,identity:typeof owner?.visitorHash==='string'?owner.visitorHash:undefined,at:comment.createdAt as Date,now,active:next==='approved'})
     }
     applyRanking()
+    if (next === 'approved' && short && short.hasPublishedComments !== true) tx.set('shorts/' + String(comment.shortId), {...short, hasPublishedComments: true})
     tx.set(path,{...comment,moderationStatus:next,reviewVersion:revision+1})
     tx.create('moderationLogs/' + crypto.randomUUID(),{contentType:'comment',contentId:input.commentId,
       action:input.action,reason:input.reason,previousStatus:status,resultingStatus:next,

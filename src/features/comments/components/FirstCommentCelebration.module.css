@@ -1,0 +1,5 @@
+.celebration { color: var(--color-accent); }
+.emojis { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+.emojis span { position: absolute; top: 0; font-size: 1.8rem; opacity: 0; animation: fall 1.6s ease-out both; }
+@keyframes fall { 0% { opacity: 0; transform: translateY(-40px) rotate(0deg); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(65vh) rotate(100deg); } }
+@media (prefers-reduced-motion: reduce) { .emojis { display: none; } .emojis span { animation: none; } }

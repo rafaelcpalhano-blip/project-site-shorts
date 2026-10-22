@@ -1,8 +1,9 @@
 import { useId, useRef, useState } from 'react'
+import type { CommentResult } from '../services/comment-api'
 import { createCommentClient } from '../services/comment-api'
 const send=createCommentClient()
 export function PersistentCommentForm({shortId,disabled,onBusyChange,onPublished}:{
-  shortId:string; disabled:boolean; onBusyChange:(busy:boolean)=>void; onPublished:()=>void
+  shortId:string; disabled:boolean; onBusyChange:(busy:boolean)=>void; onPublished:(result:CommentResult)=>void
 }) {
   const field=useId()
   const [content,setContent]=useState('')
@@ -22,7 +23,7 @@ export function PersistentCommentForm({shortId,disabled,onBusyChange,onPublished
       setMessage(result.status==='approved'?'Comentário publicado.':result.status==='pending'
         ?'Comentário recebido para revisão. Ele permanece oculto até a análise.'
         :'Essa tentativa já foi recebida. O comentário não está público.')
-      if(result.status==='approved')onPublished()
+      if(result.status==='approved')onPublished(result)
     }catch(failure){
       setError(failure instanceof Error && failure.name==='Error'?failure.message:'Falha no envio. Seu texto foi preservado.')
     }finally{busy.current=false;setSending(false);onBusyChange(false)}

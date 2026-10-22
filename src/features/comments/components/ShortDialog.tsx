@@ -1,3 +1,4 @@
+import { CommentContent } from './CommentContent'
 import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 import { validateCommentInput } from '../../../lib/validation/public-input'
@@ -14,7 +15,7 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
     <OfficialPlayer key={short.id} short={short} />
     <p><VideoSourceLink short={short} /></p>
     <h3>Comentários ({comments.length})</h3>
-    {comments.length ? comments.map(item => <p key={item.id}>{item.content}</p>) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
+    {comments.length ? comments.map((item,index) => <CommentContent key={item.id} content={item.content} number={index+1} />) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
     <form className="form" onSubmit={event => {
       event.preventDefault()
       let validated

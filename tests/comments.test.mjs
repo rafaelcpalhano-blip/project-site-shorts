@@ -17,7 +17,7 @@ function memory(){
  const store={transact(work){
   const result=tail.then(async()=>{
    const writes=new Map()
-   const result=await work({get:async path=>structuredClone(records.get(path)??null),
+   const result=await work({hasPublishedComment:async shortId=>[...records.entries()].some(([path,data])=>path.startsWith('comments/')&&data.shortId===shortId&&['approved','removed'].includes(data.moderationStatus)),get:async path=>structuredClone(records.get(path)??null),
     create:(path,value)=>{assert.ok(!records.has(path)&&!writes.has(path));writes.set(path,value)},
     set:(path,value)=>writes.set(path,value)})
    for(const [path,value] of writes)records.set(path,value)
@@ -203,7 +203,7 @@ test('comment client preserves request UUID across retries, sends only public fi
   calls.push([path,options])
   if(path==='/api/session')return new Response(null,{status:204})
   if(fail)throw new Error('network interrupted')
-  return Response.json({id:'d'.repeat(64),status:'approved',repeated:true},{status:200})
+  return Response.json({id:'d'.repeat(64),status:'approved',repeated:true,firstPublished:false},{status:200})
  })
  await assert.rejects(send(data))
  assert.equal(calls.length,2)
@@ -213,4 +213,33 @@ test('comment client preserves request UUID across retries, sends only public fi
  assert.deepEqual(JSON.parse(calls[3][1].body),data)
  const hidden=createCommentClient(async()=>Response.json({error:'private-secret',message:'do not display'},{status:503}))
  await assert.rejects(hidden(data),error=>!error.message.includes('do not display')&&!error.message.includes('private-secret'))
+})
+
+
+test('first published event is atomic, never replayed and survives deletion',async()=>{
+ const {store,records}=memory(),data=input()
+ const results=await Promise.all([submitComment(data,visitor,{store,now}),submitComment(data,visitor,{store,now}),submitComment(input({content:'Outra jogada'}),'c'.repeat(64),{store,now})])
+ assert.equal(results.filter(row=>row.firstPublished).length,1)
+ assert.equal(results.find(row=>row.repeated).firstPublished,false)
+ const first=results.find(row=>row.firstPublished)
+ await reviewComment(parseCommentReview({commentId:first.id,action:'remove',revision:0,reason:'Revisão do comentário'}),'owner',{store,now})
+ assert.equal(records.get('shorts/'+shortId).hasPublishedComments,true)
+ assert.equal((await submitComment(input({content:'Depois da remoção'}),'d'.repeat(64),{store,now})).firstPublished,false)
+})
+test('pending does not claim first publication, admin approval and legacy history suppress later celebrations',async()=>{
+ for(const mode of ['pending','legacy-approved','legacy-removed','admin']){
+  const {store,records}=memory()
+  if(mode.startsWith('legacy'))records.set('comments/legacy',{shortId,content:'Antigo',createdAt:now(),moderationStatus:mode==='legacy-approved'?'approved':'removed'})
+  else{
+   const pending=await submitComment(input({content:'caralho'}),visitor,{store,now});assert.equal(pending.firstPublished,false)
+   if(mode==='admin')await reviewComment(parseCommentReview({commentId:pending.id,action:'approve',revision:0,reason:'Contexto conferido'}),'owner',{store,now})
+  }
+  assert.equal((await submitComment(input({content:'Comentário normal'}),'e'.repeat(64),{store,now})).firstPublished,mode==='pending')
+ }
+})
+test('client rejects impossible first-publication flags',async()=>{
+ for(const payload of [{status:'pending',repeated:false,firstPublished:true},{status:'approved',repeated:true,firstPublished:true},{status:'approved',repeated:false}]){
+  const send=createCommentClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({id:'a'.repeat(64),...payload},{status:payload.repeated?200:payload.status==='approved'?201:202}))
+  await assert.rejects(send(input()),/Resposta inesperada/)
+ }
 })

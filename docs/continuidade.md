@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.5-C concluída — 22/10/2026
+
+Comentários com divisores e numeração por posição/offset, sem números persistidos. Primeiro comentário identificado transacionalmente pelo servidor, com marco histórico no short e consulta limitada para registros anteriores; reenvios/pendências e aprovação administrativa não disparam celebração. Interface só anima após encontrar o ID confirmado na listagem pública. Sem consultas de contagem/polling, coleção/índice/dependência nova ou deploy.
+33 testes relacionados distintos, lint/build aprovados. Conferência local criou um comentário de teste em plau pra q?, verificou comemoração e atualização sem repetição, além de tela estreita sem overflow. API reiniciada; login administrativo precisa ser refeito. Custos, limites e evidências em [etapa-7-6-5-c.md](etapa-7-6-5-c.md).
+Próxima: 7.6.5-D, aguardando autorização individual; E e produção não iniciadas. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.5-B concluída — 22/10/2026
 
 Cards reorganizados: canal e horário separados, curtidas antes de comentários, sem legenda Abrir vídeo. Visualizador com fonte/curtida na mesma faixa, avisos expansíveis e denúncia após formulário, ações administrativas no final. Desabilitação explícita preserva proteção antes herdada do fieldset. Sem novas consultas, regras ou serviços.

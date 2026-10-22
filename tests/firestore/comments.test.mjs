@@ -116,3 +116,22 @@ test('removed parent and request payload conflict never create partial comment o
  assert.equal((await loadCommentDetail({commentId:id},store)).logs.length,2)
  assert.equal((await loadCommentQueue({status:'approved'},store)).items.length,0)
 })
+
+
+test('REST transaction gives exactly one first-publication event across concurrent visitors and retries',async()=>{
+ await seed();const data=input()
+ const results=await Promise.all([submitComment(data,visitor,options),submitComment(data,visitor,options),submitComment(input({content:'Outra contribuição'}),'c'.repeat(64),options)])
+ assert.equal(results.filter(row=>row.firstPublished).length,1)
+ assert.equal(results.find(row=>row.repeated).firstPublished,false)
+ assert.equal((await read('shorts/'+shortId)).hasPublishedComments,true)
+ const first=results.find(row=>row.firstPublished)
+ await reviewComment(review(first.id,{action:'remove'}),'owner',options)
+ assert.equal((await submitComment(input({content:'Nova mensagem'}),'d'.repeat(64),options)).firstPublished,false)
+})
+test('REST legacy approved/removed comments suppress celebration; pending alone does not',async()=>{
+ for(const status of ['approved','removed','pending']){
+  await seed()
+  await store.transact(async tx=>tx.set('comments/legacy',{shortId,content:'Antigo',createdAt:now(),moderationStatus:status}))
+  assert.equal((await submitComment(input(),visitor,options)).firstPublished,status==='pending')
+ }
+})

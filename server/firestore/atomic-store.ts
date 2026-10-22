@@ -1,6 +1,7 @@
 import type {AdminSort,AdminListCursor} from '../../src/features/admin/types/list-order.ts'
 export type RecordData = Record<string, unknown>
 export interface AtomicTransaction {
+  hasPublishedComment?(shortId: string): Promise<boolean>
   get(path: string): Promise<RecordData | null>
   create(path: string, data: RecordData): void
   set(path: string, data: RecordData): void

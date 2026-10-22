@@ -33,7 +33,7 @@ export async function submitComment(input: unknown, visitorHash: string, options
           !['approved','pending','rejected','removed'].includes(String(previous.moderationStatus))) {
         throw new CommentError('request-conflict', 409)
       }
-      return { id, status: previous.moderationStatus as CommentStatus, repeated: true }
+      return { id, status: previous.moderationStatus as CommentStatus, repeated: true, firstPublished: false }
     }
     if (previous) throw new Error('invalid-receipt')
     if (recent) {
@@ -41,8 +41,12 @@ export async function submitComment(input: unknown, visitorHash: string, options
           recent.createdAt.getTime() < 0 || recent.createdAt.getTime() > now.getTime()) throw new Error('invalid-dedup')
       if (now.getTime() - recent.createdAt.getTime() < 60000) throw new CommentError('duplicate-comment', 409)
     }
+    // Missing adapter support suppresses celebration; it must never guess from a browser count.
+    const firstPublished = verdict.status === 'approved' && short.hasPublishedComments !== true &&
+      !!tx.hasPublishedComment && !await tx.hasPublishedComment(data.shortId)
     const applyRanking=verdict.status==='approved'?await prepareEngagement(tx,{shortId:data.shortId,gameId:short.gameId as string,kind:'comment',sourceId:id,identity:visitorHash,at:now,now,active:true}):()=>{}
     applyRanking()
+    if (verdict.status === 'approved' && short.hasPublishedComments !== true) tx.set('shorts/' + data.shortId, {...short, hasPublishedComments: true})
     tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now,
       moderationStatus: verdict.status, reviewVersion: 0 })
     // Ownership, request fingerprints and triage flags never enter public comment documents.
@@ -51,6 +55,6 @@ export async function submitComment(input: unknown, visitorHash: string, options
     tx.create('moderationLogs/' + crypto.randomUUID(), { contentType: 'comment', contentId: id,
       action: verdict.status, reasonCode: verdict.status === 'approved' ? 'local-text-accepted' : 'local-text-review',
       createdAt: now, actor: 'automatic' })
-    return { id, status: verdict.status as CommentStatus, repeated: false }
+    return { id, status: verdict.status as CommentStatus, repeated: false, firstPublished }
   })
 }
