@@ -1,0 +1,13 @@
+.welcome { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+.welcome img { width: 130px; height: 195px; flex: 0 0 130px; object-fit: contain; }
+.welcome p { margin: 0 0 12px; }
+.floating { animation: clipper-float 4s ease-in-out 1; }
+.failure { display: grid; justify-items: center; text-align: center; padding: 24px 12px; }
+.failure img { width: 150px; height: 225px; object-fit: contain; }
+.failure h1 { font-size: 1.3rem; margin: 8px 0; }
+.failure p { max-width: 48ch; margin: 0 0 20px; overflow-wrap: anywhere; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; }
+.fatal { max-width: 800px; margin: 40px auto; padding: 16px; }
+@keyframes clipper-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (max-width: 480px) { .welcome { flex-direction: column; gap: 8px; } .welcome img { width: 100px; height: 150px; flex-basis: auto; } }
+@media (prefers-reduced-motion: reduce) { .floating { animation: none; } }

@@ -1,3 +1,4 @@
+import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
 import {updateItemLikeCount,updatePageLikeCount} from '../services/feed-like-count'
 import {createOrderedFeedClient,feedOrderLabels} from '../services/ordered-feed-api'
 import type {FeedOrder} from '../services/ordered-feed-api'
@@ -102,7 +103,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       </div>
     </div>
     <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
-    {loading ? <p role="status">Carregando shorts...</p> : error ? <div role="alert"><p>{error}</p><button onClick={refresh}>Tentar novamente</button></div>
+    {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={refresh}>Tentar novamente</button></ClipperFailure>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
         <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
       : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}

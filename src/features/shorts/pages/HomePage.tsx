@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
+import { ClipperWelcome } from '../../../components/clipper/ClipperWelcome'
 import { usesFirestore } from '../../../lib/firebase/mode'
 const FirestoreFeed = lazy(() => import('../components/FirestoreFeed').then(module => ({ default: module.FirestoreFeed })))
 const PersistentSubmissionDialog = lazy(() => import('../../submissions/components/PersistentSubmissionDialog').then(module => ({ default: module.PersistentSubmissionDialog })))
@@ -11,6 +12,7 @@ export function HomePage() {
   const [message, setMessage] = useState('')
   const [feedVersion, setFeedVersion] = useState(0)
   return <>
+    <ClipperWelcome />
     <div className={styles.hero}>
       <PageIntro compact title="Pequenos clipes. Grandes jogadas."
         description="Descubra, compartilhe e comente. Sem criar uma conta." />

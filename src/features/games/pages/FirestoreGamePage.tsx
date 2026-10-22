@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
 import { Link } from 'react-router-dom'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
@@ -18,7 +19,7 @@ export function FirestoreGamePage({ gameId }: { gameId: string }) {
     return () => { active = false }
   }, [gameId])
   if (loading) return <p role="status">Carregando jogo...</p>
-  if (!game || error) return <><p role="alert">{error || 'Jogo não encontrado.'}</p><Link to="/">Voltar ao início</Link></>
+  if (!game || error) return <ClipperFailure message={error || 'Jogo não encontrado.'}><Link to="/">Voltar ao início</Link></ClipperFailure>
   return <><Link to="/">← Voltar ao início</Link><PageIntro title={game.name} description="Conheça o jogo e descubra as jogadas da comunidade." />
     <GameInfo game={game} /><FirestoreFeed key={game.id} gameId={game.id} /></>
 }
