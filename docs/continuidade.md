@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Clipper e Etapa 7.6.6-C — concluídos localmente (22/10/2026)
+
+Clipper aprovado e integrado: boas-vindas na primeira abertura da página inicial com preferência localStorage ao fechar, flutuação breve/movimento reduzido; ilustrações para imagem ausente e falhas capturáveis/404. Sem tutorial, serviço ou identificação nova. [Detalhes e limitações](clipper.md).
+
+Cards com título de três linhas e texto integral por foco/hover, jogo roxo maior, áreas consistentes e grade responsiva. Fallback oficial → capa IGDB → Clipper; cache limitado de URLs falhas. Capa vem da leitura de jogo já existente, sem nova consulta por card ou migração. 42 testes focados, build/lint localizado aprovados; nove cards reais alinhados e capas TikTok conferidas. [Detalhes/custos](etapa-7-6-6-c.md). PNGs ainda precisam de otimização antes da produção. API local reiniciada, emulador/dados mantidos, sem commit/push/deploy. Próximo 7.6.6-D aguarda autorização individual; checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.6-B — TikTok concluído (22/10/2026)
 
 Três vídeos reais retornaram oEmbed 200 com identidade confirmada, mas sem title/thumbnail_url; ausência comprovada na fonte nesses casos, sem atribuir a CORS. Normalização segura de títulos presentes com quebras e NFC; limite 500 sem truncamento. Prévia TikTok confirmada sem título responde ausência explícita, formulário orienta edição manual e preserva o texto. Demais fontes/políticas inalteradas. Diagnóstico CLI manual, sem scraping/player adicional. Manutenção limitada de thumbnails existente reaproveitada; sem refresh em massa. [Evidências, URLs, custos e limites](etapa-7-6-6-b.md).

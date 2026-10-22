@@ -1,3 +1,4 @@
+import { gameCoverUrl } from '../../../lib/validation/game-cover.ts'
 import type { Game } from '../../shorts/types/models.ts'
 export interface GameDetails extends Game {
   provisional: boolean; description: string; descriptionPtBr: string | null; aliases: string[]; genres: string[]; gameModes: string[]; platforms: string[]
@@ -6,6 +7,7 @@ export interface GameDetails extends Game {
 const text = (value: unknown, max: number) => typeof value === 'string' ? value.slice(0, max) : ''
 const list = (value: unknown) => Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === 'string' && !!item.trim()).map(item => item.slice(0, 200)))].slice(0, 50) : []
 function officialUrl(value: unknown, image = false): string | null {
+  if (image) return gameCoverUrl(value) ?? null
   if (typeof value !== 'string') return null
   try {
     const url = new URL(value)
@@ -13,12 +15,7 @@ function officialUrl(value: unknown, image = false): string | null {
       url.hostname === (image ? 'images.igdb.com' : 'www.igdb.com') &&
       (image ? url.pathname.startsWith('/igdb/image/upload/') : url.pathname.startsWith('/games/'))
     if (!allowed) return null
-    if (image) {
-      const match = /^\/igdb\/image\/upload\/t_[a-zA-Z0-9_]+\/([a-zA-Z0-9_-]+\.(?:jpg|png|webp))$/.exec(url.pathname)
-      if (!match) return null
-      url.pathname = '/igdb/image/upload/t_cover_big_2x/' + match[1]
-      url.search = ''; url.hash = ''
-    }
+
     return url.href
   } catch { return null }
 }
