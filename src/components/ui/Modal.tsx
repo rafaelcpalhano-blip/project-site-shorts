@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
-import type { ReactNode } from 'react'
+import type { ReactNode, KeyboardEventHandler } from 'react'
 import styles from './Modal.module.css'
-export function Modal({ title, onClose, children, closeDisabled = false }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean }) {
+export function Modal({ title, onClose, children, closeDisabled = false, wide = false, onKeyDown }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean; wide?:boolean; onKeyDown?:KeyboardEventHandler<HTMLDialogElement> }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   useEffect(() => {
@@ -12,8 +12,9 @@ export function Modal({ title, onClose, children, closeDisabled = false }: { tit
     document.body.style.overflow = 'hidden'
     return () => { dialog.close(); document.body.style.overflow = overflow; trigger?.focus() }
   }, [])
-  return <dialog ref={ref} className={styles.dialog} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); if (!closeDisabled) onClose() }}
+  return <dialog ref={ref} className={styles.dialog+(wide?' '+styles.wide:'')} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); if (!closeDisabled) onClose() }}
     onKeyDown={event => {
+      onKeyDown?.(event)
       if (event.key !== 'Tab') return
       const elements = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',

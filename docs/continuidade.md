@@ -1,5 +1,13 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.3 implementada — 22/10/2026
+
+Player oficial carrega ao abrir explicitamente o short e tenta autoplay com controles, sem loop. TikTok diferencia bloqueio de autoplay de erro de vídeo; fallback/link seguros preservados. Uma lease, desmontagem anterior e observers/timers limpos. Navegação local pelos até 15 itens da página, na ordem/filtro recebidos; setas laterais/touch, teclado e gesto único de wheel apenas na faixa indicada. Operações/seleção administrativa bloqueiam troca; texto não enviado exige descarte confirmado. Slide usa poster estático anterior, sem dois players, e respeita movimento reduzido.
+Diagnóstico de miniaturas: cinco YouTubes 200, um ID público/incorporável com três imagens oficiais 404; dois TikToks oEmbed sem thumbnail_url. Fallback/zoom já existente reaproveitado. Sem hover de vídeo em área incompatível, conforme decisão 7.5.7-B.
+27 testes relacionados, lint/build aprovados; conferência interativa real ainda pendente. Sem deploy, novo serviço/dependência, gravação em dados ou alteração de política de publicação/autorização. Detalhes e proposta de paginação entre páginas (não implementada) em [etapa-7-6-3.md](etapa-7-6-3.md).
+Próxima 7.6.4 somente após autorização individual. Checkpoints abaixo são históricos.
+
+
 ## Refinamentos 7.6.2 implementados — 22/10/2026
 
 Seções centralizadas e selecionadas; ordenação completa das quatro áreas com cursores vinculados e páginas de 20 (consulta até 21). Denúncias recebem título no resumo; preparação local privada concluída (0 registros antigos). 17 índices adicionais definidos, não publicados. Comparação textual nativa, sem colação pt-BR.

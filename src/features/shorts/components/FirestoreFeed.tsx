@@ -10,7 +10,7 @@ import { createPublicRepository } from '../../../lib/firebase/public-repository'
 import type { Cursor, PublicCursor } from '../../../lib/firebase/public-repository'
 import type { Game, Short } from '../types/models'
 import { ShortCard } from './ShortCard'
-import { FirestoreShortDialog } from './FirestoreShortDialog'
+import { ShortSequenceDialog } from './ShortSequenceDialog'
 import styles from './ShortFeed.module.css'
 type FeedCursor=PublicCursor|TitleSearchCursor|string
 interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean;orderingAt?:string}
@@ -114,7 +114,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    {selected && <FirestoreShortDialog short={selected} onLikeCount={updateLikeCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
+    {selected && <ShortSequenceDialog short={selected} items={page.items} onNavigate={setSelected} onLikeCount={updateLikeCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
   </>
 }
 

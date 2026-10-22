@@ -81,3 +81,11 @@ test('one playback lease replaces the previous player, cleans subscriptions and 
  assert.equal(calls,3)
  playback.release('third')
 })
+
+test('autoplay explícito preserva controles, identidade e ausência de loop nas três plataformas',()=>{
+ for(const [url,value]of [['https://www.youtube.com/shorts/abcdefghijk','1'],['https://www.tiktok.com/@gamer/video/123','1'],['https://clips.twitch.tv/Clip','true']]){const plan=buildEmbed(video(url),{...environment,autoplay:true}),src=new URL(plan.src);assert.equal(src.searchParams.get('autoplay'),value);if(plan.platform!=='Twitch'){assert.equal(src.searchParams.get('loop'),'0');assert.equal(src.searchParams.get('controls'),'1')}}
+ assert.equal(buildEmbed(video('https://clips.twitch.tv/Clip'),{...environment,width:399,autoplay:true}).src,undefined)
+})
+test('TikTok diferencia autoplay bloqueado de vídeo inválido sem aceitar mensagens forjadas',()=>{
+ const frame={},event={origin:'https://www.tiktok.com',source:frame,data:{'x-tiktok-player':true,type:'onPlayerError',value:{errorCode:3002,errorType:'AUTOPLAY_ERROR'}}};assert.equal(tikTokMessage(event,frame),'autoplay-blocked');assert.equal(tikTokMessage({...event,source:{}},frame),null);assert.equal(tikTokMessage({...event,origin:'https://evil.test'},frame),null)
+})

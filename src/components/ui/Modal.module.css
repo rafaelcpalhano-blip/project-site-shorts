@@ -4,3 +4,5 @@
 .header h2 { margin: 0; font-size: 1.2rem; }
 .header button { flex-shrink: 0; padding: 5px 12px; }
 
+
+.wide { width: min(760px, calc(100% - 32px)); }
