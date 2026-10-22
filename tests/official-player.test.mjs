@@ -11,7 +11,7 @@ test('official URLs use canonical IDs, native controls and no autoplay or loopin
  assert.equal(yt.origin,'https://www.youtube.com')
  assert.equal(yt.pathname,'/embed/abcdefghijk')
  assert.equal(yt.searchParams.get('autoplay'),'0');assert.equal(yt.searchParams.get('controls'),'1')
- assert.equal(yt.searchParams.get('loop'),'0');assert.equal(yt.searchParams.has('enablejsapi'),false)
+ assert.equal(yt.searchParams.get('loop'),'0');assert.equal(yt.searchParams.get('enablejsapi'),'1');assert.equal(yt.searchParams.get('origin'),environment.origin)
  const tiktok = new URL(buildEmbed(video('https://www.tiktok.com/@gamer/video/123456789'),environment).src)
  assert.equal(tiktok.origin,'https://www.tiktok.com');assert.equal(tiktok.pathname,'/player/v1/123456789')
  assert.equal(tiktok.searchParams.get('autoplay'),'0');assert.equal(tiktok.searchParams.get('controls'),'1')
@@ -59,7 +59,7 @@ test('TikTok messages require exact origin, current frame window and explicit do
  const frame={},other={},event={origin:'https://www.tiktok.com',source:frame,data:{'x-tiktok-player':true,type:'onPlayerReady'}}
  assert.equal(tikTokMessage(event,frame),'ready')
  assert.equal(tikTokMessage({...event,data:{'x-tiktok-player':true,type:'onPlayerError',value:{errorCode:1001,errorType:'INVALID_VIDEO'}}},frame),'error')
- for(const patch of [{origin:'https://www.tiktok.com.evil.test'},{origin:'null'},{source:other},{data:'{"type":"onPlayerReady"}'},{data:{type:'onPlayerReady'}},{data:{'x-tiktok-player':true,type:'onStateChange',value:1}}]){
+ for(const patch of [{origin:'https://www.tiktok.com.evil.test'},{origin:'null'},{source:other},{data:'{"type":"onPlayerReady"}'},{data:{type:'onPlayerReady'}}]){
   assert.equal(tikTokMessage({...event,...patch},frame),null)
  }
  assert.equal(tikTokMessage(event,null),null)
@@ -88,4 +88,12 @@ test('autoplay explícito preserva controles, identidade e ausência de loop nas
 })
 test('TikTok diferencia autoplay bloqueado de vídeo inválido sem aceitar mensagens forjadas',()=>{
  const frame={},event={origin:'https://www.tiktok.com',source:frame,data:{'x-tiktok-player':true,type:'onPlayerError',value:{errorCode:3002,errorType:'AUTOPLAY_ERROR'}}};assert.equal(tikTokMessage(event,frame),'autoplay-blocked');assert.equal(tikTokMessage({...event,source:{}},frame),null);assert.equal(tikTokMessage({...event,origin:'https://evil.test'},frame),null)
+})
+
+test('preferência de áudio preserva controles oficiais e nunca ativa autoplay no feed',()=>{
+ for(const [link,muted]of [['https://www.tiktok.com/@gamer/video/123456789','0'],['https://clips.twitch.tv/AudioClip','false']]){
+ const plan=buildEmbed(video(link),environment),url=new URL(plan.src);assert.equal(url.searchParams.get('muted'),muted);assert.ok(['0','false'].includes(url.searchParams.get('autoplay')))
+ if(plan.platform==='TikTok')assert.equal(url.searchParams.get('volume_control'),'1')
+ }
+ const yt=new URL(buildEmbed(video('https://www.youtube.com/shorts/abcdefghijk'),environment).src);assert.equal(yt.searchParams.has('mute'),false);assert.equal(yt.searchParams.get('controls'),'1')
 })

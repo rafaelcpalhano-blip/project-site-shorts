@@ -48,6 +48,7 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} />
     <div className={styles.interactions} data-short-interactions>
+      <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>
       {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     </div>
     <h2 className={styles.videoTitle}>{short.title}</h2>

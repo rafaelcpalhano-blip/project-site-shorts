@@ -13,3 +13,11 @@
 .links a, .unavailableLink { display: inline-flex; align-items: center; min-height: 44px; font-size: .85rem; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
 .unavailableLink { border: 0; padding: 0; background: none; margin-left: auto; }
 .status { margin: 4px 0; font-size: .8rem; color: var(--color-muted); }
+
+.sound { margin-top: 4px; color: var(--color-muted); font-size: .8rem; }
+.sound summary { cursor: pointer; min-height: 44px; align-content: center; width: fit-content; }
+.sound p { max-width: 60ch; margin-top: 0; }
+
+.audioControls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.audioControls button { min-height: 44px; }
+.audioControls p { flex-basis: 100%; margin: 0; font-size: .8rem; color: var(--color-muted); }
