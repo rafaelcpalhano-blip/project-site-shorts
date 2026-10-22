@@ -12,10 +12,8 @@ export function OfficialPlayer({ short }: { short: Short }) {
   const box = useRef<HTMLDivElement>(null)
   const iframe = useRef<HTMLIFrameElement>(null)
   const youtube = useRef<YouTubePlayer | null>(null)
-  const expectAudio = useRef<(enabled: boolean) => void>(() => {})
   const tiktokReady = useRef(false)
-  const audio = useSyncExternalStore(audioPreference.subscribe, audioPreference.getSnapshot, () => true)
-  const [initialAudio, setInitialAudio] = useState(audioPreference.getSnapshot)
+  const [initialAudio] = useState(audioPreference.getSnapshot)
   const loaded = useRef(false)
   const started = useRef(false)
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -40,7 +38,6 @@ export function OfficialPlayer({ short }: { short: Short }) {
     if (!active) return
     tiktokReady.current = false
     const observeAudio = createAudioObserver(audioPreference.set, audioPreference.getSnapshot())
-    expectAudio.current = observeAudio.expect
     const fail = () => { setStatus('failed'); playback.release(id) }
     const timer = window.setTimeout(() => { if (!loaded.current) fail() }, 20000)
     const message = (event: MessageEvent) => {
@@ -101,7 +98,7 @@ export function OfficialPlayer({ short }: { short: Short }) {
     visible.observe(box.current!)
     window.addEventListener('message', message)
     document.addEventListener('visibilitychange', visibility)
-    return () => { expectAudio.current = () => {}; disposed = true; window.clearInterval(poll); youtube.current = null; tiktokReady.current = false;
+    return () => { disposed = true; window.clearInterval(poll); youtube.current = null; tiktokReady.current = false;
       // Let React remove its own iframe. Destroy the API only after detaching it.
       if (apiPlayer) {
         const frame = apiFrame
@@ -111,20 +108,6 @@ export function OfficialPlayer({ short }: { short: Short }) {
       window.clearTimeout(timer); window.clearTimeout(visibilityTimer); window.removeEventListener('message', message)
       document.removeEventListener('visibilitychange', visibility); visible.disconnect() }
   }, [active, id, plan.platform, plan.src, initialAudio])
-  const chooseAudio = (enabled: boolean) => {
-    expectAudio.current(enabled)
-    audioPreference.set(enabled)
-    if (plan.platform === 'YouTube' && youtube.current) {
-      applyYouTubeAudio(youtube.current, enabled)
-      if (enabled) youtube.current.playVideo()
-    } else if (plan.platform === 'TikTok') {
-      commandTikTok(iframe.current?.contentWindow, enabled ? 'unMute' : 'mute')
-      if (enabled) commandTikTok(iframe.current?.contentWindow, 'play')
-    } else if (plan.platform === 'Twitch') {
-      // Clips have no interactive JS API: changing this explicit preference reloads the clip.
-      loaded.current = false; setStatus('loading'); setInitialAudio(enabled)
-    }
-  }
   return <section className={styles.player} aria-label={'Vídeo · ' + short.platform}>
     <div ref={box} className={!short.url ? styles.unavailable : short.platform === 'Twitch' ? styles.wide : styles.vertical}>
       {active && plan.src ? <iframe ref={iframe} src={plan.src} title={short.title + ' · player oficial ' + plan.platform}
@@ -143,12 +126,6 @@ export function OfficialPlayer({ short }: { short: Short }) {
       <VideoSourceLink short={short} />
       {plan.src && <button type="button" className={styles.unavailableLink} onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>}
     </div>
-    {active && <div className={styles.audioControls} data-short-interactions role="group" aria-label="Preferência de áudio da sessão">
-      <button type="button" aria-pressed={audio} onClick={() => chooseAudio(!audio)}>{audio ? 'Preferir som: ligado' : 'Preferir som: desligado'}</button>
-      {audio && plan.platform !== 'Twitch' && <button type="button" onClick={() => chooseAudio(true)}>Reproduzir com som</button>}
-      <p>{plan.platform === 'Twitch' ? 'Nos clipes Twitch, use também o volume do player. Alterar a preferência aqui recarrega o clipe.' : 'A preferência vale para os próximos vídeos. O navegador pode exigir Play ou ativação do som no player.'}</p>
-    </div>}
-    <details className={styles.sound} data-short-interactions><summary>Sem som?</summary><p>Ative o som e ajuste o volume nos controles do player oficial. Se necessário, toque em Play: o navegador pode bloquear o início com áudio.</p></details>
-    {active && status !== 'ready' && <p className={styles.status} role="status">{status === 'loading' ? 'Carregando player…' : status === 'blocked' ? 'A reprodução automática foi bloqueada. Use Reproduzir com som ou o Play do player oficial.' : status === 'audio-unavailable' ? 'O controle de áudio não carregou. Use os controles do player oficial.' : ''}</p>}
+    {active && (status === 'loading' || status === 'blocked') && <p className={styles.status} role="status">{status === 'loading' ? 'Carregando player…' : status === 'blocked' ? 'A reprodução automática foi bloqueada. Use o Play do player oficial.' : ''}</p>}
   </section>
 }

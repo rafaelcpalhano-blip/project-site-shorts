@@ -9,7 +9,7 @@ after(async()=>server?.close())
 const short={id:'short',title:'Jogada',platform:'YouTube',url:'https://www.youtube.com/shorts/abcdefghijk',identity:'YouTube:abcdefghijk',createdAt:1,gameId:'game'}
 test('canal fica depois do player e antes do título; texto é escapado e ausência não inventa canal',()=>{
  const html=channelName=>render(h(Context.Provider,{value:{user:null,authorized:false}},h(Content,{short:{...short,channelName},onLikeCount(){},onModerated(){},onBusyChange(){}})))
- const result=html('Canal <script>');assert.ok(result.indexOf('Assistir na plataforma')<result.indexOf('Nome do canal'));assert.ok(result.indexOf('Nome do canal')<result.indexOf('>Jogada</h2>'));assert.ok(result.includes('Canal &lt;script&gt;'));assert.ok(html('').includes('Não informado'));assert.ok(result.includes('Sem som?'))
+ const result=html('Canal <script>');assert.ok(result.indexOf('Assistir na plataforma')<result.indexOf('Nome do canal'));assert.ok(result.indexOf('Nome do canal')<result.indexOf('>Jogada</h2>'));assert.ok(result.includes('Canal &lt;script&gt;'));assert.ok(html('').includes('Não informado'));assert.ok(!result.includes('Sem som?'));assert.ok(!result.includes('Preferir som'));assert.ok(!result.includes('Reproduzir com som'))
 })
 test('formulário preserva controles nativos e acesso convencional ao cadastro de jogos',()=>{
  const result=render(h(Form,{onClose(){},onSubmitted(){}}));assert.ok(result.includes('id="persistent-url"'));assert.ok(result.includes('id="persistent-title"'));assert.ok(result.includes('<select'));assert.ok(result.includes('Não encontrou seu jogo?'));assert.ok(result.includes('id="persistent-channel"'));assert.ok(!result.includes('tabindex="-1"'));assert.ok(!result.includes('Confirmar publicação'))

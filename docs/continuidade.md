@@ -1,3 +1,7 @@
+## 22/10/2026 — 7.6.7-B concluída localmente
+
+Triagem do servidor cobre termos relatados e evasões delimitadas; suspeitas continuam pendentes/privadas, sem reclassificação retroativa. Confirmação em lote com selecionados, motivo e apenas uma linha de ações; autorização/auditoria/serviços existentes preservados. A pedido do proprietário, removida a interface extra de som, mantendo integrações funcionais YouTube/TikTok e controles oficiais Twitch. 44 testes locais + 8 de Firestore isolado aprovados, build/lint/diff e conferência visual sem exclusões reais. API reiniciada, emulador de desenvolvimento preservado. [Detalhes](etapa-7-6-7-b.md). Próxima 7.6.7-C somente após autorização.
+
 ## 22/10/2026 — Complemento aprovado: preferência de áudio da sessão
 
 Implementados controle oficial YouTube, mensagens oficiais TikTok e preferência sonora em memória. Twitch Clips mantém API não interativa e controles nativos. Evidências, testes e limitações em [audio-sessao.md](audio-sessao.md). TikTok ainda pode exigir Play nativo; título ausente no oEmbed continua manual. Sem deploy/Firestore/dependências. Alterações da 7.6.7-A anteriores ainda estavam sem commit e foram preservadas. Próxima: 7.6.7-B, somente após autorização.
