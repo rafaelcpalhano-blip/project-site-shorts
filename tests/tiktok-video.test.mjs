@@ -86,3 +86,11 @@ test('links TikTok encurtados e URLs com credenciais não geram resolução de r
  for(const url of ['https://vm.tiktok.com/example/','https://vt.tiktok.com/example/','https://www.tiktok.com/t/example/','https://user:pass@www.tiktok.com/@gamer/video/123456789'])assert.equal((await verify({url})).existence,'unknown')
  assert.equal(calls,0)
 })
+
+test('descrição textual oficial é alternativa limitada; título utilizável tem prioridade',async()=>{
+ const verify=payload=>createTikTokVerifier(async()=>Response.json({...data,...payload}))(input)
+ assert.equal((await verify({title:'Título oficial',description:'Outra legenda'})).title,'Título oficial')
+ for(const title of [undefined,'','x'.repeat(501)])assert.equal((await verify({title,description:'Legenda 🎮\n#Tíbia'})).title,'Legenda 🎮 #Tíbia')
+ for(const description of [undefined,null,{},'x'.repeat(501),'x'.repeat(4097),'texto\u0000inválido'])assert.equal((await verify({title:undefined,description,html:'<p>Não extrair este texto</p>'})).title,undefined)
+ assert.equal((await verify({title:undefined,description:'Texto',embed_product_id:'wrong'})).title,undefined)
+})

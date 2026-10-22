@@ -22,9 +22,13 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       evidence.formatPolicy = 'tiktok-platform-exception'
       // Captions can contain ordinary line breaks/tabs. Normalize presentation only;
       // preserve accents/emoji, reject remaining controls and never truncate the source title.
-      if (typeof result.title === 'string' && result.title.length <= 4096) try {
-        evidence.title = validateVideoTitle(result.title.replace(/[\t\r\n\u2028\u2029]+/g, ' ').replace(/ {2,}/g, ' '))
-      } catch { /* Missing/unusable optional titles do not invalidate verified identity. */ }
+      for (const candidate of [result.title, result.description]) {
+        if (typeof candidate !== 'string' || candidate.length > 4096) continue
+        try {
+          evidence.title = validateVideoTitle(candidate.replace(/[\t\r\n\u2028\u2029]+/g, ' ').replace(/ {2,}/g, ' '))
+          break
+        } catch { /* Try an optional textual description; never parse or execute HTML. */ }
+      }
       const image=thumbnailUrl(result.thumbnail_url,video.platform,video.identity)
       if(image)evidence.thumbnailUrl=image
       // Never execute oEmbed HTML/scripts or fetch image/author destinations on the server.
