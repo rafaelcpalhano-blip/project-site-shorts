@@ -2,7 +2,7 @@
 .dialog::backdrop { background: rgb(0 0 0 / 75%); }
 .header { display: flex; align-items: start; gap: 16px; justify-content: space-between; margin-bottom: 20px; }
 .header h2 { margin: 0; font-size: 1.2rem; }
-.header button { flex-shrink: 0; padding: 5px 12px; }
+.header button { flex-shrink: 0; min-width: 44px; min-height: 44px; padding: 5px 12px; }
 
 
 .wide { width: min(760px, calc(100% - 32px)); }

@@ -31,11 +31,12 @@ export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyC
   const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     let active = true
-    repository.listComments(short.id, cursor).then(page => {
+    const controller=new AbortController()
+    repository.listComments(short.id, cursor, controller.signal).then(page => {
       if (!active) return
       setAvailable(true); setComments(page.items); setNext(page.next); setLoading(false)
     }).catch(() => { if (active) { setAvailable(false); setError('Não foi possível carregar os comentários. Tente novamente.'); setLoading(false) } })
-    return () => { active = false }
+    return () => { active = false; controller.abort() }
   }, [short.id, cursor, attempt])
   useLayoutEffect(()=>{onBusyChange(reporting||commenting||liking||adminBusy||selectingComments);return()=>onBusyChange(false)},[onBusyChange,reporting,commenting,liking,adminBusy,selectingComments])
   return <>

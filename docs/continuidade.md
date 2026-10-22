@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.5-A concluída — 22/10/2026
+
+Diagnóstico amostral e correções comprovadas: listComments aceita cancelamento na saída/troca; confirmação de contagem de curtida igual não recria feed/seleção; fechar modal mínimo 44x44. Medição em desenvolvimento: consultas de comentários 2→1; atualização redundante dos dez cards 10→0 (separada do relógio de um minuto). Não afirmar ganho estatístico de tempo/CPU nem reproduzido/resolvido todo travamento relatado.
+Instrumentação temporária removida; 15 testes relacionados, lint/build e diff aprovados. Viewport estreito sem overflow, foco e zero iframes após fechar conferidos. Sem alterações no backend, banco/índices/regras, serviços, dependências ou deploy. Limites de medições e evidência em [etapa-7-6-5-a.md](etapa-7-6-5-a.md).
+Próxima: 7.6.5-B — cards e visualizador, aguardando autorização individual. C/D/E pendentes; Etapas 8 e 9 continuam após refinamentos, sem início automático. Checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.4 — revisão técnica concluída (22/10/2026)
 
 Duas correções: seleção de motivo da denúncia agora participa da proteção de rascunhos na troca de vídeo; foco do modal exclui desabilitação herdada/ocultos e considera iframe. 11 testes relacionados aprovados, lint/build/diff conferidos. Sem suítes repetidas de segurança sem alteração correspondente.

@@ -1,3 +1,4 @@
+import {updateItemLikeCount,updatePageLikeCount} from '../services/feed-like-count'
 import {createOrderedFeedClient,feedOrderLabels} from '../services/ordered-feed-api'
 import type {FeedOrder} from '../services/ordered-feed-api'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
@@ -36,8 +37,8 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const [selected, setSelected] = useState<Short | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
   const updateLikeCount=useCallback((id:string,count:number)=>{
-    setPage(current=>({...current,items:current.items.map(short=>short.id===id?{...short,likeCount:count}:short)}))
-    setSelected(current=>current?.id===id?{...current,likeCount:count}:current)
+    setPage(current=>updatePageLikeCount(current,id,count))
+    setSelected(current=>current?updateItemLikeCount(current,id,count):current)
   },[])
   const selectedGame = gameId || filter
   const cursor = cursors[index]
