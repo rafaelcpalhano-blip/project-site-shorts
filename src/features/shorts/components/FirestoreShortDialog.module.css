@@ -4,3 +4,5 @@
 .information { display: grid; gap: 12px; margin-top: 24px; }
 .information summary { cursor: pointer; min-height: 44px; align-content: center; color: var(--color-muted); }
 .information > button { justify-self: start; }
+
+.videoTitle { font-size: 1.1rem; line-height: 1.5; overflow-wrap: anywhere; margin: 16px 0 24px; }

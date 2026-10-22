@@ -21,12 +21,12 @@ test('contato provisório aparece em desenvolvimento e nunca como canal operacio
  assert.equal(supportEmailForDisplay(false,{email:'suporte@example.org',operational:false}),undefined)
  assert.equal(supportEmailForDisplay(false,{email:'suporte@example.org',operational:true}),'suporte@example.org')
 })
-test('recolhimento ocorre uma vez após cinco segundos',context=>{
+test('recolhimento ocorre uma vez após 1,5 segundo',context=>{
  context.mock.timers.enable({apis:['setTimeout']});let open=true,calls=0
- scheduleAutoCollapse(()=>{open=false;calls++});context.mock.timers.tick(4999);assert.equal(open,true);context.mock.timers.tick(1);assert.equal(open,false);assert.equal(calls,1);context.mock.timers.tick(5000);assert.equal(calls,1)
+ scheduleAutoCollapse(()=>{open=false;calls++});context.mock.timers.tick(1499);assert.equal(open,true);context.mock.timers.tick(1);assert.equal(open,false);assert.equal(calls,1);context.mock.timers.tick(5000);assert.equal(calls,1)
 })
 test('nova ação ou desmontagem cancela o fechamento sem callback tardio',context=>{
- context.mock.timers.enable({apis:['setTimeout']});let calls=0;const cancel=scheduleAutoCollapse(()=>calls++);context.mock.timers.tick(3000);cancel();cancel();context.mock.timers.tick(10000);assert.equal(calls,0)
+ context.mock.timers.enable({apis:['setTimeout']});let calls=0;const cancel=scheduleAutoCollapse(()=>calls++);context.mock.timers.tick(1000);cancel();cancel();context.mock.timers.tick(10000);assert.equal(calls,0)
  const unmount=scheduleAutoCollapse(()=>calls++);unmount();context.mock.timers.tick(5000);assert.equal(calls,0)
 })
 

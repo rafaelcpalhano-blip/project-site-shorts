@@ -1,3 +1,4 @@
+import { commentNumber, nextCommentNumber } from './comment-number.ts'
 import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
@@ -35,14 +36,16 @@ export async function reviewComment(input: ReturnType<typeof parseCommentReview>
     const now = options.now()
     if (!Number.isFinite(now.getTime())) throw new Error('invalid-clock')
     const next = input.action === 'approve' || input.action === 'restore' ? 'approved' : input.action === 'reject' ? 'rejected' : 'removed'
+    const existingNumber=commentNumber(comment.publicationNumber)
+    const publicationNumber=next==='approved'?(existingNumber??await nextCommentNumber(tx,String(comment.shortId),short!)):existingNumber
     let applyRanking=()=>{}
     if(next==='approved'||status==='approved'){
       const owner=await tx.get('commentRequests/'+input.commentId)
       if(short&&typeof short.gameId==='string')applyRanking=await prepareEngagement(tx,{shortId:String(comment.shortId),gameId:short.gameId,kind:'comment',sourceId:input.commentId,identity:typeof owner?.visitorHash==='string'?owner.visitorHash:undefined,at:comment.createdAt as Date,now,active:next==='approved'})
     }
     applyRanking()
-    if (short && (next === 'approved' || status === 'approved')) tx.set('shorts/' + String(comment.shortId), {...short, ...changeCommentCount(short.commentCount, next === 'approved' ? 1 : -1), ...(next === 'approved' ? {hasPublishedComments: true} : {})})
-    tx.set(path,{...comment,moderationStatus:next,reviewVersion:revision+1})
+    if (short && (next === 'approved' || status === 'approved')) tx.set('shorts/' + String(comment.shortId), {...short, ...changeCommentCount(short.commentCount, next === 'approved' ? 1 : -1), ...(next === 'approved' ? {hasPublishedComments: true, lastCommentNumber: Math.max(Number(short.lastCommentNumber??0),publicationNumber!)} : {})})
+    tx.set(path,{...comment,...(publicationNumber!==undefined?{publicationNumber}:{}),moderationStatus:next,reviewVersion:revision+1})
     tx.create('moderationLogs/' + crypto.randomUUID(),{contentType:'comment',contentId:input.commentId,
       action:input.action,reason:input.reason,previousStatus:status,resultingStatus:next,
       revision:revision+1,createdAt:now,actor:uid})

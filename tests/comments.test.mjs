@@ -230,6 +230,7 @@ test('pending does not claim first publication, admin approval and legacy histor
  for(const mode of ['pending','legacy-approved','legacy-removed','admin']){
   const {store,records}=memory()
   if(mode.startsWith('legacy'))records.set('comments/legacy',{shortId,content:'Antigo',createdAt:now(),moderationStatus:mode==='legacy-approved'?'approved':'removed'})
+  if(mode.startsWith('legacy'))records.get('shorts/'+shortId).lastCommentNumber=1
   else{
    const pending=await submitComment(input({content:'caralho'}),visitor,{store,now});assert.equal(pending.firstPublished,false)
    if(mode==='admin')await reviewComment(parseCommentReview({commentId:pending.id,action:'approve',revision:0,reason:'Contexto conferido'}),'owner',{store,now})

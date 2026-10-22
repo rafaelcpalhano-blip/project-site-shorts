@@ -1,5 +1,14 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.6-D — concluída localmente (22/10/2026)
+
+Numeração de comentários persistida por primeira publicação em transação; removidos/restaurados conservam número e novas aprovações recebem o próximo. Listagem decrescente por número, 20 por página e cursor vinculado ao short. Migração histórica aproximada autorizada por data de envio/ID, restrita ao emulador: 9 shorts, zero comentários antigos; 9 contadores inicializados em zero, segunda execução sem mudanças. Sem alteração remota ou estados de moderação. [Detalhes, custos e limitações](etapa-7-6-6-d.md).
+
+Visualizador com cabeçalho fixo, título abaixo do player/links/curtidas, controles de indisponibilidade com aparência de link e cleanup mantido; aviso centralizado. Recolhimento em 1,5s e logo reiniciando apenas o conteúdo inicial, preservando o provider administrativo. 76 testes relacionados, build/lint/diff aprovados. Navegador confirmou reset de filtros/ordem, estrutura e desmontagem do player. Sem publicar conteúdos de teste no 8080, novas dependências ou deploy. Verificação autenticada Google/TOTP após reinício da API fica para revisão integrada. Arquivo welcome-preference.ts do Clipper permanece pendência de versionamento anterior, preservado; comando anterior tinha inicial maiúscula.
+
+Próximo: 7.6.6-E — validação integrada, aguardando autorização individual. Checkpoints abaixo são históricos.
+
+
 ## Clipper e Etapa 7.6.6-C — concluídos localmente (22/10/2026)
 
 Clipper aprovado e integrado: boas-vindas na primeira abertura da página inicial com preferência localStorage ao fechar, flutuação breve/movimento reduzido; ilustrações para imagem ausente e falhas capturáveis/404. Sem tutorial, serviço ou identificação nova. [Detalhes e limitações](clipper.md).

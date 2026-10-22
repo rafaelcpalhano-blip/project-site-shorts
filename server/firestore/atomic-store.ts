@@ -2,6 +2,7 @@ import type {AdminSort,AdminListCursor} from '../../src/features/admin/types/lis
 export type RecordData = Record<string, unknown>
 export interface AtomicTransaction {
   hasPublishedComment?(shortId: string): Promise<boolean>
+  publishedCommentHistory?(shortId:string): Promise<Array<{id:string;data:RecordData}>>
   get(path: string): Promise<RecordData | null>
   create(path: string, data: RecordData): void
   set(path: string, data: RecordData): void
@@ -15,7 +16,7 @@ export interface StoreQuery {
   cursor?: { time: string; id: string }
 }
 export interface SearchShortsQuery {fragment:string;gameId?:string;cursor?:{time:string;id:string};limit:number}
-export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string}; limit: number }
+export interface PublicPageQuery { kind: 'shorts' | 'comments'; parentId?: string; cursor?: {time:string;id:string;number?:number}; limit: number }
 export type GameCatalogFilter = 'all' | 'active' | 'provisional' | 'hidden' | 'banned'
 export interface GameCatalogQuery {filter:GameCatalogFilter;cursor?:{time:string;id:string};limit:number}
 export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?:string;generationId?:string;readTime?:string;cursor?:{id:string;time:string;value?:number};limit:15}

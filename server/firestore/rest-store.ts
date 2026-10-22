@@ -138,9 +138,10 @@ export function createRestStore(options: Options): AtomicStore {
       if (!['shorts','comments'].includes(query.kind) || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > (query.kind === 'shorts' ? 30 : 21) || query.parentId !== undefined && !/^[\w-]{1,128}$/.test(query.parentId) || query.kind === 'comments' && !query.parentId || query.cursor && (!/^[\w-]{1,128}$/.test(query.cursor.id) || !Number.isFinite(Date.parse(query.cursor.time)))) throw new Error('Consulta pública inválida')
       const filters = [{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'EQUAL',value:encode(query.kind === 'shorts' ? 'published' : 'approved')}},
         ...(query.parentId ? [{fieldFilter:{field:{fieldPath:query.kind === 'shorts' ? 'gameId' : 'shortId'},op:'EQUAL',value:encode(query.parentId)}}] : [])]
-      const selected = query.kind === 'shorts' ? ['thumbnail','likeCount','commentCount','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName','moderationStatus'] : ['shortId','content','createdAt','moderationStatus']
-      const result = await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected.map(fieldPath=>({fieldPath}))},where:{compositeFilter:{op:'AND',filters}},orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
-        ...(query.cursor ? {startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}} : {})}})
+      const selected = query.kind === 'shorts' ? ['thumbnail','likeCount','commentCount','title','normalizedUrl','platform','platformVideoId','gameId','createdAt','channelName','moderationStatus'] : ['shortId','content','createdAt','moderationStatus','publicationNumber']
+      if(query.kind==='comments'&&query.cursor&&(!Number.isSafeInteger(query.cursor.number)||Number(query.cursor.number)<1))throw Error('Atualize os comentários')
+      const result = await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected.map(fieldPath=>({fieldPath}))},where:{compositeFilter:{op:'AND',filters}},orderBy:[{field:{fieldPath:query.kind==='comments'?'publicationNumber':'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
+        ...(query.cursor ? {startAt:{before:false,values:[query.kind==='comments'?encode(query.cursor.number):encode(new Date(query.cursor.time)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}} : {})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
     async scanLikeRecords(collection,after) {
@@ -197,6 +198,12 @@ export function createRestStore(options: Options): AtomicStore {
         const { transaction } = await request('beginTransaction', { options: { readWrite: previous ? { retryTransaction: previous } : {} } })
         const writes: unknown[] = []
         const port: AtomicTransaction = {
+          async publishedCommentHistory(shortId) {
+            if(writes.length)throw Error('Reads must precede writes')
+            if(!/^[\w-]{1,128}$/.test(shortId))throw Error('Invalid short')
+            const result=await request('runQuery',{transaction,structuredQuery:{from:[{collectionId:'comments'}],where:{compositeFilter:{op:'AND',filters:[{fieldFilter:{field:{fieldPath:'shortId'},op:'EQUAL',value:encode(shortId)}},{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'IN',value:encode(['approved','removed'])}}]}},orderBy:[{field:{fieldPath:'createdAt'},direction:'ASCENDING'},{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:201}})
+            return (Array.isArray(result)?result:[result]).filter(row=>row.document).map(row=>decodeDocument(row.document))
+          },
           async hasPublishedComment(shortId) {
             if (writes.length) throw new Error('Todas as leituras devem preceder as gravações')
             if (!/^[\w-]{1,128}$/.test(shortId)) throw new Error('Vídeo inválido')

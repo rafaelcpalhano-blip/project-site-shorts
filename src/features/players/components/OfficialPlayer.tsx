@@ -3,6 +3,7 @@ import type { Short } from '../../shorts/types/models'
 import { buildEmbed, tikTokMessage } from '../services/embed'
 import { playback } from '../services/playback'
 import styles from './OfficialPlayer.module.css'
+import { VideoSourceLink } from './PlayerInformation'
 export function OfficialPlayer({ short }: { short: Short }) {
   const id = useId()
   const box = useRef<HTMLDivElement>(null)
@@ -68,10 +69,10 @@ export function OfficialPlayer({ short }: { short: Short }) {
           }}>{status === 'failed' ? 'Tentar carregar novamente' : 'Retomar player'}</button>}
         </div>}
     </div>
-    {active && <div className={styles.actions}>
-      <p role="status">{status === 'loading' ? 'Carregando player…' : status === 'blocked' ? 'A reprodução automática foi bloqueada. Use o Play do player oficial.' : 'Se o vídeo não iniciar, use o Play do player oficial.'}</p>
-      <button onClick={() => playback.release(id)}>Encerrar player</button>
-      <button onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>
-    </div>}
+    <div className={styles.links} data-short-interactions>
+      <VideoSourceLink short={short} />
+      {plan.src && <button type="button" className={styles.unavailableLink} onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>}
+    </div>
+    {active && status !== 'ready' && <p className={styles.status} role="status">{status === 'loading' ? 'Carregando player…' : status === 'blocked' ? 'A reprodução automática foi bloqueada. Use o Play do player oficial.' : ''}</p>}
   </section>
 }

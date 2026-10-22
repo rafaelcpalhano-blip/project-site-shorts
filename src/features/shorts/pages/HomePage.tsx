@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ClipperWelcome } from '../../../components/clipper/ClipperWelcome'
 import { usesFirestore } from '../../../lib/firebase/mode'
 const FirestoreFeed = lazy(() => import('../components/FirestoreFeed').then(module => ({ default: module.FirestoreFeed })))
@@ -8,6 +9,10 @@ import { ShortFeed } from '../components/ShortFeed'
 import { SubmissionDialog } from '../../submissions/components/SubmissionDialog'
 import styles from './HomePage.module.css'
 export function HomePage() {
+  const location=useLocation()
+  return <HomeContent key={location.key} />
+}
+function HomeContent() {
   const [sharing, setSharing] = useState(false)
   const [message, setMessage] = useState('')
   const [feedVersion, setFeedVersion] = useState(0)

@@ -15,3 +15,5 @@
 @keyframes leaveRight { to { transform: translateX(100%); } }
 @media (max-width: 600px) { .stage { margin-inline: 0; } .previous,.next { position: static; flex: 0 0 44px; } .position { flex: 1; } }
 @media (prefers-reduced-motion: reduce) { .inRight,.inLeft { animation: none; } .outLeft,.outRight { display: none; animation: none; } }
+
+.scope { margin: 20px auto 0; max-width: 60ch; color: var(--color-muted); font-size: .8rem; text-align: center; overflow-wrap: anywhere; }

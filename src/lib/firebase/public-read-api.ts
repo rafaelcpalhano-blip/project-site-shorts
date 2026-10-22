@@ -4,7 +4,7 @@ import { publicCursor, publicId } from '../validation/public-read.ts'
 import type { PublicCursor } from '../validation/public-read.ts'
 export type { PublicCursor }
 export interface PublicShort extends Short { gameName: string; likeCount:number }
-export interface PublicComment { id:string;content:string;createdAt:number }
+export interface PublicComment { id:string;content:string;createdAt:number;number?:number }
 export interface ReadPage<T> { items:T[];next:PublicCursor|null;limited?:boolean;total?:number }
 export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  async function call(path:string,input:unknown,signal?:AbortSignal) {
@@ -37,7 +37,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
    const data=await call('/api/comments/list',{shortId,...(cursor?{cursor}:{})},signal)
    if(data?.total!==undefined&&(!Number.isSafeInteger(data.total)||data.total<0))throw new Error('Resposta inválida.')
    if(!Array.isArray(data?.items)||data.items.length>20||!Object.hasOwn(data,'next'))throw new Error('Resposta inválida.')
-   const items=data.items.map((row:PublicComment)=>{publicId(row?.id);if(typeof row.content!=='string'||row.content.length>500||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.');return row})
+   const items=data.items.map((row:PublicComment)=>{publicId(row?.id);if(typeof row.content!=='string'||row.content.length>500||!Number.isSafeInteger(row.createdAt)||row.createdAt<0||row.number!==undefined&&(!Number.isSafeInteger(row.number)||row.number<1))throw new Error('Resposta inválida.');return row})
    const next=data.next===null?null:publicCursor(data.next,scope);if(next===undefined)throw new Error('Resposta inválida.')
    return {items,next,...(data.total!==undefined?{total:data.total}:{})}
   },

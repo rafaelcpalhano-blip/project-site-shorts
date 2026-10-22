@@ -1,5 +1,5 @@
 import { CommentContent } from './CommentContent'
-import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
+import { PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 import { validateCommentInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
@@ -11,9 +11,9 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
   const [content, setContent] = useState('')
   const [message, setMessage] = useState('')
   const comments = state.comments.filter(item => item.shortId === short.id && item.status === 'approved')
-  return <Modal title={short.title} onClose={onClose}>
+  return <Modal title="Visualizador de short" onClose={onClose}>
     <OfficialPlayer key={short.id} short={short} />
-    <p><VideoSourceLink short={short} /></p>
+    <h2 style={{fontSize:"1.1rem",overflowWrap:"anywhere"}}>{short.title}</h2>
     <h3>Comentários ({comments.length})</h3>
     {comments.length ? comments.map((item,index) => <CommentContent key={item.id} content={item.content} number={index+1} />) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
     <form className="form" onSubmit={event => {

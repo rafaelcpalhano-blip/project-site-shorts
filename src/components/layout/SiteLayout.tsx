@@ -3,16 +3,16 @@ import { useEffect, useRef } from 'react'
 import styles from './SiteLayout.module.css'
 
 export function SiteLayout() {
-  const { pathname } = useLocation()
+  const { key } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
-  const previousPath = useRef(pathname)
+  const previousPath = useRef(key)
 
   useEffect(() => {
-    if (previousPath.current !== pathname) {
+    if (previousPath.current !== key) {
       mainRef.current?.focus()
-      previousPath.current = pathname
+      previousPath.current = key
     }
-  }, [pathname])
+  }, [key])
 
   return (
     <div className={styles.shell}>

@@ -21,7 +21,7 @@ test('card separa canal e horário e apresenta curtidas antes de comentários',(
  assert.match(html,/aria-label="Abrir vídeo: Jogada especial"/)
  assert.doesNotMatch(html,/>Abrir vídeo</)
  assert.match(html,/Canal teste<\/p><p[^>]*><time/)
- const positions=['Jogo teste','Jogada especial</button>','Canal teste','<time','7 curtidas','Comentários','Ver jogo'].map(text=>html.indexOf(text))
+ const positions=['Jogo teste','Jogada especial</span></button>','Canal teste','<time','7 curtidas','Comentários','Ver jogo'].map(text=>html.indexOf(text))
  assert.ok(positions.every((value,index)=>value>=0&&(!index||value>positions[index-1])))
 })
 test('fonte externa conserva URL canônica e rejeita links inseguros',()=>{

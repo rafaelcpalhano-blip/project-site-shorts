@@ -11,12 +11,12 @@ before(async()=>{
  Celebration=(await server.ssrLoadModule('/src/features/comments/components/FirstCommentCelebration.tsx')).FirstCommentCelebration
 })
 after(async()=>server?.close())
-const rows=[{id:'one',content:'Primeira mensagem <script>alert(1)</script>',createdAt:1},{id:'two',content:'Segunda mensagem',createdAt:2}]
+const rows=[{id:'one',content:'Primeira mensagem <script>alert(1)</script>',createdAt:1,number:1},{id:'two',content:'Segunda mensagem',createdAt:2,number:2}]
 const html=(comments,offset=0,authorized=false)=>render(h(Context.Provider,{value:{user:authorized?{uid:'admin'}:null,authorized}},h(Comments,{shortId:'video',comments,offset,disabled:false,onSelectionChange:()=>{},onBusyChange:()=>{},onRemoved:()=>{}})))
-test('numeração acompanha ordem e deslocamento, sem tornar comentário HTML executável',()=>{
+test('numeração persistida não depende da página, preservando escape do texto',()=>{
  const first=html(rows),second=html(rows,20)
  assert.ok(first.indexOf('Comentário #1')<first.indexOf('Comentário #2'))
- assert.ok(second.includes('Comentário #21'));assert.ok(second.includes('Comentário #22'));assert.ok(!second.includes('Comentário #1<'))
+ assert.ok(second.includes('Comentário #1'));assert.ok(second.includes('Comentário #2'));assert.ok(!second.includes('Comentário #21'))
  assert.ok(first.includes('&lt;script&gt;'));assert.ok(!first.includes('<script>'))
  assert.ok(!first.includes('Excluir comentários'));assert.ok(html(rows,20,true).includes('Excluir comentários'))
 })

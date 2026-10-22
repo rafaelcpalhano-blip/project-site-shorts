@@ -1,3 +1,4 @@
+import { prepareCommentNumbers } from '../../server/comments/comment-number.ts'
 import { readComments } from '../../server/public/read-content.ts'
 import {test,before,after} from 'node:test'
 import assert from 'node:assert/strict'
@@ -138,6 +139,7 @@ test('REST legacy approved/removed comments suppress celebration; pending alone 
  for(const status of ['approved','removed','pending']){
   await seed()
   await store.transact(async tx=>tx.set('comments/legacy',{shortId,content:'Antigo',createdAt:now(),moderationStatus:status}))
+  await prepareCommentNumbers(shortId,store,true)
   assert.equal((await submitComment(input(),visitor,options)).firstPublished,status==='pending')
  }
 })

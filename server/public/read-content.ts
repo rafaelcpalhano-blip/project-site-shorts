@@ -1,4 +1,5 @@
 import { gameCoverUrl } from '../../src/lib/validation/game-cover.ts'
+import { commentNumber } from '../comments/comment-number.ts'
 import { publicCommentCount } from '../comments/comment-count.ts'
 import { readThumbnail } from '../videos/thumbnail.ts'
 import { likeCount } from '../likes/short-likes.ts'
@@ -61,7 +62,7 @@ export async function readComments(value: unknown, store: AtomicStore) {
   const short = await readPublicShort({shortId},store)
   const rows=await reader(store).page({kind:'comments',parentId:shortId,cursor:after,limit:21})
   if(rows.length>21)throw new Error('invalid-page')
-  const items=rows.slice(0,20).map(row=>{if(row.data.shortId!==shortId||row.data.moderationStatus!=='approved')throw new Error('invalid-comment');return {id:publicId(row.id),content:text(row.data,'content',500),createdAt:date(row.data).getTime()}})
+  const items=rows.slice(0,20).map(row=>{if(row.data.shortId!==shortId||row.data.moderationStatus!=='approved')throw new Error('invalid-comment');const number=commentNumber(row.data.publicationNumber);return {id:publicId(row.id),content:text(row.data,'content',500),createdAt:date(row.data).getTime(),...(number!==undefined?{number}:{})}})
   const last=items.at(-1)
-  return {items,...(short.commentCount!==undefined?{total:short.commentCount}:{}),next:rows.length>20&&last?{id:last.id,time:new Date(last.createdAt).toISOString(),scope}:null}
+  return {items,...(short.commentCount!==undefined?{total:short.commentCount}:{}),next:rows.length>20&&last?{id:last.id,time:new Date(last.createdAt).toISOString(),scope,...(last.number!==undefined?{number:last.number}:{})}:null}
 }

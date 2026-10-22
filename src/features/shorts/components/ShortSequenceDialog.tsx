@@ -33,7 +33,7 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
   node.addEventListener('wheel',onWheel,{passive:false});return()=>node.removeEventListener('wheel',onWheel)
  },[busy,items,short.id,pending])
  const ghost=transition&&validThumbnail(transition.previous.thumbnail,transition.previous.platform,transition.previous.identity)
- return <Modal title={short.title} wide closeDisabled={busy} onClose={()=>{if(!busyNow.current)onClose()}} onKeyDown={event=>{
+ return <Modal title="Visualizador de short" wide closeDisabled={busy} onClose={()=>{if(!busyNow.current)onClose()}} onKeyDown={event=>{
   const editing=!!(event.target as HTMLElement).closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),iframe,form,[data-short-interactions]')
   const direction=keyDirection(event,editing);if(direction===null||busyNow.current||pending!==null||moving.current)return
   if(sequenceTarget(items,short.id,direction)){event.preventDefault();move(direction)}
@@ -51,7 +51,7 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
  <FirestoreShortContent short={short} onLikeCount={onLikeCount} onCommentCount={onCommentCount} onModerated={onModerated} onBusyChange={reportBusy}/>
  </div>
  </div>
- <p className="muted">A sequência usa somente os vídeos desta página, na ordem e no filtro atuais.</p>
+ <p className={styles.scope}>A sequência usa somente os vídeos desta página, na ordem e no filtro atuais.</p>
  </div>
  </Modal>
 }

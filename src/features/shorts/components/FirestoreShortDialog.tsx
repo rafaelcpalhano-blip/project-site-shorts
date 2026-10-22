@@ -11,7 +11,7 @@ import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
 import type { PublicCursor, PublicComment } from '../../../lib/firebase/public-repository'
 import type { Short } from '../types/models'
-import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
+import { PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
 export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onModerated, onBusyChange }: { short: Short; onCommentCount?:(id:string,count:number)=>void; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
@@ -26,7 +26,6 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   const [commenting, setCommenting] = useState(false)
   const [reporting, setReporting] = useState(false)
   const [comments, setComments] = useState<PublicComment[]>([])
-  const [offset,setOffset]=useState(0)
   const firstPublication=useRef<string|null>(null)
   const [celebration,setCelebration]=useState<string|null>(null)
   const [cursor, setCursor] = useState<PublicCursor>()
@@ -49,17 +48,17 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} />
     <div className={styles.interactions} data-short-interactions>
-      <VideoSourceLink short={short} />
       {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     </div>
+    <h2 className={styles.videoTitle}>{short.title}</h2>
     <h3 ref={commentHeading} tabIndex={-1}>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>
       <button disabled={adminBusy||selectingComments} onClick={() => { setError(''); setLoading(true); setAttempt(value => value + 1) }}>Tentar novamente</button></div>
-      : <CommentSelectionModeration key={short.id+attempt+(admin.user?.uid??'visitor')} shortId={short.id} comments={comments} offset={offset} disabled={liking||reporting||commenting||adminBusy} onSelectionChange={setSelectingComments} onBusyChange={adminBusyChange} onRemoved={ids=>{if(short.commentCount!==undefined&&short.commentCount>=ids.length)onCommentCount?.(short.id,short.commentCount-ids.length);setComments(current=>current.filter(item=>!ids.includes(item.id)));if(comments.every(item=>ids.includes(item.id)))commentHeading.current?.focus()}} />}
-    {!loading && !error && next && <button disabled={adminBusy||selectingComments} onClick={() => { setOffset(value=>value+comments.length); setLoading(true); setCursor(next) }}>Próximos comentários →</button>}
-    <button disabled={loading || commenting || adminBusy || selectingComments} onClick={() => { setOffset(0); setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Atualizar comentários</button>
+      : <CommentSelectionModeration key={short.id+attempt+(admin.user?.uid??'visitor')} shortId={short.id} comments={comments} disabled={liking||reporting||commenting||adminBusy} onSelectionChange={setSelectingComments} onBusyChange={adminBusyChange} onRemoved={ids=>{if(short.commentCount!==undefined&&short.commentCount>=ids.length)onCommentCount?.(short.id,short.commentCount-ids.length);setComments(current=>current.filter(item=>!ids.includes(item.id)));if(comments.every(item=>ids.includes(item.id)))commentHeading.current?.focus()}} />}
+    {!loading && !error && next && <button disabled={adminBusy||selectingComments} onClick={() => { setLoading(true); setCursor(next) }}>Próximos comentários →</button>}
+    <button disabled={loading || commenting || adminBusy || selectingComments} onClick={() => { setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Atualizar comentários</button>
     {available && <PersistentCommentForm key={'comment-form:'+short.id} shortId={short.id} disabled={reporting || adminBusy || selectingComments} onBusyChange={setCommenting}
-      onPublished={result => { firstPublication.current=result.firstPublished&&!result.repeated?result.id:null; setOffset(0); setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }} />}
+      onPublished={result => { firstPublication.current=result.firstPublished&&!result.repeated?result.id:null; setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }} />}
     {celebration && <FirstCommentCelebration key={celebration} />}
     <div className={styles.information} data-short-interactions>
       <PlayerInformation short={short} />

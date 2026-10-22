@@ -1,3 +1,4 @@
+import { nextCommentNumber } from './comment-number.ts'
 import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
@@ -45,11 +46,12 @@ export async function submitComment(input: unknown, visitorHash: string, options
     // Missing adapter support suppresses celebration; it must never guess from a browser count.
     const firstPublished = verdict.status === 'approved' && short.hasPublishedComments !== true &&
       !!tx.hasPublishedComment && !await tx.hasPublishedComment(data.shortId)
+    const publicationNumber=verdict.status==='approved'?await nextCommentNumber(tx,data.shortId,short):undefined
     const applyRanking=verdict.status==='approved'?await prepareEngagement(tx,{shortId:data.shortId,gameId:short.gameId as string,kind:'comment',sourceId:id,identity:visitorHash,at:now,now,active:true}):()=>{}
     applyRanking()
-    if (verdict.status === 'approved') tx.set('shorts/' + data.shortId, {...short, ...changeCommentCount(short.commentCount, 1), hasPublishedComments: true})
+    if (verdict.status === 'approved') tx.set('shorts/' + data.shortId, {...short, ...changeCommentCount(short.commentCount, 1), hasPublishedComments: true, lastCommentNumber: publicationNumber})
     tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now,
-      moderationStatus: verdict.status, reviewVersion: 0 })
+      ...(publicationNumber!==undefined?{publicationNumber}:{}), moderationStatus: verdict.status, reviewVersion: 0 })
     // Ownership, request fingerprints and triage flags never enter public comment documents.
     tx.create('commentRequests/' + id, { visitorHash, payloadHash, flags: verdict.flags, createdAt: now })
     tx.set('commentDedup/' + fingerprint, { commentId: id, createdAt: now })
