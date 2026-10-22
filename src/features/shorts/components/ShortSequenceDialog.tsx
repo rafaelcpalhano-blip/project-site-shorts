@@ -7,7 +7,7 @@ import type {Direction} from '../services/sequence-navigation'
 import type {Short} from '../types/models'
 import {FirestoreShortContent} from './FirestoreShortDialog'
 import styles from './ShortSequenceDialog.module.css'
-export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,onModerated}:{short:Short;items:Short[];onNavigate:(short:Short)=>void;onClose:()=>void;onLikeCount:(id:string,count:number)=>void;onModerated:()=>void}){
+export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,onCommentCount,onModerated}:{short:Short;items:Short[];onNavigate:(short:Short)=>void;onClose:()=>void;onLikeCount:(id:string,count:number)=>void;onCommentCount?:(id:string,count:number)=>void;onModerated:()=>void}){
  const [busy,setBusy]=useState(false),[pending,setPending]=useState<Direction|null>(null),[transition,setTransition]=useState<{direction:Direction;previous:Short}|null>(null)
  const content=useRef<HTMLDivElement>(null),controls=useRef<HTMLElement>(null),cancel=useRef<HTMLButtonElement>(null),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),moving=useRef(false)
  const busyNow=useRef(false)
@@ -48,7 +48,7 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
  <div className={styles.stage}>
  {transition&&<div aria-hidden="true" className={transition.direction===1?styles.outLeft:styles.outRight}>{ghost&&<img src={ghost.url} alt="" referrerPolicy="no-referrer" onError={event=>{event.currentTarget.hidden=true}}/>}<p>{transition.previous.title}</p></div>}
  <div ref={content} key={short.id} tabIndex={-1} className={transition?(transition.direction===1?styles.inRight:styles.inLeft):undefined}>
- <FirestoreShortContent short={short} onLikeCount={onLikeCount} onModerated={onModerated} onBusyChange={reportBusy}/>
+ <FirestoreShortContent short={short} onLikeCount={onLikeCount} onCommentCount={onCommentCount} onModerated={onModerated} onBusyChange={reportBusy}/>
  </div>
  </div>
  <p className="muted">A sequência usa somente os vídeos desta página, na ordem e no filtro atuais.</p>

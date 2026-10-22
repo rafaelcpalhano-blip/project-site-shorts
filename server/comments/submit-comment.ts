@@ -1,3 +1,4 @@
+import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
 import { validateCommentSubmission } from '../../src/lib/validation/comment-input.ts'
@@ -46,7 +47,7 @@ export async function submitComment(input: unknown, visitorHash: string, options
       !!tx.hasPublishedComment && !await tx.hasPublishedComment(data.shortId)
     const applyRanking=verdict.status==='approved'?await prepareEngagement(tx,{shortId:data.shortId,gameId:short.gameId as string,kind:'comment',sourceId:id,identity:visitorHash,at:now,now,active:true}):()=>{}
     applyRanking()
-    if (verdict.status === 'approved' && short.hasPublishedComments !== true) tx.set('shorts/' + data.shortId, {...short, hasPublishedComments: true})
+    if (verdict.status === 'approved') tx.set('shorts/' + data.shortId, {...short, ...changeCommentCount(short.commentCount, 1), hasPublishedComments: true})
     tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now,
       moderationStatus: verdict.status, reviewVersion: 0 })
     // Ownership, request fingerprints and triage flags never enter public comment documents.

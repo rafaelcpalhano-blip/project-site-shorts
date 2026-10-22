@@ -1,3 +1,4 @@
+import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
 import { shortGameVisible } from '../games/visibility.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
@@ -40,7 +41,7 @@ export async function reviewComment(input: ReturnType<typeof parseCommentReview>
       if(short&&typeof short.gameId==='string')applyRanking=await prepareEngagement(tx,{shortId:String(comment.shortId),gameId:short.gameId,kind:'comment',sourceId:input.commentId,identity:typeof owner?.visitorHash==='string'?owner.visitorHash:undefined,at:comment.createdAt as Date,now,active:next==='approved'})
     }
     applyRanking()
-    if (next === 'approved' && short && short.hasPublishedComments !== true) tx.set('shorts/' + String(comment.shortId), {...short, hasPublishedComments: true})
+    if (short && (next === 'approved' || status === 'approved')) tx.set('shorts/' + String(comment.shortId), {...short, ...changeCommentCount(short.commentCount, next === 'approved' ? 1 : -1), ...(next === 'approved' ? {hasPublishedComments: true} : {})})
     tx.set(path,{...comment,moderationStatus:next,reviewVersion:revision+1})
     tx.create('moderationLogs/' + crypto.randomUUID(),{contentType:'comment',contentId:input.commentId,
       action:input.action,reason:input.reason,previousStatus:status,resultingStatus:next,

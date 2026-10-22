@@ -73,3 +73,13 @@ test('cliente rejeita resposta e cursor incompatíveis, não repete falha automa
  const forged=createPublicReadClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({items:[],next:{id:'s000',time:now().toISOString(),scope:'shorts:other'},limited:false,candidatesRead:0,candidatesExamined:0}))
  await assert.rejects(forged.listShorts(),/invalid-input/)
 })
+
+
+test('total de comentários vem do short sem consultas de contagem por card e não é o tamanho da página',async()=>{
+ const source=row(0);source.data.commentCount=25
+ const {store,stats}=memory([source])
+ const feed=await readFeed({},store);assert.equal(feed.items[0].commentCount,25);assert.equal(stats.candidates,1)
+ const detail=await readComments({shortId:'s000'},store);assert.equal(detail.total,25);assert.equal(detail.items.length,0)
+ source.data.commentCount=-1
+ const invalid=memory([source]);await assert.rejects(readFeed({},invalid.store),/invalid-comment-count/)
+})

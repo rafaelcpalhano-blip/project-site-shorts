@@ -1,5 +1,17 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.6-A — segurança local concluída (22/10/2026)
+
+Identidade anônima preservada entre reinícios por segredos privados em .env.security.local. Proteção HMAC por rede/dia/finalidade, limites de sessões/tentativas e contribuições aceitas transacionais; IPv6 /64, sem IP bruto/fingerprinting. Cinco publicações por identidade, desfazer/recurtir, duplicatas e restauração preservados. Retenção local limitada e índices mínimos; não ativado Turnstile nem infraestrutura remota. Uma pessoa única não é comprovada; limites por rede exigem calibração antes da produção.
+60 testes relacionados e lint/build aprovados; smoke HTTPS: sessão/feed disponíveis, administração sem token 401, segredos não baixáveis (403). Confirmada allowlist somente do UID previamente aprovado; testes negativos cobrem todas as 12 rotas. Primeira troca renova cookies do runner antigo; arquivo de segredos deve ser preservado. Oito shorts existentes mantidos; nenhum conteúdo enviado pelo agente. [Detalhes, limites, custos e testes](etapa-7-6-6-a.md).
+Refinamento anterior de cards ainda não commitado, com arquivos compartilhados: preferir commit conjunto ou separar hunks revisados. Próximo bloco 7.6.6-B aguarda autorização individual; Etapas 8/9 não iniciadas.
+
+
+## Refinamento dos cards — 22/10/2026
+
+Comentários ao lado das curtidas com total público persistido; Ver jogo maior/centralizado; capa de borda a borda e zoom de intensidade triplicada, respeitando movimento reduzido. Contagem transacional em envio/revisão, sem consulta por card. Preparado 1 contador legado no emulador; ausência de campo não é apresentada como zero. API reiniciada; Google/TOTP pode exigir nova sessão. 39 testes relacionados, lint/build aprovados. [Detalhes, custos e limites](refinamento-cards.md). Sem deploy ou nova etapa iniciada.
+
+
 ## Etapa 7.6.5-E — rodada técnica concluída; pausa solicitada (22/10/2026)
 
 Integração conferida: rascunhos de comentário/denúncia, sequência, filtro/ordem + ficha, numeração, ausência de comemoração ao reabrir, player oficial único/limpeza, formulário e layout estreito. Corrigida omissão de summary no ciclo de foco do Modal, reproduzida antes e validada depois. Três testes localizados e lint/build aprovados; suítes anteriores reaproveitadas.

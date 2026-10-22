@@ -17,3 +17,11 @@ test('primeiro render não monta players extras e mantém visitante sem ferramen
 test('miniaturas ausentes, expiradas ou inválidas usam fallback; metadado válido mantém imagem oficial',()=>{
  const short=items[0],now=Date.now(),valid={url:'https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg',obtainedAt:now,expiresAt:now+60000};for(const thumbnail of [undefined,{...valid,expiresAt:now-1},{...valid,url:'https://evil.test/p.jpg'}]){const html=renderToStaticMarkup(h(MemoryRouter,null,h(Card,{short:{...short,thumbnail},onOpen:()=>{}})));assert.ok(html.includes('Miniatura indisponível'));assert.ok(!html.includes('<img'))}const html=renderToStaticMarkup(h(MemoryRouter,null,h(Card,{short:{...short,thumbnail:valid},onOpen:()=>{}})));assert.ok(html.includes('src="'+valid.url+'"'));assert.ok(html.includes('loading="lazy"'));assert.ok(!html.includes('<iframe'))
 })
+
+
+test('card agrupa total de comentários publicados ao lado das curtidas sem montar player',()=>{
+ const html=renderToStaticMarkup(h(MemoryRouter,null,h(Card,{short:{...items[0],likeCount:4,commentCount:12},onOpen:()=>{}})))
+ assert.match(html,/4 curtidas no Clipzone/);assert.match(html,/12 comentários publicados/);assert.match(html,/Comentários <span>12<\/span>/);assert.ok(html.indexOf('4 curtidas')<html.indexOf('12 comentários'));assert.ok(html.includes('Ver jogo'));assert.ok(!html.includes('<iframe'))
+ const legacy=renderToStaticMarkup(h(MemoryRouter,null,h(Card,{short:items[0],onOpen:()=>{}})))
+ assert.ok(legacy.includes('total indisponível'));assert.ok(!legacy.includes('0 comentários publicados'))
+})

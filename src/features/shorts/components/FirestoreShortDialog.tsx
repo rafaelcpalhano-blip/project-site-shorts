@@ -14,7 +14,7 @@ import type { Short } from '../types/models'
 import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
-export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyChange }: { short: Short; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
+export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onModerated, onBusyChange }: { short: Short; onCommentCount?:(id:string,count:number)=>void; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
   const admin=useAdminSession()
   const [selectingComments,setSelectingComments]=useState(false)
   const commentHeading=useRef<HTMLHeadingElement>(null)
@@ -40,10 +40,11 @@ export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyC
     repository.listComments(short.id, cursor, controller.signal).then(page => {
       if (!active) return
       if(firstPublication.current){if(page.items.some(item=>item.id===firstPublication.current))setCelebration(firstPublication.current);firstPublication.current=null}
+      if(page.total!==undefined)onCommentCount?.(short.id,page.total)
       setAvailable(true); setComments(page.items); setNext(page.next); setLoading(false)
     }).catch(() => { if (active) { setAvailable(false); setError('Não foi possível carregar os comentários. Tente novamente.'); setLoading(false) } })
     return () => { active = false; controller.abort() }
-  }, [short.id, cursor, attempt])
+  }, [short.id, cursor, attempt, onCommentCount])
   useLayoutEffect(()=>{onBusyChange(reporting||commenting||liking||adminBusy||selectingComments);return()=>onBusyChange(false)},[onBusyChange,reporting,commenting,liking,adminBusy,selectingComments])
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} />
@@ -54,7 +55,7 @@ export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyC
     <h3 ref={commentHeading} tabIndex={-1}>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>
       <button disabled={adminBusy||selectingComments} onClick={() => { setError(''); setLoading(true); setAttempt(value => value + 1) }}>Tentar novamente</button></div>
-      : <CommentSelectionModeration key={short.id+attempt+(admin.user?.uid??'visitor')} shortId={short.id} comments={comments} offset={offset} disabled={liking||reporting||commenting||adminBusy} onSelectionChange={setSelectingComments} onBusyChange={adminBusyChange} onRemoved={ids=>{setComments(current=>current.filter(item=>!ids.includes(item.id)));if(comments.every(item=>ids.includes(item.id)))commentHeading.current?.focus()}} />}
+      : <CommentSelectionModeration key={short.id+attempt+(admin.user?.uid??'visitor')} shortId={short.id} comments={comments} offset={offset} disabled={liking||reporting||commenting||adminBusy} onSelectionChange={setSelectingComments} onBusyChange={adminBusyChange} onRemoved={ids=>{if(short.commentCount!==undefined&&short.commentCount>=ids.length)onCommentCount?.(short.id,short.commentCount-ids.length);setComments(current=>current.filter(item=>!ids.includes(item.id)));if(comments.every(item=>ids.includes(item.id)))commentHeading.current?.focus()}} />}
     {!loading && !error && next && <button disabled={adminBusy||selectingComments} onClick={() => { setOffset(value=>value+comments.length); setLoading(true); setCursor(next) }}>Próximos comentários →</button>}
     <button disabled={loading || commenting || adminBusy || selectingComments} onClick={() => { setOffset(0); setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Atualizar comentários</button>
     {available && <PersistentCommentForm key={'comment-form:'+short.id} shortId={short.id} disabled={reporting || adminBusy || selectingComments} onBusyChange={setCommenting}

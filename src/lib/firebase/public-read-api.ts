@@ -5,7 +5,7 @@ import type { PublicCursor } from '../validation/public-read.ts'
 export type { PublicCursor }
 export interface PublicShort extends Short { gameName: string; likeCount:number }
 export interface PublicComment { id:string;content:string;createdAt:number }
-export interface ReadPage<T> { items:T[];next:PublicCursor|null;limited?:boolean }
+export interface ReadPage<T> { items:T[];next:PublicCursor|null;limited?:boolean;total?:number }
 export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  async function call(path:string,input:unknown,signal?:AbortSignal) {
   const deadline=AbortSignal.timeout(20000),combined=signal?AbortSignal.any([signal,deadline]):deadline
@@ -19,7 +19,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  }
  function checkShort(value:unknown):PublicShort {
   const row=value as PublicShort
-  if(!row||typeof row!=='object'||typeof row.title!=='string'||typeof row.gameName!=='string'||!Number.isSafeInteger(row.likeCount)||row.likeCount<0||typeof row.url!=='string'||typeof row.channelName!=='string'||typeof row.identity!=='string'||!['YouTube','TikTok','Twitch'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.')
+  if(!row||typeof row!=='object'||typeof row.title!=='string'||typeof row.gameName!=='string'||!Number.isSafeInteger(row.likeCount)||row.likeCount<0||row.commentCount!==undefined&&(!Number.isSafeInteger(row.commentCount)||row.commentCount<0)||typeof row.url!=='string'||typeof row.channelName!=='string'||typeof row.identity!=='string'||!['YouTube','TikTok','Twitch'].includes(row.platform)||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.')
   publicId(row.id);publicId(row.gameId);const {thumbnail,...rest}=row;const image=validThumbnail(thumbnail,row.platform,row.identity);return {...rest,...(image?{thumbnail:image}:{})}
  }
  return {
@@ -35,10 +35,11 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
   async listComments(shortId:string,cursor?:PublicCursor,signal?:AbortSignal):Promise<ReadPage<PublicComment>> {
    publicId(shortId);const scope='comments:'+shortId;publicCursor(cursor,scope)
    const data=await call('/api/comments/list',{shortId,...(cursor?{cursor}:{})},signal)
+   if(data?.total!==undefined&&(!Number.isSafeInteger(data.total)||data.total<0))throw new Error('Resposta inválida.')
    if(!Array.isArray(data?.items)||data.items.length>20||!Object.hasOwn(data,'next'))throw new Error('Resposta inválida.')
    const items=data.items.map((row:PublicComment)=>{publicId(row?.id);if(typeof row.content!=='string'||row.content.length>500||!Number.isSafeInteger(row.createdAt)||row.createdAt<0)throw new Error('Resposta inválida.');return row})
    const next=data.next===null?null:publicCursor(data.next,scope);if(next===undefined)throw new Error('Resposta inválida.')
-   return {items,next}
+   return {items,next,...(data.total!==undefined?{total:data.total}:{})}
   },
   async getShort(shortId:string):Promise<PublicShort> { publicId(shortId);return checkShort(await call('/api/shorts/detail',{shortId})) },
  }

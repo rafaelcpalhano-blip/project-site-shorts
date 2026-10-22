@@ -40,6 +40,10 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     setPage(current=>updatePageLikeCount(current,id,count))
     setSelected(current=>current?updateItemLikeCount(current,id,count):current)
   },[])
+  const updateCommentCount=useCallback((id:string,count:number)=>{
+    setPage(current=>current.items.some(item=>item.id===id&&item.commentCount!==count)?{...current,items:current.items.map(item=>item.id===id?{...item,commentCount:count}:item)}:current)
+    setSelected(current=>current?.id===id&&current.commentCount!==count?{...current,commentCount:count}:current)
+  },[])
   const selectedGame = gameId || filter
   const cursor = cursors[index]
   useEffect(() => {
@@ -115,7 +119,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    {selected && <ShortSequenceDialog short={selected} items={page.items} onNavigate={setSelected} onLikeCount={updateLikeCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
+    {selected && <ShortSequenceDialog short={selected} items={page.items} onNavigate={setSelected} onLikeCount={updateLikeCount} onCommentCount={updateCommentCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
   </>
 }
 

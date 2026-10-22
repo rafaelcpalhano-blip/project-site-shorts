@@ -21,7 +21,7 @@ before(async()=>{
 after(async()=>{await environment?.cleanup()})
 async function seed(){
  await environment.clearFirestore()
- await store.transact(async tx=>{tx.set('games/portal',{officialName:'Portal',status:'active'});tx.set('shorts/'+shortId,{gameId:'portal',platform:'Twitch',platformVideoId:'CommentClip',normalizedUrl:'https://clips.twitch.tv/CommentClip',title:'Jogada',moderationStatus:'published',createdAt:now()})})
+ await store.transact(async tx=>{tx.set('games/portal',{officialName:'Portal',status:'active'});tx.set('shorts/'+shortId,{gameId:'portal',platform:'Twitch',platformVideoId:'CommentClip',normalizedUrl:'https://clips.twitch.tv/CommentClip',title:'Jogada',moderationStatus:'published',commentCount:0,createdAt:now()})})
  return environment.unauthenticatedContext().firestore()
 }
 const read=path=>store.transact(tx=>tx.get(path))
@@ -33,6 +33,8 @@ test('REST concurrent retries create exactly one comment/audit and protect priva
  const results=await Promise.all([submitComment(data,visitor,options),submitComment(data,visitor,options),submitComment(data,visitor,options)])
  assert.equal(new Set(results.map(item=>item.id)).size,1)
  assert.equal(results.filter(item=>item.repeated).length,2)
+ assert.equal((await read('shorts/'+shortId)).commentCount,1)
+ assert.equal((await readComments({shortId},store)).total,1)
  const id=results[0].id
  await assertFails(getDoc(doc(db,'comments',id)))
  const publicComment=(await readComments({shortId},store)).items[0]
@@ -54,12 +56,16 @@ test('pending stays private; approval, removal, restoration and parent removal c
  const {id}=await submitComment(input({content:'caralho'}),visitor,options)
  await assertFails(getDoc(doc(db,'comments',id)))
  assert.equal((await readComments({shortId},store)).items.length,0)
+ assert.equal((await read('shorts/'+shortId)).commentCount,0)
  assert.equal((await loadCommentQueue({status:'pending'},store)).items[0].id,id)
  await reviewComment(review(id),'owner',options)
+ assert.equal((await read('shorts/'+shortId)).commentCount,1)
  assert.equal((await readComments({shortId},store)).items[0].id,id)
  await reviewComment(review(id,{action:'remove',revision:1}),'owner',options)
+ assert.equal((await read('shorts/'+shortId)).commentCount,0)
  await assertFails(getDoc(doc(db,'comments',id)))
  await reviewComment(review(id,{action:'restore',revision:2}),'owner',options)
+ assert.equal((await read('shorts/'+shortId)).commentCount,1)
  assert.equal((await readComments({shortId},store)).items[0].id,id)
  await store.transact(async tx=>{
   const short=await tx.get('shorts/'+shortId);tx.set('shorts/'+shortId,{...short,moderationStatus:'removed'})

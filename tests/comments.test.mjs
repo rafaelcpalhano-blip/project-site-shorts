@@ -12,7 +12,7 @@ const origin='https://clipzone.test',shortId='a'.repeat(64),visitor='b'.repeat(6
 const now=()=>new Date('2026-10-21T12:00:00Z')
 const input=(patch={})=>({shortId,content:'Boa jogada!',requestId:crypto.randomUUID(),...patch})
 function memory(){
- const records=new Map([['games/portal',{status:'active',officialName:'Portal'}],['shorts/'+shortId,{gameId:'portal',moderationStatus:'published',title:'Jogada'}]])
+ const records=new Map([['games/portal',{status:'active',officialName:'Portal'}],['shorts/'+shortId,{gameId:'portal',moderationStatus:'published',title:'Jogada',commentCount:0}]])
  let tail=Promise.resolve()
  const store={transact(work){
   const result=tail.then(async()=>{
@@ -242,4 +242,29 @@ test('client rejects impossible first-publication flags',async()=>{
   const send=createCommentClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({id:'a'.repeat(64),...payload},{status:payload.repeated?200:payload.status==='approved'?201:202}))
   await assert.rejects(send(input()),/Resposta inesperada/)
  }
+})
+
+
+test('total público conta apenas aprovados, é idempotente e acompanha revisão/restauração',async()=>{
+ const {store,records}=memory(),options={store,now},normal=input()
+ const [first,replay]=await Promise.all([submitComment(normal,visitor,options),submitComment(normal,visitor,options)])
+ const total=()=>records.get('shorts/'+shortId).commentCount
+ assert.equal(first.id,replay.id);assert.equal(total(),1)
+ const pending=await submitComment(input({content:'caralho'}),visitor,options)
+ assert.equal(total(),1)
+ await reviewComment(review(pending.id),'owner',options);assert.equal(total(),2)
+ await reviewComment(review(pending.id,{action:'remove',revision:1}),'owner',options);assert.equal(total(),1)
+ await assert.rejects(reviewComment(review(pending.id,{action:'remove',revision:1}),'owner',options));assert.equal(total(),1)
+ await reviewComment(review(pending.id,{action:'restore',revision:2}),'owner',options);assert.equal(total(),2)
+ const rejected=await submitComment(input({content:'porra'}),visitor,options)
+ await reviewComment(review(rejected.id,{action:'reject'}),'owner',options);assert.equal(total(),2)
+ records.get('shorts/'+shortId).commentCount=0
+ await assert.rejects(reviewComment(review(first.id,{action:'remove'}),'owner',options));assert.equal(total(),0)
+ assert.equal(records.get('comments/'+first.id).moderationStatus,'approved')
+})
+
+test('legado sem contador não inventa total zero ao receber comentário',async()=>{
+ const {store,records}=memory();delete records.get('shorts/'+shortId).commentCount
+ await submitComment(input(),visitor,{store,now})
+ assert.equal(records.get('shorts/'+shortId).commentCount,undefined)
 })

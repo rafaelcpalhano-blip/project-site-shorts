@@ -1,3 +1,4 @@
+import { publicCommentCount } from '../comments/comment-count.ts'
 import { readThumbnail } from '../videos/thumbnail.ts'
 import { likeCount } from '../likes/short-likes.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
@@ -15,7 +16,7 @@ export function publicShort(id: string, data: RecordData, game: RecordData) {
   const url=text(data,'normalizedUrl',2048), parsed=parseVideoUrl(url)
   if(parsed.platform!==data.platform || parsed.identity!==data.platform+':'+data.platformVideoId)throw new Error('invalid-record')
   const thumbnail=readThumbnail(data.thumbnail,parsed.platform,parsed.identity)
-  return {id,...(thumbnail?{thumbnail}:{}),likeCount:likeCount(data.likeCount),identity:parsed.identity,url,platform:parsed.platform,title:text(data,'title',500),channelName:typeof data.channelName==='string'?data.channelName:'',gameId:publicId(data.gameId),gameName:text(game,'officialName',500),createdAt:date(data).getTime()}
+  return {id,...(thumbnail?{thumbnail}:{}),likeCount:likeCount(data.likeCount),...(data.commentCount!==undefined?{commentCount:publicCommentCount(data.commentCount)}:{}),identity:parsed.identity,url,platform:parsed.platform,title:text(data,'title',500),channelName:typeof data.channelName==='string'?data.channelName:'',gameId:publicId(data.gameId),gameName:text(game,'officialName',500),createdAt:date(data).getTime()}
 }
 function reader(store: AtomicStore) { if(!store.get||!store.publicPage)throw new Error('public-read-unavailable');return {get:store.get,page:store.publicPage} }
 export async function readFeed(value: unknown, store: AtomicStore) {
@@ -55,10 +56,10 @@ export async function readPublicShort(value: unknown, store: AtomicStore) {
 }
 export async function readComments(value: unknown, store: AtomicStore) {
   const data=input(value,['shortId','cursor']),shortId=id(data.shortId),scope='comments:'+shortId,after=cursor(data.cursor,scope)
-  await readPublicShort({shortId},store)
+  const short = await readPublicShort({shortId},store)
   const rows=await reader(store).page({kind:'comments',parentId:shortId,cursor:after,limit:21})
   if(rows.length>21)throw new Error('invalid-page')
   const items=rows.slice(0,20).map(row=>{if(row.data.shortId!==shortId||row.data.moderationStatus!=='approved')throw new Error('invalid-comment');return {id:publicId(row.id),content:text(row.data,'content',500),createdAt:date(row.data).getTime()}})
   const last=items.at(-1)
-  return {items,next:rows.length>20&&last?{id:last.id,time:new Date(last.createdAt).toISOString(),scope}:null}
+  return {items,...(short.commentCount!==undefined?{total:short.commentCount}:{}),next:rows.length>20&&last?{id:last.id,time:new Date(last.createdAt).toISOString(),scope}:null}
 }

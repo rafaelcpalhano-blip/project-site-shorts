@@ -7,10 +7,11 @@ import { validateSubmissionInput, validateVideoTitle } from '../../src/lib/valid
 import { saoPauloDayKey } from '../../src/lib/validation/day-key.ts'
 import { decidePublication } from './decision.ts'
 import type { VideoEvidence } from './decision.ts'
-import type { AtomicStore } from '../firestore/atomic-store.ts'
+import type { AtomicStore, AtomicTransaction } from '../firestore/atomic-store.ts'
 type Submission = ReturnType<typeof validateSubmissionInput>
 export interface SubmissionDependencies {
   store: AtomicStore
+  prepareNetworkPublication?: (tx: AtomicTransaction) => Promise<() => void>
   // Both implementations must be trusted server services, never client-supplied verdicts.
   checkAbuse: (visitorHash: string) => Promise<void>
   verify: (submission: Submission) => Promise<VideoEvidence>
@@ -57,6 +58,8 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     if (title.length > 500) throw new SubmissionError('invalid-metadata')
     const thumbnail=createThumbnail(evidence.thumbnailUrl,submission.platform,submission.identity,now)
     const ranking=await transaction.get('rankingState/metrics')
+    const applyNetwork=decision.status==='published'&&dependencies.prepareNetworkPublication?await dependencies.prepareNetworkPublication(transaction):()=>{}
+    applyNetwork()
     transaction.create('videoIdentities/' + identityId, { shortId: identityId, identity: submission.identity, createdAt: now })
     transaction.create('shorts/' + identityId, {
       originalUrl: submission.originalUrl, normalizedUrl: submission.url,
@@ -64,7 +67,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
       ...(TITLE_SEARCH_ENABLED ? titleSearchFields(title) : {}),
       ...(thumbnail?{thumbnail}:{}),
       title, originalTitle, channelName: submission.channelName, gameId: submission.gameId,
-      createdAt: now, moderationStatus: decision.status, likeCount: 0,
+      createdAt: now, moderationStatus: decision.status, likeCount: 0, commentCount: 0,
     })
     if(ranking?.ready===true&&typeof ranking.epoch==='string')transaction.create('rankingMetrics/'+identityId,emptyRankingMetric(identityId,submission.gameId,now,ranking.epoch))
     // Private ownership supports later quota accounting on approval; never in public short documents.

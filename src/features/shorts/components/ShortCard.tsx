@@ -29,8 +29,10 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
       <h3><button type="button" className={styles.title} onClick={onOpen}>{short.title}</button></h3>
       <p className={styles.channel}>{short.channelName || 'Canal não informado'}</p>
       <p className={styles.time}><time dateTime={dateTime}>{relativeTime(short.createdAt,now)}</time></p>
-      {short.likeCount!==undefined&&<p aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</p>}
-      <button className={styles.comments} type="button" onClick={onOpen}>Comentários{count !== undefined ? ' (' + count + ')' : ''}</button>
+      <div className={styles.engagement}>
+        {short.likeCount!==undefined&&<span aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</span>}
+        <button className={styles.comments} type="button" onClick={onOpen} aria-label={(count ?? short.commentCount) === undefined ? 'Abrir comentários; total indisponível' : (count ?? short.commentCount)+' comentários publicados'}>Comentários <span>{count ?? short.commentCount ?? '—'}</span></button>
+      </div>
       <Link className={styles.gameLink} to={'/jogos/' + game.id}>Ver jogo</Link>
     </div>
   </article>

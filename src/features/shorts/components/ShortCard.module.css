@@ -1,4 +1,4 @@
-.card { min-width: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
+.card { min-width: 0; overflow: visible; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
 .preview { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: start; width: 100%; min-height: 212px; padding: 12px; border: 0; border-radius: 0; overflow: hidden; background: linear-gradient(150deg, #30263f, #1c1d25); text-align: left; }
 .preview::before { content: ''; position: absolute; z-index: -1; inset: 58px -35px 55px 16px; border-radius: 25px; transform: rotate(-35deg); background: linear-gradient(110deg, #3d3053, #5b4779); opacity: .8; }
 .platform { background: #16171d; border-radius: 4px; padding: 3px 7px; font-size: .65rem; }
@@ -13,18 +13,22 @@
 .gameLink { display: block; margin-top: 7px; font-size: .7rem; color: var(--color-muted); }
 
 
-.preview:has(.artwork) { display: grid; grid-template-rows: auto minmax(96px, 1fr) auto; gap: 6px; }
-.preview:has(.artwork) .platform { justify-self: start; }
-.artwork { position: relative; display: block; width: 100%; min-height: 96px; }
-.artwork img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transform: scale(.96); transition: opacity 200ms ease, transform 220ms ease; }
+.preview:has(.artwork) { display: flex; min-height: 0; gap: 10px; padding: 0 0 12px; overflow: visible; border-radius: 13px 13px 0 0; }
+.preview:has(.artwork) .platform { position: absolute; top: 12px; left: 12px; z-index: 2; }
+.artwork { position: relative; display: block; width: 100%; min-height: 0; min-width: 0; aspect-ratio: 16 / 9; }
+.artwork img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 13px 13px 0 0; opacity: 0; transform: scale(1); transition: opacity 200ms ease, transform 220ms ease; }
 .artwork img.loaded { opacity: 1; }
-.preview:has(.artwork) .game { margin: 0; font-size: .85rem; }
+.preview:has(.artwork) .game { margin: 0 12px; font-size: .85rem; }
 .preview:has(.artwork) .caption { margin: 0; }
 .preview:has(.artwork)::before { display: none; }
-@media (hover: hover) and (pointer: fine) { .preview:hover .artwork img { transform: scale(1); } }
+@media (hover: hover) and (pointer: fine) { .card:has(.preview:hover) { position: relative; z-index: 3; } .preview:hover .artwork { z-index: 4; } .preview:hover .artwork img { transform: scale(1.12); } }
 @media (prefers-reduced-motion: reduce) { .artwork img { transition: none; transform: none; } .preview:hover .artwork img { transform: none; } }
 
 .channel { margin-bottom: 2px; overflow-wrap: anywhere; }
 .time { margin-top: 0; }
 .preview:focus-visible { outline-offset: -4px; }
 .comments, .gameLink { min-height: 44px; display: flex; align-items: center; }
+
+.engagement { display: flex; align-items: center; flex-wrap: wrap; column-gap: 12px; color: var(--color-muted); font-size: .75rem; }
+.comments { gap: 4px; font-size: .75rem; }
+.gameLink { justify-content: center; width: fit-content; max-width: 100%; margin: 8px auto 0; font-size: .85rem; }
