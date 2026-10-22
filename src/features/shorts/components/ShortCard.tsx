@@ -23,13 +23,14 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
       <span className={styles.platform}>{short.platform}</span>
       {image?<span className={styles.artwork}><img className={loadedImage===image?styles.loaded:undefined} src={image} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onLoad={()=>setLoadedImage(image)} onError={()=>setFailedImage(image)} /></span>:<span className={styles.play} aria-hidden="true">▶</span>}
       <span className={styles.game}>{game.name}</span>
-      <span className={styles.caption}>{image?'Abrir vídeo':short.url?'Miniatura indisponível':'Prévia ilustrativa'}</span>
+      {!image&&<span className={styles.caption}>{short.url?'Miniatura indisponível':'Prévia ilustrativa'}</span>}
     </button>
     <div className={styles.body}>
       <h3><button type="button" className={styles.title} onClick={onOpen}>{short.title}</button></h3>
-      <p>{short.channelName || 'Canal não informado'} · <time dateTime={dateTime}>{relativeTime(short.createdAt,now)}</time></p>
-      <button className={styles.comments} type="button" onClick={onOpen}>Comentários{count !== undefined ? ' (' + count + ')' : ''}</button>
+      <p className={styles.channel}>{short.channelName || 'Canal não informado'}</p>
+      <p className={styles.time}><time dateTime={dateTime}>{relativeTime(short.createdAt,now)}</time></p>
       {short.likeCount!==undefined&&<p aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</p>}
+      <button className={styles.comments} type="button" onClick={onOpen}>Comentários{count !== undefined ? ' (' + count + ')' : ''}</button>
       <Link className={styles.gameLink} to={'/jogos/' + game.id}>Ver jogo</Link>
     </div>
   </article>

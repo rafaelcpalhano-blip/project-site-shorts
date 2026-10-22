@@ -10,6 +10,7 @@ import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
 import type { PublicCursor, PublicComment } from '../../../lib/firebase/public-repository'
 import type { Short } from '../types/models'
+import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
 export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyChange }: { short: Short; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
@@ -41,10 +42,10 @@ export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyC
   useLayoutEffect(()=>{onBusyChange(reporting||commenting||liking||adminBusy||selectingComments);return()=>onBusyChange(false)},[onBusyChange,reporting,commenting,liking,adminBusy,selectingComments])
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} />
-    {available && <fieldset className={styles.interactions} data-short-interactions aria-label="Interações com o short" disabled={adminBusy||selectingComments}>
-    <LikeButton key={'like:'+short.id} shortId={short.id} onCountChange={onLikeCount} onBusyChange={setLiking} />
-    <ReportForm key={'report:'+short.id} shortId={short.id} onBusyChange={setReporting} />
-    </fieldset>}
+    <div className={styles.interactions} data-short-interactions>
+      <VideoSourceLink short={short} />
+      {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
+    </div>
     <h3 ref={commentHeading} tabIndex={-1}>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>
       <button disabled={adminBusy||selectingComments} onClick={() => { setError(''); setLoading(true); setAttempt(value => value + 1) }}>Tentar novamente</button></div>
@@ -53,6 +54,11 @@ export function FirestoreShortContent({ short, onLikeCount, onModerated, onBusyC
     <button disabled={loading || commenting || adminBusy || selectingComments} onClick={() => { setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Atualizar comentários</button>
     {available && <PersistentCommentForm key={'comment-form:'+short.id} shortId={short.id} disabled={reporting || adminBusy || selectingComments} onBusyChange={setCommenting}
       onPublished={() => { setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }} />}
+    <div className={styles.information} data-short-interactions>
+      <PlayerInformation short={short} />
+      {available && <details><summary>Sobre as curtidas do Clipzone</summary><p className="muted">Sua escolha fica vinculada à sessão deste navegador, sem cadastro obrigatório. Limpar cookies ou expirar a sessão perde esse vínculo.</p></details>}
+      {available && <ReportForm key={'report:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onBusyChange={setReporting} />}
+    </div>
     {available&&admin.user&&<InlineModeration key={admin.user.uid+short.id} kind="short" id={short.id} disabled={liking||reporting||commenting||adminBusy||selectingComments} onBusyChange={adminBusyChange} onCompleted={onModerated} />}
   </>
 }

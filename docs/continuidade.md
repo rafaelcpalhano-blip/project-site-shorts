@@ -1,5 +1,12 @@
 # Continuidade da aplicação — checkpoint
 
+## Etapa 7.6.5-B concluída — 22/10/2026
+
+Cards reorganizados: canal e horário separados, curtidas antes de comentários, sem legenda Abrir vídeo. Visualizador com fonte/curtida na mesma faixa, avisos expansíveis e denúncia após formulário, ações administrativas no final. Desabilitação explícita preserva proteção antes herdada do fieldset. Sem novas consultas, regras ou serviços.
+Sete testes relacionados, lint/build aprovados. Conferência local de denúncia sem envio, aviso, foco, limpeza de iframe e tela estreita sem overflow. Detalhes e limites em [etapa-7-6-5-b.md](etapa-7-6-5-b.md).
+Próxima: 7.6.5-C, aguardando autorização individual. C/D/E não implementadas; checkpoints abaixo são históricos.
+
+
 ## Etapa 7.6.5-A concluída — 22/10/2026
 
 Diagnóstico amostral e correções comprovadas: listComments aceita cancelamento na saída/troca; confirmação de contagem de curtida igual não recria feed/seleção; fechar modal mínimo 44x44. Medição em desenvolvimento: consultas de comentários 2→1; atualização redundante dos dez cards 10→0 (separada do relógio de um minuto). Não afirmar ganho estatístico de tempo/CPU nem reproduzido/resolvido todo travamento relatado.

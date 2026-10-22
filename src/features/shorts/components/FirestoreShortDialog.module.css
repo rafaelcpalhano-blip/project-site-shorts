@@ -1,1 +1,6 @@
-.interactions { min-width: 0; border: 0; margin: 0; padding: 0; }
+.interactions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin: 12px 0 24px; }
+.interactions > a { display: inline-flex; align-items: center; min-height: 44px; }
+.interactions > div { margin-left: auto; }
+.information { display: grid; gap: 12px; margin-top: 24px; }
+.information summary { cursor: pointer; min-height: 44px; align-content: center; color: var(--color-muted); }
+.information > button { justify-self: start; }

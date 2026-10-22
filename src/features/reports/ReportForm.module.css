@@ -1,0 +1,2 @@
+.trigger { min-height: 44px; padding: 8px 0; border: 0; background: none; color: var(--color-muted); text-decoration: underline; text-underline-offset: 3px; }
+.trigger:hover:not(:disabled) { color: var(--color-accent); }

@@ -73,7 +73,5 @@ export function OfficialPlayer({ short }: { short: Short }) {
       <button onClick={() => playback.release(id)}>Encerrar player</button>
       <button onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>
     </div>}
-    {plan.source && <p><a href={plan.source} target="_blank" rel="noopener noreferrer">Assistir na plataforma ↗</a></p>}
-    {plan.src && <p className="muted">Ao abrir este vídeo, você se conecta a {plan.platform}. Reprodução, cookies e eventuais restrições são tratados pela plataforma. Vídeos privados, removidos ou restritos podem não estar disponíveis aqui.</p>}
   </section>
 }

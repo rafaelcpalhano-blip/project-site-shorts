@@ -1,3 +1,4 @@
+import { VideoSourceLink, PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 import { validateCommentInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
@@ -11,6 +12,7 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
   const comments = state.comments.filter(item => item.shortId === short.id && item.status === 'approved')
   return <Modal title={short.title} onClose={onClose}>
     <OfficialPlayer key={short.id} short={short} />
+    <p><VideoSourceLink short={short} /></p>
     <h3>Comentários ({comments.length})</h3>
     {comments.length ? comments.map(item => <p key={item.id}>{item.content}</p>) : <p className="muted">Nenhum comentário publicado. Compartilhe sua opinião sobre a jogada.</p>}
     <form className="form" onSubmit={event => {
@@ -29,6 +31,7 @@ export function ShortDialog({ short, onClose }: { short: Short; onClose: () => v
       <button className="primary" type="submit">Enviar comentário</button>
       <p role="status">{message}</p>
     </form>
+    <PlayerInformation short={short} />
   </Modal>
 }
 

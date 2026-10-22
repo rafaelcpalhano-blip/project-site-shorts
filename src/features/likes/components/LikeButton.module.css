@@ -1,0 +1,4 @@
+.likes { min-width: 0; text-align: right; }
+.likes button { min-height: 44px; }
+.likes button[aria-pressed="true"] { color: var(--color-accent); border-color: var(--color-accent); background: var(--color-surface); }
+.likes p { margin: 4px 0; font-size: .8rem; }
