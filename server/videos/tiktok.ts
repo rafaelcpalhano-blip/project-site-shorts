@@ -1,3 +1,4 @@
+import { validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
@@ -19,6 +20,7 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       if (result.embed_product_id !== undefined &&
           result.embed_product_id !== video.identity.slice('TikTok:'.length)) return evidence
       evidence.existence = 'confirmed'
+      try { const channel=validateChannelName(result.author_name); if(channel)evidence.channelName=channel } catch { /* Optional metadata never blocks verification. */ }
       evidence.formatPolicy = 'tiktok-platform-exception'
       // Captions can contain ordinary line breaks/tabs. Normalize presentation only;
       // preserve accents/emoji, reject remaining controls and never truncate the source title.

@@ -24,6 +24,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const [title, setTitle] = useState('')
   const [titleNotice, setTitleNotice] = useState('')
   const titleEdited = useRef(false)
+  const channelEdited = useRef(false)
   const [gameId, setGameId] = useState('')
   const [channelName, setChannelName] = useState('')
   const [games, setGames] = useState<Game[]>([])
@@ -74,11 +75,12 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         if (!active) return
         latestPreview.current={url,status:'success'}
         if(advanceUrl.current===url&&document.activeElement===urlField.current){advanceUrl.current=null;titleField.current?.focus()}
-        if (original === null) {
+        if (!channelEdited.current) setChannelName(original.channelName)
+        if (original.title === null) {
           setTitleNotice('O TikTok não forneceu um título utilizável. Informe-o manualmente; o vídeo será validado no envio.')
           return
         }
-        if (!titleEdited.current) setTitle(original)
+        if (!titleEdited.current) setTitle(original.title)
         setTitleNotice('Título original carregado. Você pode editar o título.')
       }).catch(() => {
         if(active){latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice('Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
@@ -101,7 +103,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
           if(latestPreview.current?.url===url&&latestPreview.current.status==='success'){titleField.current?.focus();return}
           advanceUrl.current=url
           if(latestPreview.current?.url!==url||latestPreview.current.status==='failed')setPreviewAttempt(value=>value+1)
-        }} onChange={event => { const value=event.target.value;advanceUrl.current=pasting.current?value:null;pasting.current=false;latestPreview.current=null;setUrl(value);if(!titleEdited.current)setTitle('');setTitleNotice('');setError('') }} /></div>
+        }} onChange={event => { const value=event.target.value;advanceUrl.current=pasting.current?value:null;pasting.current=false;latestPreview.current=null;setUrl(value);if(!channelEdited.current)setChannelName('');if(!titleEdited.current)setTitle('');setTitleNotice('');setError('') }} /></div>
       <div className="form-field"><label htmlFor="persistent-title">Título</label>
         <input ref={titleField} id="persistent-title" onKeyDown={event=>{if(enter(event)){event.preventDefault();gameField.current?.focus()}}} maxLength={500} value={title} disabled={sending} aria-describedby="title-notice"
           onChange={event => { titleEdited.current = true; setTitle(event.target.value) }} />
@@ -127,11 +129,10 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         setGames(current => [...current.filter(item => item.id !== game.id), game]); setGameId(game.id); setError('')
       }} />
       <div className="form-field"><label htmlFor="persistent-channel">Nome do canal</label>
-        <input ref={channelField} id="persistent-channel" onKeyDown={event=>{if(enter(event)){event.preventDefault();requestConfirmation()}}} maxLength={80} value={channelName} disabled={sending} onChange={event => setChannelName(event.target.value)} /></div>
+        <input ref={channelField} id="persistent-channel" onKeyDown={event=>{if(enter(event)){event.preventDefault();requestConfirmation()}}} maxLength={80} value={channelName} disabled={sending} onChange={event => {channelEdited.current=true;setChannelName(event.target.value)}} /></div>
       {error && <p className="error" role="alert">{error}</p>}
       <div className="actions"><button type="button" disabled={sending || choosing} onClick={onClose}>Cancelar</button>
         <button className="primary" type="submit" disabled={sending || choosing || loading || !gameId}>{sending ? 'Enviando...' : 'Compartilhar'}</button></div>
     </form>
   </Modal>
 }
-

@@ -1,7 +1,7 @@
 import { parseVideoUrl } from '../../../lib/validation/video-url.ts'
-import { validateVideoTitle } from '../../../lib/validation/public-input.ts'
+import { validateVideoTitle, validateChannelName } from '../../../lib/validation/public-input.ts'
 export function createVideoPreviewClient(fetcher: typeof fetch = fetch) {
-  return async (url: string, signal: AbortSignal): Promise<string | null> => {
+  return async (url: string, signal: AbortSignal): Promise<{title: string | null; channelName: string}> => {
     const video = parseVideoUrl(url)
     for (const path of ['/api/session', '/api/shorts/preview']) {
       const response = await fetcher(path, { method: 'POST', credentials: 'same-origin', redirect: 'error',
@@ -11,8 +11,9 @@ export function createVideoPreviewClient(fetcher: typeof fetch = fetch) {
       if (!response.ok) throw new Error('Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')
       if (path.endsWith('/preview')) {
         const result = await response.json()
-        if (video.platform === 'TikTok' && result?.title === null) return null
-        return validateVideoTitle(result?.title)
+        const channelName = validateChannelName(result?.channelName)
+        if (video.platform === 'TikTok' && result?.title === null) return {title:null,channelName}
+        return {title:validateVideoTitle(result?.title),channelName}
       }
     }
     throw new Error('Título indisponível.')

@@ -1,3 +1,4 @@
+import { validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
 import type { VideoEvidence } from '../submissions/decision.ts'
@@ -35,6 +36,7 @@ export function createTwitchClipVerifier(options: Options) {
       if (typeof clip.duration === 'number' && Number.isFinite(clip.duration) && clip.duration > 0) evidence.shortFormat = 'confirmed'
       if (typeof clip.title === 'string' && clip.title.trim() && clip.title.length <= 500 &&
           ![...clip.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) evidence.title = clip.title.trim()
+      try { const channel=validateChannelName(clip.broadcaster_name); if(channel)evidence.channelName=channel } catch { /* Optional metadata never blocks verification. */ }
       const image=thumbnailUrl(clip.thumbnail_url,video.platform,video.identity)
       if(image)evidence.thumbnailUrl=image
       const expected = await options.twitchGameId?.(submission.gameId)

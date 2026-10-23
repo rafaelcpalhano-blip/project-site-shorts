@@ -1,5 +1,5 @@
 import { BodyError, readInput } from './submissions.ts'
-import { validateSubmissionInput, validateVideoTitle } from '../../src/lib/validation/public-input.ts'
+import { validateSubmissionInput, validateVideoTitle, validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { SubmissionError } from '../submissions/submit-short.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 interface Dependencies {
@@ -29,9 +29,12 @@ export async function handleVideoPreview(request: Request, dependencies?: Depend
     const evidence = await dependencies.verify(submission)
     if (evidence.existence === 'missing') return reply(404, { error: 'video-not-found' })
     if (evidence.existence !== 'confirmed') return reply(503, { error: 'metadata-unavailable' })
+    let channelName = ''
+    try { channelName = validateChannelName(evidence.channelName) } catch { /* Ignore unusable optional names. */ }
+    const channel = channelName ? { channelName } : {}
     // A valid TikTok oEmbed may omit title/thumbnail entirely. Absence is not a service failure.
-    if (!evidence.title) return submission.platform === 'TikTok' ? reply(200, { title: null }) : reply(503, { error: 'metadata-unavailable' })
-    return reply(200, { title: validateVideoTitle(evidence.title) })
+    if (!evidence.title) return submission.platform === 'TikTok' ? reply(200, { title: null, ...channel }) : reply(503, { error: 'metadata-unavailable' })
+    return reply(200, { title: validateVideoTitle(evidence.title), ...channel })
   } catch (error) {
     if (error instanceof BodyError) return reply(error.status, { error: 'invalid-body' })
     if (error instanceof SubmissionError && error.code === 'abuse-limit') return reply(429, { error: 'abuse-limit' })

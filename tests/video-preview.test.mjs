@@ -37,7 +37,7 @@ test('preview client establishes session, sends URL only and rejects invalid tit
     calls.push([path, options])
     return path==='/api/session'?new Response(null,{status:204}):Response.json({title:'Original'})
   })
-  assert.equal(await load(video,new AbortController().signal),'Original')
+  assert.deepEqual(await load(video,new AbortController().signal),{title:'Original',channelName:''})
   assert.deepEqual(JSON.parse(calls[1][1].body),{url:video})
   assert.equal(calls[1][1].credentials,'same-origin')
   let count=0
@@ -69,7 +69,7 @@ test('prévia TikTok confirmada sem título retorna ausência explícita, sem co
 test('cliente aceita título nulo apenas para TikTok e conserva o caminho de título normal e cancelamento',async()=>{
  const fetcher=async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({title:null})
  const client=createVideoPreviewClient(fetcher),signal=new AbortController().signal
- assert.equal(await client('https://www.tiktok.com/@gamer/video/123456789',signal),null)
+ assert.deepEqual(await client('https://www.tiktok.com/@gamer/video/123456789',signal),{title:null,channelName:''})
  await assert.rejects(client(video,signal))
  await assert.rejects(client('https://www.youtube.com/shorts/abcdefghijk',signal))
  for(const title of ['',undefined,42,'bad\u0000title'])await assert.rejects(createVideoPreviewClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({title}))('https://www.tiktok.com/@gamer/video/123456789',signal))

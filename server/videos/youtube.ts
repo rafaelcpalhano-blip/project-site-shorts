@@ -1,3 +1,4 @@
+import { validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
@@ -15,7 +16,7 @@ export function createYouTubeVerifier(options: Options) {
       const endpoint = new URL('https://www.googleapis.com/youtube/v3/videos')
       endpoint.searchParams.set('id', id)
       endpoint.searchParams.set('part', 'snippet,status,contentDetails')
-      endpoint.searchParams.set('fields', 'items(id,snippet(title,thumbnails),status(privacyStatus,uploadStatus,embeddable),contentDetails(duration))')
+      endpoint.searchParams.set('fields', 'items(id,snippet(title,channelTitle,thumbnails),status(privacyStatus,uploadStatus,embeddable),contentDetails(duration))')
       // This server-only URL must never be logged or returned to the browser.
       endpoint.searchParams.set('key', options.apiKey)
       const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
@@ -33,6 +34,7 @@ export function createYouTubeVerifier(options: Options) {
           ![...item.snippet.title].some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) {
         evidence.title = item.snippet.title.trim()
       }
+      try { const channel=validateChannelName(item.snippet?.channelTitle); if(channel)evidence.channelName=channel } catch { /* Optional metadata never blocks verification. */ }
       const thumbnails=item.snippet?.thumbnails
       if(thumbnails&&typeof thumbnails==='object')for(const quality of ['maxres','standard','high','medium','default']){
         const image=thumbnailUrl(thumbnails[quality]?.url,video.platform,video.identity)

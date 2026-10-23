@@ -9,6 +9,7 @@ export interface VideoEvidence {
   moderation: 'clear' | 'flagged' | 'unavailable'
   flags: Array<'gameplay-violence' | 'real-violence' | 'threat' | 'hate' | 'name-inconsistency'>
   thumbnailUrl?: string
+  channelName?: string
   title?: string
 }
 export interface PublicationDecision { status: 'published' | 'pending' | 'rejected' | 'retry'; reason: string }
@@ -29,5 +30,3 @@ export function decidePublication(evidence: VideoEvidence, platform?: string): P
   return { status: 'published', reason: platform === 'TikTok' && evidence.formatPolicy === 'tiktok-platform-exception'
     ? 'tiktok-platform-policy' : 'automatically-verified' }
 }
-
-
