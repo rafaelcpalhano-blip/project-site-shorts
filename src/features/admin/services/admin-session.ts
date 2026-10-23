@@ -1,4 +1,5 @@
-export interface SessionUser {uid:string;getIdTokenResult:()=>Promise<{token:string;expirationTime:string}>}
+import {AdminAccessError} from './admin-access-error.ts'
+export interface SessionUser {uid:string;getIdTokenResult:(forceRefresh?:boolean)=>Promise<{token:string;expirationTime:string}>}
 export interface AdminSessionState<U> {user:U|null;authorized:boolean;checking:boolean;error:string}
 // In-memory presentation state only. Every privileged HTTP operation remains server-authorized.
 export function createAdminSession<U extends SessionUser>(check:(token:string)=>Promise<string>,now=Date.now){
@@ -24,9 +25,18 @@ export function createAdminSession<U extends SessionUser>(check:(token:string)=>
    publish({...state,authorized:false,checking:true,error:''})
    pending=(async()=>{
     try{
-     const result=await user.getIdTokenResult(),expires=Date.parse(result.expirationTime)
-     if(!Number.isFinite(expires)||expires<=now()||!result.token)throw Error('Sessão expirada. Entre novamente com Google e TOTP.')
-     const uid=await check(result.token)
+     let result=await user.getIdTokenResult(),expires=Date.parse(result.expirationTime)
+     const validate=()=>{if(!Number.isFinite(expires)||expires<=now()||!result.token)throw Error('Sessão expirada. Entre novamente com Google e TOTP.')}
+     validate()
+     if(version!==epoch||locked)return
+     let uid:string
+     try{uid=await check(result.token)}
+     catch(failure){
+      if(!(failure instanceof AdminAccessError)||failure.code!=='invalid-token'||version!==epoch||locked)throw failure
+      result=await user.getIdTokenResult(true);expires=Date.parse(result.expirationTime);validate()
+      if(version!==epoch||locked)return
+      uid=await check(result.token)
+     }
      if(version!==epoch||locked)return
      if(uid!==user.uid||expires<=now())throw Error('A autorização da conta não pôde ser confirmada.')
      approvedUntil=expires

@@ -26,3 +26,32 @@ test('invalidação após 401/403 e token expirado exigem nova verificação; se
 test('retorno de aba verifica relógio mesmo se o timer de expiração foi atrasado',async()=>{
  let clock=time;const session=createAdminSession(async()=>'owner',()=>clock);session.setUser(account());await session.verify();clock+=60001;await session.verify();assert.equal(session.getSnapshot().authorized,false);assert.match(session.getSnapshot().error,/expirada/);session.dispose()
 })
+
+test('token recusado renova uma vez e só autoriza após nova validação do servidor',async()=>{
+ const {AdminAccessError}=await import('../src/features/admin/services/admin-access-error.ts')
+ const refresh=[],tokens=[]
+ const user={uid:'owner',getIdTokenResult:async force=>{refresh.push(force===true);return {token:force?'fresh':'old',expirationTime:new Date(time+60000).toISOString()}}}
+ const session=createAdminSession(async token=>{tokens.push(token);if(token==='old')throw new AdminAccessError('invalid-token','Sessão inválida.');return 'owner'},()=>time)
+ session.setUser(user);await Promise.all([session.verify(),session.verify()])
+ assert.deepEqual(refresh,[false,true]);assert.deepEqual(tokens,['old','fresh']);assert.equal(session.getSnapshot().authorized,true);assert.equal(session.getSnapshot().error,'');session.dispose()
+})
+
+test('revogação persistente continua bloqueada, sem loop nem renovação para outros erros',async()=>{
+ const {AdminAccessError}=await import('../src/features/admin/services/admin-access-error.ts')
+ for(const code of ['invalid-token','admin-forbidden','totp-required','abuse-limit','unavailable']){
+  let calls=0,refreshes=0
+  const user={uid:'owner',getIdTokenResult:async force=>{if(force)refreshes++;return {token:'test',expirationTime:new Date(time+60000).toISOString()}}}
+  const session=createAdminSession(async()=>{calls++;throw new AdminAccessError(code,'Acesso recusado.')},()=>time)
+  session.setUser(user);await session.verify();assert.equal(calls,code==='invalid-token'?2:1);assert.equal(refreshes,code==='invalid-token'?1:0);assert.equal(session.getSnapshot().authorized,false);assert.equal(session.getSnapshot().error,'Acesso recusado.');session.dispose()
+ }
+})
+
+test('logout durante renovação não envia nova verificação nem restaura acesso',async()=>{
+ const {AdminAccessError}=await import('../src/features/admin/services/admin-access-error.ts')
+ let release,calls=0
+ const result={token:'fresh',expirationTime:new Date(time+60000).toISOString()}
+ const user={uid:'owner',getIdTokenResult:async force=>force?new Promise(resolve=>{release=resolve}):result}
+ const session=createAdminSession(async()=>{calls++;throw new AdminAccessError('invalid-token','Recusado')},()=>time)
+ session.setUser(user);const pending=session.verify();await new Promise(resolve=>setImmediate(resolve));session.end();release(result);await pending
+ assert.equal(calls,1);assert.equal(session.getSnapshot().user,null);assert.equal(session.getSnapshot().authorized,false);session.dispose()
+})

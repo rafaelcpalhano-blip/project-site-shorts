@@ -1,3 +1,4 @@
+import { AdminAccessError } from './admin-access-error'
 import { initializeApp, getApps } from 'firebase/app'
 import { initializeAuth, inMemoryPersistence, browserPopupRedirectResolver } from 'firebase/auth'
 import type { Auth } from 'firebase/auth'
@@ -31,7 +32,7 @@ export async function checkAdminAccess(token: string): Promise<string> {
     headers: { Authorization: 'Bearer ' + token }, signal: AbortSignal.timeout(20000),
   })
   const data = await response.json()
-  if (!response.ok) throw new Error(errors[data?.error] || 'Verificação administrativa indisponível. Tente mais tarde.')
+  if (!response.ok) throw new AdminAccessError(typeof data?.error === 'string' ? data.error : 'unavailable', errors[data?.error] || 'Verificação administrativa indisponível. Tente mais tarde.')
   if (data?.authenticated !== true || typeof data.uid !== 'string' || !data.uid) throw new Error('Resposta de autenticação inválida.')
   return data.uid
 }
