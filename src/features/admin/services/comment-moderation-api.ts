@@ -1,6 +1,6 @@
 import type {AdminSort,AdminListCursor} from '../types/list-order'
 import type { User } from 'firebase/auth'
-import { request } from './moderation-api'
+import { request } from './moderation-api.ts'
 export type CommentStatus='pending'|'approved'|'rejected'|'removed'
 export type CommentAction='approve'|'reject'|'remove'|'restore'
 export type CommentCursor={time:string;id:string}|AdminListCursor

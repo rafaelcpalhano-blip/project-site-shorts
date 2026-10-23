@@ -1,6 +1,6 @@
 import type {AdminSort,AdminListCursor} from '../types/list-order'
 import type { User } from 'firebase/auth'
-import { request } from './moderation-api'
+import { request } from './moderation-api.ts'
 export type RequestStatus='pending'|'linked'|'rejected'
 export interface GameRequestItem {id:string;name:string;status:RequestStatus;createdAt:string;revision:number;gameId:string|null;reason:string}
 export type RequestCursor={id:string;time:string}|AdminListCursor

@@ -1,7 +1,7 @@
 import type {ManualGameDetails} from '../../../lib/validation/manual-game-details'
 import type {AdminSort,AdminListCursor} from '../types/list-order'
 import type { User } from 'firebase/auth'
-import { request } from './moderation-api'
+import { request } from './moderation-api.ts'
 export type CatalogFilter='all'|'active'|'provisional'|'hidden'|'banned'
 export type CatalogAction='approve'|'hide'|'ban'|'unban'|'restore'
 export type CatalogCursor={time:string;id:string;scope:CatalogFilter}|AdminListCursor
