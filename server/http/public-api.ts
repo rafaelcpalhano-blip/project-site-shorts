@@ -71,7 +71,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       await adminLimit(visitor)
       return true
     })
-    if (['/api/admin/games/catalog', '/api/admin/games/detail', '/api/admin/games/moderate', '/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
+    if (['/api/admin/games/edit', '/api/admin/games/catalog', '/api/admin/games/detail', '/api/admin/games/moderate', '/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
       origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
       checkAbuse: async candidate => {
         const visitor = await identity.resolveVisitor(candidate)

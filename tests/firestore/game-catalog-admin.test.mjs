@@ -1,3 +1,4 @@
+import {editManualGame} from '../../server/games/edit-manual-game.ts'
 import {test,before,after} from 'node:test'
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
@@ -31,7 +32,7 @@ test('abas reais distinguem ativos/provisórios, ocultos legados e banidos',asyn
  await change(id,'ban');assert.equal((await loadGameCatalog({filter:'banned'},store)).items[0].id,id);assert.equal((await loadGameCatalog({filter:'provisional'},store)).items.length,0)
 })
 test('ocultação bloqueia feed, ficha, detalhe e comentários; restauração mantém removidos e vínculos',async()=>{
- const db=await seed(),{game:{id}}=await create('Jogo Visível');await store.transact(async tx=>{tx.set('shorts/public',short('public',id));tx.set('shorts/removed',short('removed',id,'removed'));tx.set('comments/c1',{shortId:'public',moderationStatus:'approved',content:'Boa jogada',createdAt:now()});tx.set('videoIdentities/reserved',{blocked:true})})
+ const db=await seed(),{game:{id}}=await create('Jogo Visível');await store.transact(async tx=>{tx.set('shorts/public',short('public',id));tx.set('shorts/removed',short('removed',id,'removed'));tx.set('comments/c1',{shortId:'public',moderationStatus:'approved',content:'Boa jogada',createdAt:now(),publicationNumber:1});tx.set('videoIdentities/reserved',{blocked:true})})
  assert.equal((await readFeed({},store)).items.length,1);assert.equal((await readComments({shortId:'public'},store)).items.length,1);assert.equal((await loadCatalogGame({id},store)).shortCount,2)
  await change(id,'hide');assert.equal((await readFeed({},store)).items.length,0);await assert.rejects(readPublicShort({shortId:'public'},store),/short-unavailable/);await assert.rejects(readComments({shortId:'public'},store),/short-unavailable/);await assertFails(getDoc(doc(db,'games',id)))
  await change(id,'restore',1);assert.equal((await readFeed({},store)).items.length,1);assert.equal((await store.get('shorts/removed')).moderationStatus,'removed');assert.equal((await store.get('shorts/public')).gameId,id);assert.deepEqual(await store.get('videoIdentities/reserved'),{blocked:true});await assertSucceeds(getDoc(doc(db,'games',id)));assert.equal(await size('shorts'),2)
@@ -59,4 +60,18 @@ test('aprovação e banimento/restauração preservam cota de cinco e duplicatas
 test('agregação vazia retorna zero real e histórico/auditoria são inacessíveis por SDK',async()=>{
  const db=await seed(),{game:{id}}=await create('Jogo sem Shorts');assert.equal((await loadCatalogGame({id},store)).shortCount,0);await change(id,'ban')
  const detail=await loadCatalogGame({id},store);const event=detail.history.find(h=>h.actorUid==='owner');assert.ok(event);assert.ok(event.reason);assert.ok(event.createdAt);await assertFails(getDoc(doc(db,'moderationLogs',event.id)));await assertFails(getDocs(collection(db,'gameModerationStates')))
+})
+
+test('edição manual REST mantém reservas, links e histórico, não permite escrita direta e serializa concorrência',async()=>{
+ const db=await seed(),{game:{id}}=await create('Original Comunitário')
+ await store.transact(async tx=>tx.set('shorts/edit-linked',short('edit-linked',id)))
+ const input={id,revision:0,confirmed:true,reason:'Informações conferidas pelo administrador',details:{name:'Nome Comunitário Atualizado',description:'Descrição brasileira.',imageUrl:'/images/games/autor.png',releaseDate:'2026-10-22',genres:['Aventura'],gameModes:['Um jogador'],platforms:['PC'],aliases:[]}}
+ const results=await Promise.allSettled([editManualGame(input,'owner',options),editManualGame(input,'owner',options)])
+ assert.equal(results.filter(r=>r.status==='fulfilled').length,1)
+ const game=(await getDoc(doc(db,'games',id))).data();assert.equal(game.officialName,input.details.name);assert.equal(game.description,input.details.description);assert.equal(game.source,'manual');assert.equal(game.reviewVersion,1)
+ assert.equal((await store.get('shorts/edit-linked')).gameId,id)
+ assert.equal((await create('Original Comunitário')).game.id,id);assert.equal((await create(input.details.name)).game.id,id)
+ await assertFails(setDoc(doc(db,'games',id),{description:'Forjado'},{merge:true}))
+ await assertFails(setDoc(doc(env.authenticatedContext('owner',{admin:true}).firestore(),'games',id),{description:'Forjado'},{merge:true}))
+ assert.equal(await size('moderationLogs'),2)
 })

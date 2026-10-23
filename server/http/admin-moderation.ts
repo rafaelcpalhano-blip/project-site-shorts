@@ -1,3 +1,4 @@
+import { editManualGame } from '../games/edit-manual-game.ts'
 import { loadGameCatalog, loadCatalogGame, moderateCatalogGame } from '../games/admin-catalog.ts'
 import { GameNameError } from '../games/name-keys.ts'
 import { loadGameRequests, reviewGameRequest } from '../games/requests.ts'
@@ -26,6 +27,7 @@ export async function handleAdminModeration(request: Request, options: {
     const admin = await options.admin.authorize(request)
     const input = await readInput(request)
     const path = new URL(request.url).pathname
+    if (path === '/api/admin/games/edit') return reply(200, await editManualGame(input, admin.uid, options))
     if (path === '/api/admin/games/catalog') return reply(200, await loadGameCatalog(input, options.store))
     if (path === '/api/admin/games/detail') return reply(200, await loadCatalogGame(input, options.store))
     if (path === '/api/admin/games/moderate') return reply(200, await moderateCatalogGame(input, admin.uid, options))

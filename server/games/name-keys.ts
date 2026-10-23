@@ -18,8 +18,10 @@ export async function readNameKeys(tx:Pick<AtomicTransaction,'get'>,identity:Awa
  return {exact,similar,exactIds:keyIds(exact),ids:[...new Set([...keyIds(exact),...keyIds(similar)])]}
 }
 export function validateNameReference(identity:Awaited<ReturnType<typeof nameIdentity>>,records:Awaited<ReturnType<typeof readNameKeys>>,id:string,game:RecordData) {
- const actual=normalizedGameName(game.officialName)
- if(records.exactIds.includes(id)&&actual.normalizedName!==identity.normalizedName||keyIds(records.similar).includes(id)&&actual.skeleton!==identity.skeleton)throw new Error('invalid-name-reference')
+ const names=[game.officialName,...(game.source==='manual'&&Array.isArray(game.reservedNames)?game.reservedNames:[])]
+ if(names.length>21)throw new Error('invalid-name-reference')
+ const actual=names.map(normalizedGameName)
+ if(records.exactIds.includes(id)&&!actual.some(name=>name.normalizedName===identity.normalizedName)||keyIds(records.similar).includes(id)&&!actual.some(name=>name.skeleton===identity.skeleton))throw new Error('invalid-name-reference')
 }
 export function writeNameKeys(tx:AtomicTransaction,identity:Awaited<ReturnType<typeof nameIdentity>>,records:Awaited<ReturnType<typeof readNameKeys>>,id:string,now:Date) {
  for(const [key,previous]of [[identity.exact,records.exact],[identity.similar,records.similar]] as const){

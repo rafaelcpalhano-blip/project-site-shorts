@@ -60,7 +60,7 @@ test('registro de nomes em preparação e referências corrompidas fecham a deci
 })
 test('todos os endpoints exigem autorização UID/TOTP antes de ler catálogo ou receber decisão',async()=>{
  const deps=memory(),base={...deps,origin,checkAbuse:async()=>true,verify:async()=>{throw Error('unused')}}
- for(const path of ['catalog','detail','moderate'])for(const [code,status]of [['invalid-token',401],['admin-forbidden',403],['totp-required',403]]){
+ for(const path of ['catalog','detail','moderate','edit'])for(const [code,status]of [['invalid-token',401],['admin-forbidden',403],['totp-required',403]]){
   let touched=false;const store={transact:async()=>{touched=true;throw Error('must not read')},gameCatalogPage:async()=>{touched=true;throw Error('must not read')}}
   const response=await handleAdminModeration(new Request(origin+'/api/admin/games/'+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({filter:'all'})}),{...base,store,admin:{authorize:async()=>{throw new AdminAuthError(code,status)}}})
   assert.equal(response.status,status);assert.equal(touched,false);assert.equal(response.headers.get('cache-control'),'no-store')
@@ -68,7 +68,7 @@ test('todos os endpoints exigem autorização UID/TOTP antes de ler catálogo ou
 })
 test('roteador público reconhece novas rotas e recusa visitante sem cookie assinado',async()=>{
  const deps=memory(),api=await createPublicApi({...deps,origin,visitorSecret:'a'.repeat(64),maximumAttempts:20,attemptWindowMs:60000,allowSessionIssuance:async()=>true,verify:async()=>{throw Error('unused')},admin:{authorize:async()=>{throw Error('must not authorize')}}})
- for(const path of ['catalog','detail','moderate'])assert.equal((await api(new Request(origin+'/api/admin/games/'+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}'}))).status,429)
+ for(const path of ['catalog','detail','moderate','edit'])assert.equal((await api(new Request(origin+'/api/admin/games/'+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}'}))).status,429)
 })
 test('HTTP autorizado mantém origem, limite, tipo e tamanho de corpo; erros são redigidos',async()=>{
  const deps=memory(),options={...deps,origin,checkAbuse:async()=>true,verify:async()=>{},admin:{authorize:async()=>({uid:'owner'})}}

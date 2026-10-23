@@ -1,3 +1,4 @@
+import { manualGameCoverUrl } from '../../src/lib/validation/manual-game-details.ts'
 import {loadAdminList} from '../admin/list-page.ts'
 import type { AtomicStore, GameCatalogFilter, RecordData } from '../firestore/atomic-store.ts'
 import { ReviewError, counter } from '../moderation/review-short.ts'
@@ -44,7 +45,7 @@ export async function loadCatalogGame(input:unknown,store:AtomicStore){
  const logs=await store.query({collection:'moderationLogs',filter:{field:'contentId',value:gameId},orderBy:'createdAt',limit:21})
  let shortCount:number|null=null
  try{if(store.countGameShorts)shortCount=await store.countGameShorts(gameId)}catch{/* A failed aggregation must never become a fabricated zero. */}
- return {game:item(gameId,snapshot.game),actions:targets(snapshot.game,snapshot.state),shortCount,
+ return {metadata:snapshot.game.source==='manual'?{name:snapshot.game.officialName,description:typeof snapshot.game.description==='string'?snapshot.game.description:'',imageUrl:manualGameCoverUrl(snapshot.game.imageUrl)??null,releaseDate:typeof snapshot.game.releaseDate==='string'?snapshot.game.releaseDate:null,...Object.fromEntries(['genres','gameModes','platforms','aliases'].map(key=>[key,Array.isArray(snapshot.game![key])?snapshot.game![key]:[]]))}:null,game:item(gameId,snapshot.game),actions:targets(snapshot.game,snapshot.state),shortCount,
   unbanTarget:targets(snapshot.game,snapshot.state).includes('unban')?String(snapshot.state!.previousStatus):null,
   history:logs.filter(row=>row.data.contentType==='game').slice(0,20).map(row=>({id:row.id,action:typeof row.data.action==='string'?row.data.action:'unknown',reason:typeof row.data.reason==='string'?row.data.reason:null,actorUid:typeof row.data.actorUid==='string'?row.data.actorUid:null,createdAt:time(row.data.createdAt)})),historyLimited:logs.length>20}
 }
