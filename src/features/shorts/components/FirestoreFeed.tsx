@@ -1,3 +1,4 @@
+import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
 import { readFailureMessage } from '../../../lib/http/read-failure'
 import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
 import {updateItemLikeCount,updatePageLikeCount} from '../services/feed-like-count'
@@ -6,7 +7,7 @@ import type {FeedOrder} from '../services/ordered-feed-api'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
 import type { TitleSearchCursor } from '../../../lib/validation/title-search'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
@@ -28,14 +29,16 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const [games, setGames] = useState<Game[]>([])
   const [gameCursor, setGameCursor] = useState<Cursor | null>(null)
   const [catalogError, setCatalogError] = useState('')
-  const [catalogLoading, setCatalogLoading] = useState(false)
+  const [catalogBusy, setCatalogLoading] = useState(false)
   const [page, setPage] = useState<FeedPage>({ items: [], next: null })
   const [cursors, setCursors] = useState<Array<FeedCursor | undefined>>([undefined])
   const [index, setIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
-  const [catalogAttempt,setCatalogAttempt]=useState(0)
+  const catalogVersion=useSyncExternalStore(subscribeGameCatalog,getGameCatalogVersion,getGameCatalogVersion)
+  const [loadedCatalogVersion,setLoadedCatalogVersion]=useState(-1)
+  const catalogLoading=catalogBusy||loadedCatalogVersion!==catalogVersion
   const [selected, setSelected] = useState<Short | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
   const updateLikeCount=useCallback((id:string,count:number)=>{
@@ -49,12 +52,13 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const selectedGame = gameId || filter
   const cursor = cursors[index]
   useEffect(() => {
+    if(gameId)return
     let active = true
     repository.listGames().then(result => {
-      if (active) { setGames(result.items); setGameCursor(result.next); setCatalogError('') }
-    }).catch(() => { if (active) setCatalogError('Não foi possível carregar o catálogo.') })
+      if (active) { setGames(result.items); setGameCursor(result.next); setCatalogError('');setLoadedCatalogVersion(catalogVersion) }
+    }).catch(() => { if (active){setGames([]);setGameCursor(null);setCatalogError('Não foi possível carregar o catálogo.');setLoadedCatalogVersion(catalogVersion)} }).finally(()=>{if(active)setCatalogLoading(false)})
     return () => { active = false }
-  }, [catalogAttempt])
+  }, [catalogVersion,gameId])
   useEffect(() => {
     let active = true
     const controller=new AbortController()
@@ -75,7 +79,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     return () => { active = false; controller.abort() }
   }, [selectedGame, cursor, attempt, query, order])
   const refresh = () => {
-    setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); setCatalogAttempt(value=>value+1)
+    setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); if(!gameId)invalidateGameCatalog()
   }
   return <div className={styles.feed}>
     {gameId && <Link to="/">← Voltar ao início</Link>}
@@ -87,17 +91,17 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         <small className="muted">Mais recentes primeiro. Pesquise por botão ou Enter.</small>
       </form>}
       {!gameId && <div className="form-field"><label htmlFor="persistent-game">Filtrar por jogo</label>
-        <select id="persistent-game" value={filter} onChange={event => {
+        <select id="persistent-game" disabled={catalogLoading} value={filter} onChange={event => {
           setFilter(event.target.value); setIndex(0); setCursors([undefined]); setLoading(true); setError('')
-        }}><option value="">Todos os jogos</option>{games.map(game => <option key={game.id} value={game.id}>{game.name}</option>)}</select>
+        }}><option value="">Todos os jogos</option>{(loadedCatalogVersion===catalogVersion?games:[]).map(game => <option key={game.id} value={game.id}>{game.name}</option>)}</select>
         {filter && <Link to={'/jogos/' + encodeURIComponent(filter)}>Ver ficha do jogo</Link>}
-        {gameCursor && <button disabled={catalogLoading} onClick={async () => {
+        {gameCursor && loadedCatalogVersion===catalogVersion && <button disabled={catalogLoading} onClick={async () => {
           setCatalogLoading(true)
-          try { const result = await repository.listGames(gameCursor); setGames(current => [...current, ...result.items]); setGameCursor(result.next); setCatalogError('') }
-          catch { setCatalogError('Não foi possível carregar mais jogos. Tente novamente.') }
-          finally { setCatalogLoading(false) }
+          try { const result = await repository.listGames(gameCursor); if(catalogVersion!==getGameCatalogVersion())return; setGames(current => [...current, ...result.items]); setGameCursor(result.next); setCatalogError('') }
+          catch { if(catalogVersion===getGameCatalogVersion())setCatalogError('Não foi possível carregar mais jogos. Tente novamente.') }
+          finally { if(catalogVersion===getGameCatalogVersion())setCatalogLoading(false) }
         }}>{catalogLoading ? 'Carregando...' : 'Carregar mais jogos'}</button>}
-        {catalogError && <p role="alert">{catalogError}</p>}
+        {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError}</p>}
       </div>}
       <div className="form-field"><label htmlFor="persistent-order">Filtrar por relevância</label>
         <select id="persistent-order" value={order} onChange={event=>{setOrder(event.target.value as FeedOrder);setIndex(0);setCursors([undefined]);setError('');setLoading(true)}}>{(Object.keys(feedOrderLabels) as FeedOrder[]).map(value=><option key={value} value={value}>{feedOrderLabels[value]}</option>)}</select>

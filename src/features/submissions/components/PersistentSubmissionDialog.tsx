@@ -1,9 +1,10 @@
+import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
 import { GameCombobox } from '../../games/components/GameCombobox'
 import { createVideoPreviewClient } from '../services/video-preview-api'
 import { validateSubmissionInput } from '../../../lib/validation/public-input'
 import { parseVideoUrl } from '../../../lib/validation/video-url'
 import { OfficialGamePicker } from '../../games/components/OfficialGamePicker'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { KeyboardEvent } from 'react'
 import { Modal } from '../../../components/ui/Modal'
 import { database } from '../../../lib/firebase/client'
@@ -27,8 +28,11 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const channelEdited = useRef(false)
   const [gameId, setGameId] = useState('')
   const [channelName, setChannelName] = useState('')
+  const catalogVersion=useSyncExternalStore(subscribeGameCatalog,getGameCatalogVersion,getGameCatalogVersion)
   const [games, setGames] = useState<Game[]>([])
-  const [loading, setLoading] = useState(true)
+  const [catalogBusy, setLoading] = useState(true)
+  const [loadedCatalogVersion,setLoadedCatalogVersion]=useState(catalogVersion)
+  const loading=catalogBusy||loadedCatalogVersion!==catalogVersion
   const [catalogError, setCatalogError] = useState('')
   const [error, setError] = useState('')
   const [sending, setSending] = useState(false)
@@ -67,10 +71,10 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         page.items.forEach(game=>catalog.set(game.id,game))
         cursor=page.next??undefined
       } while(cursor)
-      if(active){setGames([...catalog.values()]);setLoading(false)}
-    })().catch(()=>{if(active){setCatalogError('Não foi possível carregar os jogos.');setLoading(false)}})
+      if(active){setGames([...catalog.values()]);setGameId(current=>catalog.has(current)?current:'');setCatalogError('');setLoadedCatalogVersion(catalogVersion);setLoading(false)}
+    })().catch(()=>{if(active){setGames([]);setGameId('');setCatalogError('Não foi possível carregar os jogos.');setLoadedCatalogVersion(catalogVersion);setLoading(false)}})
     return () => { active = false }
-  }, [attempt,services])
+  }, [attempt,services,catalogVersion])
   useEffect(() => {
     try { parseVideoUrl(url) } catch { return }
     const controller = new AbortController()
@@ -117,9 +121,9 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         <p id="title-notice" className="muted" role="status">{titleNotice || 'Preenchido pela fonte quando disponível. A edição é opcional.'}</p>
       </div>
       <div className="form-field">
-        <GameCombobox games={games} value={gameId} onChange={setGameId} disabled={sending||choosing} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
-        {catalogError && <p role="alert">{catalogError} <button type="button" disabled={sending || choosing || loading} onClick={() => {
-          setLoading(true); setCatalogError(''); setAttempt(value => value + 1)
+        <GameCombobox games={loading?[]:games} value={gameId} onChange={setGameId} disabled={sending||choosing} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
+        {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError} <button type="button" disabled={sending || choosing || loading} onClick={() => {
+          setLoading(true); setCatalogError(''); invalidateGameCatalog(); setAttempt(value => value + 1)
         }}>Recarregar catálogo</button></p>}
         {!loading && !catalogError && !games.length && <p role="status">Nenhum jogo disponível para publicação.</p>}
       </div>

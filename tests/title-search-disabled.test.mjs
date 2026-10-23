@@ -7,6 +7,7 @@ import ts from 'typescript'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import {createOrderedFeedClient,feedOrderLabels} from '../src/features/shorts/services/ordered-feed-api.ts'
+import * as catalogCache from '../src/features/games/services/catalog-cache.ts'
 import { TITLE_SEARCH_ENABLED } from '../src/lib/features/title-search.ts'
 import { createPublicApi } from '../server/http/public-api.ts'
 
@@ -21,6 +22,7 @@ function renderFeed(file, props = {}) {
     if (name.includes('features/title-search')) return { TITLE_SEARCH_ENABLED }
     if (name.includes('title-search-api')) return { createTitleSearchClient: () => () => { searches++; throw Error('Busca não autorizada') } }
     if (name.includes('ordered-feed-api')) return {createOrderedFeedClient,feedOrderLabels}
+    if (name.includes('catalog-cache')) return catalogCache
     if (name.includes('public-repository')) return { createPublicRepository: () => ({}) }
     if (name.includes('firebase/client')) return { database: {} }
     if (name === 'react-router-dom') return { Link: ({ to, children }) => React.createElement('a', { href: to }, children) }

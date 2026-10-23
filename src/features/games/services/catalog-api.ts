@@ -1,3 +1,4 @@
+import {invalidateGameCatalog} from './catalog-cache.ts'
 import { validateGameRequestInput } from '../../../lib/validation/public-input.ts'
 export interface OfficialGame { externalId: string; officialName: string; releaseDate: string | null; platforms: string[] }
 export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
@@ -33,6 +34,7 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
       await call('/api/session','POST')
       const result=await (await call('/api/games/manual','POST',{name})).json()
       if(!result?.game||typeof result.game.id!=='string'||!/^[\w-]{1,128}$/.test(result.game.id)||typeof result.game.name!=='string'||!result.game.name.trim()||result.game.name.length>500||typeof result.created!=='boolean')throw new Error('Resposta de inclusão inválida.')
+      invalidateGameCatalog()
       return {game:result.game,created:result.created}
     },
     async request(value: string): Promise<{status:'pending'|'linked'|'rejected';game:{id:string;name:string}|null}> {
@@ -42,6 +44,7 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
       if(!['pending','linked','rejected'].includes(result?.status) || (result.game!==null &&
         (!result.game || typeof result.game.id!=='string' || !/^(?:igdb-[1-9]\d{0,9}|manual-[a-f0-9]{64})$/.test(result.game.id) ||
         typeof result.game.name!=='string'||!result.game.name.trim()||result.game.name.length>500))) throw new Error('Resposta de solicitação inválida.')
+      if(result.status==='linked')invalidateGameCatalog()
       return {status:result.status,game:result.game}
     },
     async confirm(externalId: string): Promise<{ id: string; name: string }> {
@@ -50,6 +53,7 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
       const response = await call('/api/games/confirm', 'POST', { externalId })
       const result = await response.json()
       if (![200, 201].includes(response.status) || result?.id !== 'igdb-' + externalId || typeof result.name !== 'string' || !result.name.trim() || result.name.length > 500) throw new Error('Não foi possível confirmar o jogo. Consulte o catálogo antes de tentar novamente.')
+      invalidateGameCatalog()
       return { id: result.id, name: result.name }
     },
   }
