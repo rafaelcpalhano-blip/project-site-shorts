@@ -1,3 +1,7 @@
+## 23/10/2026 — 7.6.8-E implementada experimentalmente; aguarda avaliação visual
+
+Combobox autorizado com pesquisa local de acentos/capitalização, ordem pt-BR e cerca de seis linhas. Lista completa vem das páginas de 50 existentes, uma carga por formulário, sem consulta por letra; IDs, elegibilidade, confirmação e callback de novo cadastro preservados. Mouse/teclado/Escape/Tab e validação obrigatória conferidos. Cinco testes focados, lint/build/diff aprovados. UI simulada de 61 jogos em duas páginas, último registro, seleção obrigatória e envio por ID; UI real de 21 jogos em desktop/390px sem overflow. Sem publicação ou novo cadastro real. Toque físico, teclado virtual e leitor de tela real pendentes; catálogo grande exigirá reavaliar custo inicial e renderização. [Detalhes](etapa-7-6-8-e.md). Sem backend, infraestrutura, Firebase real, dependências, commit ou deploy. Aguardar avaliação do proprietário; F não iniciada.
+
 ## 23/10/2026 — ajuste D aprovado: retorno às boas-vindas modais
 
 Proprietário substituiu explicitamente a preferência anterior: janela sobreposta sem X, somente Vamos explorar! e Escape; storage preservado. Retorno de foco após fechamento validado, outros modais mantêm X. Frase de login com (J.A.R.V.I.S., 2013). Nove testes focados, lint, build e UI desktop/390 px aprovados; sem dados/remoto/deploy. [Detalhes](etapa-7-6-8-d.md). Próxima E aguarda autorização.
