@@ -1,3 +1,7 @@
+## 22/10/2026 — 7.6.7-E concluída localmente
+
+Rodapé aprovado com Clipper existente, dois balões, incentivo indie, orientação de inclusão/complemento, suporte indisponível sem mailto e créditos. Desktop lateral/celular empilhado; lazy loading e espaçamento da paginação. Quatro testes de layout, lint/build/diff aprovados, UI real desktop/390px sem overflow. Mesmo aviso de chunk >500 kB; PNG existente ainda requer otimização antes da produção. Sem backend/Firestore/dependências/deploy; pendências D preservadas. [Detalhes](etapa-7-6-7-e.md). Próxima 7.6.7-F aguarda autorização.
+
 ## 22/10/2026 — recuperação limitada da verificação administrativa
 
 Proprietário relatou invalid-token logo após login, com acesso possível em seguida. Causa específica da recusa inicial ainda não comprovada. Cliente agora distingue código de erro do servidor e, somente para invalid-token, renova o token Firebase uma vez e reapresenta à validação completa existente. Recusa persistente continua bloqueada; sem retry para MFA, UID, limite ou indisponibilidade. Logout/troca de identidade impedem envio/aplicação atrasada. 17 testes focados de sessão/autorização aprovados, lint e build aprovados; mesmo aviso conhecido de chunk >500 kB. Backend, TOTP, revogação e regras permanecem intactos. Confirmar o próximo login real com o proprietário; não houve uso de credenciais pelo agente. Pendências da D preservadas, sem commit/deploy.

@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAdminSession } from '../../features/admin/context/admin-session-context'
 import { useEffect, useRef } from 'react'
 import styles from './SiteLayout.module.css'
+import { SiteFooter } from './SiteFooter'
 
 export function SiteLayout() {
   const { key } = useLocation()
@@ -29,9 +30,7 @@ export function SiteLayout() {
       <main id="main-content" className={styles.main} ref={mainRef} tabIndex={-1}>
         <Outlet />
       </main>
-      <footer className={styles.footer}>
-        Feito para compartilhar jogadas. Respeito faz parte do jogo.
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

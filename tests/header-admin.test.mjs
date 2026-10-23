@@ -28,3 +28,18 @@ test('página administrativa marca link atual; perder autorização remove o ace
  assert.match(html({user:{uid:'owner'},authorized:true},'/admin'),/aria-current="page"/)
  assert.doesNotMatch(html({user:{uid:'owner'},authorized:false}),/>Administrar</)
 })
+
+test('rodapé orienta inclusão e suporte indisponível sem links ou direitos enganosos',()=>{
+ const result=html({})
+ const footer=result.match(/<footer[\s\S]*?<\/footer>/)?.[0]
+ assert.ok(footer)
+ assert.match(footer,/Compartilhe suas melhores jogadas/)
+ assert.match(footer,/Criou um jogo indie/)
+ assert.match(footer,/Solicite a inclusão ao compartilhar um short/)
+ assert.match(footer,/teste\.suporte@clipzone\.com/)
+ assert.match(footer,/endereço de demonstração, ainda indisponível/)
+ assert.match(footer,/respectivos titulares/)
+ assert.match(footer,/loading="lazy"/)
+ assert.match(footer,/alt="Clipper, o mascote do Clipzone, acenando"/)
+ assert.doesNotMatch(footer,/<a\b|mailto:|©|copyright/i)
+})
