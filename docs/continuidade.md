@@ -1,3 +1,7 @@
+## 23/10/2026 — 7.6.8-B concluída localmente
+
+Catálogo em quatro colunas alinhadas, nomes à esquerda, consulta pública de ativos/manuais/provisórios e detalhes administrativos separados. Ocultos/banidos consultáveis apenas na administração, sem link público. Ações: aparece somente com seleção; Confirmar ação preserva todas as regras; resultados ficam separados para não sumirem após sucesso/falha parcial. 43 testes focados, lint/build/diff aprovados; UI simulada desktop/390px/colunas/foco/consulta provisória/falha parcial conferida sem escrita de negócio. Backend/emulador/remoto intactos, sem restart/deploy. [Detalhes](etapa-7-6-8-b.md). Próxima 7.6.8-C: avaliação de URLs/uploads e aprovação da alternativa antes de implementação.
+
 ## 23/10/2026 — 7.6.8-A concluída localmente
 
 Canal automático da mesma resposta oficial: YouTube channelTitle, Twitch broadcaster_name, TikTok author_name. Prévia fornece título/canal juntos; edição manual preservada durante consulta/troca de URL, nome ausente continua opcional. Visualizador com canal roxo/tamanho do título, fonte discreta e jogo com link interno; somente frase indicada de cookies removida. 41 testes focados, lint/build/diff aprovados; UI simulada de preenchimento/corrida e real desktop/390px/link/fim do player conferidas. API reiniciada, dados locais preservados; sem Firestore/remoto/dependências/deploy. [Detalhes e limites](etapa-7-6-8-a.md). Próxima 7.6.8-B aguarda autorização.

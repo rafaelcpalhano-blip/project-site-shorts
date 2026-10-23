@@ -26,10 +26,12 @@ export function AdminBulkActions({user,onUnauthorized,children}:{user:User;onUna
  }
  const actions=commonBulkActions(items)
  return <AdminBulkContext.Provider value={{busy,items,completed,toggle,clear}}>{children}
- <section className={styles.bulk} aria-label="Ações administrativas em lote"><h2>Ações em lote</h2>
+ {!items.length&&busy&&<p role="status">Processando operação administrativa…</p>}
+ {!items.length&&error&&<p role="alert">{error}</p>}
+ {!!items.length&&<section className={styles.bulk} aria-label="Ações administrativas em lote"><h2>Ações:</h2>
  <p>Selecione até {bulkLimit} registros da página atual. Ao mudar de fila, filtro, ordem ou página, a seleção será limpa.</p>
  {busy&&<p role="status">Processando operação administrativa…</p>}{error&&<p role="alert">{error}</p>}
- {!!items.length&&<form className="form" onSubmit={event=>{event.preventDefault();if(lock.current||!confirmed||!action)return;lock.current=true;setBusy(true);setResults([]);setError('');const selected=[...current.current];void runAdminBatch(selected,action,reason,()=>active.current,result=>{if(active.current)setResults(value=>[...value,result])}).then(result=>{if(!active.current)return;const done=result.results.filter(item=>item.status==='done').map(item=>item.key);setCompleted(previous=>new Set([...previous,...done]));update(current.current.filter(item=>!done.includes(item.key)));if(result.unauthorized)onUnauthorized();else requestAnimationFrame(()=>{if(active.current)resultHeading.current?.focus()})}).catch(()=>{if(active.current)setError('O lote não foi iniciado. Confira a seleção e o motivo.')}).finally(()=>{lock.current=false;if(active.current)setBusy(false)})}}>
+ <form className="form" onSubmit={event=>{event.preventDefault();if(lock.current||!confirmed||!action)return;lock.current=true;setBusy(true);setResults([]);setError('');const selected=[...current.current];void runAdminBatch(selected,action,reason,()=>active.current,result=>{if(active.current)setResults(value=>[...value,result])}).then(result=>{if(!active.current)return;const done=result.results.filter(item=>item.status==='done').map(item=>item.key);setCompleted(previous=>new Set([...previous,...done]));update(current.current.filter(item=>!done.includes(item.key)));if(result.unauthorized)onUnauthorized();else requestAnimationFrame(()=>{if(active.current)resultHeading.current?.focus()})}).catch(()=>{if(active.current)setError('O lote não foi iniciado. Confira a seleção e o motivo.')}).finally(()=>{lock.current=false;if(active.current)setBusy(false)})}}>
  <p>{items.length} registro(s) selecionado(s).</p><ul>{items.map(item=><li key={item.key}>{item.label}</li>)}</ul>
  <label htmlFor={id+'action'}>Ação para todos os selecionados</label><select id={id+'action'} value={action} disabled={busy} onChange={event=>{setAction(event.target.value as BulkAction|'');setConfirmed(false)}}><option value="">Selecione uma ação</option>{actions.map(value=><option key={value} value={value}>{bulkLabels[value]}</option>)}</select>
  {!actions.length&&<p>Os estados selecionados não têm uma ação comum. Separe a seleção por estado.</p>}
@@ -39,8 +41,9 @@ export function AdminBulkActions({user,onUnauthorized,children}:{user:User;onUna
  {action==='game:unban'&&<p>Cada jogo volta ao estado registrado antes do banimento; um jogo anteriormente oculto continuará oculto.</p>}
  <label htmlFor={id+'reason'}>Motivo da decisão em lote</label><textarea id={id+'reason'} required minLength={5} maxLength={500} disabled={busy} value={reason} onChange={event=>{setReason(event.target.value);setConfirmed(false)}}/>
  <label className={styles.confirmation}><input type="checkbox" checked={confirmed} disabled={busy} onChange={event=>setConfirmed(event.target.checked)}/> Confirmo a ação e o motivo para cada registro selecionado.</label>
- <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>{update([]);setReason('');setError('');requestAnimationFrame(()=>{if(active.current)focusReturn.current()})}}>Cancelar seleção</button><button className="primary" disabled={busy||!confirmed||!action||!actions.includes(action)||reason.trim().length<5}>Confirmar ação em lote</button></div>
- </form>}
- {!!results.length&&<div role="status"><h3 ref={resultHeading} tabIndex={-1}>Resultado por registro</h3><ul>{results.map(result=><li key={result.key}><strong>{result.label}</strong> · {result.status==='done'?'Concluído':result.status==='failed'?'Não confirmado':'Não iniciado'}: {result.message}</li>)}</ul><p>Atualize a fila para consultar os estados atuais.</p></div>}
- </section></AdminBulkContext.Provider>
+ <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>{update([]);setReason('');setError('');requestAnimationFrame(()=>{if(active.current)focusReturn.current()})}}>Cancelar seleção</button><button className="primary" disabled={busy||!confirmed||!action||!actions.includes(action)||reason.trim().length<5}>Confirmar ação</button></div>
+ </form>
+ </section>}
+ {!!results.length&&<section className={styles.bulk} aria-label="Resultado da operação"><div role="status"><h3 ref={resultHeading} tabIndex={-1}>Resultado por registro</h3><ul>{results.map(result=><li key={result.key}><strong>{result.label}</strong> · {result.status==='done'?'Concluído':result.status==='failed'?'Não confirmado':'Não iniciado'}: {result.message}</li>)}</ul><p>Atualize a fila para consultar os estados atuais.</p></div></section>}
+ </AdminBulkContext.Provider>
 }
