@@ -1,3 +1,5 @@
+import {AdminBulkSelect} from './AdminBulkSelect'
+import {useAdminBulk} from '../context/admin-bulk-context'
 import {AdminFilters} from './AdminFilters'
 import {queueDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
@@ -14,6 +16,7 @@ const queueLabels = {reports:'Denúncias abertas',pending:'Vídeos pendentes / b
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
 const labels: Record<ReviewAction, string> = { block:'Bloquear vídeo', dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
 export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauthorized: () => void }) {
+ const bulk=useAdminBulk()
   const [sort,setSort]=useState<AdminSort>('date-desc')
  const [queue, setQueue] = useState<'reports' | 'pending' | 'removed'>('reports')
   const [page, setPage] = useState<QueuePage | null>(null)
@@ -28,7 +31,8 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
   const active = useRef(true)
   useEffect(() => { active.current = true; return () => { active.current = false } }, [])
   const run = async (work: () => Promise<void>) => {
-    if (lock.current) return
+    if (lock.current||bulk?.busy) return
+    bulk?.clear()
     lock.current = true; setWorking(true); setError(''); setFeedback('')
     try { await work() }
     catch (failure) {
@@ -38,7 +42,7 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
     } finally { lock.current = false; if (active.current) setWorking(false) }
   }
   const load = async (selectedQueue: 'reports' | 'pending' | 'removed' = queue,selectedSort:AdminSort=sort) => {
-    const result = await fetchQueue(user, selectedQueue,undefined,selectedSort)
+    bulk?.clear();const result = await fetchQueue(user, selectedQueue,undefined,selectedSort)
     if (active.current) { setPage(result); setHistory([]); setDetail(null); setAction(null); setReason('') }
   }
   const open = async (id: string) => {
@@ -53,25 +57,25 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
     <h2 id="moderation-heading">Denúncias e revisão</h2>
 
     <p>Denúncias entram para análise e mantêm o vídeo visível. Os totais representam sessões anônimas, não pessoas verificadas.</p>
-    <AdminFilters labels={queueLabels} descriptions={queueDescriptions} value={queue} disabled={working} onChange={value=>void run(async()=>{setQueue(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />} refresh={<RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working} onClick={() => void run(() => load())} />} />
+    <AdminFilters labels={queueLabels} descriptions={queueDescriptions} value={queue} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setQueue(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />} refresh={<RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working||!!bulk?.busy} onClick={() => void run(() => load())} />} />
     {working && <p role="status">Consultando o servidor…</p>}
     {error && <p role="alert" className="error">{error}</p>}
     {feedback && <p role="status">{feedback}</p>}
     {page && <div>
       {!page.items.length && <p>Nenhum item nesta fila.</p>}
-      <ul className={styles.list}>{page.items.map(item => <li key={item.id}>
+      <ul className={styles.list}>{page.items.map(item => <li key={item.id}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'video',id:item.id,label:item.title??'',status:item.status,queue,count:item.count,reviewedCount:item.reviewedCount}}/>
         <div><strong>{item.title || 'Vídeo denunciado'}</strong><p>{date(item.time)}{item.count !== undefined &&
           ' · ' + Math.max(0, item.count - (item.reviewedCount ?? 0)) + ' denúncia(s) desde a última análise'}</p></div>
-        <button disabled={working} onClick={() => void run(() => open(item.id))}>Revisar</button>
+        <button disabled={working||!!bulk?.busy} onClick={() => void run(() => open(item.id))}>Revisar</button>
       </li>)}</ul>
       <div className={styles.actions}>
-        <button disabled={working || !history.length} onClick={() => void run(async () => {
+        <button disabled={working||!!bulk?.busy || !history.length} onClick={() => void run(async () => {
           const previous = history.slice(0, -1)
-          const result = await fetchQueue(user, queue, previous.at(-1),sort)
+          bulk?.clear();const result = await fetchQueue(user, queue, previous.at(-1),sort)
           if (active.current) { setPage(result); setHistory(previous); setDetail(null); setAction(null) }
         })}>Anterior</button>
         <span>Página {history.length + 1} · até 20 itens</span>
-        <button disabled={working || !page.next} onClick={() => void run(async () => {
+        <button disabled={working||!!bulk?.busy || !page.next} onClick={() => void run(async () => {
           const next = page.next!
           const result = await fetchQueue(user, queue, next,sort)
           if (active.current) { setPage(result); setHistory([...history, next]); setDetail(null); setAction(null) }
@@ -93,7 +97,7 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       <ul>{detail.reports.map((report, index) => <li key={index}>
         {reportReasons[report.reason as keyof typeof reportReasons] || 'Motivo desconhecido'} · {date(report.createdAt)}
       </li>)}</ul>
-      {detail.next && <button disabled={working} onClick={() => void run(async () => {
+      {detail.next && <button disabled={working||!!bulk?.busy} onClick={() => void run(async () => {
         const result = await fetchDetail(user, detail.short.id, detail.next!)
         if (result.count !== detail.count || result.short.revision !== detail.short.revision) throw new Error('Há alterações recentes. Reabra os detalhes antes de decidir.')
         if (active.current) setDetail({ ...detail, reports: [...detail.reports, ...result.reports], next: result.next })
@@ -103,15 +107,15 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       <p>Confira a fonte, o jogo, o título e o motivo. Combate fictício normal do jogo não equivale a violência real ou ameaça.</p>
       <label htmlFor="review-reason">Motivo da decisão (5 a 500 caracteres)</label>
       <textarea id="review-reason" className={styles.reason} minLength={5} maxLength={500} value={reason}
-        disabled={working} onChange={event => { setReason(event.target.value); setAction(null) }} />
+        disabled={working||!!bulk?.busy} onChange={event => { setReason(event.target.value); setAction(null) }} />
       <div className={styles.actions}>
         {detail.count > detail.reviewedCount && ['published', 'pending'].includes(detail.short.status) &&
-          <button disabled={working || reason.trim().length < 5} onClick={() => setAction('dismiss')}>Arquivar denúncias</button>}
-        {detail.short.status === 'published' && <button disabled={working || reason.trim().length < 5} onClick={()=>setAction('block')}>Bloquear vídeo</button>}
-        {detail.short.status === 'pending' && <button disabled={working || reason.trim().length < 5} onClick={() => setAction('approve')}>Publicar vídeo</button>}
+          <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={() => setAction('dismiss')}>Arquivar denúncias</button>}
+        {detail.short.status === 'published' && <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={()=>setAction('block')}>Bloquear vídeo</button>}
+        {detail.short.status === 'pending' && <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={() => setAction('approve')}>Publicar vídeo</button>}
         {['published', 'pending'].includes(detail.short.status) &&
-          <button disabled={working || reason.trim().length < 5} onClick={() => setAction('remove')}>Remover vídeo</button>}
-        {detail.short.restoreStatus && <button disabled={working || reason.trim().length < 5} onClick={() => setAction('restore')}>Restaurar vídeo</button>}
+          <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={() => setAction('remove')}>Remover vídeo</button>}
+        {detail.short.restoreStatus && <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={() => setAction('restore')}>Restaurar vídeo</button>}
       </div>
       {action && <div className={styles.confirm} role="group" aria-label="Confirmar decisão">
         <p><strong>{labels[action]}?</strong> {action==='block'?'O vídeo ficará oculto na fila de revisão, mantendo sua identidade reservada.':action === 'remove' ? 'O vídeo sairá do feed e continuará bloqueado contra republicação.' :
@@ -119,13 +123,13 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
           action === 'approve' ? 'A fonte será validada novamente e a publicação consumirá a cota do autor de hoje.' : 'A visibilidade não será alterada. Novas denúncias reabrirão a análise.'}</p>
         <p>Motivo: {reason}</p>
         <div className={styles.actions}>
-          <button className="primary" disabled={working} onClick={() => void run(async () => {
+          <button className="primary" disabled={working||!!bulk?.busy} onClick={() => void run(async () => {
             await sendReview(user, detail, action, reason)
             if (!active.current) return
             setDetail(null); setAction(null); setReason(''); setPage(null); setHistory([])
             setFeedback('Decisão registrada. Use o botão de atualização para recarregar a fila.')
           })}>Confirmar decisão</button>
-          <button disabled={working} onClick={() => setAction(null)}>Cancelar</button>
+          <button disabled={working||!!bulk?.busy} onClick={() => setAction(null)}>Cancelar</button>
         </div>
       </div>}
     </article>}

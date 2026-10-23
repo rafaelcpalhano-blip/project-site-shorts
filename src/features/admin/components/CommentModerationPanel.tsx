@@ -1,3 +1,5 @@
+import {AdminBulkSelect} from './AdminBulkSelect'
+import {useAdminBulk} from '../context/admin-bulk-context'
 import {AdminFilters} from './AdminFilters'
 import {commentDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
@@ -13,7 +15,8 @@ const statuses:Record<CommentStatus,string>={pending:'Pendentes',approved:'Publi
 const actions:Record<CommentAction,string>={approve:'Publicar comentário',reject:'Rejeitar comentário',remove:'Remover comentário',restore:'Restaurar comentário'}
 const flags:Record<string,string>={threat:'Possível ameaça',hate:'Possível discriminação','offensive-language':'Linguagem ofensiva',spam:'Possível spam'}
 export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}) {
-  const [sort,setSort]=useState<AdminSort>('date-desc')
+  const bulk=useAdminBulk()
+ const [sort,setSort]=useState<AdminSort>('date-desc')
  const [status,setStatus]=useState<CommentStatus>('pending')
   const [page,setPage]=useState<CommentPage|null>(null)
   const [history,setHistory]=useState<Array<CommentCursor|undefined>>([])
@@ -26,7 +29,8 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
   const lock=useRef(false),active=useRef(true)
   useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
   const run=async(work:()=>Promise<void>)=>{
-    if(lock.current)return
+    if(lock.current||bulk?.busy)return
+  bulk?.clear()
     lock.current=true;setWorking(true);setError('');setMessage('')
     try{await work()}catch(failure){
       if(!active.current)return
@@ -35,30 +39,30 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
     }finally{lock.current=false;if(active.current)setWorking(false)}
   }
   const load=async(cursor?:CommentCursor,selectedStatus:CommentStatus=status,selectedSort:AdminSort=sort)=>{
-    const result=await fetchCommentQueue(user,selectedStatus,cursor,selectedSort)
+    bulk?.clear();const result=await fetchCommentQueue(user,selectedStatus,cursor,selectedSort)
     if(active.current){setPage(result);setDetail(null);setAction(null);setReason('')}
   }
   return <section className={styles.panel} aria-labelledby="comment-review-heading">
     <h2 id="comment-review-heading">Comentários e revisão de texto</h2>
 
     <p>A triagem local pode errar ou deixar passar conteúdo. Confira o contexto antes de decidir.</p>
-    <AdminFilters labels={statuses} descriptions={commentDescriptions} value={status} disabled={working} onChange={value=>void run(async()=>{setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(undefined,value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Texto" dateLabel="Data de publicação" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />} refresh={<RefreshButton label="Atualizar comentários" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
+    <AdminFilters labels={statuses} descriptions={commentDescriptions} value={status} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setStatus(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(undefined,value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Texto" dateLabel="Data de publicação" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />} refresh={<RefreshButton label="Atualizar comentários" disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
     {working&&<p role="status">Consultando comentários…</p>}
     {error&&<p role="alert">{error}</p>}
     {message&&<p role="status">{message}</p>}
     {page&&<>
       {!page.items.length&&<p>Nenhum comentário nesta fila.</p>}
-      <ul className={styles.list}>{page.items.map(item=><li key={item.id}>
+      <ul className={styles.list}>{page.items.map(item=><li key={item.id}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'comment',id:item.id,label:item.content,revision:item.revision,status:item.status}}/>
         <p style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{item.content}</p>
-        <button disabled={working} onClick={()=>void run(async()=>{
+        <button disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{
           const result=await fetchCommentDetail(user,item.id)
           if(active.current){setDetail(result);setAction(null);setReason('')}
         })}>Revisar comentário</button>
       </li>)}</ul>
-      <div className={styles.actions}><button disabled={working||!history.length} onClick={()=>void run(async()=>{
+      <div className={styles.actions}><button disabled={working||!!bulk?.busy||!history.length} onClick={()=>void run(async()=>{
         const previous=history.slice(0,-1);await load(previous.at(-1));if(active.current)setHistory(previous)
       })}>Comentários anteriores</button><span>Página {history.length+1} · até 20 itens</span>
-      <button disabled={working||!page.next} onClick={()=>void run(async()=>{
+      <button disabled={working||!!bulk?.busy||!page.next} onClick={()=>void run(async()=>{
         const next=page.next!;await load(next);if(active.current)setHistory([...history,next])
       })}>Próximos comentários</button></div>
     </>}
@@ -79,13 +83,13 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
       }}>
         <label htmlFor="comment-review-reason">Motivo da decisão</label>
         <textarea id="comment-review-reason" minLength={5} maxLength={500} required value={reason}
-          disabled={working} onChange={event=>setReason(event.target.value)} />
+          disabled={working||!!bulk?.busy} onChange={event=>setReason(event.target.value)} />
         <div className={styles.actions}>{(Object.keys(actions) as CommentAction[]).filter(value=>
           value==='approve'?['pending','rejected'].includes(detail.comment.status):
           value==='reject'?detail.comment.status==='pending':value==='remove'?detail.comment.status==='approved':detail.comment.status==='removed'
-        ).map(value=><button key={value} type="button" disabled={working} aria-pressed={action===value} onClick={()=>setAction(value)}>{actions[value]}</button>)}</div>
+        ).map(value=><button key={value} type="button" disabled={working||!!bulk?.busy} aria-pressed={action===value} onClick={()=>setAction(value)}>{actions[value]}</button>)}</div>
         {action&&<p>Confirmar: {actions[action]}. A decisão será registrada no histórico.</p>}
-        <button className="primary" disabled={working||!action||reason.trim().length<5} type="submit">Confirmar decisão do comentário</button>
+        <button className="primary" disabled={working||!!bulk?.busy||!action||reason.trim().length<5} type="submit">Confirmar decisão do comentário</button>
       </form>
     </article>}
   </section>

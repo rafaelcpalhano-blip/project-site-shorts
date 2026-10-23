@@ -1,3 +1,5 @@
+import {AdminBulkSelect} from './AdminBulkSelect'
+import {useAdminBulk} from '../context/admin-bulk-context'
 import {ManualGameEditor} from './ManualGameEditor'
 import {AdminFilters} from './AdminFilters'
 import {catalogDescriptions} from './filter-descriptions'
@@ -18,6 +20,7 @@ const actions:Record<CatalogAction,string>={approve:'Aprovar cadastro provisóri
 const date=(value:string|null)=>value?new Date(value).toLocaleString('pt-BR'):'Data não informada'
 const state=(game:CatalogGame)=>game.status==='active'?(game.provisional?'Provisório':'Ativo'):game.status==='banned'?'Banido':'Oculto'
 export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}){
+ const bulk=useAdminBulk()
  const [sort,setSort]=useState<AdminSort>('date-desc')
  const [filter,setFilter]=useState<CatalogFilter>('all'),[page,setPage]=useState<CatalogPage|null>(null),[history,setHistory]=useState<Array<CatalogCursor|undefined>>([])
  const [detail,setDetail]=useState<CatalogDetail|null>(null),[action,setAction]=useState<CatalogAction|null>(null),[draft,setDraft]=useState(emptyReason),[confirmed,setConfirmed]=useState(false)
@@ -26,26 +29,27 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
  const reason=formatReason(draft)
  const reset=()=>{setDetail(null);setAction(null);setDraft(emptyReason());setConfirmed(false)}
  const run=async(work:()=>Promise<void>)=>{
-  if(lock.current)return
+  if(lock.current||bulk?.busy)return
+  bulk?.clear()
   lock.current=true;setWorking(true);setError('');setMessage('')
   try{await work()}catch(failure){if(active.current){if(failure instanceof AdminRequestError&&failure.unauthorized){onUnauthorized();return}setError(failure instanceof Error?failure.message:'Operação indisponível.')}}finally{lock.current=false;if(active.current)setWorking(false)}
  }
- const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
+ const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{bulk?.clear();const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
  return <section className={styles.panel} aria-labelledby="catalog-heading">
   <h2 id="catalog-heading">Catálogo administrativo de jogos</h2>
 
   <p>Ocultar ou banir retira também os shorts das próximas consultas públicas. Os registros, vínculos e estados de moderação dos vídeos são preservados.</p>
   <p className="muted">Ativos inclui provisórios visíveis. Contagens são consultadas somente ao abrir detalhes e incluem shorts em todos os estados.</p>
-  <AdminFilters labels={tabs} descriptions={catalogDescriptions} value={filter} disabled={working} onChange={value=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})} order={<AdminOrder value={sort} disabled={working} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />} refresh={<RefreshButton label="Atualizar catálogo de jogos" disabled={working} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
+  <AdminFilters labels={tabs} descriptions={catalogDescriptions} value={filter} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />} refresh={<RefreshButton label="Atualizar catálogo de jogos" disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
   {working&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
-  {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><li key={game.id}>
+  {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><li key={game.id}><AdminBulkSelect disabled={working} onChoose={reset} row={{kind:'game',id:game.id,label:game.name,revision:game.revision,status:game.status}}/>
    <p>{game.name} · {game.source==='IGDB'?'IGDB':'Manual'} · {state(game)} · {date(game.createdAt)}</p>
    {game.source==='IGDB'&&game.status==='active'&&<Link to={'/jogos/'+game.id}>Consultar jogo</Link>}
-   <button disabled={working} onClick={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}>{game.source==='manual'?'Consultar jogo':'Detalhes administrativos'}</button>
+   <button disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}>{game.source==='manual'?'Consultar jogo':'Detalhes administrativos'}</button>
   </li>)}</ul><div className={styles.actions}>
-   <button disabled={working||!history.length} onClick={()=>void run(async()=>{const previous=history.slice(0,-1);await load(filter,previous.at(-1));if(active.current)setHistory(previous)})}>Anteriores</button>
+   <button disabled={working||!!bulk?.busy||!history.length} onClick={()=>void run(async()=>{const previous=history.slice(0,-1);await load(filter,previous.at(-1));if(active.current)setHistory(previous)})}>Anteriores</button>
    <span>Página {history.length+1} · até 20 jogos</span>
-   <button disabled={working||!page.next} onClick={()=>void run(async()=>{const next=page.next!;await load(filter,next);if(active.current)setHistory([...history,next])})}>Próximos</button>
+   <button disabled={working||!!bulk?.busy||!page.next} onClick={()=>void run(async()=>{const next=page.next!;await load(filter,next);if(active.current)setHistory([...history,next])})}>Próximos</button>
   </div></>}
   {detail&&<article className={styles.detail}><h3>{detail.game.name} · {state(detail.game)}</h3>
    <p>Cadastro: {date(detail.game.createdAt)} · Origem: {detail.game.source} · Shorts vinculados: {detail.shortCount===null?'Não calculado':detail.shortCount}</p>
@@ -53,11 +57,11 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
    {detail.game.source==='manual'&&detail.metadata&&<ManualGameEditor key={detail.game.id+':'+detail.game.revision} user={user} detail={detail} onBusyChange={busy=>{lock.current=busy;setWorking(busy)}} onUnauthorized={onUnauthorized} onSaved={async()=>{if(!active.current)return;const result=await fetchCatalogGame(user,detail.game.id);if(active.current){setDetail(result);setPage(null);setAction(null);setConfirmed(false);setMessage('Informações salvas com histórico administrativo. Atualize o catálogo para conferir a lista.')}}}/>}
    {detail.unbanTarget&&<p>Após desbanir: {detail.unbanTarget==='active'?(detail.game.provisional?'provisório visível':'ativo'):'oculto'}. A revisão individual dos shorts será preservada.</p>}
    {!detail.actions.length&&<p>Nenhuma transição segura disponível. Atualize os detalhes; registros sem histórico de banimento não são restaurados automaticamente.</p>}
-   <div className={styles.actions}>{detail.actions.map(value=><button key={value} disabled={working} aria-pressed={action===value} onClick={()=>{setAction(value);setConfirmed(false)}}>{actions[value]}</button>)}</div>
-   {action&&<div className="form"><ReasonShortcuts value={draft} disabled={working} onChange={value=>{setDraft(value);setConfirmed(false)}} />
+   <div className={styles.actions}>{detail.actions.map(value=><button key={value} disabled={working||!!bulk?.busy} aria-pressed={action===value} onClick={()=>{setAction(value);setConfirmed(false)}}>{actions[value]}</button>)}</div>
+   {action&&<div className="form"><ReasonShortcuts value={draft} disabled={working||!!bulk?.busy} onChange={value=>{setDraft(value);setConfirmed(false)}} />
     <p>{action==='hide'||action==='ban'?'O jogo e seus shorts ficarão fora das próximas consultas públicas. O nome continuará reservado. Nada será apagado.':action==='unban'?'O jogo voltará ao estado anterior ao banimento. Se estava oculto, continuará oculto.':'O jogo poderá aparecer novamente conforme seu estado. Vídeos removidos ou pendentes mantêm sua própria moderação.'}</p>
-    <label className={styles.confirmation}><input type="checkbox" checked={confirmed} disabled={working} onChange={event=>setConfirmed(event.target.checked)} /> Confirmo esta decisão sobre {detail.game.name}.</label>
-    <button className="primary" disabled={working||!confirmed||reason.trim().length<5||reason.length>500} onClick={()=>void run(async()=>{await moderateGame(user,detail,action,reason);if(active.current){reset();setPage(null);setHistory([]);setMessage('Decisão registrada com motivo e identidade administrativa.')}await load();if(active.current)setMessage('Decisão registrada com motivo e identidade administrativa.')})}>Confirmar: {actions[action]}</button>
+    <label className={styles.confirmation}><input type="checkbox" checked={confirmed} disabled={working||!!bulk?.busy} onChange={event=>setConfirmed(event.target.checked)} /> Confirmo esta decisão sobre {detail.game.name}.</label>
+    <button className="primary" disabled={working||!!bulk?.busy||!confirmed||reason.trim().length<5||reason.length>500} onClick={()=>void run(async()=>{await moderateGame(user,detail,action,reason);if(active.current){reset();setPage(null);setHistory([]);setMessage('Decisão registrada com motivo e identidade administrativa.')}await load();if(active.current)setMessage('Decisão registrada com motivo e identidade administrativa.')})}>Confirmar: {actions[action]}</button>
    </div>}
    <h4>Histórico recente</h4>{!detail.history.length&&<p>Nenhum evento disponível.</p>}
    <ul>{detail.history.map(event=><li key={event.id}>{date(event.createdAt)} · {actions[event.action as CatalogAction]??event.action} · {event.reason??'Sem motivo registrado'} · {event.actorUid?'UID: '+event.actorUid:'Registro automático'}</li>)}</ul>

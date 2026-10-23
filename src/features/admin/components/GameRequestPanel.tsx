@@ -1,3 +1,5 @@
+import {AdminBulkSelect} from './AdminBulkSelect'
+import {useAdminBulk} from '../context/admin-bulk-context'
 import {AdminFilters} from './AdminFilters'
 import {requestDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
@@ -15,6 +17,7 @@ import type { RequestStatus, RequestCursor, GameRequestPage, GameRequestItem } f
 import styles from './ModerationPanel.module.css'
 const labels:Record<RequestStatus,string>={pending:'Pendentes',linked:'Vinculadas',rejected:'Rejeitadas'}
 export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized:()=>void}) {
+ const bulk=useAdminBulk()
  const [sort,setSort]=useState<AdminSort>('date-desc')
  const [status,setStatus]=useState<RequestStatus>('pending'),[page,setPage]=useState<GameRequestPage|null>(null)
  const [history,setHistory]=useState<Array<RequestCursor|undefined>>([]),[item,setItem]=useState<GameRequestItem|null>(null)
@@ -25,9 +28,10 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
  const lock=useRef(false),active=useRef(true)
  useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
  const reason=formatReason(reasonDraft)
- const busy=working||picking
+ const busy=working||picking||!!bulk?.busy
  const run=async(work:()=>Promise<void>)=>{
-  if(lock.current||picking)return
+  if(lock.current||picking||bulk?.busy)return
+  bulk?.clear()
   lock.current=true;setWorking(true);setError('');setMessage('')
   try{await work()}catch(failure){if(active.current){
    if(failure instanceof AdminRequestError&&failure.unauthorized){onUnauthorized();return}
@@ -35,20 +39,21 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
   }}finally{lock.current=false;if(active.current)setWorking(false)}
  }
  const load=async(cursor?:RequestCursor,selectedStatus:RequestStatus=status,selectedSort:AdminSort=sort)=>{
-  const result=await fetchGameRequests(user,selectedStatus,cursor,selectedSort)
+  bulk?.clear();const result=await fetchGameRequests(user,selectedStatus,cursor,selectedSort)
   if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason(emptyReason())}
  }
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
   <h2 id="game-requests-heading">Solicitações de jogos</h2>
 
+  <p>Solicitações vinculadas ou rejeitadas não possuem nova decisão em lote na política atual.</p>
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
   <AdminFilters labels={labels} descriptions={requestDescriptions} value={status} disabled={busy} onChange={value=>void run(async()=>{setStatus(value);setPage(null);setItem(null);setGame(null);setReason(emptyReason());setAction(null);setHistory([]);await load(undefined,value)})} order={<AdminOrder value={sort} disabled={busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(undefined,status,value)})} />} refresh={<RefreshButton label="Atualizar solicitações de jogos" disabled={busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
   {busy&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {page&&<>{!page.items.length&&<p>Nenhuma solicitação nesta fila.</p>}
-   <ul className={styles.list}>{page.items.map(value=><li key={value.id}>
+   <ul className={styles.list}>{page.items.map(value=><li key={value.id}>{value.status==='pending'&&<AdminBulkSelect disabled={busy} onChoose={()=>{setItem(null);setAction(null)}} row={{kind:'request',id:value.id,label:value.name,revision:value.revision,status:value.status,request:value}}/>}
     <p>{value.name} · {labels[value.status]} · {new Date(value.createdAt).toLocaleString('pt-BR')}</p>
     {value.reason&&<p>Motivo: {value.reason}</p>}{value.gameId&&<Link to={'/jogos/'+value.gameId}>Abrir ficha do jogo</Link>}
-    {value.status==='pending'&&<button disabled={busy} onClick={()=>{setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason(emptyReason());setAction(null);setMessage('')}}>Analisar solicitação</button>}
+    {value.status==='pending'&&<button disabled={busy} onClick={()=>{bulk?.clear();setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason(emptyReason());setAction(null);setMessage('')}}>Analisar solicitação</button>}
    </li>)}</ul>
    <div className={styles.actions}><button disabled={busy||!history.length} onClick={()=>void run(async()=>{
     const previous=history.slice(0,-1);await load(previous.at(-1));if(active.current)setHistory(previous)
@@ -67,7 +72,7 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
     <input id="manual-game-name" value={manualName} maxLength={100} disabled={busy} onChange={event=>{setManualName(event.target.value);setAction(null)}} />
     <p id="game-request-help">Confira o nome e evite duplicatas. A ficha ficará sem descrição ou imagem, identificada como cadastro manual sem vínculo ao IGDB.</p>
    </div> : <>
-    <OfficialGamePicker key={item.id} allowRequest={false} disabled={working} onBusyChange={setPicking} onSelected={value=>{setGame(value);setAction(null)}} />
+    <OfficialGamePicker key={item.id} allowRequest={false} disabled={working||!!bulk?.busy} onBusyChange={setPicking} onSelected={value=>{setGame(value);setAction(null)}} />
     {game ? <p>Jogo confirmado: {game.name}</p> : <p id="game-request-help">Pesquise o nome real no IGDB, selecione o resultado e confirme o jogo. Se ele não existir na fonte, escolha Cadastro manual.</p>}
    </>}
    <form className="form" onSubmit={event=>{event.preventDefault();if(!action||(action==='link'&&!game)||(action==='create'&&!manualName.trim()))return;void run(async()=>{
