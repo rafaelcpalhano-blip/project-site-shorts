@@ -1,4 +1,4 @@
-import {AdminBulkSelect} from './AdminBulkSelect'
+import {CatalogGameRow} from './CatalogGameRow'
 import {useAdminBulk} from '../context/admin-bulk-context'
 import {ManualGameEditor} from './ManualGameEditor'
 import {AdminFilters} from './AdminFilters'
@@ -42,11 +42,7 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
   <p className="muted">Ativos inclui provisórios visíveis. Contagens são consultadas somente ao abrir detalhes e incluem shorts em todos os estados.</p>
   <AdminFilters labels={tabs} descriptions={catalogDescriptions} value={filter} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />} refresh={<RefreshButton label="Atualizar catálogo de jogos" disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
   {working&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
-  {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><li key={game.id}><AdminBulkSelect disabled={working} onChoose={reset} row={{kind:'game',id:game.id,label:game.name,revision:game.revision,status:game.status}}/>
-   <p>{game.name} · {game.source==='IGDB'?'IGDB':'Manual'} · {state(game)} · {date(game.createdAt)}</p>
-   {game.source==='IGDB'&&game.status==='active'&&<Link to={'/jogos/'+game.id}>Consultar jogo</Link>}
-   <button disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}>{game.source==='manual'?'Consultar jogo':'Detalhes administrativos'}</button>
-  </li>)}</ul><div className={styles.actions}>
+  {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><CatalogGameRow key={game.id} game={game} disabled={working||!!bulk?.busy} onChoose={reset} onInspect={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}/>)}</ul><div className={styles.actions}>
    <button disabled={working||!!bulk?.busy||!history.length} onClick={()=>void run(async()=>{const previous=history.slice(0,-1);await load(filter,previous.at(-1));if(active.current)setHistory(previous)})}>Anteriores</button>
    <span>Página {history.length+1} · até 20 jogos</span>
    <button disabled={working||!!bulk?.busy||!page.next} onClick={()=>void run(async()=>{const next=page.next!;await load(filter,next);if(active.current)setHistory([...history,next])})}>Próximos</button>
