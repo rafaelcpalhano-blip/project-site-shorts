@@ -22,25 +22,39 @@ export async function readOrderedFeed(input:{order?:RankingQuery['mode'];gameId?
   generationId=current.generationId;computedAt=(current.computedAt as Date).toISOString()
  }
  if(mode==='relevant'&&cursor){const metrics=await store.get('rankingState/metrics');if(metrics&&(metrics.ready!==true||metrics.epoch!==metricsEpoch))throw Error('ranking-not-ready-or-stale')}
- const items:ReturnType<typeof publicShort>[]=[],games=new Map<string,Awaited<ReturnType<NonNullable<AtomicStore['get']>>>>()
+ const items:ReturnType<typeof publicShort>[]=[],games=new Map<string,Promise<Awaited<ReturnType<NonNullable<AtomicStore['get']>>>>>()
+ const game=(key:string)=>{
+  let pending=games.get(key)
+  if(!pending){pending=store.get!('games/'+key);games.set(key,pending)}
+  return pending
+ }
  let read=0,examined=0,next:OrderedCursor|null=null
  while(read<30&&items.length<15){
   const page=await store.rankingPage({mode,gameId,generationId,readTime:point,cursor:cursor?{id:cursor.id,time:cursor.time,value:cursor.value}:undefined,limit:15});point=page.readTime
   if(page.items.length>15)throw Error('ranking-invalid-page')
   read+=page.items.length
-  for(let index=0;index<page.items.length;index++){
-   const row=page.items[index];examined++
-   const anchor:OrderedCursor={scope,readTime:point,id:mode==='relevant'&&/^[-_a-zA-Z0-9]{1,192}$/.test(row.id)?row.id:id(row.id),time:new Date(timestamp(row.data.createdAt)).toISOString(),...(mode==='likes'?{value:likeCount(row.data.likeCount)}:mode==='relevant'?{value:Number(row.data.score),generationId,computedAt,metricsEpoch}: {})}
-   if(mode==='relevant'&&(typeof row.data.score!=='number'||!Number.isFinite(anchor.value)||Number(anchor.value)<0))throw Error('ranking-invalid-score')
-   cursor=anchor
-   const shortId=mode==='relevant'?id(row.data.shortId):row.id,short=await store.get('shorts/'+shortId)
-   if(short?.moderationStatus==='published'&&typeof short.gameId==='string'&&(!gameId||gameId===short.gameId)){
-    const key=id(short.gameId)
-    if(!games.has(key))games.set(key,await store.get('games/'+key))
-    const game=games.get(key)
-    if(game?.status==='active')items.push(publicShort(shortId,short,game))
+  // Resolve a small window concurrently, then consume it in cursor order.
+  // Never prefetch more candidates than the remaining visible slots.
+  for(let start=0;start<page.items.length&&items.length<15;){
+   const end=Math.min(page.items.length,start+4,start+15-items.length)
+   const window=await Promise.all(page.items.slice(start,end).map(async row=>{
+    const anchor:OrderedCursor={scope,readTime:point!,id:mode==='relevant'&&/^[-_a-zA-Z0-9]{1,192}$/.test(row.id)?row.id:id(row.id),time:new Date(timestamp(row.data.createdAt)).toISOString(),...(mode==='likes'?{value:likeCount(row.data.likeCount)}:mode==='relevant'?{value:Number(row.data.score),generationId,computedAt,metricsEpoch}: {})}
+    if(mode==='relevant'&&(typeof row.data.score!=='number'||!Number.isFinite(anchor.value)||Number(anchor.value)<0))throw Error('ranking-invalid-score')
+    const shortId=mode==='relevant'?id(row.data.shortId):row.id,short=await store.get!('shorts/'+shortId)
+    let item:ReturnType<typeof publicShort>|undefined
+    if(short?.moderationStatus==='published'&&typeof short.gameId==='string'&&(!gameId||gameId===short.gameId)){
+     const record=await game(id(short.gameId))
+     if(record?.status==='active')item=publicShort(shortId,short,record)
+    }
+    return {anchor,item}
+   }))
+   for(let offset=0;offset<window.length;offset++){
+    const {anchor,item}=window[offset],index=start+offset
+    cursor=anchor;examined++
+    if(item)items.push(item)
+    if(items.length===15){next=index<page.items.length-1||page.items.length===15?anchor:null;break}
    }
-   if(items.length===15){next=index<page.items.length-1||page.items.length===15?anchor:null;break}
+   start=end
   }
   if(items.length===15)break
   if(page.items.length<15){next=null;break}
