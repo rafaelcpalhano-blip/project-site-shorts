@@ -19,7 +19,8 @@
 .clipper {
   display: block;
   width: 112px;
-  height: auto;
+  height: 168px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 .balloons { display: grid; gap: 12px; text-align: left; }
@@ -61,7 +62,7 @@
 @media (max-width: 480px) {
   .footer { padding: 24px 16px; }
   .community { flex-direction: column; gap: 16px; }
-  .clipper { width: 88px; }
+  .clipper { width: 88px; height: 132px; }
   .balloons { text-align: center; }
   .balloon::before { display: none; }
 }

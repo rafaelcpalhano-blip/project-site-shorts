@@ -76,7 +76,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const refresh = () => {
     setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); setCatalogAttempt(value=>value+1)
   }
-  return <>
+  return <div className={styles.feed}>
     {gameId && <Link to="/">← Voltar ao início</Link>}
     <div className={styles.filters}>
       {TITLE_SEARCH_ENABLED && <form className="form-field" onSubmit={event=>{event.preventDefault();setQuery(draft.trim());setIndex(0);setCursors([undefined]);setLoading(true);setError('');setAttempt(value=>value+1)}}>
@@ -103,10 +103,12 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       </div>
     </div>
     <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
+    <div className={styles.results}>
     {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={refresh}>Tentar novamente</button></ClipperFailure>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
         <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
       : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}
+    </div>
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
     {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
     {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima geração horária.</p>}
@@ -121,6 +123,6 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
     {selected && <ShortSequenceDialog short={selected} items={page.items} onNavigate={setSelected} onLikeCount={updateLikeCount} onCommentCount={updateCommentCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
-  </>
+  </div>
 }
 

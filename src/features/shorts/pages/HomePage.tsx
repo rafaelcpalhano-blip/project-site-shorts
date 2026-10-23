@@ -6,6 +6,7 @@ const FirestoreFeed = lazy(() => import('../components/FirestoreFeed').then(modu
 const PersistentSubmissionDialog = lazy(() => import('../../submissions/components/PersistentSubmissionDialog').then(module => ({ default: module.PersistentSubmissionDialog })))
 import { PageIntro } from '../../../components/ui/PageIntro'
 import { ShortFeed } from '../components/ShortFeed'
+import { FeedLoading } from '../components/FeedLoading'
 import { SubmissionDialog } from '../../submissions/components/SubmissionDialog'
 import styles from './HomePage.module.css'
 export function HomePage() {
@@ -26,7 +27,7 @@ function HomeContent() {
     <ClipperWelcome onDismiss={()=>shareButton.current?.focus()} />
     {import.meta.env.DEV && <small className={styles.environment}>{usesFirestore?'Desenvolvimento · dados locais':'Desenvolvimento · modo demonstrativo'}</small>}
     {message && <p role="status">{message}</p>}
-    <Suspense fallback={<p role="status">Carregando fonte de dados...</p>}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
+    <Suspense fallback={<FeedLoading />}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
     {sharing && !usesFirestore && <SubmissionDialog onClose={() => setSharing(false)} onPublished={() => {
       setSharing(false); setFeedVersion(current => current + 1); setMessage('Short compartilhado nesta sessão.')
     }} />}
