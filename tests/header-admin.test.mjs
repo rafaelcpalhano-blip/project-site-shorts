@@ -38,8 +38,13 @@ test('rodapé orienta inclusão e suporte indisponível sem links ou direitos en
  assert.match(footer,/Solicite a inclusão ao compartilhar um short/)
  assert.match(footer,/teste\.suporte@clipzone\.com/)
  assert.match(footer,/endereço de demonstração, ainda indisponível/)
- assert.match(footer,/respectivos titulares/)
+ assert.match(footer,/respectivos titulares/);assert.match(footer,/Como os vídeos funcionam/);assert.match(footer,/contagem de visualizações segue as regras de cada plataforma/);assert.match(footer,/sem incentivar visualizações artificiais/)
  assert.match(footer,/loading="lazy"/)
- assert.match(footer,/alt="Clipper, o mascote do Clipzone, acenando"/)
+ assert.match(footer,/alt=""/)
  assert.doesNotMatch(footer,/<a\b|mailto:|©|copyright/i)
+})
+
+test('rodapé público não aparece na administração, inclusive barra final e subrotas',()=>{
+ for(const path of ['/admin','/admin/','/admin?retorno=1','/admin/revisao']){const result=html({},path);assert.doesNotMatch(result,/<footer|Como os vídeos funcionam|teste\.suporte@clipzone\.com/)}
+ for(const path of ['/','/jogos/manual-test','/caminho-inexistente'])assert.match(html({},path),/<footer/)
 })

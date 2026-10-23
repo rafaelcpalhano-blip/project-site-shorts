@@ -3,3 +3,7 @@
 .totpForm input { min-height: 44px; text-align: center; letter-spacing: .25em; }
 .totpForm button { min-height: 44px; padding: 8px 12px; }
 @media (max-width: 480px) { .totpForm { grid-template-columns: minmax(0, 13rem); } .totpForm button { justify-self: start; max-width: 100%; } }
+.clipperGreeting { display: flex; align-items: center; gap: 16px; max-width: 640px; margin: 12px 0 20px; }
+.clipperGreeting img { flex: 0 0 72px; width: 72px; height: 108px; object-fit: contain; }
+.clipperGreeting p { margin: 0; line-height: 1.6; font-size: .9rem; color: var(--color-accent); }
+@media (max-width: 480px) { .clipperGreeting { gap: 12px; } .clipperGreeting img { flex-basis: 56px; width: 56px; height: 84px; } }

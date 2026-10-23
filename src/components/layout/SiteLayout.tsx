@@ -5,7 +5,7 @@ import styles from './SiteLayout.module.css'
 import { SiteFooter } from './SiteFooter'
 
 export function SiteLayout() {
-  const { key } = useLocation()
+  const { key, pathname } = useLocation()
   const { user, authorized, checking } = useAdminSession()
   const mainRef = useRef<HTMLElement>(null)
   const previousPath = useRef(key)
@@ -30,7 +30,7 @@ export function SiteLayout() {
       <main id="main-content" className={styles.main} ref={mainRef} tabIndex={-1}>
         <Outlet />
       </main>
-      <SiteFooter />
+      {pathname!=='/admin'&&!pathname.startsWith('/admin/')&&<SiteFooter />}
     </div>
   )
 }

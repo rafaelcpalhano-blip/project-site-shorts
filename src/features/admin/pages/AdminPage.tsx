@@ -1,3 +1,4 @@
+import clipperStyles from '../../../components/clipper/Clipper.module.css'
 import { useAdminSession } from '../context/admin-session-context'
 import { AdminSections } from '../components/AdminSections'
 import styles from './AdminPage.module.css'
@@ -46,6 +47,7 @@ export function AdminPage() {
   }
   return <>
     <PageIntro title="Administração" description="Acesso exclusivo à conta autorizada, com Google e aplicativo autenticador." />
+    {!authorized&&<aside className={styles.clipperGreeting} aria-label="Recado do Clipper"><img className={clipperStyles.floating} src="/clipper/welcome.png" width="1024" height="1536" alt="" decoding="async"/><p>Estou online, totalmente operacional e, se me permite a audácia, torcendo pelo senhor como sempre.(J.A.R.V.I.S., 2013)</p></aside>}
     {!authorized && status && <p role="status">{status}</p>}
     {checking && <p role="status">Verificando acesso administrativo…</p>}
     {sessionError && <p role="alert" className="error">{sessionError}</p>}
