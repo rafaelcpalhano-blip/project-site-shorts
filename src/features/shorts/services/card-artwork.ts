@@ -11,5 +11,5 @@ export function cardArtwork(short:Short,now:number,failed:(url:string)=>boolean)
   if(thumbnail&&!failed(thumbnail.url))return {kind:'thumbnail' as const,url:thumbnail.url}
   const cover=manualGameCoverUrl(short.gameCoverUrl)
   if(cover&&!failed(cover))return {kind:'cover' as const,url:cover}
-  return {kind:'clipper' as const,url:'/clipper/image-unavailable.png'}
+  return {kind:'clipper' as const,url:'/clipper/image-unavailable.webp'}
 }

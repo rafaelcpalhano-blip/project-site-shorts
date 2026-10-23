@@ -3,7 +3,7 @@ import styles from './SiteFooter.module.css'
 export function SiteFooter() {
   return <footer className={styles.footer}>
     <div className={styles.community}>
-      <img className={styles.clipper} src="/clipper/welcome.png" width="1024" height="1536" alt="" loading="lazy" decoding="async" />
+      <img className={styles.clipper} src="/clipper/welcome.webp" width="512" height="768" alt="" loading="lazy" decoding="async" />
       <div className={styles.balloons}>
         <p className={styles.balloon}>Compartilhe suas melhores jogadas e descubra novos criadores!</p>
         <p className={styles.balloon}>Criou um jogo indie? Queremos ajudar a divulgar seu projeto!</p>
