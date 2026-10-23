@@ -2,7 +2,9 @@ import {test,before,after} from 'node:test'
 import assert from 'node:assert/strict'
 import {createServer} from 'vite'
 import {createElement as h} from 'react'
-import {renderToStaticMarkup as render} from 'react-dom/server'
+import {MemoryRouter} from 'react-router-dom'
+import {renderToStaticMarkup as renderBase} from 'react-dom/server'
+const render=node=>renderBase(h(MemoryRouter,null,node))
 let server,Dialog,Context
 before(async()=>{server=await createServer({cacheDir:'node_modules/.cache/refinements-d',server:{middlewareMode:true,watch:null,hmr:false},appType:'custom',clearScreen:false});Dialog=(await server.ssrLoadModule('/src/features/shorts/components/ShortSequenceDialog.tsx')).ShortSequenceDialog;Context=(await server.ssrLoadModule('/src/features/admin/context/admin-session-context.ts')).AdminContext})
 after(async()=>server?.close())

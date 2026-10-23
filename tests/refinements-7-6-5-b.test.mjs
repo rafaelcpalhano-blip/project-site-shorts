@@ -39,7 +39,7 @@ test('denúncia desabilitada e curtidas sem moldura mantêm semântica',()=>{
  assert.doesNotMatch(html,/fieldset|class="inset"/);assert.match(html,/role="status"/)
 })
 test('avisos ficam após comentários; fonte permanece disponível durante carregamento',()=>{
- const html=render(h(Context.Provider,{value:{user:null,authorized:false}},h(Content,{short,onLikeCount:()=>{},onModerated:()=>{},onBusyChange:()=>{}})))
+ const html=render(h(MemoryRouter,null,h(Context.Provider,{value:{user:null,authorized:false}},h(Content,{short,onLikeCount:()=>{},onModerated:()=>{},onBusyChange:()=>{}}))))
  assert.ok(html.indexOf('Assistir na plataforma')<html.indexOf('Comentários publicados'))
  assert.ok(html.indexOf('Sobre a reprodução')>html.indexOf('Atualizar comentários'))
  assert.doesNotMatch(html,/<fieldset|<iframe/)

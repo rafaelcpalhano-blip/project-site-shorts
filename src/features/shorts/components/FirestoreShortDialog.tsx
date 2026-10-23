@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { FirstCommentCelebration } from '../../comments/components/FirstCommentCelebration'
 import { CommentSelectionModeration } from '../../admin/components/CommentSelectionModeration'
 import { InlineModeration } from '../../admin/components/InlineModeration'
@@ -48,7 +49,11 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} />
     <div className={styles.interactions} data-short-interactions>
-      <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>
+      <div className={styles.metadata}>
+        <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>
+        <p className={styles.source}>Fonte: {short.platform}</p>
+        <p className={styles.game}>Jogo: <Link to={'/jogos/'+short.gameId}>{short.gameName || 'Ver jogo'}</Link></p>
+      </div>
       {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     </div>
     <h2 className={styles.videoTitle}>{short.title}</h2>
@@ -63,7 +68,7 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
     {celebration && <FirstCommentCelebration key={celebration} />}
     <div className={styles.information} data-short-interactions>
       <PlayerInformation short={short} />
-      {available && <details><summary>Sobre as curtidas do Clipzone</summary><p className="muted">Sua escolha fica vinculada à sessão deste navegador, sem cadastro obrigatório. Limpar cookies ou expirar a sessão perde esse vínculo.</p></details>}
+      {available && <details><summary>Sobre as curtidas do Clipzone</summary><p className="muted">Sua escolha fica vinculada à sessão deste navegador, sem cadastro obrigatório.</p></details>}
       {available && <ReportForm key={'report:'+short.id} shortId={short.id} disabled={adminBusy||selectingComments} onBusyChange={setReporting} />}
     </div>
     {available&&admin.user&&<InlineModeration key={admin.user.uid+short.id} kind="short" id={short.id} disabled={liking||reporting||commenting||adminBusy||selectingComments} onBusyChange={adminBusyChange} onCompleted={onModerated} />}
