@@ -1,0 +1,11 @@
+.root { display:grid; gap:6px; min-width:0; }
+.root label { font-size:.8rem; }
+.trigger { display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; width:100%; min-width:0; padding:12px; }
+.trigger span:first-child { overflow-wrap:anywhere; }
+.panel { position:fixed; z-index:10; display:flex; flex-direction:column; gap:6px; padding:8px; background:var(--color-surface); color:var(--color-text); border:1px solid var(--color-border); border-radius:9px; box-shadow:0 8px 24px #0008; overflow:hidden; box-sizing:border-box; }
+.panel input { flex-shrink:0; min-height:44px; padding:8px 10px; }
+.list { position:relative; list-style:none; margin:0; padding:0; min-height:0; max-height:264px; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-gutter:stable; touch-action:pan-y; }
+.list li { min-height:44px; padding:10px; cursor:pointer; overflow-wrap:anywhere; line-height:24px; }
+.list li:hover,.active { background:#bda0ff20; outline:1px solid var(--color-accent); outline-offset:-2px; }
+.selected { color:var(--color-accent); font-weight:700; }
+.status { font-size:.75rem; color:var(--color-muted); }

@@ -1,3 +1,4 @@
+import { GameCombobox } from '../../games/components/GameCombobox'
 import { createVideoPreviewClient } from '../services/video-preview-api'
 import { validateSubmissionInput } from '../../../lib/validation/public-input'
 import { parseVideoUrl } from '../../../lib/validation/video-url'
@@ -7,7 +8,6 @@ import type { KeyboardEvent } from 'react'
 import { Modal } from '../../../components/ui/Modal'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
-import type { Cursor } from '../../../lib/firebase/public-repository'
 import type { Game } from '../../shorts/types/models'
 import { createSubmissionClient } from '../services/submission-api'
 import type { SubmissionResult } from '../services/submission-api'
@@ -28,7 +28,6 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const [gameId, setGameId] = useState('')
   const [channelName, setChannelName] = useState('')
   const [games, setGames] = useState<Game[]>([])
-  const [cursor, setCursor] = useState<Cursor | null>(null)
   const [loading, setLoading] = useState(true)
   const [catalogError, setCatalogError] = useState('')
   const [error, setError] = useState('')
@@ -36,8 +35,8 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const [choosing, setChoosing] = useState(false)
   const [attempt, setAttempt] = useState(0)
   const busy = useRef(false)
-  const form=useRef<HTMLFormElement>(null),urlField=useRef<HTMLInputElement>(null),titleField=useRef<HTMLInputElement>(null),gameField=useRef<HTMLSelectElement>(null),channelField=useRef<HTMLInputElement>(null),cancelButton=useRef<HTMLButtonElement>(null)
-  const returnFocus=useRef<HTMLElement|null>(null),restoreFocus=useRef(false),advanceUrl=useRef<string|null>(null),pasting=useRef(false),selectKeyboard=useRef(false)
+  const form=useRef<HTMLFormElement>(null),urlField=useRef<HTMLInputElement>(null),titleField=useRef<HTMLInputElement>(null),gameField=useRef<HTMLButtonElement>(null),channelField=useRef<HTMLInputElement>(null),cancelButton=useRef<HTMLButtonElement>(null)
+  const returnFocus=useRef<HTMLElement|null>(null),restoreFocus=useRef(false),advanceUrl=useRef<string|null>(null),pasting=useRef(false)
   const latestPreview=useRef<{url:string;status:'pending'|'success'|'failed'}|null>(null)
   const [previewAttempt,setPreviewAttempt]=useState(0),[confirming,setConfirming]=useState(false)
   useLayoutEffect(()=>{if(confirming)cancelButton.current?.focus();else if(restoreFocus.current){restoreFocus.current=false;returnFocus.current?.focus()}},[confirming])
@@ -59,9 +58,17 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
 
   useEffect(() => {
     let active = true
-    services.listGames().then(page => {
-      if (active) { setGames(page.items); setCursor(page.next); setLoading(false) }
-    }).catch(() => { if (active) { setCatalogError('Não foi possível carregar os jogos.'); setLoading(false) } })
+    void (async()=>{
+      let cursor:Parameters<typeof services.listGames>[0]
+      const catalog=new Map<string,Game>()
+      do {
+        const page=await services.listGames(cursor)
+        if(!active)return
+        page.items.forEach(game=>catalog.set(game.id,game))
+        cursor=page.next??undefined
+      } while(cursor)
+      if(active){setGames([...catalog.values()]);setLoading(false)}
+    })().catch(()=>{if(active){setCatalogError('Não foi possível carregar os jogos.');setLoading(false)}})
     return () => { active = false }
   }, [attempt,services])
   useEffect(() => {
@@ -109,17 +116,8 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
           onChange={event => { titleEdited.current = true; setTitle(event.target.value) }} />
         <p id="title-notice" className="muted" role="status">{titleNotice || 'Preenchido pela fonte quando disponível. A edição é opcional.'}</p>
       </div>
-      <div className="form-field"><label htmlFor="submission-game">Jogo *</label>
-        <select ref={gameField} id="submission-game" required value={gameId} disabled={sending || choosing || loading} onPointerDown={()=>{selectKeyboard.current=false}} onKeyDown={event=>{if(enter(event)&&event.currentTarget.value){event.preventDefault();channelField.current?.focus()}else if(event.key!=='Tab')selectKeyboard.current=true}} onChange={event => {setGameId(event.target.value);if(event.target.value&&!selectKeyboard.current)channelField.current?.focus()}}>
-          <option value="">{loading ? 'Carregando jogos...' : 'Selecione um jogo'}</option>
-          {games.map(game => <option key={game.id} value={game.id}>{game.name}</option>)}
-        </select>
-        {cursor && <button type="button" disabled={loading || sending || choosing} onClick={async () => {
-          setLoading(true); setCatalogError('')
-          try { const page = await services.listGames(cursor); setGames(current => [...current, ...page.items]); setCursor(page.next) }
-          catch { setCatalogError('Não foi possível carregar mais jogos.') }
-          finally { setLoading(false) }
-        }}>Carregar mais jogos</button>}
+      <div className="form-field">
+        <GameCombobox games={games} value={gameId} onChange={setGameId} disabled={sending||choosing} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
         {catalogError && <p role="alert">{catalogError} <button type="button" disabled={sending || choosing || loading} onClick={() => {
           setLoading(true); setCatalogError(''); setAttempt(value => value + 1)
         }}>Recarregar catálogo</button></p>}

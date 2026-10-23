@@ -1,3 +1,4 @@
+import { GameCombobox } from './GameCombobox'
 import { validateGameRequestInput } from '../../../lib/validation/public-input'
 import { useState } from 'react'
 import { games } from '../../shorts/data/fixtures'
@@ -9,11 +10,7 @@ export function GamePicker({ value, onChange }: { value: string; onChange: (id: 
   const [message, setMessage] = useState('')
   const results = query.trim() ? games.filter(game => game.name.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR'))) : []
   return <div className="form-field">
-    <label htmlFor="submission-game">Jogo <span aria-hidden="true">*</span></label>
-    <select id="submission-game" required value={value} onChange={event => onChange(event.target.value)}>
-      <option value="">Selecione um jogo</option>
-      {games.map(game => <option key={game.id} value={game.id}>{game.name}</option>)}
-    </select>
+    <GameCombobox games={games} value={value} onChange={onChange} />
     <button type="button" className="text-button" aria-expanded={open} onClick={() => setOpen(!open)}>Cadastrar jogo</button>
     {open && <section className="inset" aria-label="Cadastrar jogo">
       <label htmlFor="game-query">Qual jogo você procura?</label>
