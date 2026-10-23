@@ -1,3 +1,4 @@
+import { readFailureMessage } from '../../../lib/http/read-failure'
 import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
 import {updateItemLikeCount,updatePageLikeCount} from '../services/feed-like-count'
 import {createOrderedFeedClient,feedOrderLabels} from '../services/ordered-feed-api'
@@ -69,7 +70,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
       if (!active) return
       setNames(Object.fromEntries(resolved)); setPage(result); setLoading(false)
     }).catch(failure => {
-      if (active) { setError(failure instanceof Error?failure.message:TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Tente novamente.'); setLoading(false) }
+      if (active) { setError(readFailureMessage(failure,TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Tente novamente.')); setLoading(false) }
     })
     return () => { active = false; controller.abort() }
   }, [selectedGame, cursor, attempt, query, order])
@@ -104,7 +105,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     </div>
     <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
     <div className={styles.results}>
-    {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={refresh}>Tentar novamente</button></ClipperFailure>
+    {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={()=>{refresh();document.getElementById('main-content')?.focus()}}>Tentar novamente</button></ClipperFailure>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
         <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
       : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}

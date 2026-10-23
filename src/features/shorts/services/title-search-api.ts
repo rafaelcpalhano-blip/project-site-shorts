@@ -1,3 +1,4 @@
+import { PublicReadFailure } from '../../../lib/http/read-failure.ts'
 import {normalizeTitle} from '../../../lib/validation/title-search.ts'
 import type {TitleSearchCursor} from '../../../lib/validation/title-search.ts'
 import type {Short} from '../types/models.ts'
@@ -8,13 +9,13 @@ export function createTitleSearchClient(fetcher:typeof fetch=fetch) {
   const call=(path:string,body:unknown)=>fetcher(path,{method:'POST',credentials:'same-origin',redirect:'error',signal:combined,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
   if(!input.query.trim()||input.query.length>500)throw new Error('Informe um trecho de até 500 caracteres.')
   const session=await call('/api/session',{})
-  if(!session.ok)throw new Error('Não foi possível iniciar a pesquisa. Aguarde e tente novamente.')
+  if(!session.ok)throw new PublicReadFailure('Não foi possível iniciar a pesquisa. Aguarde e tente novamente.', 'session')
   const response=await call('/api/shorts/search',input)
   const data=await response.json()
   if(!response.ok){
-   if(data?.error==='search-preparing')throw new Error('A pesquisa está sendo preparada. O feed continua disponível ao limpar a busca.')
-   if(response.status===429)throw new Error('Muitas pesquisas. Aguarde antes de tentar novamente.')
-   throw new Error('Não foi possível pesquisar. Tente novamente.')
+   if(data?.error==='search-preparing')throw new PublicReadFailure('A pesquisa está sendo preparada. O feed continua disponível ao limpar a busca.')
+   if(response.status===429)throw new PublicReadFailure('Muitas pesquisas. Aguarde antes de tentar novamente.')
+   throw new PublicReadFailure('Não foi possível pesquisar. Tente novamente.')
   }
   const safeId=(value:unknown)=>typeof value==='string'&&/^[\w-]{1,128}$/.test(value)
   if(!Array.isArray(data?.items)||data.items.length>15||data.items.some((item:Short)=>!item||!safeId(item.id)||!safeId(item.gameId)||typeof item.title!=='string'||typeof item.url!=='string'||typeof item.identity!=='string'||typeof item.channelName!=='string'||!['YouTube','TikTok','Twitch'].includes(item.platform)||!Number.isFinite(item.createdAt))||
