@@ -1,8 +1,8 @@
 import clipperStyles from '../../../components/clipper/Clipper.module.css'
 import { useAdminSession } from '../context/admin-session-context'
-import { AdminSections } from '../components/AdminSections'
+const AdminSections = lazy(() => import('../components/AdminSections').then(module => ({default:module.AdminSections})))
 import styles from './AdminPage.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import {
   GoogleAuthProvider, signInWithPopup, getMultiFactorResolver, multiFactor,
   TotpMultiFactorGenerator,
@@ -98,7 +98,7 @@ export function AdminPage() {
         inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" required minLength={6} maxLength={6} disabled={working} />
       <button className="primary" disabled={working || code.length !== 6}>Confirmar código TOTP</button>
     </form>}
-    {authorized && user && <AdminSections key={user.uid} user={user} onUnauthorized={()=>invalidate('A sessão administrativa não é mais válida. Verifique o acesso novamente.')} />}
+    {authorized && user && <Suspense fallback={<p role="status">Carregando painel administrativo...</p>}><AdminSections key={user.uid} user={user} onUnauthorized={()=>invalidate('A sessão administrativa não é mais válida. Verifique o acesso novamente.')} /></Suspense>}
     {auth && (user || resolver) && <button disabled={working} onClick={()=>void run(async()=>{
       await endSession();if(active.current){setResolver(null);setSecret(null);setCode('');setStatus('Sessão encerrada.')}
     })}>Sair / cancelar autenticação</button>}

@@ -1,7 +1,7 @@
 import { AdminAccessError } from './admin-access-error'
 import { initializeApp, getApps } from 'firebase/app'
-import { initializeAuth, inMemoryPersistence, browserPopupRedirectResolver } from 'firebase/auth'
-import type { Auth } from 'firebase/auth'
+import { initializeAuth, inMemoryPersistence, browserPopupRedirectResolver, onIdTokenChanged, signOut } from 'firebase/auth'
+import type { Auth, User } from 'firebase/auth'
 let pending: Promise<Auth> | undefined
 export function loadAdminAuth(): Promise<Auth> {
   if (pending) return pending
@@ -35,4 +35,11 @@ export async function checkAdminAccess(token: string): Promise<string> {
   if (!response.ok) throw new AdminAccessError(typeof data?.error === 'string' ? data.error : 'unavailable', errors[data?.error] || 'Verificação administrativa indisponível. Tente mais tarde.')
   if (data?.authenticated !== true || typeof data.uid !== 'string' || !data.uid) throw new Error('Resposta de autenticação inválida.')
   return data.uid
+}
+
+export function observeAdminAuth(auth:Auth,onUser:(user:User|null)=>void) {
+  return onIdTokenChanged(auth,onUser)
+}
+export function signOutAdminAuth(auth:Auth) {
+  return signOut(auth)
 }

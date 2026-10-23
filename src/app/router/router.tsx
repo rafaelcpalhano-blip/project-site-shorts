@@ -5,7 +5,7 @@ import { SiteLayout } from '../../components/layout/SiteLayout'
 import { NotFoundPage } from '../../components/ui/NotFoundPage'
 import { HomePage } from '../../features/shorts/pages/HomePage'
 import { GamePage } from '../../features/games/pages/GamePage'
-import { AdminPage } from '../../features/admin/pages/AdminPage'
+import { AdminRoute } from '../../features/admin/pages/AdminRoute'
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/jogos/:gameId', element: <GamePage /> },
-      { path: '/admin', element: <AdminPage /> },
+      { path: '/admin', element: <AdminRoute /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
