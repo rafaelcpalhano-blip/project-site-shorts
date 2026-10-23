@@ -1,3 +1,11 @@
+## 23/10/2026 — ajuste D aprovado: retorno às boas-vindas modais
+
+Proprietário substituiu explicitamente a preferência anterior: janela sobreposta sem X, somente Vamos explorar! e Escape; storage preservado. Retorno de foco após fechamento validado, outros modais mantêm X. Frase de login com (J.A.R.V.I.S., 2013). Nove testes focados, lint, build e UI desktop/390 px aprovados; sem dados/remoto/deploy. [Detalhes](etapa-7-6-8-d.md). Próxima E aguarda autorização.
+
+## 23/10/2026 — 7.6.8-D concluída localmente
+
+Boas-vindas agora informativas e não bloqueantes, mesma preferência local; quem já fechou não recebe novamente. Explicação curta de players oficiais/regras de contagem; detalhes recolhidos no rodapé sem prometer views. Clipper existente e frase exata no login; recado some autorizado, rodapé público fora de /admin e subrotas. Foco retorna ao Compartilhar, animação existente respeita movimento reduzido. 26 testes focados, lint/build/diff aprovados; UI real do login e primeira visita simulada com componentes reais, desktop/390px/teclado/sem overflow conferidos. Preferências e dados do proprietário preservados, fixtures removidas. Sem novo Google/TOTP, backend, Firestore, dependências, imagens, restart, commit ou deploy. [Detalhes](etapa-7-6-8-d.md). Próxima 7.6.8-E — seletor de jogos aguarda autorização.
+
 ## 23/10/2026 — complemento C: fallback dos cards com capa manual corrigido
 
 Relato confirmado: ficha mostrava capa, card permanecia Clipper. publicShort e cardArtwork ainda restringiam capa a IGDB. Ambos agora incluem manualGameCoverUrl para capas manuais, mantendo miniatura oficial → capa → Clipper e regras IGDB. Sem leitura extra ou alteração em shorts; próxima consulta/Atualizar feed recebe capa atual. 27 testes focados, lint/build/diff aprovados. UI real confirmou yu-gi-oh teste jogo/Ragnarock no feed e card da ficha; sem escrita de negócio ou player. API reiniciada, dados preservados. [Detalhes/commit complementar](correcao-capas-manuais-cards.md). Alterações anteriores C preservadas; D não iniciada.
