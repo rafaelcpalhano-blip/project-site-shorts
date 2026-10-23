@@ -1,3 +1,4 @@
+import {GameCover} from '../../games/components/GameCover'
 import {useId,useRef,useState} from 'react'
 import type {User} from 'firebase/auth'
 import {validateManualGameDetails} from '../../../lib/validation/manual-game-details'
@@ -13,7 +14,9 @@ export function ManualGameEditor({user,detail,onSaved,onUnauthorized,onBusyChang
  <label htmlFor={id+'name'}>Nome do jogo</label><input id={id+'name'} required maxLength={100} value={value.name} onChange={event=>change('name',event.target.value)}/>
  <label htmlFor={id+'description'}>Descrição</label><textarea id={id+'description'} maxLength={2000} value={value.description} onChange={event=>change('description',event.target.value)}/>
  <label htmlFor={id+'image'}>Capa (opcional)</label><input id={id+'image'} value={value.imageUrl??''} maxLength={2048} onChange={event=>change('imageUrl',event.target.value)}/>
- <p>Use um arquivo já incluído no projeto em /images/games/nome.png (PNG, JPG ou WebP) ou uma capa do domínio oficial images.igdb.com. Não há upload de arquivos aqui.</p>
+ <p>Informe o link HTTPS público direto de uma imagem PNG, JPG ou WebP, até 500 KiB e 2048 pixels por lado. A capa será conferida ao salvar. Links que abrem páginas de compartilhamento ou login, inclusive do Drive, não são imagens diretas.</p>
+ <p>Também aceitamos os caminhos de imagens já incluídas no projeto e as capas IGDB permitidas. Não há upload. O endereço externo precisa continuar público e disponível.</p>
+ {detail.metadata?.imageUrl&&<div><p>Capa salva</p><GameCover imageUrl={detail.metadata.imageUrl} name={detail.game.name}/></div>}
  <label htmlFor={id+'date'}>Data de lançamento</label><input id={id+'date'} type="date" value={value.releaseDate??''} onChange={event=>change('releaseDate',event.target.value)}/>
  {(['genres','gameModes','platforms','aliases'] as const).map(key=><div key={key}><label htmlFor={id+key}>{{genres:'Gêneros',gameModes:'Modos de jogo',platforms:'Plataformas',aliases:'Também conhecido como'}[key]} (um por linha)</label><textarea id={id+key} value={value[key].join('\n')} onChange={event=>change(key,event.target.value.split('\n'))}/></div>)}
  </fieldset>

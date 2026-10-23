@@ -41,3 +41,19 @@ Se upload for autorizado futuramente: somente administrador com MFA, confirmaç�
 Manter capas próprias como arquivos estáticos do Clipzone nesta fase, com inclusão/otimização revisada e caminho no campo já existente. É a menor mudança arquitetural e não requer faturamento, novas coleções ou serviços. Após aprovação, refinar instrução/prévia/fallback e a validação local dos assets dentro do escopo acordado. Não liberar Drive/URLs arbitrárias nem implementar upload administrativo agora.
 
 Não foram executados testes ou build: análise/documentação somente. git diff --check deve ser conferido na entrega. Não considerar C implementada ou avançar D sem autorização.
+
+## Decisão posterior do proprietário — URLs externas
+
+Em 23/10/2026, o proprietário decidiu: “seguiremos com o uso de URL externa ou Drive”. Essa escolha substitui a recomendação inicial de arquivos estáticos. Não é necessário pedir novamente aprovação da alternativa. Upload, Storage e R2 continuam fora do escopo.
+
+Implementação ainda não iniciada: foi solicitado um exemplo de URL pública, acessível sem login e sem tokens, para confirmar o formato de imagem direta, origem e comportamento de redirecionamentos. A definição do host/caminho permitido depende desse exemplo; não liberar todo host HTTPS ou toda a rede googleusercontent.com indiscriminadamente. Preservar capas IGDB e caminhos estáticos existentes por compatibilidade.
+
+Arquivos diretamente afetados após definição: validador manual-game-details, ManualGameEditor, validação do endpoint administrativo se houver verificação remota, GameInfo/fallback e testes de edição/apresentação. Sem novo armazenamento ou arquivo em base64. Manter motivo, MFA, revisão e auditoria existentes. Evitar proxy de imagem e consultas por visita; eventual verificação remota deve acontecer na edição, com limites e proteção SSRF, sem fazer fetch de destinos arbitrários só para uma prévia.
+
+Drive: webViewLink abre o visualizador, não é imagem direta. webContentLink é link de download para arquivos binários, não garantia de incorporação permanente. thumbnailLink é temporário (ordem de horas) e a documentação não o destina ao uso direto em aplicações web. Não armazenar thumbnailLink como capa permanente, nem inventar conversão não documentada de URL. Fontes adicionais: https://developers.google.com/workspace/drive/api/reference/rest/v3/files e https://developers.google.com/workspace/drive/api/guides/manage-downloads . Avaliar o link concreto antes de prometer suporte ao Drive; qualquer necessidade de API/credencial/serviço adicional deve ser explicitada antes de integrar.
+
+Somente registro da escolha e análise do fluxo; sem mudança funcional ou teste desnecessário nesta atualização. Próximo passo: receber e validar a URL de exemplo e implementar a alternativa escolhida dentro das restrições acordadas.
+
+## Implementação posterior
+
+O proprietário forneceu um link direto mlstatic e autorizou domínios públicos variados. A implementação de URLs externas foi concluída, conforme [resultado da 7.6.8-C](etapa-7-6-8-c.md). Os trechos anteriores registram a análise e decisões históricas, não uma pendência atual de aprovação. Sem upload ou novo serviço.

@@ -1,3 +1,4 @@
+import {GameCover} from './GameCover'
 import { supportEmailForDisplay } from '../../../config/support'
 import { gameLabel } from '../services/game-labels'
 import type { GameDetails } from '../services/game-details'
@@ -5,7 +6,7 @@ import styles from './GameInfo.module.css'
 export function GameInfo({game}:{game:GameDetails}) {
   const supportEmail=supportEmailForDisplay(import.meta.env.DEV)
   return <section className={styles.card} aria-label="Informações do jogo">
-    {game.imageUrl && <img className={styles.cover} src={game.imageUrl} alt={'Capa de '+game.name} loading="lazy" referrerPolicy="no-referrer" onError={event=>{event.currentTarget.hidden=true}} />}
+    {game.imageUrl && <GameCover imageUrl={game.imageUrl} name={game.name}/>}
     <div><h2>Sobre o jogo</h2>
       {game.source === 'manual' ? <>
         <p>Informações cadastradas pela comunidade Clipzone.{game.provisional?' Cadastro provisório, sujeito à moderação posterior.':''} Sem cadastro associado à fonte IGDB.</p>

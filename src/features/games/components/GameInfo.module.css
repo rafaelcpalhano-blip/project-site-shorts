@@ -6,3 +6,4 @@
 .facts dt { font-weight:600; }
 .facts dd { margin:0; }
 @media(max-width:520px) { .card { grid-template-columns:minmax(0,1fr); } .cover { max-width:140px; } .facts { grid-template-columns:minmax(0,1fr); } .facts dd { margin-bottom:.5rem; } }
+.coverFallback { margin: 0; color: var(--color-muted); font-size: .85rem; }

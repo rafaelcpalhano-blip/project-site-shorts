@@ -1,3 +1,15 @@
+## 23/10/2026 — complemento C: fallback dos cards com capa manual corrigido
+
+Relato confirmado: ficha mostrava capa, card permanecia Clipper. publicShort e cardArtwork ainda restringiam capa a IGDB. Ambos agora incluem manualGameCoverUrl para capas manuais, mantendo miniatura oficial → capa → Clipper e regras IGDB. Sem leitura extra ou alteração em shorts; próxima consulta/Atualizar feed recebe capa atual. 27 testes focados, lint/build/diff aprovados. UI real confirmou yu-gi-oh teste jogo/Ragnarock no feed e card da ficha; sem escrita de negócio ou player. API reiniciada, dados preservados. [Detalhes/commit complementar](correcao-capas-manuais-cards.md). Alterações anteriores C preservadas; D não iniciada.
+
+## 23/10/2026 — 7.6.8-C concluída: URLs externas diretas
+
+Escolha externa implementada após exemplo mlstatic: HTTPS de domínios públicos variados, inspeção no salvamento com DNS/IP fixado, TLS, redirecionamentos limitados, MIME/assinatura/dimensões e limite 500 KiB/2048px. Só URL final persiste; pré-leitura/revisão final preservam metadados e auditoria em falhas/conflitos. Editor orienta link direto/Drive sem HTML/login, prévia da capa salva e fallback na ficha. 26 testes locais + 2 Firestore isolado aprovados; exemplo real 36.366 bytes/322x500 validado sem cadastrar no 8080, UI simulada desktop/390px conferida. API reiniciada com dados preservados, sem dependências/serviços/remoto/deploy. [Detalhes, custos e limites](etapa-7-6-8-c.md), incluindo revisão do transporte para Cloudflare na Etapa 8. Próxima 7.6.8-D aguarda autorização.
+
+## 23/10/2026 — 7.6.8-C: proprietário escolheu URLs externas/Drive
+
+Escolha de URL externa ou Drive substitui a recomendação de arquivos estáticos; não solicitar nova aprovação da alternativa. Solicitado link público de exemplo (sem login/tokens) para definir host, imagem direta e redirecionamentos antes de implementar. Documentação oficial Drive distingue visualizador, download e thumbnail temporária; não prometer incorporação permanente nem conversão não documentada. [Decisão e dependências](etapa-7-6-8-c-avaliacao.md). Sem código, serviço, upload, dependência, Firestore remoto ou deploy. Aguardar URL; D não iniciada.
+
 ## 23/10/2026 — 7.6.8-C avaliação concluída; alternativa aguarda aprovação
 
 Revisados campo de capa, validadores e fallback existentes; fontes oficiais de custos/limites consultadas. Recomendação: capas próprias como arquivos estáticos otimizados do site, caminho já aceito e sem serviço/faturamento adicional. Upload é viável em volume, mas exige persistência; Firebase Storage requer Blaze e R2 assinatura com possíveis excedentes. URLs externas/Drive não garantem permanência nem formato e exigem política de hosts/validação. [Comparação, números e escopo proposto](etapa-7-6-8-c-avaliacao.md). Somente documentação, sem testes desnecessários, dependências, serviços, backend, Firestore remoto ou deploy. Aguardar aprovação da alternativa antes de implementar; D não iniciada.

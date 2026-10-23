@@ -6,6 +6,7 @@ export class AdminRequestError extends Error {
   constructor(message: string, unauthorized: boolean) { super(message); this.unauthorized = unauthorized }
 }
 const messages: Record<string, string> = {
+  'invalid-cover': 'Não foi possível validar a capa. Use um link HTTPS público direto para PNG, JPG ou WebP, até 500 KiB e 2048 pixels por lado. Links de páginas, login ou compartilhamento podem não funcionar.',
   'manual-edit-only': 'Somente jogos manuais podem ser editados aqui.',
   'game-name-conflict': 'Este nome ou uma variante já está reservado para outro jogo.',
   'name-history-limit': 'O limite de alterações de nome foi atingido; os demais dados podem ser editados mantendo o nome atual.',
