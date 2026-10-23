@@ -10,6 +10,8 @@ import { VideoSourceLink } from './PlayerInformation'
 export function OfficialPlayer({ short }: { short: Short }) {
   const id = useId()
   const box = useRef<HTMLDivElement>(null)
+  const scrollBox = useRef<HTMLDivElement>(null)
+  const [horizontalScroll, setHorizontalScroll] = useState(false)
   const iframe = useRef<HTMLIFrameElement>(null)
   const youtube = useRef<YouTubePlayer | null>(null)
   const tiktokReady = useRef(false)
@@ -24,10 +26,11 @@ export function OfficialPlayer({ short }: { short: Short }) {
   useEffect(() => {
     const element = box.current!
     const measure = () => {
-      setSize({ width: element.clientWidth, height: element.clientHeight })
+      setSize(current => current.width === element.clientWidth && current.height === element.clientHeight ? current : { width: element.clientWidth, height: element.clientHeight })
+      setHorizontalScroll(Boolean(scrollBox.current && element.offsetWidth > scrollBox.current.clientWidth))
     }
     const observer = new ResizeObserver(measure)
-    observer.observe(element); measure()
+    observer.observe(element); if (scrollBox.current) observer.observe(scrollBox.current); measure()
     return () => { observer.disconnect(); playback.release(id) }
   }, [id])
   useEffect(() => {
@@ -108,8 +111,7 @@ export function OfficialPlayer({ short }: { short: Short }) {
       window.clearTimeout(timer); window.clearTimeout(visibilityTimer); window.removeEventListener('message', message)
       document.removeEventListener('visibilitychange', visibility); visible.disconnect() }
   }, [active, id, plan.platform, plan.src, initialAudio])
-  return <section className={styles.player} aria-label={'Vídeo · ' + short.platform}>
-    <div ref={box} className={!short.url ? styles.unavailable : short.platform === 'Twitch' ? styles.wide : styles.vertical}>
+  const playerFrame = <div ref={box} className={!short.url ? styles.unavailable : short.platform === 'Twitch' ? styles.wide : styles.vertical}>
       {active && plan.src ? <iframe ref={iframe} src={plan.src} title={short.title + ' · player oficial ' + plan.platform}
         width="100%" height="100%" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowFullScreen
         referrerPolicy="strict-origin-when-cross-origin"
@@ -122,6 +124,11 @@ export function OfficialPlayer({ short }: { short: Short }) {
           }}>{status === 'failed' ? 'Tentar carregar novamente' : 'Retomar player'}</button>}
         </div>}
     </div>
+  return <section className={styles.player} aria-label={'Vídeo · ' + short.platform}>
+    {short.platform === 'Twitch' ? <>
+      <div ref={scrollBox} className={styles.twitchScroll} role="region" aria-label="Player Twitch" tabIndex={horizontalScroll ? 0 : undefined} aria-describedby={horizontalScroll ? id+'-scroll-help' : undefined} data-short-interactions>{playerFrame}</div>
+      {horizontalScroll && <p id={id+'-scroll-help'} className={styles.status}>Deslize para os lados para acessar todo o player Twitch.</p>}
+    </> : playerFrame}
     <div className={styles.links} data-short-interactions>
       <VideoSourceLink short={short} />
       {plan.src && <button type="button" className={styles.unavailableLink} onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>}
