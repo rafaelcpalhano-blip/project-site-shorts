@@ -1,3 +1,7 @@
+## 23/10/2026 — 7.6.8-C avaliação concluída; alternativa aguarda aprovação
+
+Revisados campo de capa, validadores e fallback existentes; fontes oficiais de custos/limites consultadas. Recomendação: capas próprias como arquivos estáticos otimizados do site, caminho já aceito e sem serviço/faturamento adicional. Upload é viável em volume, mas exige persistência; Firebase Storage requer Blaze e R2 assinatura com possíveis excedentes. URLs externas/Drive não garantem permanência nem formato e exigem política de hosts/validação. [Comparação, números e escopo proposto](etapa-7-6-8-c-avaliacao.md). Somente documentação, sem testes desnecessários, dependências, serviços, backend, Firestore remoto ou deploy. Aguardar aprovação da alternativa antes de implementar; D não iniciada.
+
 ## 23/10/2026 — 7.6.8-B concluída localmente
 
 Catálogo em quatro colunas alinhadas, nomes à esquerda, consulta pública de ativos/manuais/provisórios e detalhes administrativos separados. Ocultos/banidos consultáveis apenas na administração, sem link público. Ações: aparece somente com seleção; Confirmar ação preserva todas as regras; resultados ficam separados para não sumirem após sucesso/falha parcial. 43 testes focados, lint/build/diff aprovados; UI simulada desktop/390px/colunas/foco/consulta provisória/falha parcial conferida sem escrita de negócio. Backend/emulador/remoto intactos, sem restart/deploy. [Detalhes](etapa-7-6-8-b.md). Próxima 7.6.8-C: avaliação de URLs/uploads e aprovação da alternativa antes de implementação.
