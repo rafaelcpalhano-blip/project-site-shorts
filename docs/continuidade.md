@@ -1,3 +1,7 @@
+## 22/10/2026 — 7.6.7-C concluída localmente
+
+Consultar jogo oficial navega à ficha; detalhes administrativos separados. Jogos manuais têm edição validada no servidor, motivo/confirmação e histórico privado antes/depois, sem alterar ID/vínculos/status/cotas. Nomes antigos permanecem reservados; conflito de nomes e revisão concorrente falham sem escrita parcial. Ficha manual mostra metadados da comunidade; retorno interno ao painel somente autorizado, sem alterar o provider. Capas próprias por arquivo estático previamente incluído em public/images/games, sem upload ou Storage. 42 testes locais + 8 Firestore isolado passaram, build/lint/diff e UI simulada conferidos. API reiniciada; dados do emulador preservados. [Detalhes e limites](etapa-7-6-7-c.md). Próxima 7.6.7-D aguarda autorização.
+
 ## 22/10/2026 — 7.6.7-B concluída localmente
 
 Triagem do servidor cobre termos relatados e evasões delimitadas; suspeitas continuam pendentes/privadas, sem reclassificação retroativa. Confirmação em lote com selecionados, motivo e apenas uma linha de ações; autorização/auditoria/serviços existentes preservados. A pedido do proprietário, removida a interface extra de som, mantendo integrações funcionais YouTube/TikTok e controles oficiais Twitch. 44 testes locais + 8 de Firestore isolado aprovados, build/lint/diff e conferência visual sem exclusões reais. API reiniciada, emulador de desenvolvimento preservado. [Detalhes](etapa-7-6-7-b.md). Próxima 7.6.7-C somente após autorização.

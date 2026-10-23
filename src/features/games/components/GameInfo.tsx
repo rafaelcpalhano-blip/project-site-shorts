@@ -8,7 +8,8 @@ export function GameInfo({game}:{game:GameDetails}) {
     {game.imageUrl && <img className={styles.cover} src={game.imageUrl} alt={'Capa de '+game.name} loading="lazy" referrerPolicy="no-referrer" onError={event=>{event.currentTarget.hidden=true}} />}
     <div><h2>Sobre o jogo</h2>
       {game.source === 'manual' ? <>
-        <p>{game.provisional ? 'Jogo cadastrado provisoriamente pela comunidade, sujeito à moderação posterior.' : 'Jogo cadastrado manualmente.'} Sem cadastro associado à fonte IGDB. Descrição e imagem não disponíveis.</p>
+        <p>Informações cadastradas pela comunidade Clipzone.{game.provisional?' Cadastro provisório, sujeito à moderação posterior.':''} Sem cadastro associado à fonte IGDB.</p>
+        <p className={styles.description}>{game.description || 'Descrição não disponível: jogo sem cadastro associado à fonte IGDB.'}</p>
         <p>Para solicitar informações e imagens de um jogo novo ou de sua autoria, entre em contato {supportEmail?<>pelo e-mail de suporte: <strong>{supportEmail}</strong>.</>:<>com o suporte.</>}</p>
       </> : <p className={styles.description}>{game.descriptionPtBr || game.description || 'Descrição não disponível no catálogo.'}</p>}
       {game.descriptionPtBr && <>

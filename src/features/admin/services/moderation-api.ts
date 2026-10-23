@@ -6,6 +6,9 @@ export class AdminRequestError extends Error {
   constructor(message: string, unauthorized: boolean) { super(message); this.unauthorized = unauthorized }
 }
 const messages: Record<string, string> = {
+  'manual-edit-only': 'Somente jogos manuais podem ser editados aqui.',
+  'game-name-conflict': 'Este nome ou uma variante já está reservado para outro jogo.',
+  'name-history-limit': 'O limite de alterações de nome foi atingido; os demais dados podem ser editados mantendo o nome atual.',
   'admin-order-preparing': 'A ordenação por título ainda está em preparação. Atualize após o preenchimento dos resumos.',
   'game-unavailable': 'Jogo indisponível. Atualize o catálogo.',
   'game-action-unavailable': 'Esta decisão não é permitida no estado atual. Reabra os detalhes.',

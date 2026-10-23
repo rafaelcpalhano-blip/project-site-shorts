@@ -1,3 +1,4 @@
+import {ManualGameEditor} from './ManualGameEditor'
 import {AdminFilters} from './AdminFilters'
 import {catalogDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
@@ -39,7 +40,8 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
   {working&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {page&&<>{!page.items.length&&<p>Nenhum jogo neste filtro.</p>}<ul className={styles.list}>{page.items.map(game=><li key={game.id}>
    <p>{game.name} · {game.source==='IGDB'?'IGDB':'Manual'} · {state(game)} · {date(game.createdAt)}</p>
-   <button disabled={working} onClick={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}>Consultar jogo</button>
+   {game.source==='IGDB'&&game.status==='active'&&<Link to={'/jogos/'+game.id}>Consultar jogo</Link>}
+   <button disabled={working} onClick={()=>void run(async()=>{const result=await fetchCatalogGame(user,game.id);if(active.current){reset();setDetail(result)}})}>{game.source==='manual'?'Consultar jogo':'Detalhes administrativos'}</button>
   </li>)}</ul><div className={styles.actions}>
    <button disabled={working||!history.length} onClick={()=>void run(async()=>{const previous=history.slice(0,-1);await load(filter,previous.at(-1));if(active.current)setHistory(previous)})}>Anteriores</button>
    <span>Página {history.length+1} · até 20 jogos</span>
@@ -48,6 +50,7 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
   {detail&&<article className={styles.detail}><h3>{detail.game.name} · {state(detail.game)}</h3>
    <p>Cadastro: {date(detail.game.createdAt)} · Origem: {detail.game.source} · Shorts vinculados: {detail.shortCount===null?'Não calculado':detail.shortCount}</p>
    {detail.game.status==='active'&&<p><Link to={'/jogos/'+detail.game.id}>Abrir ficha pública</Link></p>}
+   {detail.game.source==='manual'&&detail.metadata&&<ManualGameEditor key={detail.game.id+':'+detail.game.revision} user={user} detail={detail} onBusyChange={busy=>{lock.current=busy;setWorking(busy)}} onUnauthorized={onUnauthorized} onSaved={async()=>{if(!active.current)return;const result=await fetchCatalogGame(user,detail.game.id);if(active.current){setDetail(result);setPage(null);setAction(null);setConfirmed(false);setMessage('Informações salvas com histórico administrativo. Atualize o catálogo para conferir a lista.')}}}/>}
    {detail.unbanTarget&&<p>Após desbanir: {detail.unbanTarget==='active'?(detail.game.provisional?'provisório visível':'ativo'):'oculto'}. A revisão individual dos shorts será preservada.</p>}
    {!detail.actions.length&&<p>Nenhuma transição segura disponível. Atualize os detalhes; registros sem histórico de banimento não são restaurados automaticamente.</p>}
    <div className={styles.actions}>{detail.actions.map(value=><button key={value} disabled={working} aria-pressed={action===value} onClick={()=>{setAction(value);setConfirmed(false)}}>{actions[value]}</button>)}</div>
