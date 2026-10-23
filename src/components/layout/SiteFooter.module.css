@@ -65,3 +65,4 @@
   .balloons { text-align: center; }
   .balloon::before { display: none; }
 }
+.explanation { margin: 16px 0; text-align: left; } .explanation summary { cursor: pointer; min-height: 44px; align-content: center; color: var(--color-accent); }

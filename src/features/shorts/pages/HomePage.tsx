@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { ClipperWelcome } from '../../../components/clipper/ClipperWelcome'
 import { usesFirestore } from '../../../lib/firebase/mode'
@@ -13,16 +13,17 @@ export function HomePage() {
   return <HomeContent key={location.key} />
 }
 function HomeContent() {
+  const shareButton=useRef<HTMLButtonElement>(null)
   const [sharing, setSharing] = useState(false)
   const [message, setMessage] = useState('')
   const [feedVersion, setFeedVersion] = useState(0)
   return <>
-    <ClipperWelcome />
     <div className={styles.hero}>
       <PageIntro compact title="Pequenos clipes. Grandes jogadas."
         description="Descubra, compartilhe e comente. Sem criar uma conta." />
-      <button className={"primary " + styles.shareButton} type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
+      <button ref={shareButton} className={"primary " + styles.shareButton} type="button" onClick={() => setSharing(true)}>+ Compartilhar short</button>
     </div>
+    <ClipperWelcome onDismiss={()=>shareButton.current?.focus()} />
     {import.meta.env.DEV && <small className={styles.environment}>{usesFirestore?'Desenvolvimento · dados locais':'Desenvolvimento · modo demonstrativo'}</small>}
     {message && <p role="status">{message}</p>}
     <Suspense fallback={<p role="status">Carregando fonte de dados...</p>}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
@@ -38,4 +39,3 @@ function HomeContent() {
     </Suspense>}
   </>
 }
-

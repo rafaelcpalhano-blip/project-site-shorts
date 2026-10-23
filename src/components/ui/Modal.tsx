@@ -1,16 +1,18 @@
 import { useEffect, useId, useRef } from 'react'
 import type { ReactNode, KeyboardEventHandler } from 'react'
 import styles from './Modal.module.css'
-export function Modal({ title, onClose, children, closeDisabled = false, wide = false, onKeyDown }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean; wide?:boolean; onKeyDown?:KeyboardEventHandler<HTMLDialogElement> }) {
+export function Modal({ title, onClose, children, closeDisabled = false, hideCloseButton = false, returnFocus, wide = false, onKeyDown }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean; hideCloseButton?: boolean; returnFocus?:()=>void; wide?:boolean; onKeyDown?:KeyboardEventHandler<HTMLDialogElement> }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
+  const restoreFocus = useRef(returnFocus)
   useEffect(() => {
     const dialog = ref.current!
+    const focusAfterClose = restoreFocus.current
     const trigger = document.activeElement as HTMLElement | null
     dialog.showModal()
     const overflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => { dialog.close(); document.body.style.overflow = overflow; trigger?.focus() }
+    return () => { dialog.close(); document.body.style.overflow = overflow; if (focusAfterClose) focusAfterClose(); else trigger?.focus() }
   }, [])
   return <dialog ref={ref} className={styles.dialog+(wide?' '+styles.wide:'')} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); if (!closeDisabled) onClose() }}
     onKeyDown={event => {
@@ -29,7 +31,7 @@ export function Modal({ title, onClose, children, closeDisabled = false, wide = 
     }}>
     <header className={styles.header}>
       <h2 id={titleId}>{title}</h2>
-      <button type="button" disabled={closeDisabled} onClick={onClose} aria-label="Fechar janela">✕</button>
+      {!hideCloseButton&&<button type="button" disabled={closeDisabled} onClick={onClose} aria-label="Fechar janela">✕</button>}
     </header>
     {children}
   </dialog>
