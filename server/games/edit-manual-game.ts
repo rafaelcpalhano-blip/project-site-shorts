@@ -1,14 +1,21 @@
+import { inspectRemoteCover } from './remote-cover.ts'
+import { gameCoverUrl } from '../../src/lib/validation/game-cover.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import { ReviewError, counter } from '../moderation/review-short.ts'
 import { validateManualGameDetails } from '../../src/lib/validation/manual-game-details.ts'
 import { nameIdentity, nameStatePath, readNameKeys, writeNameKeys, validateNameReference, GameNameError } from './name-keys.ts'
-export async function editManualGame(input: unknown, uid: string, options: { store: AtomicStore; now: () => Date }) {
+export async function editManualGame(input: unknown, uid: string, options: { store: AtomicStore; now: () => Date; inspectCover?: (url:string)=>Promise<string> }) {
   if (!uid || uid.length > 128) throw Error('invalid-actor')
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new ReviewError('invalid-input',400)
   const data = input as Record<string, unknown>
   if (Object.keys(data).some(key => !['id','revision','confirmed','reason','details'].includes(key)) || typeof data.id !== 'string' || !/^[\w-]{1,128}$/.test(data.id) || data.confirmed !== true || !Number.isSafeInteger(data.revision) || Number(data.revision) < 0 || Number(data.revision) >= Number.MAX_SAFE_INTEGER || typeof data.reason !== 'string' || data.reason.trim().length < 5 || data.reason.trim().length > 500 || /[\p{C}<>]/u.test(data.reason)) throw new ReviewError('invalid-input',400)
   let details: ReturnType<typeof validateManualGameDetails>
   try { details = validateManualGameDetails(data.details) } catch { throw new ReviewError('invalid-input',400) }
+  if(details.imageUrl?.startsWith('https://')&&!gameCoverUrl(details.imageUrl)){
+    // Authoritative preflight before outbound I/O, followed by the existing atomic recheck.
+    await options.store.transact(async tx=>{const game=await tx.get('games/'+data.id);if(!game)throw new ReviewError('game-unavailable',404);if(game.source!=='manual')throw new ReviewError('manual-edit-only',409);if(counter(game.reviewVersion??0)!==data.revision)throw new ReviewError('stale-review')})
+    try { const checked=await (options.inspectCover??inspectRemoteCover)(details.imageUrl);const normalized=validateManualGameDetails({...details,imageUrl:checked});if(!normalized.imageUrl?.startsWith('https://'))throw Error('invalid-cover');details=normalized } catch { throw new ReviewError('invalid-cover',400) }
+  }
   const identity = await nameIdentity(details.name), now = options.now()
   if (!Number.isSafeInteger(now.getTime()) || now.getTime() < 0) throw Error('invalid-clock')
   return options.store.transact(async tx => {
