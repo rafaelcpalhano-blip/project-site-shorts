@@ -6,7 +6,7 @@ import styles from './GameInfo.module.css'
 export function GameInfo({game}:{game:GameDetails}) {
   const supportEmail=supportEmailForDisplay(import.meta.env.DEV)
   return <section className={styles.card} aria-label="Informações do jogo">
-    {game.imageUrl && <GameCover imageUrl={game.imageUrl} name={game.name}/>}
+    {game.imageUrl && <div className={styles.coverSlot}><GameCover imageUrl={game.imageUrl} name={game.name}/></div>}
     <div><h2>Sobre o jogo</h2>
       {game.source === 'manual' ? <>
         <p>Informações cadastradas pela comunidade Clipzone.{game.provisional?' Cadastro provisório, sujeito à moderação posterior.':''} Sem cadastro associado à fonte IGDB.</p>
