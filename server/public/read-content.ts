@@ -1,3 +1,4 @@
+import { manualGameCoverUrl } from '../../src/lib/validation/manual-game-details.ts'
 import { gameCoverUrl } from '../../src/lib/validation/game-cover.ts'
 import { commentNumber } from '../comments/comment-number.ts'
 import { publicCommentCount } from '../comments/comment-count.ts'
@@ -18,7 +19,7 @@ export function publicShort(id: string, data: RecordData, game: RecordData) {
   const url=text(data,'normalizedUrl',2048), parsed=parseVideoUrl(url)
   if(parsed.platform!==data.platform || parsed.identity!==data.platform+':'+data.platformVideoId)throw new Error('invalid-record')
   const thumbnail=readThumbnail(data.thumbnail,parsed.platform,parsed.identity)
-  const gameCover=game.source==='IGDB'?gameCoverUrl(game.imageUrl):undefined
+  const gameCover=game.source==='IGDB'?gameCoverUrl(game.imageUrl):game.source==='manual'?manualGameCoverUrl(game.imageUrl):undefined
   return {id,...(gameCover?{gameCoverUrl:gameCover}:{}),...(thumbnail?{thumbnail}:{}),likeCount:likeCount(data.likeCount),...(data.commentCount!==undefined?{commentCount:publicCommentCount(data.commentCount)}:{}),identity:parsed.identity,url,platform:parsed.platform,title:text(data,'title',500),channelName:typeof data.channelName==='string'?data.channelName:'',gameId:publicId(data.gameId),gameName:text(game,'officialName',500),createdAt:date(data).getTime()}
 }
 function reader(store: AtomicStore) { if(!store.get||!store.publicPage)throw new Error('public-read-unavailable');return {get:store.get,page:store.publicPage} }

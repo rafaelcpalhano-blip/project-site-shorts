@@ -24,6 +24,30 @@ test('projeção pública reutiliza capa IGDB sem alterar título ou revelar cam
  const data={platform:'YouTube',platformVideoId:'abcdefghijk',normalizedUrl:'https://www.youtube.com/shorts/abcdefghijk',title:'Título completo '+ 'jogada '.repeat(50),gameId:'portal',createdAt:new Date(now),moderationStatus:'published',likeCount:0}
  const game={officialName:'Portal',source:'IGDB',imageUrl:cover,private:'secret'}
  const result=publicShort('short',data,game);assert.equal(result.gameCoverUrl,gameCoverUrl(cover));assert.equal(result.title,data.title);assert.equal('private' in result,false)
- assert.equal(publicShort('short',data,{...game,source:'manual'}).gameCoverUrl,undefined)
+ assert.equal(publicShort('short',data,{...game,source:'manual'}).gameCoverUrl,gameCoverUrl(cover))
  assert.equal(publicShort('short',data,{...game,imageUrl:'https://evil.test/a.png'}).gameCoverUrl,undefined)
+})
+
+test('capa manual externa e estática entram após miniatura oficial, e falha preserva Clipper',()=>{
+ for(const image of ['https://http2.mlstatic.com/D_NQ_NP_827505-MLB104802198232_012026-O.webp','/images/games/capa.png']){
+  const item={...short,gameCoverUrl:image},failures=createImageFailureCache()
+  assert.equal(cardArtwork(item,now,failures.has).kind,'thumbnail')
+  failures.add(url);assert.deepEqual(cardArtwork(item,now,failures.has),{kind:'cover',url:image})
+  failures.add(image);assert.equal(cardArtwork(item,now,failures.has).kind,'clipper')
+ }
+})
+test('feed reaproveita capa manual atualizada do registro lido, sem mudar thumbnail ou expor metadados privados',()=>{
+ const data={platform:'TikTok',platformVideoId:'123456789',normalizedUrl:'https://www.tiktok.com/@gamer/video/123456789',title:'Jogada',gameId:'manual-test',createdAt:new Date(now),moderationStatus:'published',likeCount:0}
+ const game={officialName:'Jogo manual',source:'manual',imageUrl:null,private:'segredo',reviewVersion:1}
+ assert.equal(cardArtwork(publicShort('short',data,game),now,()=>false).kind,'clipper')
+ game.imageUrl='https://images.example.org/capa.png'
+ const refreshed=publicShort('short',data,game)
+ assert.equal(refreshed.gameCoverUrl,game.imageUrl);assert.equal(cardArtwork(refreshed,now,()=>false).kind,'cover');assert.equal(refreshed.thumbnail,undefined);assert.equal(refreshed.private,undefined);assert.equal(refreshed.reviewVersion,undefined)
+ for(const imageUrl of ['javascript:alert(1)','https://127.0.0.1/a.png','data:image/png;base64,x','https://images.example.org/a.svg']){const result=publicShort('short',data,{...game,imageUrl});assert.equal(result.gameCoverUrl,undefined);assert.equal(cardArtwork(result,now,()=>false).kind,'clipper')}
+ assert.equal(publicShort('short',data,{...game,source:'unknown'}).gameCoverUrl,undefined)
+})
+test('capa manual substituída não fica bloqueada pelo cache de falha da URL antiga',()=>{
+ const failures=createImageFailureCache(),old='https://images.example.org/old.png',updated='https://images.example.org/new.png';failures.add(old)
+ assert.equal(cardArtwork({...short,thumbnail:undefined,gameCoverUrl:old},now,failures.has).kind,'clipper')
+ assert.deepEqual(cardArtwork({...short,thumbnail:undefined,gameCoverUrl:updated},now,failures.has),{kind:'cover',url:updated})
 })
