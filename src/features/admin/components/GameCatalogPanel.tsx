@@ -1,3 +1,4 @@
+import {useAdminListRefresh} from './use-admin-list-refresh'
 import {CatalogGameRow} from './CatalogGameRow'
 import {useAdminBulk} from '../context/admin-bulk-context'
 import {ManualGameEditor} from './ManualGameEditor'
@@ -28,16 +29,18 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
  useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
  const reason=formatReason(draft)
  const reset=()=>{setDetail(null);setAction(null);setDraft(emptyReason());setConfirmed(false)}
- const run=async(work:()=>Promise<void>)=>{
+ const run=async(work:()=>Promise<void>,preserveFeedback=false)=>{
   if(lock.current||bulk?.busy)return
-  bulk?.clear()
-  lock.current=true;setWorking(true);setError('');setMessage('')
+  bulk?.clear(preserveFeedback)
+  lock.current=true;setWorking(true);setError('');if(!preserveFeedback)setMessage('')
   try{await work()}catch(failure){if(active.current){if(failure instanceof AdminRequestError&&failure.unauthorized){onUnauthorized();return}setError(failure instanceof Error?failure.message:'Operação indisponível.')}}finally{lock.current=false;if(active.current)setWorking(false)}
  }
- const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{bulk?.clear();const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
+ const load=async(selected:CatalogFilter=filter,cursor?:CatalogCursor,selectedSort:AdminSort=sort)=>{bulk?.clear(true);const result=await fetchCatalog(user,selected,cursor,selectedSort);if(active.current){setPage(result);reset()}}
+ useAdminListRefresh(bulk?.revision,working||!!bulk?.busy,()=>{if(page)void run(async()=>{await load();setHistory([])},true)})
  return <section className={styles.panel} aria-labelledby="catalog-heading">
   <h2 id="catalog-heading">Catálogo administrativo de jogos</h2>
 
+  <p>Revise novos cadastros em Provisórios. Salvar informações não aprova o cadastro: use Aprovar cadastro provisório após a conferência. Esta aprovação não converte o jogo para IGDB nem altera seu ID.</p>
   <p>Ocultar ou banir retira também os shorts das próximas consultas públicas. Os registros, vínculos e estados de moderação dos vídeos são preservados.</p>
   <p className="muted">Ativos inclui provisórios visíveis. Contagens são consultadas somente ao abrir detalhes e incluem shorts em todos os estados.</p>
   <AdminFilters labels={tabs} descriptions={catalogDescriptions} value={filter} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setFilter(value);setPage(null);setHistory([]);reset();await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Nome" dateLabel="Data de cadastro" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(filter,undefined,value)})} />} refresh={<RefreshButton label="Atualizar catálogo de jogos" disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{await load();if(active.current)setHistory([])})} />} />
@@ -50,14 +53,14 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
   {detail&&<article className={styles.detail}><h3>{detail.game.name} · {state(detail.game)}</h3>
    <p>Cadastro: {date(detail.game.createdAt)} · Origem: {detail.game.source} · Shorts vinculados: {detail.shortCount===null?'Não calculado':detail.shortCount}</p>
    {detail.game.status==='active'&&<p><Link to={'/jogos/'+detail.game.id}>Abrir ficha pública</Link></p>}
-   {detail.game.source==='manual'&&detail.metadata&&<ManualGameEditor key={detail.game.id+':'+detail.game.revision} user={user} detail={detail} onBusyChange={busy=>{lock.current=busy;setWorking(busy)}} onUnauthorized={onUnauthorized} onSaved={async()=>{if(!active.current)return;const result=await fetchCatalogGame(user,detail.game.id);if(active.current){setDetail(result);setPage(null);setAction(null);setConfirmed(false);setMessage('Informações salvas com histórico administrativo. Atualize o catálogo para conferir a lista.')}}}/>}
+   {detail.game.source==='manual'&&detail.metadata&&<ManualGameEditor key={detail.game.id+':'+detail.game.revision} user={user} detail={detail} onBusyChange={busy=>{lock.current=busy;setWorking(busy)}} onUnauthorized={onUnauthorized} onSaved={async()=>{if(!active.current)return;setDetail(null);setAction(null);setConfirmed(false);setMessage('Informações salvas com histórico administrativo.');bulk?.invalidateLists()}}/>}
    {detail.unbanTarget&&<p>Após desbanir: {detail.unbanTarget==='active'?(detail.game.provisional?'provisório visível':'ativo'):'oculto'}. A revisão individual dos shorts será preservada.</p>}
    {!detail.actions.length&&<p>Nenhuma transição segura disponível. Atualize os detalhes; registros sem histórico de banimento não são restaurados automaticamente.</p>}
    <div className={styles.actions}>{detail.actions.map(value=><button key={value} disabled={working||!!bulk?.busy} aria-pressed={action===value} onClick={()=>{setAction(value);setConfirmed(false)}}>{actions[value]}</button>)}</div>
    {action&&<div className="form"><ReasonShortcuts value={draft} disabled={working||!!bulk?.busy} onChange={value=>{setDraft(value);setConfirmed(false)}} />
-    <p>{action==='hide'||action==='ban'?'O jogo e seus shorts ficarão fora das próximas consultas públicas. O nome continuará reservado. Nada será apagado.':action==='unban'?'O jogo voltará ao estado anterior ao banimento. Se estava oculto, continuará oculto.':'O jogo poderá aparecer novamente conforme seu estado. Vídeos removidos ou pendentes mantêm sua própria moderação.'}</p>
+    <p>{action==='hide'||action==='ban'?'O jogo e seus shorts ficarão fora das próximas consultas públicas. O nome continuará reservado. Nada será apagado.':action==='approve'?'O jogo já está visível. Esta decisão conclui a revisão administrativa do cadastro provisório, preservando seu ID e seus shorts.':action==='unban'?'O jogo voltará ao estado anterior ao banimento. Se estava oculto, continuará oculto.':'O jogo poderá aparecer novamente conforme seu estado. Vídeos removidos ou pendentes mantêm sua própria moderação.'}</p>
     <label className={styles.confirmation}><input type="checkbox" checked={confirmed} disabled={working||!!bulk?.busy} onChange={event=>setConfirmed(event.target.checked)} /> Confirmo esta decisão sobre {detail.game.name}.</label>
-    <button className="primary" disabled={working||!!bulk?.busy||!confirmed||reason.trim().length<5||reason.length>500} onClick={()=>void run(async()=>{await moderateGame(user,detail,action,reason);if(active.current){reset();setPage(null);setHistory([]);setMessage('Decisão registrada com motivo e identidade administrativa.')}await load();if(active.current)setMessage('Decisão registrada com motivo e identidade administrativa.')})}>Confirmar: {actions[action]}</button>
+    <button className="primary" disabled={working||!!bulk?.busy||!confirmed||reason.trim().length<5||reason.length>500} onClick={()=>void run(async()=>{await moderateGame(user,detail,action,reason);if(active.current){reset();setHistory([]);setMessage('Decisão registrada com motivo e identidade administrativa.')}bulk?.invalidateLists()})}>Confirmar: {actions[action]}</button>
    </div>}
    <h4>Histórico recente</h4>{!detail.history.length&&<p>Nenhum evento disponível.</p>}
    <ul>{detail.history.map(event=><li key={event.id}>{date(event.createdAt)} · {actions[event.action as CatalogAction]??event.action} · {event.reason??'Sem motivo registrado'} · {event.actorUid?'UID: '+event.actorUid:'Registro automático'}</li>)}</ul>

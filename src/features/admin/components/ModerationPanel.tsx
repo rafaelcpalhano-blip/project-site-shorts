@@ -1,3 +1,4 @@
+import {useAdminListRefresh} from './use-admin-list-refresh'
 import {AdminBulkSelect} from './AdminBulkSelect'
 import {useAdminBulk} from '../context/admin-bulk-context'
 import {AdminFilters} from './AdminFilters'
@@ -12,13 +13,13 @@ import type { QueueCursor, QueuePage, ReviewDetail, ReviewAction } from '../type
 import { reportReasons } from '../../../lib/validation/report-input'
 import { parseVideoUrl } from '../../../lib/validation/video-url'
 import styles from './ModerationPanel.module.css'
-const queueLabels = {reports:'Denúncias abertas',pending:'Vídeos pendentes / bloqueados',removed:'Vídeos removidos'}
+const queueLabels = {reports:'Denúncias abertas',reviewed:'Denúncias analisadas',pending:'Todos os pendentes / bloqueados',unblocked:'Pendentes de publicação',blocked:'Bloqueados pela administração',removed:'Vídeos removidos'}
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
 const labels: Record<ReviewAction, string> = { block:'Bloquear vídeo', dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
 export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauthorized: () => void }) {
  const bulk=useAdminBulk()
   const [sort,setSort]=useState<AdminSort>('date-desc')
- const [queue, setQueue] = useState<'reports' | 'pending' | 'removed'>('reports')
+ const [queue, setQueue] = useState<keyof typeof queueLabels>('reports')
   const [page, setPage] = useState<QueuePage | null>(null)
   const [history, setHistory] = useState<Array<QueueCursor | undefined>>([])
   const [detail, setDetail] = useState<ReviewDetail | null>(null)
@@ -30,10 +31,10 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
   const lock = useRef(false)
   const active = useRef(true)
   useEffect(() => { active.current = true; return () => { active.current = false } }, [])
-  const run = async (work: () => Promise<void>) => {
+  const run = async (work: () => Promise<void>,preserveFeedback=false) => {
     if (lock.current||bulk?.busy) return
-    bulk?.clear()
-    lock.current = true; setWorking(true); setError(''); setFeedback('')
+    bulk?.clear(preserveFeedback)
+    lock.current = true; setWorking(true); setError(''); if(!preserveFeedback)setFeedback('')
     try { await work() }
     catch (failure) {
       if (!active.current) return
@@ -41,37 +42,39 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
       setError(failure instanceof Error ? failure.message : 'Operação indisponível. Tente novamente.')
     } finally { lock.current = false; if (active.current) setWorking(false) }
   }
-  const load = async (selectedQueue: 'reports' | 'pending' | 'removed' = queue,selectedSort:AdminSort=sort) => {
-    bulk?.clear();const result = await fetchQueue(user, selectedQueue,undefined,selectedSort)
+  const load = async (selectedQueue: keyof typeof queueLabels = queue,selectedSort:AdminSort=sort) => {
+    bulk?.clear(true);const result = await fetchQueue(user, selectedQueue,undefined,selectedSort)
     if (active.current) { setPage(result); setHistory([]); setDetail(null); setAction(null); setReason('') }
   }
   const open = async (id: string) => {
     const result = await fetchDetail(user, id)
     if (active.current) { setDetail(result); setAction(null); setReason('') }
   }
+ useAdminListRefresh(bulk?.revision,working||!!bulk?.busy,()=>{if(page)void run(async()=>{await load();setHistory([])},true)})
   let source: string | undefined
   if (detail) {
     try { source = parseVideoUrl(detail.short.url).url } catch { /* Never link arbitrary schemes/hosts from stored data. */ }
   }
   return <section className={styles.panel} aria-labelledby="moderation-heading">
-    <h2 id="moderation-heading">Denúncias e revisão</h2>
+    <h2 id="moderation-heading">Denúncias e moderação de vídeos</h2>
 
     <p>Denúncias entram para análise e mantêm o vídeo visível. Os totais representam sessões anônimas, não pessoas verificadas.</p>
-    <AdminFilters labels={queueLabels} descriptions={queueDescriptions} value={queue} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setQueue(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Título" dateLabel="Data de entrada na fila" onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />} refresh={<RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working||!!bulk?.busy} onClick={() => void run(() => load())} />} />
+    <AdminFilters labels={queueLabels} descriptions={queueDescriptions} value={queue} disabled={working||!!bulk?.busy} onChange={value=>void run(async()=>{setQueue(value);setPage(null);setDetail(null);setHistory([]);setAction(null);setReason('');await load(value)})} order={<AdminOrder value={sort} disabled={working||!!bulk?.busy} textLabel="Título" dateLabel={queue==='reports'||queue==='reviewed'?'Data da primeira denúncia':'Data de criação do vídeo'} onChange={value=>void run(async()=>{setSort(value);setPage(null);setHistory([]);await load(queue,value)})} />} refresh={<RefreshButton label="Atualizar fila de denúncias e vídeos" disabled={working||!!bulk?.busy} onClick={() => void run(() => load())} />} />
+    {page?.filteredWindow&&<p>Filtro em janelas de até 20 registros. Uma janela vazia pode ter continuação; use Próxima enquanto disponível.</p>}
     {working && <p role="status">Consultando o servidor…</p>}
     {error && <p role="alert" className="error">{error}</p>}
     {feedback && <p role="status">{feedback}</p>}
     {page && <div>
-      {!page.items.length && <p>Nenhum item nesta fila.</p>}
-      <ul className={styles.list}>{page.items.map(item => <li key={item.id}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'video',id:item.id,label:item.title??'',status:item.status,queue,count:item.count,reviewedCount:item.reviewedCount}}/>
-        <div><strong>{item.title || 'Vídeo denunciado'}</strong><p>{date(item.time)}{item.count !== undefined &&
+      {!page.items.length && <p>Nenhum item nesta janela da fila.</p>}
+      <ul className={styles.list}>{page.items.map(item => <li key={item.id}>{queue!=='reviewed'&&<AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'video',id:item.id,label:item.title??'',status:item.status,queue:queue==='blocked'||queue==='unblocked'?'pending':queue,count:item.count,reviewedCount:item.reviewedCount}}/>}
+        <div><strong>{item.title || 'Vídeo denunciado'}</strong><p style={{overflowWrap:'anywhere'}}>ID: {item.id}</p><p>{date(item.time)}{item.count !== undefined &&
           ' · ' + Math.max(0, item.count - (item.reviewedCount ?? 0)) + ' denúncia(s) desde a última análise'}</p></div>
         <button disabled={working||!!bulk?.busy} onClick={() => void run(() => open(item.id))}>Revisar</button>
       </li>)}</ul>
       <div className={styles.actions}>
         <button disabled={working||!!bulk?.busy || !history.length} onClick={() => void run(async () => {
           const previous = history.slice(0, -1)
-          bulk?.clear();const result = await fetchQueue(user, queue, previous.at(-1),sort)
+          bulk?.clear(true);const result = await fetchQueue(user, queue, previous.at(-1),sort)
           if (active.current) { setPage(result); setHistory(previous); setDetail(null); setAction(null) }
         })}>Anterior</button>
         <span>Página {history.length + 1} · até 20 itens</span>
@@ -118,16 +121,16 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
         {detail.short.restoreStatus && <button disabled={working||!!bulk?.busy || reason.trim().length < 5} onClick={() => setAction('restore')}>Restaurar vídeo</button>}
       </div>
       {action && <div className={styles.confirm} role="group" aria-label="Confirmar decisão">
-        <p><strong>{labels[action]}?</strong> {action==='block'?'O vídeo ficará oculto na fila de revisão, mantendo sua identidade reservada.':action === 'remove' ? 'O vídeo sairá do feed e continuará bloqueado contra republicação.' :
+        <p><strong>{labels[action]}?</strong> {action==='block'?'O vídeo sairá da visualização pública e aparecerá em Bloqueados pela administração. Seu registro e identidade serão preservados.':action === 'remove' ? 'O vídeo sairá do feed e continuará bloqueado contra republicação.' :
           action === 'restore' ? 'O registro voltará ao estado anterior à remoção, sem nova cobrança de cota. O link continuará bloqueado para novos envios.' :
-          action === 'approve' ? 'A fonte será validada novamente e a publicação consumirá a cota do autor de hoje.' : 'A visibilidade não será alterada. Novas denúncias reabrirão a análise.'}</p>
+          action === 'approve' ? 'A fonte será validada novamente e a publicação consumirá a cota do autor de hoje.' : 'As denúncias serão marcadas como analisadas, preservando os registros. A visibilidade não será alterada. Novas denúncias poderão reabrir a análise.'}</p>
         <p>Motivo: {reason}</p>
         <div className={styles.actions}>
           <button className="primary" disabled={working||!!bulk?.busy} onClick={() => void run(async () => {
             await sendReview(user, detail, action, reason)
             if (!active.current) return
-            setDetail(null); setAction(null); setReason(''); setPage(null); setHistory([])
-            setFeedback('Decisão registrada. Use o botão de atualização para recarregar a fila.')
+            setDetail(null); setAction(null); setReason(''); setHistory([])
+            setFeedback('Decisão registrada.');bulk?.invalidateLists()
           })}>Confirmar decisão</button>
           <button disabled={working||!!bulk?.busy} onClick={() => setAction(null)}>Cancelar</button>
         </div>

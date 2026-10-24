@@ -23,6 +23,7 @@ const messages: Record<string, string> = {
   'invalid-game': 'Confirme um jogo IGDB ativo antes de vincular.',
   'comment-unavailable': 'Comentário indisponível. Atualize a fila.',
   'short-unavailable': 'Vídeo indisponível. Atualize a fila.',
+  'record-unavailable': 'Registro não encontrado. Confira o tipo e o ID.',
   'invalid-input': 'Confira o motivo e os dados da revisão.',
   'abuse-limit': 'Muitas operações. Aguarde antes de tentar novamente.',
   'totp-required': 'Entre novamente com Google e TOTP.',
@@ -37,7 +38,7 @@ export async function request<T>(user: User, path: string, body: unknown): Promi
     response.status === 401 || response.status === 403)
   return data as T
 }
-export const fetchQueue = (user: User, queue: 'reports' | 'pending' | 'removed', cursor?: QueueCursor, sort?:AdminSort) =>
+export const fetchQueue = (user: User, queue: 'reports' | 'pending' | 'removed' | 'blocked' | 'unblocked' | 'reviewed', cursor?: QueueCursor, sort?:AdminSort) =>
   request<QueuePage>(user, 'queue', { queue, cursor, sort })
 export const fetchDetail = (user: User, shortId: string, cursor?: AdminCursor) =>
   request<ReviewDetail>(user, 'detail', { shortId, cursor })

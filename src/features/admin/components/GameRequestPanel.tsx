@@ -1,3 +1,4 @@
+import {useAdminListRefresh} from './use-admin-list-refresh'
 import {AdminBulkSelect} from './AdminBulkSelect'
 import {useAdminBulk} from '../context/admin-bulk-context'
 import {AdminFilters} from './AdminFilters'
@@ -29,21 +30,23 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
  useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
  const reason=formatReason(reasonDraft)
  const busy=working||picking||!!bulk?.busy
- const run=async(work:()=>Promise<void>)=>{
+ const run=async(work:()=>Promise<void>,preserveFeedback=false)=>{
   if(lock.current||picking||bulk?.busy)return
-  bulk?.clear()
-  lock.current=true;setWorking(true);setError('');setMessage('')
+  bulk?.clear(preserveFeedback)
+  lock.current=true;setWorking(true);setError('');if(!preserveFeedback)setMessage('')
   try{await work()}catch(failure){if(active.current){
    if(failure instanceof AdminRequestError&&failure.unauthorized){onUnauthorized();return}
    setError(failure instanceof Error?failure.message:'Operação indisponível.')
   }}finally{lock.current=false;if(active.current)setWorking(false)}
  }
  const load=async(cursor?:RequestCursor,selectedStatus:RequestStatus=status,selectedSort:AdminSort=sort)=>{
-  bulk?.clear();const result=await fetchGameRequests(user,selectedStatus,cursor,selectedSort)
+  bulk?.clear(true);const result=await fetchGameRequests(user,selectedStatus,cursor,selectedSort)
   if(active.current){setPage(result);setItem(null);setGame(null);setAction(null);setReason(emptyReason())}
  }
+ useAdminListRefresh(bulk?.revision,working||!!bulk?.busy,()=>{if(page)void run(async()=>{await load();setHistory([])},true)})
  return <section className={styles.panel} aria-labelledby="game-requests-heading">
-  <h2 id="game-requests-heading">Solicitações de jogos</h2>
+  <h2 id="game-requests-heading">Solicitações antigas</h2>
+  <p>Fila do fluxo anterior. Novas inclusões manuais são revisadas em Catálogo → Provisórios; confirmações IGDB entram diretamente no catálogo. Aceitar uma solicitação não migra shorts nem aprova um provisório já existente.</p>
 
   <p>Solicitações vinculadas ou rejeitadas não possuem nova decisão em lote na política atual.</p>
   <p>Vincule ao jogo correto no IGDB ou aceite um cadastro manual sem metadados externos. Esta decisão não publica vídeos pelo visitante.</p>
@@ -51,9 +54,9 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
   {busy&&<p role="status">Consultando catálogo…</p>}{error&&<p role="alert">{error}</p>}{message&&<p role="status">{message}</p>}
   {page&&<>{!page.items.length&&<p>Nenhuma solicitação nesta fila.</p>}
    <ul className={styles.list}>{page.items.map(value=><li key={value.id}>{value.status==='pending'&&<AdminBulkSelect disabled={busy} onChoose={()=>{setItem(null);setAction(null)}} row={{kind:'request',id:value.id,label:value.name,revision:value.revision,status:value.status,request:value}}/>}
-    <p>{value.name} · {labels[value.status]} · {new Date(value.createdAt).toLocaleString('pt-BR')}</p>
+    <p style={{overflowWrap:'anywhere'}}>ID: {value.id}</p><p>{value.name} · {labels[value.status]} · {new Date(value.createdAt).toLocaleString('pt-BR')}</p>
     {value.reason&&<p>Motivo: {value.reason}</p>}{value.gameId&&<Link to={'/jogos/'+value.gameId}>Abrir ficha do jogo</Link>}
-    {value.status==='pending'&&<button disabled={busy} onClick={()=>{bulk?.clear();setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason(emptyReason());setAction(null);setMessage('')}}>Analisar solicitação</button>}
+    {value.status==='pending'&&<button disabled={busy} onClick={()=>{bulk?.clear(true);setItem(value);setGame(null);setManual(false);setManualName(value.name);setReason(emptyReason());setAction(null);setMessage('')}}>Analisar solicitação</button>}
    </li>)}</ul>
    <div className={styles.actions}><button disabled={busy||!history.length} onClick={()=>void run(async()=>{
     const previous=history.slice(0,-1);await load(previous.at(-1));if(active.current)setHistory(previous)
@@ -77,7 +80,7 @@ export function GameRequestPanel({user,onUnauthorized}:{user:User;onUnauthorized
    </>}
    <form className="form" onSubmit={event=>{event.preventDefault();if(!action||(action==='link'&&!game)||(action==='create'&&!manualName.trim()))return;void run(async()=>{
     await reviewGameRequest(user,item,reason,action==='create'?{kind:'manual',name:manualName}:action==='link'&&game?{kind:'igdb',gameId:game.id}:undefined)
-    await load();if(active.current){setHistory([]);setMessage('Decisão da solicitação registrada.')}
+    if(active.current){setItem(null);setHistory([]);setMessage('Decisão da solicitação registrada.');bulk?.invalidateLists()}
    })}}>
     <ReasonShortcuts value={reasonDraft} onChange={setReason} disabled={busy} />
     <div className={styles.actions}><button type="button" disabled={busy||(manual?!manualName.trim():!game)} aria-describedby={!game?'game-request-help':undefined} aria-pressed={action==='link'||action==='create'} onClick={()=>setAction(manual?'create':'link')}>Aceitar solicitação</button>

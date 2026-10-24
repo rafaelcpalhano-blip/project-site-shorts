@@ -17,6 +17,9 @@ export const commentDescriptions = {
   removed:'Comentários anteriormente publicados que foram retirados pela administração.',
 }
 export const queueDescriptions = {
+  reviewed:'Resumos de denúncias já analisados, com registros originais e histórico preservados.',
+  blocked:'Vídeos anteriormente publicados e bloqueados pela administração.',
+  unblocked:'Vídeos pendentes que não possuem bloqueio administrativo de publicação anterior.',
   reports:'Denúncias recebidas que ainda precisam de uma decisão administrativa.',
   pending:'Shorts ocultos que aguardam análise ou uma decisão de moderação.',
   removed:'Shorts retirados da visualização pública por decisão administrativa, com registros preservados.',
