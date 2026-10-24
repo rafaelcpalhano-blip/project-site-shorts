@@ -7,3 +7,11 @@
 .clipperGreeting img { flex: 0 0 72px; width: 72px; height: 108px; object-fit: contain; }
 .clipperGreeting p { margin: 0; line-height: 1.6; font-size: .9rem; color: var(--color-accent); }
 @media (max-width: 480px) { .clipperGreeting { gap: 12px; } .clipperGreeting img { flex-basis: 56px; width: 56px; height: 84px; } }
+
+.login { max-width:640px; margin:clamp(8px,4vh,36px) auto; text-align:center; min-width:0; }
+.login h1 { margin:0 0 20px; }
+.login .clipperGreeting { flex-direction:column; margin:0 auto 24px; max-width:48ch; gap:18px; }
+.login .clipperGreeting img { flex-basis:auto; width:104px; height:156px; }
+.login .totpForm { justify-content:center; text-align:left; }
+.login > button { max-width:100%; min-height:48px; }
+.login p { overflow-wrap:anywhere; }

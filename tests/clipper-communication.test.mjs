@@ -15,5 +15,5 @@ test('login conserva Google/erros e frase exata; recado some após autorização
  const phrase='Estou online, totalmente operacional e, se me permite a audácia, torcendo pelo senhor como sempre.(J.A.R.V.I.S., 2013)'
  const base={auth:{},user:null,authorized:false,checking:false,error:'Erro de acesso de teste',initialize:async()=>{},verify:async()=>{},invalidate(){},beginSignIn(){},endSession:async()=>{}}
  const output=state=>render(h(Context.Provider,{value:{...base,...state}},h(Admin)))
- const html=output({});assert.ok(html.includes(phrase));assert.match(html,/src="\/clipper\/welcome.webp"[^>]*alt=""/);assert.ok(html.includes('Entrar com Google'));assert.ok(html.includes('Erro de acesso de teste'));assert.ok(!html.includes('teste.suporte@clipzone.com'));assert.ok(!output({authorized:true}).includes(phrase))
+ const html=output({});assert.ok(html.includes(phrase));assert.match(html,/src="\/clipper\/welcome.webp"[^>]*alt=""/);assert.ok(html.includes('Login Administrativo'));assert.ok(html.includes('Erro de acesso de teste'));assert.ok(!html.includes('teste.suporte@clipzone.com'));assert.ok(!output({authorized:true}).includes(phrase))
 })

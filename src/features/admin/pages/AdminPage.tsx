@@ -8,7 +8,6 @@ import {
   TotpMultiFactorGenerator,
 } from 'firebase/auth'
 import type { MultiFactorError, MultiFactorResolver, TotpSecret } from 'firebase/auth'
-import { PageIntro } from '../../../components/ui/PageIntro'
 function message(error: unknown): string {
   const code = (error as { code?: string })?.code
   const messages: Record<string, string> = {
@@ -45,8 +44,8 @@ export function AdminPage() {
     try { await work() } catch (failure) { if (active.current) setError(message(failure)) }
     finally { lock.current = false; if (active.current) setWorking(false) }
   }
-  return <>
-    <PageIntro title="Administração" description="Acesso exclusivo à conta autorizada, com Google e aplicativo autenticador." />
+  return <div className={!authorized?styles.login:undefined}>
+    <h1>Administração</h1>
     {!authorized&&<aside className={styles.clipperGreeting} aria-label="Recado do Clipper"><img className={clipperStyles.floating} src="/clipper/welcome.webp" width="512" height="768" alt="" decoding="async"/><p>Estou online, totalmente operacional e, se me permite a audácia, torcendo pelo senhor como sempre.(J.A.R.V.I.S., 2013)</p></aside>}
     {!authorized && status && <p role="status">{status}</p>}
     {checking && <p role="status">Verificando acesso administrativo…</p>}
@@ -62,7 +61,7 @@ export function AdminPage() {
         if (!challenge.hints.some(hint => hint.factorId === TotpMultiFactorGenerator.FACTOR_ID)) throw new Error('Esta conta não possui segundo fator TOTP disponível.', { cause: failure })
         if (active.current) { setResolver(challenge); setCode('') }
       }
-    })}>Entrar com Google</button>}
+    })}>Login Administrativo</button>}
     {user && <>
       <p>Conta conectada: {user.email}</p>
       <p>{authorized?'Acesso administrativo autorizado.':'Conta conectada. Aguardando autorização administrativa.'}</p>
@@ -102,6 +101,5 @@ export function AdminPage() {
     {auth && (user || resolver) && <button disabled={working} onClick={()=>void run(async()=>{
       await endSession();if(active.current){setResolver(null);setSecret(null);setCode('');setStatus('Sessão encerrada.')}
     })}>Sair / cancelar autenticação</button>}
-    <p className="muted">O cadastro e os códigos do autenticador são tratados pelo Firebase. Esta página não concede acesso direto às coleções privadas.</p>
-  </>
+  </div>
 }
