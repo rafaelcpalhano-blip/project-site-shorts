@@ -7,7 +7,7 @@ export interface ReviewShort {
 }
 export interface QueueItem { id: string; title?: string; status?: string; count?: number; reviewedCount?: number; time: string }
 export type QueueCursor=AdminCursor|AdminListCursor
-export interface QueuePage { items: QueueItem[]; next: QueueCursor | null }
+export interface QueuePage { items: QueueItem[]; next: QueueCursor | null; filteredWindow?:boolean }
 export interface ReviewDetail {
   short: ReviewShort; count: number; reviewedCount: number; logs: { action: string; reason: string; createdAt: string }[]
   reports: { reason: string; createdAt: string }[]; next: AdminCursor | null

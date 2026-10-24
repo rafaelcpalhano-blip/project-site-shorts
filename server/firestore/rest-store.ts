@@ -101,13 +101,13 @@ export function createRestStore(options: Options): AtomicStore {
       return found ? decodeDocument(found).data : null
     },
     async adminListPage(query) {
-      const filtersAllowed={games:['all','active','provisional','hidden','banned'],gameRequests:['pending','linked','rejected'],comments:['pending','approved','rejected','removed'],shorts:['pending','removed'],reportSummaries:['pending']}
+      const filtersAllowed={games:['all','active','provisional','hidden','banned'],gameRequests:['pending','linked','rejected'],comments:['pending','approved','rejected','removed'],shorts:['pending','removed'],reportSummaries:['pending','reviewed']}
       if(!Object.hasOwn(filtersAllowed,query.kind)||!filtersAllowed[query.kind].includes(query.filter)||query.limit!==21)throw Error('Consulta administrativa inválida')
       listOrder(query.kind,query.filter,query.sort,query.cursor)
       const text=query.sort.startsWith('text-'),field=adminListFields[query.kind][text?'text':'date'],direction=query.sort.endsWith('-asc')?'ASCENDING':'DESCENDING'
       const statusField=query.kind==='games'||query.kind==='gameRequests'||query.kind==='reportSummaries'?'status':'moderationStatus'
       const filters=query.kind==='games'&&query.filter==='all'?[]:[{fieldFilter:{field:{fieldPath:statusField},op:query.kind==='games'&&query.filter==='hidden'?'IN':'EQUAL',value:encode(query.kind==='games'&&query.filter==='hidden'?['hidden','disabled','inactive']:query.filter==='provisional'?'active':query.filter)}},...(query.kind==='games'&&query.filter==='provisional'?[{fieldFilter:{field:{fieldPath:'reviewStatus'},op:'EQUAL',value:encode('provisional')}}]:[])]
-      const selected={games:['officialName','status','reviewStatus','source','createdAt','reviewVersion'],gameRequests:['name','status','createdAt','revision','gameId','reason'],comments:['content','shortId','moderationStatus','createdAt','reviewVersion'],shorts:['title','moderationStatus','createdAt'],reportSummaries:['title','count','reviewedCount','firstReportedAt']}
+      const selected={games:['officialName','status','reviewStatus','source','createdAt','reviewVersion'],gameRequests:['name','status','createdAt','revision','gameId','reason'],comments:['content','shortId','moderationStatus','createdAt','reviewVersion'],shorts:['title','moderationStatus','createdAt','administrativeBlock'],reportSummaries:['title','count','reviewedCount','firstReportedAt']}
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected[query.kind].map(fieldPath=>({fieldPath}))},...(filters.length?{where:{compositeFilter:{op:'AND',filters}}}:{}),orderBy:[{field:{fieldPath:field},direction},{field:{fieldPath:'__name__'},direction}],limit:21,...(query.cursor?{startAt:{before:false,values:[encode(text?query.cursor.value:new Date(query.cursor.value)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
@@ -179,7 +179,7 @@ export function createRestStore(options: Options): AtomicStore {
       if (!fieldsAllowed || query.filter.field !== fieldsAllowed[0] || query.orderBy !== fieldsAllowed[1] ||
           !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 21) throw new Error('Consulta inválida')
       const start = query.cursor
-      if (start && (!(query.collection === 'comments' ? /^[\w-]{1,128}$/ : /^[a-f0-9]{64}$/).test(start.id) || !Number.isFinite(Date.parse(start.time)))) throw new Error('Cursor inválido')
+      if (start && (!(query.collection === 'comments'||query.collection === 'moderationLogs' ? /^[\w-]{1,128}$/ : /^[a-f0-9]{64}$/).test(start.id) || !Number.isFinite(Date.parse(start.time)))) throw new Error('Cursor inválido')
       const result = await request('runQuery', { structuredQuery: {
         from: [{ collectionId: query.collection }],
         where: { fieldFilter: { field: { fieldPath: query.filter.field }, op: 'EQUAL', value: encode(query.filter.value) } },

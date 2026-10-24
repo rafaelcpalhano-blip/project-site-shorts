@@ -25,3 +25,12 @@ export async function loadAdminList(kind:AdminListKind,filter:string,sort:unknow
  if(rows.length>20&&last){const raw=last.data[field],value=query.sort.startsWith('text-')?raw:raw instanceof Date&&Number.isFinite(raw.getTime())?raw.toISOString():undefined;if(typeof value!=='string')throw Error('invalid-admin-order-value');next={value,id:last.id,scope:[kind,filter,query.sort].join(':')}}
  return {rows:shown,next}
 }
+
+export function filteredListCursor(cursor:unknown,kind:AdminListKind,filter:string,sort:AdminSort,selection:string) {
+ if(cursor===undefined||cursor===null)return undefined
+ const expected=[kind,filter,sort,selection].join(':')
+ if(!cursor||typeof cursor!=='object'||Array.isArray(cursor)||(cursor as RecordData).scope!==expected)throw new ReviewError('invalid-input',400)
+ const query=listOrder(kind,filter,sort,{...(cursor as RecordData),scope:[kind,filter,sort].join(':')})
+ return query.cursor
+}
+export function filteredListNext(next:AdminListCursor|null,selection:string){return next?{...next,scope:next.scope+':'+selection}:null}

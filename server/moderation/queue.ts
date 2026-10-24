@@ -1,4 +1,4 @@
-import {loadAdminList} from '../admin/list-page.ts'
+import {loadAdminList,filteredListCursor,filteredListNext} from '../admin/list-page.ts'
 import type { AtomicStore, RecordData, StoreQuery } from '../firestore/atomic-store.ts'
 import type { AdminCursor, QueuePage, ReviewDetail, ReviewShort } from '../../src/features/admin/types/moderation.ts'
 import { counter, ReviewError, restoreTarget, publishedBeforeBlock } from './review-short.ts'
@@ -29,14 +29,21 @@ async function page(store: AtomicStore, query: StoreQuery) {
 }
 export async function loadQueue(input: unknown, store: AtomicStore): Promise<QueuePage> {
   const data = parseQuery(input, ['queue', 'cursor', 'sort'])
-  if (data.queue !== 'reports' && data.queue !== 'pending' && data.queue !== 'removed') throw new ReviewError('invalid-input', 400)
-  const reports = data.queue === 'reports'
+  if (data.queue !== 'reports' && data.queue !== 'pending' && data.queue !== 'removed' && data.queue !== 'blocked' && data.queue !== 'unblocked' && data.queue !== 'reviewed') throw new ReviewError('invalid-input', 400)
+  const reports = data.queue === 'reports'||data.queue==='reviewed'
+  if(data.queue==='blocked'||data.queue==='unblocked'){
+    const sort=data.sort??'date-desc'
+    if(!['date-desc','date-asc','text-asc','text-desc'].includes(String(sort)))throw new ReviewError('invalid-input',400)
+    const base=filteredListCursor(data.cursor,'shorts','pending',sort as import('../../src/features/admin/types/list-order.ts').AdminSort,String(data.queue))
+    const result=await loadAdminList('shorts','pending',sort,base,store)
+    return {items:result.rows.filter(({data:item})=>publishedBeforeBlock(item)===(data.queue==='blocked')).map(({id,data:item})=>({id:shortId(id),title:String(item.title||''),status:String(item.moderationStatus),time:time(item.createdAt)})),next:filteredListNext(result.next,String(data.queue)),filteredWindow:true}
+  }
   if(data.sort!==undefined){
-    const result=await loadAdminList(reports?'reportSummaries':'shorts',data.queue==='removed'?'removed':'pending',data.sort,data.cursor,store)
+    const result=await loadAdminList(reports?'reportSummaries':'shorts',data.queue==='reviewed'?'reviewed':data.queue==='removed'?'removed':'pending',data.sort,data.cursor,store)
     return {items:result.rows.map(({id,data:item})=>reports?{id:shortId(id),title:typeof item.title==='string'?item.title:'',count:counter(item.count),reviewedCount:counter(item.reviewedCount??0),time:time(item.firstReportedAt)}:{id:shortId(id),title:String(item.title||''),status:String(item.moderationStatus),time:time(item.createdAt)}),next:result.next}
   }
   const result = await page(store, { collection: reports ? 'reportSummaries' : 'shorts',
-    filter: { field: reports ? 'status' : 'moderationStatus', value: data.queue === 'removed' ? 'removed' : 'pending' },
+    filter: { field: reports ? 'status' : 'moderationStatus', value: data.queue==='reviewed'?'reviewed':data.queue === 'removed' ? 'removed' : 'pending' },
     orderBy: reports ? 'lastReportedAt' : 'createdAt', limit: 21, cursor: cursor(data.cursor) })
   return { items: result.rows.map(({ id, data: item }) => reports ?
     { id: shortId(id), count: counter(item.count), reviewedCount: counter(item.reviewedCount ?? 0), time: time(item.lastReportedAt) } :
