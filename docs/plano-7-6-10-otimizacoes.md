@@ -1,6 +1,6 @@
 # Plano 7.6.10 — Otimizações localizadas antes da Etapa8
 
-Estado: proposta para aprovação. Nenhuma otimização ou teste novo executado ao elaborar este plano. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
+Estado: A autorizada e concluída; B–F aguardam autorização. Consulte etapa-7-6-10-a.md para evidências e critérios atualizados. Nenhuma otimização foi aplicada em A. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
 
 ## Compromisso de preservação
 
