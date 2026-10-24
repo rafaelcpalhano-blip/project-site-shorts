@@ -12,7 +12,7 @@ export function ClipperCommunity(){
   <button className={styles.mascot+(state.laughing?' '+styles.tickled:'')} type="button" aria-label="Fazer cócegas no Clipper" onKeyDown={event=>{if(event.repeat&&(event.key==='Enter'||event.key===' '))event.preventDefault()}} onClick={()=>interaction.tickle()}>
    <span className={styles.art} data-ready={ready}>
     <img className={state.laughing&&ready?styles.inactive:styles.visible} src="/clipper/welcome.webp" width="512" height="768" alt="" loading="lazy" decoding="async"/>
-    {state.count>0&&frames.map((src,index)=><img key={src} src={src} width="320" height="480" alt="" decoding="async" className={styles.frame+' '+styles['frame'+index]+' '+(ready&&state.laughing&&state.frame===index+1?styles.visible:styles.inactive)} onLoad={()=>setLoaded(value=>value|(1<<index))} onError={event=>{event.currentTarget.hidden=true;setFailed(true)}}/>)}
+    {state.hasInteracted&&frames.map((src,index)=><img key={src} src={src} width="320" height="480" alt="" decoding="async" className={ready&&state.laughing&&state.frame===index+1?styles.visible:styles.inactive} onLoad={()=>setLoaded(value=>value|(1<<index))} onError={event=>{event.currentTarget.hidden=true;setFailed(true)}}/>)}
    </span>
    <span className={styles.laugh+(state.laughing?' '+styles.laughing:'')} aria-hidden="true">HaHaHA!</span>
   </button>
