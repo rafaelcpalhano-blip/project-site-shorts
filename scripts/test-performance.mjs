@@ -19,6 +19,7 @@ const groups={
     "short-sequence-components"
   ],
   "C": [
+    "youtube-card-image",
     "clipper-image-variants",
     "thumbnails",
     "card-artwork",
@@ -39,6 +40,7 @@ const groups={
     "admin-auth"
   ],
   "E": [
+    "youtube-card-image",
     "clipper-image-variants",
     "game-catalog-cache",
     "ordered-feed-concurrency",
