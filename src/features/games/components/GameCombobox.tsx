@@ -1,3 +1,4 @@
+import {gamePanelPosition} from '../services/game-panel-position'
 import {createOptionPointer} from '../services/game-option-pointer'
 import { useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { Ref } from 'react'
@@ -10,7 +11,7 @@ export function GameCombobox({games,value,onChange,disabled=false,loading=false,
   const trigger=useRef<HTMLButtonElement>(null),search=useRef<HTMLInputElement>(null),panel=useRef<HTMLDivElement>(null),list=useRef<HTMLUListElement>(null)
   useImperativeHandle(controlRef,()=>trigger.current!,[])
   const [open,setOpen]=useState(false),[query,setQuery]=useState(''),[active,setActive]=useState('')
-  const [position,setPosition]=useState({top:0,left:0,width:0,height:0})
+  const [position,setPosition]=useState({top:0,left:0,width:0,height:0,up:false})
   const options=useMemo(()=>filterGameOptions(games,query),[games,query])
   const selected=games.find(game=>game.id===value)
   function close(focus=true){setOpen(false);if(focus)trigger.current?.focus()}
@@ -18,16 +19,20 @@ export function GameCombobox({games,value,onChange,disabled=false,loading=false,
   function select(id:string){if(disabled||loading||!games.some(game=>game.id===id))return;onChange(id);close();onAdvance?.()}
   useLayoutEffect(()=>{
     if(!open)return
+    const viewport=window.visualViewport
+    let scheduled:number|undefined
     const place=()=>{
+      scheduled=undefined
       const rect=trigger.current?.getBoundingClientRect();if(!rect||pointer.current.active)return
-      const viewport=window.visualViewport,bottom=(viewport?.height??innerHeight)+(viewport?.offsetTop??0),top=viewport?.offsetTop??0
-      const below=bottom-rect.bottom-12,above=rect.top-top-12,up=below<358&&above>below,available=Math.max(0,up?above:below),height=Math.min(358,available)
-      setPosition({top:up?Math.max(top+8,rect.top-height-4):rect.bottom+4,left:Math.max(8,Math.min(rect.left,innerWidth-Math.min(rect.width,innerWidth-16)-8)),width:Math.min(rect.width,innerWidth-16),height})
+      const next=gamePanelPosition(rect,{top:viewport?.offsetTop??0,left:viewport?.offsetLeft??0,width:viewport?.width??document.documentElement.clientWidth,height:viewport?.height??innerHeight})
+      setPosition(current=>current.top===next.top&&current.left===next.left&&current.width===next.width&&current.height===next.height&&current.up===next.up?current:next)
     }
-    place();search.current?.focus({preventScroll:true})
-    const scroll=(event:Event)=>{if(!panel.current?.contains(event.target as Node))place()}
-    window.addEventListener('resize',place);window.addEventListener('scroll',scroll,true);window.visualViewport?.addEventListener('resize',place)
-    return()=>{window.removeEventListener('resize',place);window.removeEventListener('scroll',scroll,true);window.visualViewport?.removeEventListener('resize',place)}
+    const schedule=()=>{if(scheduled===undefined)scheduled=requestAnimationFrame(place)}
+    place();search.current?.focus({preventScroll:true});schedule()
+    const scroll=(event:Event)=>{if(!panel.current?.contains(event.target as Node))schedule()}
+    window.addEventListener('resize',schedule);window.addEventListener('scroll',scroll,true);viewport?.addEventListener('resize',schedule);viewport?.addEventListener('scroll',schedule)
+    return()=>{if(scheduled!==undefined)cancelAnimationFrame(scheduled);window.removeEventListener('resize',schedule);window.removeEventListener('scroll',scroll,true);viewport?.removeEventListener('resize',schedule);viewport?.removeEventListener('scroll',schedule)}
+
   },[open])
   useEffect(()=>{
     if(!open)return
@@ -50,7 +55,7 @@ export function GameCombobox({games,value,onChange,disabled=false,loading=false,
     }}><span id={valueId}>{loading?'Carregando jogos...':selected?.name||'Selecione um jogo'}</span><span aria-hidden="true">▾</span></button>
     <span id={uid+"-hint"} hidden>Seleção obrigatória. Abra para pesquisar jogos cadastrados.</span>
     <select hidden aria-hidden="true" tabIndex={-1} required disabled={disabled||loading} value={selected?.id||''} onChange={()=>{}} onInvalid={event=>{event.preventDefault();show()}}><option value=""/>{selected&&<option value={selected.id}>{selected.name}</option>}</select>
-    {open&&!disabled&&!loading&&<div ref={panel} className={styles.panel} style={{top:position.top,left:position.left,width:position.width,maxHeight:position.height}} onBlur={event=>{if(!pointer.current.active&&event.relatedTarget&&!event.currentTarget.contains(event.relatedTarget as Node)&&event.relatedTarget!==trigger.current)setOpen(false)}}>
+    {open&&!disabled&&!loading&&<div ref={panel} className={styles.panel} style={{top:position.top,left:position.left,width:position.width,maxHeight:position.height,transform:position.up?'translateY(-100%)':undefined}} onBlur={event=>{if(!pointer.current.active&&event.relatedTarget&&!event.currentTarget.contains(event.relatedTarget as Node)&&event.relatedTarget!==trigger.current)setOpen(false)}}>
       <input ref={search} role="combobox" aria-required="true" aria-label="Pesquisar jogos cadastrados" aria-expanded="true" aria-controls={listId} aria-autocomplete="list" aria-activedescendant={highlighted?uid+'-option-'+highlighted:undefined} autoComplete="off" placeholder="Pesquisar jogo..." value={query} onChange={event=>{setQuery(event.target.value);setActive(filterGameOptions(games,event.target.value)[0]?.id||'')}} onKeyDown={event=>{
         if(event.nativeEvent.isComposing)return
         if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close()}
