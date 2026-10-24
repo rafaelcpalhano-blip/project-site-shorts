@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react'
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import type { Short } from '../../shorts/types/models'
 import { buildEmbed, tikTokMessage, commandTikTok } from '../services/embed'
@@ -7,7 +8,7 @@ import { loadYouTubeApi, applyYouTubeAudio } from '../services/youtube-api'
 import type { YouTubePlayer } from '../services/youtube-api'
 import styles from './OfficialPlayer.module.css'
 import { VideoSourceLink } from './PlayerInformation'
-export function OfficialPlayer({ short }: { short: Short }) {
+export function OfficialPlayer({ short, navigation }: { short: Short; navigation?:ReactNode }) {
   const id = useId()
   const box = useRef<HTMLDivElement>(null)
   const scrollBox = useRef<HTMLDivElement>(null)
@@ -126,9 +127,9 @@ export function OfficialPlayer({ short }: { short: Short }) {
     </div>
   return <section className={styles.player} aria-label={'Vídeo · ' + short.platform}>
     {short.platform === 'Twitch' ? <>
-      <div ref={scrollBox} className={styles.twitchScroll} role="region" aria-label="Player Twitch" tabIndex={horizontalScroll ? 0 : undefined} aria-describedby={horizontalScroll ? id+'-scroll-help' : undefined} data-short-interactions>{playerFrame}</div>
-      {horizontalScroll && <p id={id+'-scroll-help'} className={styles.status}>Deslize para os lados para acessar todo o player Twitch.</p>}
+      <div ref={scrollBox} className={styles.twitchScroll} role="region" aria-label="Player Twitch" tabIndex={horizontalScroll ? 0 : undefined} data-short-interactions>{playerFrame}</div>
     </> : playerFrame}
+    {navigation}
     <div className={styles.links} data-short-interactions>
       <VideoSourceLink short={short} />
       {plan.src && <button type="button" className={styles.unavailableLink} onClick={() => { setStatus('failed'); playback.release(id) }}>Vídeo indisponível?</button>}

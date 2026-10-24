@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import type { ReactNode, KeyboardEventHandler } from 'react'
 import styles from './Modal.module.css'
-export function Modal({ title, onClose, children, closeDisabled = false, hideCloseButton = false, returnFocus, wide = false, onKeyDown }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean; hideCloseButton?: boolean; returnFocus?:()=>void; wide?:boolean; onKeyDown?:KeyboardEventHandler<HTMLDialogElement> }) {
+export function Modal({ title, onClose, children, closeDisabled = false, hideCloseButton = false, returnFocus, wide = false, viewer = false, onKeyDown }: { title: string; onClose: () => void; children: ReactNode; closeDisabled?: boolean; hideCloseButton?: boolean; returnFocus?:()=>void; wide?:boolean; viewer?:boolean; onKeyDown?:KeyboardEventHandler<HTMLDialogElement> }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   const restoreFocus = useRef(returnFocus)
@@ -14,7 +14,7 @@ export function Modal({ title, onClose, children, closeDisabled = false, hideClo
     document.body.style.overflow = 'hidden'
     return () => { dialog.close(); document.body.style.overflow = overflow; if (focusAfterClose) focusAfterClose(); else trigger?.focus() }
   }, [])
-  return <dialog ref={ref} className={styles.dialog+(wide?' '+styles.wide:'')} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); if (!closeDisabled) onClose() }}
+  return <dialog ref={ref} className={styles.dialog+(wide?' '+styles.wide:'')+(viewer?' '+styles.viewer:'')} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); if (!closeDisabled) onClose() }}
     onKeyDown={event => {
       onKeyDown?.(event)
       if (event.key !== 'Tab') return

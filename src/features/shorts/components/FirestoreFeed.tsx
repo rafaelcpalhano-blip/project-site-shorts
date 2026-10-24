@@ -1,3 +1,5 @@
+import {createCursorPages} from '../services/cursor-pages'
+import type {Direction} from '../services/sequence-navigation'
 import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
 import { readFailureMessage } from '../../../lib/http/read-failure'
 import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
@@ -7,7 +9,7 @@ import type {FeedOrder} from '../services/ordered-feed-api'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
 import type { TitleSearchCursor } from '../../../lib/validation/title-search'
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
@@ -41,16 +43,29 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   const catalogLoading=catalogBusy||loadedCatalogVersion!==catalogVersion
   const [selected, setSelected] = useState<Short | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
+  const pagerCounts=useRef<(patch:(page:FeedPage)=>FeedPage)=>void>(()=>{})
   const updateLikeCount=useCallback((id:string,count:number)=>{
+    pagerCounts.current(current=>updatePageLikeCount(current,id,count))
     setPage(current=>updatePageLikeCount(current,id,count))
     setSelected(current=>current?updateItemLikeCount(current,id,count):current)
   },[])
   const updateCommentCount=useCallback((id:string,count:number)=>{
+    pagerCounts.current(current=>({...current,items:current.items.map(item=>item.id===id?{...item,commentCount:count}:item)}))
     setPage(current=>current.items.some(item=>item.id===id&&item.commentCount!==count)?{...current,items:current.items.map(item=>item.id===id?{...item,commentCount:count}:item)}:current)
     setSelected(current=>current?.id===id&&current.commentCount!==count?{...current,commentCount:count}:current)
   },[])
   const selectedGame = gameId || filter
-  const cursor = cursors[index]
+  const requestContext=useMemo(()=>({selectedGame,query,order,attempt}),[selectedGame,query,order,attempt])
+  const pager=useMemo(()=>{const {selectedGame,query,order}=requestContext;return createCursorPages<Short,FeedCursor,FeedPage>(async(cursor,signal)=>{
+    const result=TITLE_SEARCH_ENABLED&&query?await searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},signal):await orderedFeed(order,selectedGame||undefined,typeof cursor==='string'?cursor:undefined,signal)
+    const ids=[...new Set(result.items.filter(short=>!short.gameName).map(short=>short.gameId))]
+    const names=Object.fromEntries(await Promise.all(ids.map(async id=>{try{return [id,(await repository.getGame(id))?.name||'Jogo indisponível']}catch{return [id,'Jogo indisponível']}})))
+    return {...result,items:result.items.map(short=>({...short,gameName:short.gameName||names[short.gameId]}))}
+  })},[requestContext])
+  useLayoutEffect(()=>{pagerCounts.current=patch=>pager.update(patch)},[pager])
+  const context=useRef(pager),viewerTicket=useRef(0),selectedRef=useRef(selected)
+  useLayoutEffect(()=>{context.current=pager;selectedRef.current=selected})
+  useEffect(()=>()=>pager.cancel(),[pager])
   useEffect(() => {
     if(gameId)return
     let active = true
@@ -59,26 +74,29 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     }).catch(() => { if (active){setGames([]);setGameCursor(null);setCatalogError('Não foi possível carregar o catálogo.');setLoadedCatalogVersion(catalogVersion)} }).finally(()=>{if(active)setCatalogLoading(false)})
     return () => { active = false }
   }, [catalogVersion,gameId])
-  useEffect(() => {
-    let active = true
-    const controller=new AbortController()
-    const request=TITLE_SEARCH_ENABLED && query ? searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},controller.signal) : orderedFeed(order,selectedGame||undefined,typeof cursor==='string'?cursor:undefined,controller.signal)
-    request.then(async result => {
-      const ids = [...new Set(result.items.map(short => short.gameId))]
-      const resolved = await Promise.all(ids.map(async id => {
-        const name = result.items.find(short => short.gameId === id)?.gameName
-        if (name) return [id, name]
-        try { return [id, (await repository.getGame(id))?.name || 'Jogo indisponível'] }
-        catch { return [id, 'Jogo indisponível'] }
-      }))
-      if (!active) return
-      setNames(Object.fromEntries(resolved)); setPage(result); setLoading(false)
-    }).catch(failure => {
-      if (active) { setError(readFailureMessage(failure,TITLE_SEARCH_ENABLED && query?'Não foi possível concluir a pesquisa. Limpe a busca para voltar ao feed.':'Não foi possível carregar o feed. Tente novamente.')); setLoading(false) }
-    })
-    return () => { active = false; controller.abort() }
-  }, [selectedGame, cursor, attempt, query, order])
+  useEffect(()=>{
+    let active=true
+    pager.load(index).then(result=>{
+      if(!active)return
+      setNames(Object.fromEntries(result.items.map(short=>[short.gameId,short.gameName||'Jogo indisponível'])))
+      setPage(result);setCursors(pager.knownCursors());setLoading(false)
+    }).catch(failure=>{if(active){setError(readFailureMessage(failure,'Não foi possível carregar o feed. Tente novamente.'));setLoading(false)}})
+    return()=>{active=false}
+  },[pager,index])
+  const boundary=async(direction:Direction)=>{
+    const ticket=++viewerTicket.current,owner=pager,current=selectedRef.current
+    const result=await pager.adjacent(index,direction,page.items.map(short=>short.id))
+    if(context.current!==owner||ticket!==viewerTicket.current||selectedRef.current?.id!==current?.id)throw new DOMException('Consulta cancelada','AbortError')
+    if(!result)return null
+    setPage(result.page);setIndex(result.index);setCursors(pager.knownCursors());setError('');setLoading(false)
+    return result.target
+  }
+  const closeViewer=()=>{
+    viewerTicket.current++;const id=selected?.id;setSelected(null)
+    requestAnimationFrame(()=>{const node=document.querySelector<HTMLElement>('[data-short-id="'+id+'"] button');node?.scrollIntoView({block:'nearest'});node?.focus({preventScroll:true})})
+  }
   const refresh = () => {
+    viewerTicket.current++;setSelected(null)
     setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); if(!gameId)invalidateGameCatalog()
   }
   return <div className={styles.feed}>
@@ -127,7 +145,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    {selected && <ShortSequenceDialog short={selected} items={page.items} onNavigate={setSelected} onLikeCount={updateLikeCount} onCommentCount={updateCommentCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={() => setSelected(null)} />}
+    {selected && <ShortSequenceDialog short={selected} items={page.items} hasPreviousPage={index>0} hasNextPage={!!page.next} onBoundary={boundary} onNavigate={setSelected} onLikeCount={updateLikeCount} onCommentCount={updateCommentCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={closeViewer} />}
   </div>
 }
 

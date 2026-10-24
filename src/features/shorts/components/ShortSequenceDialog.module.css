@@ -1,24 +1,15 @@
-.viewer { position: relative; }
-.controls { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 56px; margin-bottom: 12px; }
-.position { margin: 0; text-align: center; }
-.position small { display: block; font-size: .75rem; color: var(--color-muted); }
-.previous, .next { position: absolute; top: 190px; width: 44px; min-height: 44px; padding: 8px; font-size: 1.3rem; }
-.previous { left: 0; } .next { right: 0; }
-.stage { position: relative; margin-inline: 52px; overflow: hidden; }
-.outLeft, .outRight { position: absolute; inset: 0; pointer-events: none; display: grid; place-content: start center; padding: 16px; min-height: 240px; background: var(--color-surface); }
-.outLeft img, .outRight img { max-height: 300px; max-width: 100%; object-fit: contain; }
-.inRight { animation: enterRight 240ms ease-out; } .inLeft { animation: enterLeft 240ms ease-out; }
-.outLeft { animation: leaveLeft 240ms ease-out forwards; } .outRight { animation: leaveRight 240ms ease-out forwards; }
-@keyframes enterRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-@keyframes enterLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-@keyframes leaveLeft { to { transform: translateX(-100%); } }
-@keyframes leaveRight { to { transform: translateX(100%); } }
-@media (max-width: 600px) { .stage { margin-inline: 0; } .previous,.next { position: static; flex: 0 0 44px; } .position { flex: 1; } }
-@media (prefers-reduced-motion: reduce) { .inRight,.inLeft { animation: none; } .outLeft,.outRight { display: none; animation: none; } }
-
-.scope { margin: 20px auto 0; max-width: 60ch; color: var(--color-muted); font-size: .8rem; text-align: center; overflow-wrap: anywhere; }
-
-.controls { touch-action: pan-y pinch-zoom; }
-.position { user-select:none; padding:8px; border:1px dashed var(--color-border); border-radius:8px; }
-.motion { margin-bottom:12px; font-size:.8rem; color:var(--color-muted); }
-.motion summary { cursor:pointer; min-height:44px; align-content:center; }
+.viewer { position:relative; min-width:0; }
+.controls { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:52px; margin-top:8px; touch-action:pan-y pinch-zoom; }
+.controls button { flex:0 0 48px; min-height:48px; padding:8px; border:0; background:transparent; font-size:1.4rem; }
+.gesture { flex:1; align-self:stretch; min-width:0; user-select:none; }
+.loading { margin:0; font-size:.8rem; color:var(--color-muted); }
+.stage { position:relative; min-width:0; overflow:hidden; }
+.outLeft,.outRight { position:absolute; inset:0; pointer-events:none; display:grid; place-content:start center; padding:16px; min-height:240px; background:var(--color-surface); z-index:1; }
+.outLeft img,.outRight img { max-height:300px; max-width:100%; object-fit:contain; }
+.inRight { animation:enterRight 240ms ease-out; }.inLeft { animation:enterLeft 240ms ease-out; }
+.outLeft { animation:leaveLeft 240ms ease-out forwards; }.outRight { animation:leaveRight 240ms ease-out forwards; }
+@keyframes enterRight { from { transform:translateX(100%); } to { transform:translateX(0); } }
+@keyframes enterLeft { from { transform:translateX(-100%); } to { transform:translateX(0); } }
+@keyframes leaveLeft { to { transform:translateX(-100%); } }
+@keyframes leaveRight { to { transform:translateX(100%); } }
+@media(prefers-reduced-motion:reduce){.inRight,.inLeft { animation:none; }.outLeft,.outRight { display:none;animation:none; }}

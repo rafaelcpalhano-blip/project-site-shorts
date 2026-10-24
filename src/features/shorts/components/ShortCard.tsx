@@ -18,7 +18,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
   const tooltipId=useId()
   const published=new Date(short.createdAt)
   const dateTime=Number.isSafeInteger(short.createdAt)&&short.createdAt>=0&&Number.isFinite(published.getTime())?published.toISOString():undefined
-  return <article className={styles.card}>
+  return <article className={styles.card} data-short-id={short.id}>
     <button type="button" className={styles.preview} onClick={onOpen} aria-label={'Abrir vídeo: ' + short.title}>
       <span className={styles.platform}>{short.platform}</span>
       <span className={styles.artwork}>

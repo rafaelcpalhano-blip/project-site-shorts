@@ -8,6 +8,7 @@ import styles from './FirestoreShortDialog.module.css'
 import { LikeButton } from '../../likes/components/LikeButton'
 import { PersistentCommentForm } from '../../comments/components/PersistentCommentForm'
 import { ReportForm } from '../../reports/ReportForm'
+import type {ReactNode} from 'react'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
@@ -16,7 +17,7 @@ import type { Short } from '../types/models'
 import { PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
-export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onModerated, onBusyChange }: { short: Short; onCommentCount?:(id:string,count:number)=>void; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
+export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onModerated, onBusyChange, navigation }: { navigation?:ReactNode; short: Short; onCommentCount?:(id:string,count:number)=>void; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
   const admin=useAdminSession()
   const [selectingComments,setSelectingComments]=useState(false)
   const commentHeading=useRef<HTMLHeadingElement>(null)
@@ -49,7 +50,7 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   }, [short.id, cursor, attempt, onCommentCount])
   useLayoutEffect(()=>{onBusyChange(reporting||commenting||liking||adminBusy||selectingComments);return()=>onBusyChange(false)},[onBusyChange,reporting,commenting,liking,adminBusy,selectingComments])
   return <>
-    <OfficialPlayer key={'player:'+short.id} short={short} />
+    <OfficialPlayer key={'player:'+short.id} short={short} navigation={navigation} />
     <div className={styles.interactions} data-short-interactions>
       <div className={styles.metadata}>
         <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>

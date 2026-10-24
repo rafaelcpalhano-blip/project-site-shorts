@@ -1,4 +1,4 @@
-.player { margin: 16px 0 24px; }
+.player { margin: 0 0 20px; }
 .wide, .vertical { position: relative; margin-inline: auto; background: #101115; border: 1px solid var(--color-border); overflow: hidden; }
 .wide { width: max(100%, 402px); min-height: 302px; aspect-ratio: 16 / 9; }
 .vertical { width: min(100%, 340px); min-height: 202px; aspect-ratio: 9 / 16; }
@@ -9,7 +9,7 @@
 .actions p { flex: 1 1 100%; margin: 0; }
 .unavailable { border: 1px solid var(--color-border); border-radius: 8px; }
 
-.links { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 20px; margin-top: 8px; }
+.links { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 20px; margin-top: 16px; }
 .links a, .unavailableLink { display: inline-flex; align-items: center; min-height: 44px; font-size: .85rem; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
 .unavailableLink { border: 0; padding: 0; background: none; margin-left: auto; }
 .status { margin: 4px 0; font-size: .8rem; color: var(--color-muted); }
