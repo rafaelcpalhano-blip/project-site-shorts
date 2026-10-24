@@ -10,6 +10,7 @@ const groups={
     "admin-session"
   ],
   "B": [
+    "clipper-image-variants",
     "clipper-interaction",
     "clipper-community",
     "clipper-welcome",
@@ -18,6 +19,7 @@ const groups={
     "short-sequence-components"
   ],
   "C": [
+    "clipper-image-variants",
     "thumbnails",
     "card-artwork",
     "short-sequence-components",
@@ -37,6 +39,7 @@ const groups={
     "admin-auth"
   ],
   "E": [
+    "clipper-image-variants",
     "game-catalog-cache",
     "ordered-feed-concurrency",
     "short-sequence-components",
