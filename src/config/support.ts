@@ -1,5 +1,5 @@
-// Development placeholder. Replace and verify before any approved public deployment.
-export const supportContact = { email: 'teste.suporte@clipzone.com', operational: false } as const
+// Public support contact. Authentication and service credentials are configured separately.
+export const supportContact = { email: 'clipzone.suporte@gmail.com', operational: true } as const
 
 interface SupportContact {email:string;operational:boolean}
 export function supportEmailForDisplay(development:boolean,contact:SupportContact=supportContact):string|undefined {

@@ -29,19 +29,19 @@ test('página administrativa marca link atual; perder autorização remove o ace
  assert.doesNotMatch(html({user:{uid:'owner'},authorized:false}),/>Administrar</)
 })
 
-test('rodapé orienta inclusão e suporte indisponível sem links ou direitos enganosos',()=>{
+test('rodapé mantém orientação, contato oficial e balões acessíveis sem direitos enganosos',()=>{
  const result=html({})
  const footer=result.match(/<footer[\s\S]*?<\/footer>/)?.[0]
  assert.ok(footer)
- assert.match(footer,/Compartilhe suas melhores jogadas/)
- assert.match(footer,/Criou um jogo indie/)
+ assert.equal((footer.match(/aria-label="Trocar mensagem:/g)||[]).length,4)
+ assert.match(footer,/Fazer cócegas no Clipper/)
  assert.match(footer,/Solicite a inclusão ao compartilhar um short/)
- assert.match(footer,/teste\.suporte@clipzone\.com/)
- assert.match(footer,/endereço de demonstração, ainda indisponível/)
+ assert.match(footer,/href="mailto:clipzone.suporte@gmail.com"/)
+ assert.doesNotMatch(footer,/endereço de demonstração, ainda indisponível/)
  assert.match(footer,/respectivos titulares/);assert.match(footer,/Como os vídeos funcionam/);assert.match(footer,/contagem de visualizações segue as regras de cada plataforma/);assert.match(footer,/sem incentivar visualizações artificiais/)
  assert.match(footer,/loading="lazy"/)
  assert.match(footer,/alt=""/)
- assert.doesNotMatch(footer,/<a\b|mailto:|©|copyright/i)
+ assert.doesNotMatch(footer,/teste\.suporte@clipzone\.com|©|copyright/i)
 })
 
 test('rodapé público não aparece na administração, inclusive barra final e subrotas',()=>{

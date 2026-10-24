@@ -11,7 +11,7 @@ export function GameInfo({game}:{game:GameDetails}) {
       {game.source === 'manual' ? <>
         <p>Informações cadastradas pela comunidade Clipzone.{game.provisional?' Cadastro provisório, sujeito à moderação posterior.':''} Sem cadastro associado à fonte IGDB.</p>
         <p className={styles.description}>{game.description || 'Descrição não disponível: jogo sem cadastro associado à fonte IGDB.'}</p>
-        <p>Para solicitar informações e imagens de um jogo novo ou de sua autoria, entre em contato {supportEmail?<>pelo e-mail de suporte: <strong>{supportEmail}</strong>.</>:<>com o suporte.</>}</p>
+        <p>Para solicitar informações e imagens de um jogo novo ou de sua autoria, entre em contato {supportEmail?<>pelo e-mail de suporte: <a href={'mailto:'+supportEmail}>{supportEmail}</a>.</>:<>com o suporte.</>}</p>
       </> : <p className={styles.description}>{game.descriptionPtBr || game.description || 'Descrição não disponível no catálogo.'}</p>}
       {game.descriptionPtBr && <>
         <small>Tradução automática para português brasileiro; pode conter imprecisões.</small>

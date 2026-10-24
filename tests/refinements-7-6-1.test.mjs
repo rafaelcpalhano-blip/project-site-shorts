@@ -15,9 +15,9 @@ test('tempo relativo não muda no calendário e trata horários futuros/inválid
  for(const clock of [NaN,Infinity,-1,Number.MAX_SAFE_INTEGER])assert.equal(relativeTime(now,clock),'Data indisponível')
  assert.equal(relativeTime(0,0),'agora')
 })
-test('contato provisório aparece em desenvolvimento e nunca como canal operacional em produção',()=>{
- assert.equal(supportEmailForDisplay(true),supportContact.email);assert.equal(supportEmailForDisplay(false),undefined)
- assert.equal(supportEmailForDisplay(false,{email:supportContact.email,operational:true}),undefined)
+test('contato oficial aparece em desenvolvimento e produção; provisórios continuam protegidos',()=>{
+ assert.equal(supportEmailForDisplay(true),supportContact.email);assert.equal(supportEmailForDisplay(false),supportContact.email)
+ assert.equal(supportEmailForDisplay(false,{email:'teste.suporte@clipzone.com',operational:true}),undefined)
  assert.equal(supportEmailForDisplay(false,{email:'suporte@example.org',operational:false}),undefined)
  assert.equal(supportEmailForDisplay(false,{email:'suporte@example.org',operational:true}),'suporte@example.org')
 })

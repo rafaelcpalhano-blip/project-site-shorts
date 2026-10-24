@@ -76,7 +76,7 @@ export function OfficialGamePicker({ disabled, onBusyChange, onSelected, allowRe
       {!results.length && !error && <p className="error" role="status">Jogo não encontrado</p>}
       {allowRequest && <>
         {!!results.length && <p>Se nenhum resultado corresponde ao seu jogo, confira o nome antes de fazer a inclusão manual.</p>}
-        <p>Avaliaremos a legitimidade do jogo, mas o cadastro está previamente liberado. Para adicionar informações como imagens, lançamento, gêneros, modos e plataformas, entre em contato {supportEmail?<>pelo e-mail de suporte: {supportEmail}.</>:<>com o suporte.</>}</p>
+        <p>Avaliaremos a legitimidade do jogo, mas o cadastro está previamente liberado. Para adicionar informações como imagens, lançamento, gêneros, modos e plataformas, entre em contato {supportEmail?<>pelo e-mail de suporte: <a href={'mailto:'+supportEmail}>{supportEmail}</a>.</>:<>com o suporte.</>}</p>
         <button type="button" onClick={()=>void run(async()=>{
           const result=await catalog.includeManual(query)
           if(!active.current)return

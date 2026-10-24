@@ -1,0 +1,16 @@
+export const clipperMessages=[
+ 'Entre, explore e descubra novos criadores!',
+ 'Todo grande momento merece ser compartilhado!',
+ 'Aqui, a comunidade é quem faz acontecer!',
+ 'Sua próxima descoberta pode estar a um clique!',
+ 'Tem sempre uma jogada nova por aqui!',
+ 'De jogadores para jogadores. Simples assim!',
+ 'Um link, um jogo e pronto: compartilhe seu short!',
+ 'YouTube, Twitch e TikTok? Todos têm espaço aqui!',
+ 'Seus vídeos continuam nas plataformas de origem!',
+ 'Aqui reunimos jogadas de diferentes plataformas!',
+ 'Não precisa criar conta para compartilhar!',
+ 'Escolha um jogo e encontre shorts sobre ele!',
+ 'Curtiu um vídeo? Deixe seu coração!',
+ 'Compartilhar aqui é gratuito!',
+] as const
