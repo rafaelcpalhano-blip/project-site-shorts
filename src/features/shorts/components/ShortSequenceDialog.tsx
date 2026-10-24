@@ -1,3 +1,5 @@
+import {createSwipeNavigation} from '../services/mobile-navigation'
+import {useMotionNavigation} from './use-motion-navigation'
 import {useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react'
 import {Modal} from '../../../components/ui/Modal'
 import {playback} from '../../players/services/playback'
@@ -12,10 +14,11 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
  const content=useRef<HTMLDivElement>(null),controls=useRef<HTMLElement>(null),cancel=useRef<HTMLButtonElement>(null),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),moving=useRef(false)
  const busyNow=useRef(false)
  const reportBusy=useCallback((value:boolean)=>{busyNow.current=value;setBusy(value)},[])
+ const swipe=useRef(createSwipeNavigation())
  const wheel=useRef(createWheelNavigation()),moveRef=useRef<(direction:Direction)=>void>(()=>{})
  const previous=sequenceTarget(items,short.id,-1),next=sequenceTarget(items,short.id,1),position=items.findIndex(item=>item.id===short.id)
  const move=(direction:Direction,discard=false)=>{
-  if(busyNow.current||moving.current)return
+  if(busyNow.current||moving.current||pending!==null&&!discard)return
   const target=sequenceTarget(items,short.id,direction);if(!target)return
   const draft=hasUnsavedViewerFields(Array.from(content.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>('textarea,input,select')??[]).map(field=>({tagName:field.tagName,type:field.type,value:field.value,disabled:field.matches(':disabled')})))
   if(draft&&!discard){setPending(direction);return}
@@ -32,6 +35,7 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
   const onWheel=(event:WheelEvent)=>{if(busy||moving.current||pending!==null)return;const direction=wheel.current(event);if(direction!==null&&sequenceTarget(items,short.id,direction)){event.preventDefault();moveRef.current(direction)}}
   node.addEventListener('wheel',onWheel,{passive:false});return()=>node.removeEventListener('wheel',onWheel)
  },[busy,items,short.id,pending])
+ const motion=useMotionNavigation(direction=>moveRef.current(direction),busy||pending!==null||!!transition)
  const ghost=transition&&validThumbnail(transition.previous.thumbnail,transition.previous.platform,transition.previous.identity)
  return <Modal title="Visualizador de short" wide closeDisabled={busy} onClose={()=>{if(!busyNow.current)onClose()}} onKeyDown={event=>{
   const editing=!!(event.target as HTMLElement).closest('input,textarea,select,[contenteditable]:not([contenteditable="false"]),iframe,form,[data-short-interactions]')
@@ -39,11 +43,12 @@ export function ShortSequenceDialog({short,items,onNavigate,onClose,onLikeCount,
   if(sequenceTarget(items,short.id,direction)){event.preventDefault();move(direction)}
  }}>
  <div className={styles.viewer}>
- <nav ref={controls} className={styles.controls} aria-label="Sequência de vídeos da página atual">
+ <nav ref={controls} className={styles.controls} aria-label="Sequência de vídeos da página atual" onPointerDown={event=>{if((event.target as HTMLElement).closest('button,a,input,textarea,select')||busy||transition||pending!==null){swipe.current.cancel();return}swipe.current.start({pointerId:event.pointerId,pointerType:event.pointerType,isPrimary:event.isPrimary,clientX:event.clientX,clientY:event.clientY,time:performance.now(),viewportWidth:innerWidth})}} onPointerMove={event=>swipe.current.move(event)} onPointerCancel={()=>swipe.current.cancel()} onPointerUp={event=>{const direction=swipe.current.end({pointerId:event.pointerId,clientX:event.clientX,clientY:event.clientY,time:performance.now()});if(direction!==null&&sequenceTarget(items,short.id,direction)){event.preventDefault();move(direction)}}}>
  <button type="button" className={styles.previous} aria-label="Vídeo anterior" disabled={!previous||busy||!!transition||pending!==null} onClick={()=>move(-1)}>←</button>
- <p className={styles.position} role="status">{position>=0?'Vídeo '+(position+1)+' de '+items.length:'Vídeo selecionado'}<small>Role sobre esta faixa para trocar de vídeo.</small></p>
+ <p className={styles.position} role="status">{position>=0?'Vídeo '+(position+1)+' de '+items.length:'Vídeo selecionado'}<small>Deslize nesta faixa para trocar de vídeo. No computador, use a roda do mouse ou as setas.</small></p>
  <button type="button" className={styles.next} aria-label="Próximo vídeo" disabled={!next||busy||!!transition||pending!==null} onClick={()=>move(1)}>→</button>
  </nav>
+ <details className={styles.motion}><summary>Navegação por movimento (experimental)</summary><p>Opcional: utiliza a inclinação lateral, não a translação do aparelho. Leituras ficam somente na memória desta página. Pode não funcionar em todos os navegadores.</p><button type="button" aria-pressed={motion.enabled} onClick={()=>void motion.toggle()}>{motion.enabled?'Desativar movimento':motion.requesting?'Cancelar ativação':'Ativar movimento'}</button><p role="status">{motion.message}</p></details>
  {pending!==null&&<div className="inset" role="group" aria-label="Confirmar troca de vídeo"><p>Trocar de vídeo e descartar o texto não enviado?</p><div className="actions"><button ref={cancel} type="button" onClick={()=>{setPending(null);requestAnimationFrame(()=>content.current?.focus({preventScroll:true}))}}>Continuar neste vídeo</button><button type="button" onClick={()=>move(pending,true)}>Descartar e trocar</button></div></div>}
  <div className={styles.stage}>
  {transition&&<div aria-hidden="true" className={transition.direction===1?styles.outLeft:styles.outRight}>{ghost&&<img src={ghost.url} alt="" referrerPolicy="no-referrer" onError={event=>{event.currentTarget.hidden=true}}/>}<p>{transition.previous.title}</p></div>}

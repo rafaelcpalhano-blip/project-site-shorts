@@ -17,3 +17,8 @@
 @media (prefers-reduced-motion: reduce) { .inRight,.inLeft { animation: none; } .outLeft,.outRight { display: none; animation: none; } }
 
 .scope { margin: 20px auto 0; max-width: 60ch; color: var(--color-muted); font-size: .8rem; text-align: center; overflow-wrap: anywhere; }
+
+.controls { touch-action: pan-y pinch-zoom; }
+.position { user-select:none; padding:8px; border:1px dashed var(--color-border); border-radius:8px; }
+.motion { margin-bottom:12px; font-size:.8rem; color:var(--color-muted); }
+.motion summary { cursor:pointer; min-height:44px; align-content:center; }
