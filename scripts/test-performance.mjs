@@ -28,6 +28,11 @@ const groups={
     "twitch-mobile-layout"
   ],
   "D": [
+    "deferred-viewer",
+    "short-sequence-components",
+    "short-sequence",
+    "official-player",
+    "player-audio",
     "game-catalog-cache",
     "game-catalog-client",
     "mobile-recovery",
@@ -40,6 +45,7 @@ const groups={
     "admin-auth"
   ],
   "E": [
+    "deferred-viewer",
     "youtube-card-image",
     "clipper-image-variants",
     "game-catalog-cache",
