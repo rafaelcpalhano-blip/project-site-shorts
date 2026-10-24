@@ -1,3 +1,11 @@
+## 24/10/2026 — Resolvedor de links TikTok ativo na5174
+
+Proprietário reiniciou API; PID19512. Conferência com sessão real: resolve HTTP200 retornou URL completa do link curto fornecido; preview HTTP200 retornou title:null/channelName:Seda King. Ativação do backend encerrada.8080/PID7860 preservado, sem reset/restauração/publicação. [Evidências](links-compartilhados-mobile.md). Continuar teste físico de colagem Twitch/TikTok no Motorola; Etapa8suspensa. Sem repetir suítes/deploy/commit automático.
+
+## 24/10/2026 — Colagem Twitch e links curtos TikTok implementados
+
+Novo pedido substitui decisão anterior de não tratar apresentação Twitch: extrair uma única URL oficial na colagem, sem escolher entre múltiplas URLs. TikTok vt/vm/t resolve no servidor com origem/sessão/rate limit, HTTPS/hosts fixos, até4requisições/6s e sem baixar HTML; URL completa aparece no campo antes de prévia/envio. Publicação/deduplicação/cotas/YouTube preservados. 33testes relacionados/lint/build/diff aprovados; formulário real isolado5178 limpou frase Twitch, resolveu link fornecido e preencheu Seda King, preservou campos manuais e confirmou envio simulado canônico. Sem publicação real. Fixtures retiradas/5178encerrada. [Relatório, arquivos e limites](links-compartilhados-mobile.md). API5174/PID11428 protegida: solicitado reinício manual para ativar nova rota; confirmação na5174 e teste físico pendentes.8080/PID7860 preservado sem reset. CanalTikTok/dd68ecd e docs/b618d3b já commitados; seletor mobile ainda pendente, incluído nos blocos finais. Sem deploy/infraestrutura/produção/commit automático; Etapa8suspensa.
+
 ## 24/10/2026 — Twitch resolvida pelo proprietário; canal TikTok ativo na5174
 
 Proprietário confirmou que a cópia Twitch trazia frase de apresentação além da URL; link isolado funciona. Pediu considerar resolvido e não alterar: fluxo/parser preservados. Reinício manual confirmado: API5174/PID11428 respondeu prévia HTTP200 com title:null/channelName:Jogatina do vini, usando sessão real. Emulador8080 mantém PID7860, sem reset/restauração/publicação. Pendência de ativação do relato anterior encerrada; conferência visual TikTok no celular pode seguir. [Relatório atualizado](previa-canais-tiktok-twitch.md). Sem repetir testes/deploy/infraestrutura/commit. Etapa8suspensa.
