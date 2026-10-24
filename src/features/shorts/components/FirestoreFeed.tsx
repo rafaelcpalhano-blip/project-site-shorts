@@ -16,7 +16,9 @@ import { createPublicRepository } from '../../../lib/firebase/public-repository'
 import type { Cursor, PublicCursor } from '../../../lib/firebase/public-repository'
 import type { Game, Short } from '../types/models'
 import { ShortCard } from './ShortCard'
-import { ShortSequenceDialog } from './ShortSequenceDialog'
+import { DeferredDialog } from '../../../components/ui/DeferredDialog'
+import { createDeferredModule } from '../../../components/ui/deferred-module'
+const loadViewer=createDeferredModule(()=>import('./ShortSequenceDialog').then(module=>module.ShortSequenceDialog))
 import styles from './ShortFeed.module.css'
 type FeedCursor=PublicCursor|TitleSearchCursor|string
 interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean;orderingAt?:string}
@@ -145,7 +147,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         setLoading(true); setError(''); setIndex(index + 1)
       }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
     </nav>
-    {selected && <ShortSequenceDialog short={selected} items={page.items} hasPreviousPage={index>0} hasNextPage={!!page.next} onBoundary={boundary} onNavigate={setSelected} onLikeCount={updateLikeCount} onCommentCount={updateCommentCount} onModerated={()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}} onClose={closeViewer} />}
+    {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={closeViewer} dialogProps={{short:selected, items:page.items, hasPreviousPage:index>0, hasNextPage:!!page.next, onBoundary:boundary, onNavigate:setSelected, onLikeCount:updateLikeCount, onCommentCount:updateCommentCount, onModerated:()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}, onClose:closeViewer}} />}
   </div>
 }
 

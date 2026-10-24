@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { useDemo } from '../../../app/providers/demo-context'
 import { games } from '../data/fixtures'
 import { ShortCard } from './ShortCard'
-import { ShortDialog } from '../../comments/components/ShortDialog'
+import { DeferredDialog } from '../../../components/ui/DeferredDialog'
+import { createDeferredModule } from '../../../components/ui/deferred-module'
+const loadViewer=createDeferredModule(()=>import('../../comments/components/ShortDialog').then(module=>module.ShortDialog))
 import type { Short } from '../types/models'
 import styles from './ShortFeed.module.css'
 export function ShortFeed({ gameId }: { gameId?: string }) {
@@ -49,7 +51,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
         onClick={() => setPage(index + 1)}>{index + 1}</button>) : <span>1 / 1</span>}
       <button type="button" disabled={currentPage === pages} onClick={() => setPage(currentPage + 1)}>Próxima →</button>
     </nav>
-    {selected && <ShortDialog short={selected} onClose={() => setSelected(null)} />}
+    {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={()=>setSelected(null)} dialogProps={{short:selected,onClose:()=>setSelected(null)}} />}
   </>
 }
 
