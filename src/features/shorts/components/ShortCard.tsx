@@ -1,3 +1,4 @@
+import {youtubeCardImage,unusableMediumImage,unusableMaxresImage} from '../services/youtube-card-image'
 import {unavailableSources} from '../../../components/clipper/image-sources'
 import { relativeTime } from '../../../lib/relative-time.ts'
 import { useEffect, useId, useState } from 'react'
@@ -16,6 +17,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
   const [loadedImage,setLoadedImage]=useState('')
   const [missingMascot,setMissingMascot]=useState(false)
   const artwork=cardArtwork(short,now,failedCardImages.has)
+  const optimized=artwork.kind==='thumbnail'&&short.platform==='YouTube'?youtubeCardImage(artwork.url,short.identity,failedCardImages.has):undefined
   const tooltipId=useId()
   const published=new Date(short.createdAt)
   const dateTime=Number.isSafeInteger(short.createdAt)&&short.createdAt>=0&&Number.isFinite(published.getTime())?published.toISOString():undefined
@@ -24,7 +26,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
       <span className={styles.platform}>{short.platform}</span>
       <span className={styles.artwork}>
         {artwork.kind==='clipper'&&<span className={styles.caption}>Miniatura indisponível</span>}
-        {!(artwork.kind==='clipper'&&missingMascot)&&<img key={artwork.url} className={(artwork.kind==='clipper'?styles.mascot+' ':'')+(loadedImage===artwork.url?styles.loaded:'')} src={artwork.url} srcSet={artwork.kind==='clipper'?unavailableSources:undefined} sizes={artwork.kind==='clipper'?'144px':undefined} alt={artwork.kind==='cover'?'Capa de '+game.name:artwork.kind==='clipper'?'Clipper com uma placa de alerta de imagem indisponível':''} loading="lazy" decoding="async" referrerPolicy="no-referrer" onLoad={()=>setLoadedImage(artwork.url)} onError={()=>{if(artwork.kind==='clipper')setMissingMascot(true);else{failedCardImages.add(artwork.url);redraw(value=>value+1)}}} />}
+        {!(artwork.kind==='clipper'&&missingMascot)&&<img key={artwork.url} className={(artwork.kind==='clipper'?styles.mascot+' ':'')+(loadedImage===artwork.url?styles.loaded:'')} src={artwork.url} srcSet={artwork.kind==='clipper'?unavailableSources:optimized?.srcSet} sizes={artwork.kind==='clipper'?'144px':optimized?.sizes} alt={artwork.kind==='cover'?'Capa de '+game.name:artwork.kind==='clipper'?'Clipper com uma placa de alerta de imagem indisponível':''} loading="lazy" decoding="async" referrerPolicy="no-referrer" onLoad={event=>{const image=event.currentTarget;const medium=optimized&&image.currentSrc===optimized.medium;if(artwork.kind==='thumbnail'&&short.platform==='YouTube'&&(medium?unusableMediumImage(image.naturalWidth,image.naturalHeight):youtubeCardImage(artwork.url,short.identity,()=>false)&&unusableMaxresImage(image.naturalWidth,image.naturalHeight))){failedCardImages.add(medium?optimized.medium:artwork.url);redraw(value=>value+1);return}setLoadedImage(artwork.url)}} onError={event=>{if(optimized&&(!event.currentTarget.currentSrc||event.currentTarget.currentSrc===optimized.medium)){failedCardImages.add(optimized.medium);redraw(value=>value+1);return}if(artwork.kind==='clipper')setMissingMascot(true);else{failedCardImages.add(artwork.url);redraw(value=>value+1)}}} />}
       </span>
       <span className={styles.game} title={game.name}>{game.name}</span>
     </button>
