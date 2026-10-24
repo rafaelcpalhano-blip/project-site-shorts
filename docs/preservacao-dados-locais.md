@@ -1,3 +1,33 @@
+## Encerramento verificado — 24/10/2026
+
+Salvos26jogos,27shorts e20comentários do emulador demo-clipzone, incluindo os registros inseridos hoje. A exportação integral também inclui coleções auxiliares.
+
+- Backup independente: C:/Users/rafae/Documents/ChatGPT/Project-Site-Shorts/backups/clipzone-20261024T083513Z/
+- Retomada automática: .emulator-data/ no repositório.
+- Importação anterior preservada: C:/Users/rafae/Documents/ChatGPT/Project-Site-Shorts/backups/clipzone-before-20261024T083513Z-preserved/
+- Verificação: verification.json dentro do backup e backups/latest-verified.json fora do repositório.
+
+Quatro arquivos de exportação,258.733bytes, com SHA-256 igual nas duas cópias. Restauração real em emulador isolado8081 comparou IDs e campos dos26games/27shorts/20comments, e confirmou igualdade com a fonte. Nenhuma gravação de teste no emulador original.
+
+A exportação pelo hub voltou a falhar; o endpoint oficial local do Firestore produziu o backup completo. Movimentar a pasta antiga com o processo ativo falhou por bloqueio do Windows. Revisão automática rejeitou a proposta de sobrescrever a pasta em uso, devido ao risco de corrupção. Foi aplicada a alternativa segura: validar a cópia independente, encerrar serviços e somente então preservar a cópia anterior e atualizar .emulator-data. Os arquivos foram conferidos novamente após a cópia.
+
+Serviços5174/5175/8080 encerrados; emulador temporário8081 também encerrado. A máquina pode ser desligada. Não houve mudança na infraestrutura, produção, credenciais ou regras. Arquivos de backup/dados privados não entram nos commits.
+
+### Retomada amanhã
+
+Na raiz do repositório, em terminais separados:
+
+```powershell
+npm run emulators
+```
+
+```powershell
+node --env-file=.env.server.local scripts/dev-api.mjs
+```
+
+Abrir https://127.0.0.1:5174/. Não executar seed:firestore ou reset. Conferir a importação e o feed antes de inserir novos dados. A build dist está atualizada; o servidor auxiliar5175 deverá ser iniciado separadamente se necessário. A pendência da chave YouTube (API_KEY_IP_ADDRESS_BLOCKED) continua separada da preservação dos dados.
+
+
 ## Retomada validada — 23/10/2026
 
 Após o desligamento, .emulator-data estava sem o arquivo de metadados exigido para importação. Restaurada a cópia independente clipzone-20261023T075951Z, com quatro arquivos/221.038 bytes e conferência SHA-256. Emulador iniciado explicitamente com --import; leitura posterior confirmou 22 jogos, 21 shorts e 19 comentários. Agora há validação efetiva de restauração, além da conferência dos arquivos registrada abaixo.
