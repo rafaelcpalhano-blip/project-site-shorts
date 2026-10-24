@@ -1,3 +1,5 @@
+import {resolveSharedVideoUrl} from '../videos/resolve-shared-url.ts'
+import {sharedVideoInput} from '../../src/lib/validation/shared-video-url.ts'
 import { BodyError, readInput } from './submissions.ts'
 import { validateSubmissionInput, validateVideoTitle, validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { SubmissionError } from '../submissions/submit-short.ts'
@@ -7,6 +9,7 @@ interface Dependencies {
   resolveVisitor: (request: Request) => Promise<string | null>
   checkAbuse: (visitor: string) => Promise<void>
   verify: SubmissionDependencies['verify']
+  resolveUrl?: (url:string)=>Promise<string>
 }
 const reply = (status: number, body: unknown) => Response.json(body, { status,
   headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...(status === 405 ? { Allow: 'POST' } : {}) } })
@@ -20,11 +23,16 @@ export async function handleVideoPreview(request: Request, dependencies?: Depend
     if (!visitor || !/^[a-f0-9]{64}$/.test(visitor)) return reply(401, { error: 'invalid-session' })
     await dependencies.checkAbuse(visitor)
     const input = await readInput(request)
-    let submission
+    let link:string
     try {
       if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(key => key !== 'url')) throw new Error('invalid-input')
-      submission = validateSubmissionInput({ url: (input as { url?: unknown }).url, gameId: 'preview' })
+      const value=(input as {url?:unknown}).url
+      if(typeof value!=='string')throw Error('invalid-input')
+      link=sharedVideoInput(value).url
     } catch { return reply(400, { error: 'invalid-input' }) }
+    const resolved=await (dependencies.resolveUrl??resolveSharedVideoUrl)(link)
+    const submission=validateSubmissionInput({url:resolved,gameId:'preview'})
+    if(new URL(request.url).pathname==='/api/shorts/resolve')return reply(200,{url:submission.url})
     // Preview has no chosen game and never authorizes publication or reserves a video.
     const evidence = await dependencies.verify(submission)
     if (evidence.existence === 'missing') return reply(404, { error: 'video-not-found' })

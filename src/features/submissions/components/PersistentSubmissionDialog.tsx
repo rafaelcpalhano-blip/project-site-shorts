@@ -1,8 +1,9 @@
+import {extractSharedVideoUrl,sharedVideoInput} from '../../../lib/validation/shared-video-url'
+import {createVideoLinkClient} from '../services/video-link-api'
 import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
 import { GameCombobox } from '../../games/components/GameCombobox'
 import { createVideoPreviewClient } from '../services/video-preview-api'
 import { validateSubmissionInput } from '../../../lib/validation/public-input'
-import { parseVideoUrl } from '../../../lib/validation/video-url'
 import { OfficialGamePicker } from '../../games/components/OfficialGamePicker'
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { KeyboardEvent } from 'react'
@@ -15,6 +16,7 @@ import type { SubmissionResult } from '../services/submission-api'
 const repository = createPublicRepository(database)
 const submit = createSubmissionClient()
 const preview = createVideoPreviewClient()
+const resolveLink = createVideoLinkClient()
 const defaultServices={listGames:repository.listGames,preview,submit}
 export type SubmissionDialogServices=typeof defaultServices
 export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defaultServices }: {
@@ -41,15 +43,16 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const [attempt, setAttempt] = useState(0)
   const busy = useRef(false)
   const form=useRef<HTMLFormElement>(null),urlField=useRef<HTMLInputElement>(null),titleField=useRef<HTMLInputElement>(null),gameField=useRef<HTMLButtonElement>(null),channelField=useRef<HTMLInputElement>(null),cancelButton=useRef<HTMLButtonElement>(null)
-  const returnFocus=useRef<HTMLElement|null>(null),restoreFocus=useRef(false),advanceUrl=useRef<string|null>(null),pasting=useRef(false)
+  const returnFocus=useRef<HTMLElement|null>(null),restoreFocus=useRef(false),advanceUrl=useRef<string|null>(null)
   const latestPreview=useRef<{url:string;status:'pending'|'success'|'failed'}|null>(null)
   const [previewAttempt,setPreviewAttempt]=useState(0),[confirming,setConfirming]=useState(false)
   useLayoutEffect(()=>{if(confirming)cancelButton.current?.focus();else if(restoreFocus.current){restoreFocus.current=false;returnFocus.current?.focus()}},[confirming])
   const cancelConfirmation=()=>{if(busy.current)return;restoreFocus.current=true;setConfirming(false)}
+  const changeUrl=(raw:string,pasted=false)=>{const value=extractSharedVideoUrl(raw);advanceUrl.current=pasted?value:null;latestPreview.current=null;setPreviewFailed(false);setUrl(value);if(!channelEdited.current)setChannelName('');if(!titleEdited.current)setTitle('');setTitleNotice('');setError('')}
   const requestConfirmation=()=>{
     if(busy.current||choosing||loading||confirming)return
     if(!form.current?.reportValidity())return
-    try{validateSubmissionInput({url,gameId,channelName,title})}catch(reason){setError(reason instanceof Error?reason.message:'Confira os campos.');return}
+    try{if(sharedVideoInput(url).short)throw Error('Aguarde a resolução do link curto. Se falhar, tente novamente ou use o link completo.');validateSubmissionInput({url,gameId,channelName,title})}catch(reason){setError(reason instanceof Error?reason.message:'Confira os campos.');return}
     returnFocus.current=document.activeElement as HTMLElement|null;setError('');setConfirming(true)
   }
   const send=async()=>{
@@ -77,13 +80,18 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
     return () => { active = false }
   }, [attempt,services,catalogVersion])
   useEffect(() => {
-    try { parseVideoUrl(url) } catch { return }
+    try { sharedVideoInput(url) } catch { return }
     const controller = new AbortController()
     let active = true
     latestPreview.current={url,status:'pending'}
     const timer = setTimeout(() => {
-      setPreviewFailed(false);setTitleNotice('Buscando título original...')
-      services.preview(url, controller.signal).then(original => {
+      setPreviewFailed(false);setTitleNotice(sharedVideoInput(url).short?'Resolvendo link do TikTok...':'Buscando título original...')
+      resolveLink(url,controller.signal).then(resolved=>{
+        if(!active)return null
+        if(resolved!==url){if(advanceUrl.current===url)advanceUrl.current=resolved;setUrl(resolved);return null}
+        return services.preview(resolved,controller.signal)
+      }).then(original => {
+        if(!original)return
         if (!active) return
         setPreviewFailed(false);latestPreview.current={url,status:'success'}
         if(advanceUrl.current===url&&document.activeElement===urlField.current){advanceUrl.current=null;titleField.current?.focus()}
@@ -95,7 +103,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         if (!titleEdited.current) setTitle(original.title)
         setTitleNotice('Título original carregado. Você pode editar o título.')
       }).catch(() => {
-        if(active){setPreviewFailed(true);latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice('Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
+        if(active){setPreviewFailed(true);latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice(sharedVideoInput(url).short?'Não foi possível resolver o link curto do TikTok. Tente novamente ou copie o link completo do vídeo.':'Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
       })
     }, 600)
     return () => { active = false; clearTimeout(timer); controller.abort() }
@@ -109,13 +117,13 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
     </section>}
     <form ref={form} hidden={confirming} style={confirming?{display:'none'}:undefined} className="form" aria-busy={sending} onSubmit={event=>{event.preventDefault();requestConfirmation()}}>
       <div className="form-field"><label htmlFor="persistent-url">Link do short *</label>
-        <input ref={urlField} id="persistent-url" type="url" required maxLength={2048} value={url} disabled={sending} onPaste={()=>{pasting.current=true}} onBlur={()=>{advanceUrl.current=null}} onKeyDown={event=>{
+        <input ref={urlField} id="persistent-url" type="url" required maxLength={2048} value={url} disabled={sending} onPaste={event=>{event.preventDefault();changeUrl(event.clipboardData.getData('text'),true)}} onBlur={()=>{advanceUrl.current=null}} onKeyDown={event=>{
           if(!enter(event))return;event.preventDefault()
-          try{parseVideoUrl(url)}catch{setError('Informe um link válido de uma plataforma suportada.');urlField.current?.reportValidity();return}
+          try{sharedVideoInput(url)}catch{setError('Informe um link válido de uma plataforma suportada.');urlField.current?.reportValidity();return}
           if(latestPreview.current?.url===url&&latestPreview.current.status==='success'){titleField.current?.focus();return}
           advanceUrl.current=url
           if(latestPreview.current?.url!==url||latestPreview.current.status==='failed')setPreviewAttempt(value=>value+1)
-        }} onChange={event => { const value=event.target.value;advanceUrl.current=pasting.current?value:null;pasting.current=false;latestPreview.current=null;setPreviewFailed(false);setUrl(value);if(!channelEdited.current)setChannelName('');if(!titleEdited.current)setTitle('');setTitleNotice('');setError('') }} /></div>
+        }} onChange={event => changeUrl(event.target.value)} /></div>
       <div className="form-field"><label htmlFor="persistent-title">Título</label>
         <input ref={titleField} id="persistent-title" onKeyDown={event=>{if(enter(event)){event.preventDefault();gameField.current?.focus()}}} maxLength={500} value={title} disabled={sending} aria-describedby="title-notice"
           onChange={event => { titleEdited.current = true; setTitle(event.target.value) }} />
@@ -123,7 +131,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         {previewFailed&&<button type="button" disabled={sending} onClick={()=>setPreviewAttempt(value=>value+1)}>Tentar obter título e canal</button>}
       </div>
       <div className="form-field">
-        <GameCombobox games={loading?[]:games} value={gameId} onChange={setGameId} disabled={sending||choosing} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
+        <GameCombobox games={loading?[]:games} value={gameId} onChange={setGameId} disabled={sending||choosing||!!catalogError&&games.length===0} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
         {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError} <button type="button" disabled={sending || choosing || loading} onClick={() => {
           setLoading(true); setCatalogError(''); invalidateGameCatalog(); setAttempt(value => value + 1)
         }}>Recarregar catálogo</button></p>}

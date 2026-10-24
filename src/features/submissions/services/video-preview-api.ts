@@ -1,8 +1,9 @@
+import {createVideoLinkClient} from './video-link-api.ts'
 import { parseVideoUrl } from '../../../lib/validation/video-url.ts'
 import { validateVideoTitle, validateChannelName } from '../../../lib/validation/public-input.ts'
 export function createVideoPreviewClient(fetcher: typeof fetch = fetch) {
   return async (url: string, signal: AbortSignal): Promise<{title: string | null; channelName: string}> => {
-    const video = parseVideoUrl(url)
+    const video = parseVideoUrl(await createVideoLinkClient(fetcher)(url,signal))
     for (const path of ['/api/session', '/api/shorts/preview']) {
       const response = await fetcher(path, { method: 'POST', credentials: 'same-origin', redirect: 'error',
         signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]), headers: { 'Content-Type': 'application/json' },

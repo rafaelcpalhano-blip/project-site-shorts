@@ -1,3 +1,4 @@
+import {createVideoLinkClient} from './video-link-api.ts'
 import { validateSubmissionInput } from '../../../lib/validation/public-input.ts'
 export interface SubmissionResult { id: string; status: 'published' | 'pending'; remaining: number }
 const messages: Record<string, string> = {
@@ -14,6 +15,7 @@ const messages: Record<string, string> = {
 }
 export function createSubmissionClient(fetcher: typeof fetch = fetch) {
   return async (input: { url: string; gameId: string; channelName: string; title?: string }): Promise<SubmissionResult> => {
+    input={...input,url:await createVideoLinkClient(fetcher)(input.url,new AbortController().signal)}
     validateSubmissionInput(input)
     const post = async (path: string, body?: unknown) => {
       const response = await fetcher(path, { method: 'POST', credentials: 'same-origin', redirect: 'error',

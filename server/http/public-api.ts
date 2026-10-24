@@ -98,7 +98,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })
-    if (path === '/api/shorts/preview') return handleVideoPreview(request, {
+    if (path === '/api/shorts/preview' || path === '/api/shorts/resolve') return handleVideoPreview(request, {
       origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: previewVerifier,
     })
     if (path === '/api/games/confirm') return handleGameConfirmation(request, options.gameSearch?.get && searchLimit ? {
