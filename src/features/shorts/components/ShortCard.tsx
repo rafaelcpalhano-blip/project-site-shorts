@@ -1,3 +1,4 @@
+import {unavailableSources} from '../../../components/clipper/image-sources'
 import { relativeTime } from '../../../lib/relative-time.ts'
 import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -23,7 +24,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
       <span className={styles.platform}>{short.platform}</span>
       <span className={styles.artwork}>
         {artwork.kind==='clipper'&&<span className={styles.caption}>Miniatura indisponível</span>}
-        {!(artwork.kind==='clipper'&&missingMascot)&&<img key={artwork.url} className={(artwork.kind==='clipper'?styles.mascot+' ':'')+(loadedImage===artwork.url?styles.loaded:'')} src={artwork.url} alt={artwork.kind==='cover'?'Capa de '+game.name:artwork.kind==='clipper'?'Clipper com uma placa de alerta de imagem indisponível':''} loading="lazy" decoding="async" referrerPolicy="no-referrer" onLoad={()=>setLoadedImage(artwork.url)} onError={()=>{if(artwork.kind==='clipper')setMissingMascot(true);else{failedCardImages.add(artwork.url);redraw(value=>value+1)}}} />}
+        {!(artwork.kind==='clipper'&&missingMascot)&&<img key={artwork.url} className={(artwork.kind==='clipper'?styles.mascot+' ':'')+(loadedImage===artwork.url?styles.loaded:'')} src={artwork.url} srcSet={artwork.kind==='clipper'?unavailableSources:undefined} sizes={artwork.kind==='clipper'?'144px':undefined} alt={artwork.kind==='cover'?'Capa de '+game.name:artwork.kind==='clipper'?'Clipper com uma placa de alerta de imagem indisponível':''} loading="lazy" decoding="async" referrerPolicy="no-referrer" onLoad={()=>setLoadedImage(artwork.url)} onError={()=>{if(artwork.kind==='clipper')setMissingMascot(true);else{failedCardImages.add(artwork.url);redraw(value=>value+1)}}} />}
       </span>
       <span className={styles.game} title={game.name}>{game.name}</span>
     </button>

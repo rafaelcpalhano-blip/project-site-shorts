@@ -1,3 +1,4 @@
+import {welcomeSources} from '../../../components/clipper/image-sources'
 import clipperStyles from '../../../components/clipper/Clipper.module.css'
 import { useAdminSession } from '../context/admin-session-context'
 const AdminSections = lazy(() => import('../components/AdminSections').then(module => ({default:module.AdminSections})))
@@ -46,7 +47,7 @@ export function AdminPage() {
   }
   return <div className={!authorized?styles.login:undefined}>
     <h1>Administração</h1>
-    {!authorized&&<aside className={styles.clipperGreeting} aria-label="Recado do Clipper"><img className={clipperStyles.floating} src="/clipper/welcome.webp" width="512" height="768" alt="" decoding="async"/><p>Estou online, totalmente operacional e, se me permite a audácia, torcendo pelo senhor como sempre.(J.A.R.V.I.S., 2013)</p></aside>}
+    {!authorized&&<aside className={styles.clipperGreeting} aria-label="Recado do Clipper"><img className={clipperStyles.floating} src="/clipper/welcome.webp" srcSet={welcomeSources} sizes="104px" width="512" height="768" alt="" decoding="async"/><p>Estou online, totalmente operacional e, se me permite a audácia, torcendo pelo senhor como sempre.(J.A.R.V.I.S., 2013)</p></aside>}
     {!authorized && status && <p role="status">{status}</p>}
     {checking && <p role="status">Verificando acesso administrativo…</p>}
     {sessionError && <p role="alert" className="error">{sessionError}</p>}
