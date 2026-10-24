@@ -1,4 +1,16 @@
-# Painel administrativo de denúncias e revisão
+# Painel administrativo do Clipzone
+
+## Atualização local — 23/10/2026
+
+Navegação principal: Catálogo administrativo de jogos; Moderação de comentários; Denúncias e moderação de vídeos. Solicitações antigas continuam disponíveis em Fluxo anterior de inclusão de jogos. Inclusões manuais atuais são revisadas no filtro Provisórios do Catálogo; editar metadados não aprova o provisório e confirmar IGDB não cria solicitação.
+
+Listas já consultadas são atualizadas após decisões individuais, edição de metadados e lotes, preservando resultados por registro. Sem polling. Filtros opcionais por sinal de comentário e pendente/bloqueado percorrem janelas limitadas: página vazia pode ter continuação, indicada na interface. Denúncias analisadas consulta resumos reviewed; originais permanecem preservados. As datas exibidas são criação do registro ou primeira denúncia, conforme a fila.
+
+Consultar histórico administrativo por ID permite buscar decisões de jogos, solicitações, comentários e vídeos em páginas de20eventos, com responsável/motivo/data/estados disponíveis. POST /api/admin/history usa a mesma autorização, sessão, origem e limites das demais rotas; não expõe identidade de visitantes. Não há conversão manual→IGDB, fusão, exclusão física ou migração de shorts.
+
+[Implementação, testes e limites atuais](refinamentos-administrativos-pre-etapa-8.md). Os relatos abaixo preservam o histórico das etapas anteriores; nomes de áreas e instruções de atualização antigos foram substituídos pelo comportamento descrito acima.
+
+## Histórico de implementação
 
 Catálogo: POST /api/games/requests e revisão privada em /api/admin/games/{queue,review}.
 Ficha /jogos/:gameId exibe metadados persistidos. Solicitações não publicam vídeos;
