@@ -73,6 +73,7 @@ export function createYouTubeOEmbedVerifier(fetcher: typeof fetch = fetch) {
           !['https://www.youtube.com', 'https://www.youtube.com/'].includes(result.provider_url)) return evidence
       evidence.existence = 'confirmed'
       evidence.title = validateVideoTitle(result.title)
+      try { const channel=validateChannelName(result.author_name); if(channel)evidence.channelName=channel } catch { /* Optional author metadata. */ }
       const image=thumbnailUrl(result.thumbnail_url,video.platform,video.identity)
       if(image)evidence.thumbnailUrl=image
     } catch { /* Unavailable titles never authorize publication. */ }

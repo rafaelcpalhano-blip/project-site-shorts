@@ -1,7 +1,7 @@
 .card { min-width: 0; display: flex; flex-direction: column; overflow: visible; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
 .preview { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 12px; align-items: stretch; width: 100%; padding: 0 0 12px; border: 0; border-radius: 13px 13px 0 0; overflow: visible; background: linear-gradient(150deg,#30263f,#1c1d25); text-align: left; }
 .platform { position: absolute; top: 8px; left: 8px; z-index: 2; background: #16171d; border-radius: 4px; padding: 3px 7px; font-size: .65rem; }
-.artwork { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; background: #16171d; border-radius: 13px 13px 0 0; }
+.artwork { overflow:hidden; position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; background: #16171d; border-radius: 13px 13px 0 0; }
 .artwork img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 13px 13px 0 0; opacity: 0; transform: scale(1); transition: opacity 200ms ease, transform 220ms ease; }
 .artwork img.loaded { opacity: 1; }
 .artwork img.mascot { object-fit: contain; padding: 4px 0 22px; }

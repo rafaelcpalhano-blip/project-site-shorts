@@ -1,3 +1,4 @@
+import {createVideoPreviewVerifier} from '../videos/preview.ts'
 import {createNetworkProtection} from '../security/network-abuse.ts'
 import {SubmissionError} from '../submissions/submit-short.ts'
 import {createRankingCursor} from '../ranking/cursor.ts'
@@ -31,6 +32,7 @@ export interface PublicApiOptions {
   origin: string
   visitorSecret: string
   store: SubmissionDependencies['store']
+  previewFetch?:typeof fetch
   verify: SubmissionDependencies['verify']
   now: () => Date
   maximumAttempts: number
@@ -39,6 +41,7 @@ export interface PublicApiOptions {
 }
 // Server composition only. No Cloudflare binding or browser endpoint is enabled here.
 export async function createPublicApi(options: PublicApiOptions) {
+  const previewVerifier=createVideoPreviewVerifier(options.verify,options.previewFetch)
   const origin = new URL(options.origin)
   if (origin.protocol !== 'https:' || origin.origin !== options.origin) throw new Error('Expected canonical HTTPS origin')
   const network=options.network?await createNetworkProtection({secret:options.network.secret,store:options.store,now:options.now}):undefined
@@ -96,7 +99,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })
     if (path === '/api/shorts/preview') return handleVideoPreview(request, {
-      origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: options.verify,
+      origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: previewVerifier,
     })
     if (path === '/api/games/confirm') return handleGameConfirmation(request, options.gameSearch?.get && searchLimit ? {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor,

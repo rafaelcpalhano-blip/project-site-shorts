@@ -24,6 +24,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
   const [url, setUrl] = useState('')
   const [title, setTitle] = useState('')
   const [titleNotice, setTitleNotice] = useState('')
+  const [previewFailed,setPreviewFailed]=useState(false)
   const titleEdited = useRef(false)
   const channelEdited = useRef(false)
   const [gameId, setGameId] = useState('')
@@ -81,10 +82,10 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
     let active = true
     latestPreview.current={url,status:'pending'}
     const timer = setTimeout(() => {
-      setTitleNotice('Buscando título original...')
+      setPreviewFailed(false);setTitleNotice('Buscando título original...')
       services.preview(url, controller.signal).then(original => {
         if (!active) return
-        latestPreview.current={url,status:'success'}
+        setPreviewFailed(false);latestPreview.current={url,status:'success'}
         if(advanceUrl.current===url&&document.activeElement===urlField.current){advanceUrl.current=null;titleField.current?.focus()}
         if (!channelEdited.current) setChannelName(original.channelName)
         if (original.title === null) {
@@ -94,7 +95,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         if (!titleEdited.current) setTitle(original.title)
         setTitleNotice('Título original carregado. Você pode editar o título.')
       }).catch(() => {
-        if(active){latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice('Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
+        if(active){setPreviewFailed(true);latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice('Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
       })
     }, 600)
     return () => { active = false; clearTimeout(timer); controller.abort() }
@@ -114,11 +115,12 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
           if(latestPreview.current?.url===url&&latestPreview.current.status==='success'){titleField.current?.focus();return}
           advanceUrl.current=url
           if(latestPreview.current?.url!==url||latestPreview.current.status==='failed')setPreviewAttempt(value=>value+1)
-        }} onChange={event => { const value=event.target.value;advanceUrl.current=pasting.current?value:null;pasting.current=false;latestPreview.current=null;setUrl(value);if(!channelEdited.current)setChannelName('');if(!titleEdited.current)setTitle('');setTitleNotice('');setError('') }} /></div>
+        }} onChange={event => { const value=event.target.value;advanceUrl.current=pasting.current?value:null;pasting.current=false;latestPreview.current=null;setPreviewFailed(false);setUrl(value);if(!channelEdited.current)setChannelName('');if(!titleEdited.current)setTitle('');setTitleNotice('');setError('') }} /></div>
       <div className="form-field"><label htmlFor="persistent-title">Título</label>
         <input ref={titleField} id="persistent-title" onKeyDown={event=>{if(enter(event)){event.preventDefault();gameField.current?.focus()}}} maxLength={500} value={title} disabled={sending} aria-describedby="title-notice"
           onChange={event => { titleEdited.current = true; setTitle(event.target.value) }} />
         <p id="title-notice" className="muted" role="status">{titleNotice || 'Preenchido pela fonte quando disponível. A edição é opcional.'}</p>
+        {previewFailed&&<button type="button" disabled={sending} onClick={()=>setPreviewAttempt(value=>value+1)}>Tentar obter título e canal</button>}
       </div>
       <div className="form-field">
         <GameCombobox games={loading?[]:games} value={gameId} onChange={setGameId} disabled={sending||choosing} loading={loading} controlRef={gameField} onAdvance={()=>channelField.current?.focus()}/>
