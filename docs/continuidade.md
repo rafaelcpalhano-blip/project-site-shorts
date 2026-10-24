@@ -1,3 +1,7 @@
+## 24/10/2026 — Lighthouse mobile/desktop recebidos e analisados
+
+Proprietário confirmou duas execuções sequenciais em janela anônima, boas-vindas Clipper fechadas. Build5175: desktop86/mobile65, acessibilidade100/boaspráticas96/SEO100 ambos, CLS0 ambos, FCP0,97/4,81s e LCP2,36/6,87s; bytes2402/1879KiB. Ambos avisamIndexedDB/timeout: não fechar medição como definitiva. Feed visível; canalFirestore200 ainda aberto é hipótese de timeout, não vazamento comprovado. MobileLCP é h1; desktopLCP miniaturaYouTube lazy. Imagens grandes/JSinicial comprovados; servidorlocal semcompressão/no-cache distingue hospedagem futura. [Relatório, prioridades e limites](lighthouse-validacao-2026-10-24.md). Originais4arquivos/SHA256 preservados em workspace/audit-performance/lighthouse-20261024. Nenhuma auditoria repetida/otimização/teste/deploy/infraestrutura/dados/commit. Próxima decisão: aprovar plano localizado antes de corrigir; Etapa8suspensa. RelatórioI anterior permanece histórico, novas evidências não encerram demais validações físicas/GoogleTOTP/visuais.
+
 ## 24/10/2026 — Resolvedor de links TikTok ativo na5174
 
 Proprietário reiniciou API; PID19512. Conferência com sessão real: resolve HTTP200 retornou URL completa do link curto fornecido; preview HTTP200 retornou title:null/channelName:Seda King. Ativação do backend encerrada.8080/PID7860 preservado, sem reset/restauração/publicação. [Evidências](links-compartilhados-mobile.md). Continuar teste físico de colagem Twitch/TikTok no Motorola; Etapa8suspensa. Sem repetir suítes/deploy/commit automático.
