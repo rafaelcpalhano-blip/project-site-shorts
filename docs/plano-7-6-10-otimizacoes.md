@@ -1,6 +1,6 @@
 # Plano 7.6.10 — Otimizações localizadas antes da Etapa8
 
-Estado: A e B concluídas; C–F aguardam autorização. Consulte etapa-7-6-10-a.md e etapa-7-6-10-b.md para evidências, critérios e limites. Otimização em B restrita às imagens locais do Clipper. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
+Estado: A, B e C concluídas; D–F aguardam autorização. Consulte os relatórios etapa-7-6-10-a.md, etapa-7-6-10-b.md e etapa-7-6-10-c.md para evidências, critérios e limites. B alterou imagens locais; C somente seleção/recuperação de miniaturas no card, sem mudar prioridade por falta de ganho comprovado. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
 
 ## Compromisso de preservação
 
