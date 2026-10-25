@@ -1,0 +1,105 @@
+{
+  "created": "2026-10-25T17:53:28.265Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "entryProof": {
+    "runtime": "workerd",
+    "passed": [
+      "canonical HTTPS origin configuration required",
+      "assets stay separate from exact API boundary",
+      "request URL cannot select a different origin through proxy headers",
+      "foreign/missing mutation origins and cross-site metadata rejected before factory",
+      "untrusted forwarded headers cannot manufacture transport context",
+      "invalid transport literals rejected without opening API",
+      "IPv6 literal passed unchanged for downstream network normalization",
+      "new invocation gets independent budget even for concurrent requests",
+      "transport address captured before async construction cannot bleed across requests",
+      "factory exception and unexpected HTML/redirect never fall back to assets",
+      "204 cookie preserved and JSON API replies cannot enable shared cache",
+      "request body reaches handler unread and API status/JSON preserved"
+    ],
+    "deployReady": false
+  },
+  "routing": [
+    "real API session preserves secure cookie",
+    "API unknown remains JSON through entry",
+    "foreign origin rejected through entry",
+    "ASSETS binding preserves SPA navigation"
+  ],
+  "cpu": {
+    "available": true,
+    "fixtureRequests": 5,
+    "samples": 72,
+    "requestedSamplingIntervalUs": 100,
+    "wallTimesMs": [
+      22.436099999999897,
+      13.083000000000084,
+      13.930599999999913,
+      12.886700000000019,
+      14.567900000000009
+    ],
+    "profileSpanUs": 101300,
+    "topSampleTimelineUs": [
+      {
+        "functionName": "(idle)",
+        "timelineUs": 39856
+      },
+      {
+        "functionName": "(anonymous)",
+        "timelineUs": 23307
+      },
+      {
+        "functionName": "document",
+        "timelineUs": 9002
+      },
+      {
+        "functionName": "importKey",
+        "timelineUs": 7295
+      },
+      {
+        "functionName": "(program)",
+        "timelineUs": 5082
+      },
+      {
+        "functionName": "json",
+        "timelineUs": 2305
+      },
+      {
+        "functionName": "readOrderedFeed",
+        "timelineUs": 2281
+      },
+      {
+        "functionName": "getMany",
+        "timelineUs": 1665
+      },
+      {
+        "functionName": "decode",
+        "timelineUs": 1160
+      },
+      {
+        "functionName": "(garbage collector)",
+        "timelineUs": 1148
+      },
+      {
+        "functionName": "publicShort",
+        "timelineUs": 1131
+      },
+      {
+        "functionName": "timeout",
+        "timelineUs": 1128
+      }
+    ],
+    "profileFile": "entry-cpu.cpuprofile",
+    "productionCpuCertified": false,
+    "interpretation": "Sample timeline includes idle, fixture overhead and I/O; not billed CPU per request."
+  },
+  "deployReady": false,
+  "limits": [
+    "local test bridge rewrites origin and supplies constant trusted IP",
+    "no real Cloudflare ingress or Google data",
+    "worker-first-all is a lab config, not an approved billing/routing policy",
+    "external cover decision still open"
+  ]
+}
