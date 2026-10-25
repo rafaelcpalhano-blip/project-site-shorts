@@ -1,6 +1,6 @@
 # Etapa 8 — plano de integração
 
-Iniciada em25/10/2026 por autorização do proprietário.8-A concluída em inventário;8-B com auditoria local e limitações registradas;8-C com preparação local concluída e ações remotas pendentes;8-D–F ainda não executadas. Nada publicado.
+Iniciada em25/10/2026 por autorização do proprietário.8-A concluída em inventário;8-B com auditoria local e limitações registradas;8-C com preparação local e conferência de configurações concluídas; criação/gravações remotas pendentes;8-D–F ainda não executadas. Nada publicado.
 
 Decisões: homologação primeiro em endereço gratuito (a escolher); banco remoto sem conteúdo de teste; locais preservados; não habilitar serviços pagos ou infraestrutura sem aprovação específica. Diagnóstico do repositório e fontes: [8-A](etapa-8-a-inventario-integracao.md).
 
@@ -136,3 +136,15 @@ Prévia de banco vazio descreve apenas gameNameState/v1 e rankingState/metrics, 
 19 testes Node relacionados+9 checks workerd+9 integrações8081 aprovados; tipos/lint/build/diff-check conferidos. Uma fixture legada de comentário sem publicationNumber foi ajustada para o contrato atual; não alterados reader/regras. Sem consulta Google real/conta/produção, leitura de env privado, instalação ou reinício5174/5175/8080. Dados8080/backups preservados. Nenhuma nova auditoria Lighthouse/CPU necessária para preparação ainda não ativada; CPU do signer frio segue a medir antes de publicar.
 
 8-C local concluída; fase remota NÃO autorizada. Próxima decisão sugerida: aprovar somente conferência de configurações (projetos exatos,Spark/semCloudBilling,WorkersFree,IdentityPlatform/TOTP/Google,metadados do banco), sem documentos de produção nem mudanças. Depois apresentar resultados para autorização distinta de criar banco/conta/IAM/segredos/regras/índices/metadados vazios; nenhuma dessas ações incluída implicitamente.8-D/jobs e homologaçãoHTTPS/deploy continuam pendentes separados. Checkpoint externo verificado e commits manuais entregues.
+
+## 25/10/2026 — 8-C: conferência remota somente de configurações autorizada
+
+Autorização do proprietário para o próximo escopo proposto: leitura de configurações, sem documentos/listas de usuários, mutações, billing ou deploy. Conferência no navegador autenticado concluída. Relatório [etapa-8-c-conferencia-configuracoes.md](etapa-8-c-conferencia-configuracoes.md), evidência sanitizada docs/evidencias/etapa-8-c-conferencia-configuracoes.json. Skill computer-use lida para orientar navegação; apenas APIs de navegador utilizadas.
+
+Confirmados no console: projetoClipzone/clipzone-db02a planoSpark US$0/mês;CloudBilling não vinculado;IdentityPlatform presente;Google ativado;WorkersFree atual$0;0projetos Workers/Pages e0requisições hoje;subdomínio de conta workers.dev existente,semWorkerClipzone criado. DomíniosAuth localhost,127.0.0.1,clipzone-db02a.firebaseapp.com eclipzone-db02a.web.app,semnovo domínio.
+
+Encontrado(default) já existente,Pronto,Padrão/Native,southamerica-east1 SãoPaulo,criado19/10/2026,backups programados desativados. NÃO aberto painel de dados nem consultas/contagens: vazio não comprovado; não inicializar/apagar/migrar ou criar outro banco automaticamente. Próxima decisão: proprietário esclarecer finalidade e escolher alvo; eventual verificação restrita de presença de conteúdo requer autorização distinta e não deve atingir produção a preservar.
+
+MFAvisível mostraSMS ativada,semcampoTOTP. TOTP específico NÃO confirmado nem considerado desativado;backend segue exigindoGoogle/TOTP/UID. Página geral IdentityPlatform acusouCloudFunctionsAPI desativada;nenhumaAPI habilitada e nenhuma dependência de app inferida. PáginaMFA/formulário somente consultados,sem alterar campos,Cancelado semsalvar;nenhum SMS/segredo/código acessado. ConfirmaçãoTOTP continua pendente em configuração/teste autorizado.
+
+Nenhum recurso/chave/plano/IAM/domínio/regra/índice/fator/deploy criado/alterado,semconteúdo produção/usuários ou emulador8080. Semtestes/build/Lighthouse desnecessários;diff-check/checkpoint documental conferidos. A autorização de leitura não libera setup: confirmar alvo,apresentar pacote deações antes de qualquer mutação.8-D eHTTPS/deploy permanecem posteriores.

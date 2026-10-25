@@ -1,0 +1,71 @@
+{
+  "observedDate": "2026-10-25",
+  "timezone": "America/Sao_Paulo",
+  "method": "Authenticated browser UI, configuration screens only; sanitized manual observation record",
+  "authorizedScope": "Read configuration only; no production documents, user lists, resources, credentials, plan changes or deploy",
+  "firebase": {
+    "projectId": "clipzone-db02a",
+    "projectName": "Clipzone",
+    "planObserved": "Spark",
+    "displayedMonthlyPrice": "US$ 0/mês",
+    "cloudBillingLinked": false,
+    "billingUiText": "Este projeto não está vinculado a uma conta de faturamento.",
+    "identityPlatformObserved": true,
+    "googleProviderEnabled": true,
+    "totpConfigurationObserved": false,
+    "totpConclusion": "Not displayed in inspected configuration UI; neither enabled nor disabled inferred",
+    "smsMfaUiStatus": "enabled; unchanged",
+    "authorizedDomains": [
+      "localhost",
+      "clipzone-db02a.firebaseapp.com",
+      "clipzone-db02a.web.app",
+      "127.0.0.1"
+    ],
+    "futureWorkersDomainAdded": false
+  },
+  "firestore": {
+    "databaseId": "(default)",
+    "exists": true,
+    "statusObserved": "Pronto",
+    "editionObserved": "Padrão",
+    "modeObserved": "Nativa do Firestore",
+    "locationObserved": "southamerica-east1 (São Paulo)",
+    "createdAtDisplayed": "19/10/2026 13:43:47 UTC-3",
+    "scheduledBackupsObserved": "Desativado",
+    "encryptionObserved": "Gerenciado pelo Google",
+    "dataContentRead": false,
+    "emptyDatabaseVerified": false,
+    "indexesOrRulesInspectedRemotely": false
+  },
+  "cloudflare": {
+    "workersPlanObserved": "Free",
+    "currentPlanButtonObserved": true,
+    "displayedMonthlyPrice": "$0",
+    "workersOrPagesProjectsListed": 0,
+    "requestsTodayDisplayed": "0 / 100,000",
+    "cpuDisplayed": "0 ms",
+    "accountWorkersDevSubdomainExists": true,
+    "clipzoneWorkerCreated": false,
+    "otherProductsBillingAudited": false
+  },
+  "limits": [
+    "TOTP project setting not exposed in inspected screens; no user/factor enrollment queried",
+    "Existing database is not evidence of an empty database",
+    "Cloudflare Workers Free does not certify billing status of unrelated Cloudflare products",
+    "Identity Platform settings UI reported Cloud Functions API disabled; API was not enabled; application dependency not inferred"
+  ],
+  "remoteMutations": 0,
+  "documentQueries": 0,
+  "userListQueries": 0,
+  "secretValuesRevealed": false,
+  "nextActionsAuthorized": false,
+  "sourcePages": {
+    "firebaseOverview": "https://console.firebase.google.com/project/clipzone-db02a/overview",
+    "googleProvider": "https://console.firebase.google.com/project/clipzone-db02a/authentication/providers",
+    "authSettings": "https://console.firebase.google.com/project/clipzone-db02a/authentication/settings",
+    "billingLink": "https://console.cloud.google.com/billing/linkedaccount?project=clipzone-db02a",
+    "databaseMetadata": "https://console.cloud.google.com/firestore/databases?project=clipzone-db02a",
+    "mfa": "https://console.cloud.google.com/customer-identity/mfa?project=clipzone-db02a",
+    "cloudflare": "https://dash.cloudflare.com/"
+  }
+}
