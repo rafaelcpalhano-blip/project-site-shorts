@@ -51,6 +51,7 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
   useLayoutEffect(()=>{onBusyChange(reporting||commenting||liking||adminBusy||selectingComments);return()=>onBusyChange(false)},[onBusyChange,reporting,commenting,liking,adminBusy,selectingComments])
   return <>
     <OfficialPlayer key={'player:'+short.id} short={short} navigation={navigation} />
+    <h2 className={styles.videoTitle}>{short.title}</h2>
     <div className={styles.interactions} data-short-interactions>
       <div className={styles.metadata}>
         <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>
@@ -59,13 +60,11 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
       </div>
       {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={loading||!!error||adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     </div>
-    <h2 className={styles.videoTitle}>{short.title}</h2>
     <h3 ref={commentHeading} tabIndex={-1}>Comentários publicados</h3>
     {loading ? <p role="status">Carregando comentários...</p> : error ? <div role="alert"><p>{error}</p>
       <button disabled={commenting||adminBusy||selectingComments} onClick={() => { commentHeading.current?.focus(); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Tentar novamente</button></div>
       : <CommentSelectionModeration key={short.id+attempt+(admin.user?.uid??'visitor')} shortId={short.id} comments={comments} disabled={liking||reporting||commenting||adminBusy} onSelectionChange={setSelectingComments} onBusyChange={adminBusyChange} onRemoved={ids=>{if(short.commentCount!==undefined&&short.commentCount>=ids.length)onCommentCount?.(short.id,short.commentCount-ids.length);setComments(current=>current.filter(item=>!ids.includes(item.id)));if(comments.every(item=>ids.includes(item.id)))commentHeading.current?.focus()}} />}
     {!loading && !error && next && <button disabled={adminBusy||selectingComments} onClick={() => { setLoading(true); setCursor(next) }}>Próximos comentários →</button>}
-    <button disabled={loading || commenting || adminBusy || selectingComments} onClick={() => { setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }}>Atualizar comentários</button>
     {!confirmedOnce&&!loading&&error&&<p className="muted">O campo para comentar aparece após confirmarmos que os comentários estão disponíveis.</p>}
     {confirmedOnce && <PersistentCommentForm key={'comment-form:'+short.id} shortId={short.id} suspended={!available||loading||!!error} disabled={reporting || adminBusy || selectingComments} onBusyChange={setCommenting}
       onPublished={result => { firstPublication.current=result.firstPublished&&!result.repeated?result.id:null; setCursor(undefined); setError(''); setLoading(true); setAttempt(value => value + 1) }} />}

@@ -23,4 +23,4 @@
 @media (max-width: 480px) {
   .footer { padding: 24px 16px; }
 }
-.explanation { margin: 16px 0; text-align: left; } .explanation summary { cursor: pointer; min-height: 44px; align-content: center; color: var(--color-accent); }
+.explanation { margin: 16px 0; text-align: center; } .explanation summary { width:fit-content; max-width:100%; margin-inline:auto; cursor: pointer; min-height: 44px; align-content: center; color: var(--color-accent); }

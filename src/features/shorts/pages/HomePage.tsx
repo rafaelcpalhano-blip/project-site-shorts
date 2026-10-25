@@ -1,4 +1,5 @@
-import { lazy, Suspense, useRef, useState } from 'react'
+import {schedulePublicationDismiss} from '../services/publication-notice'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { ClipperWelcome } from '../../../components/clipper/ClipperWelcome'
 import { usesFirestore } from '../../../lib/firebase/mode'
@@ -18,6 +19,7 @@ function HomeContent() {
   const [sharing, setSharing] = useState(false)
   const [message, setMessage] = useState('')
   const [feedVersion, setFeedVersion] = useState(0)
+  useEffect(()=>schedulePublicationDismiss(message,()=>setMessage('')),[message,feedVersion])
   return <>
     <div className={styles.hero}>
       <PageIntro compact title="Pequenos clipes. Grandes jogadas."
@@ -26,7 +28,7 @@ function HomeContent() {
     </div>
     <ClipperWelcome onDismiss={()=>shareButton.current?.focus()} />
     {import.meta.env.DEV && <small className={styles.environment}>{usesFirestore?'Desenvolvimento · dados locais':'Desenvolvimento · modo demonstrativo'}</small>}
-    {message && <p role="status">{message}</p>}
+    {message && <p role="status" aria-live="polite" aria-atomic="true" className={message==='Short publicado.'?styles.success:undefined}>{message}</p>}
     <Suspense fallback={<FeedLoading />}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
     {sharing && !usesFirestore && <SubmissionDialog onClose={() => setSharing(false)} onPublished={() => {
       setSharing(false); setFeedVersion(current => current + 1); setMessage('Short compartilhado nesta sessão.')

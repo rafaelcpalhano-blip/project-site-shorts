@@ -15,3 +15,7 @@
 .login .totpForm { justify-content:center; text-align:left; }
 .login > button { max-width:100%; min-height:48px; }
 .login p { overflow-wrap:anywhere; }
+
+.login { max-width:800px; }
+.login .clipperGreeting { max-width:78ch; }
+.login .clipperGreeting p { max-width:78ch; text-wrap:balance; }
