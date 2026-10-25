@@ -1,4 +1,5 @@
 import {isIP} from 'node:net'
+import {createWorkerFetch} from './worker-fetch.ts'
 import {serveStaticGameCover} from './static-game-cover.ts'
 import {createOutboundBudget} from './outbound-budget.ts'
 type Budget=ReturnType<typeof createOutboundBudget>
@@ -31,7 +32,7 @@ export function createWorkerEntry(options:Options){
    const trusted=options.trustedTransport(request)
    const clientAddress=trusted?.clientAddress
    if(!trusted||typeof clientAddress!=='string'||clientAddress.length>64||clientAddress.includes('%')||!isIP(clientAddress))return reply(503,'transport-unavailable')
-   const budget=createOutboundBudget({maximum:options.maximumCalls??48,cleanupReserve:1,fetcher:options.fetcher})
+   const budget=createOutboundBudget({maximum:options.maximumCalls??48,cleanupReserve:1,fetcher:createWorkerFetch(options.fetcher)})
    const handler=await options.createApi({origin:options.origin,budget})
    const response=await handler(request,{clientAddress})
    if(response.status>=300&&response.status<400||response.status!==204&&!/^application\/json(?:;|$)/i.test(response.headers.get('content-type')??'')){
