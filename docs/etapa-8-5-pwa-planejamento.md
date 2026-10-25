@@ -2,7 +2,7 @@
 
 Registrado em 25/10/2026. Status: aguardando conclusão da Etapa 8; implementação não iniciada.
 
-A Etapa 8 ainda não foi iniciada. Este registro preserva o pedido do proprietário e sua condição explícita de não antecipar a implementação. Não criar agora manifesto, service worker, convite de instalação ou ícones; não realizar deploy ou alterar infraestrutura.
+A Etapa 8 foi iniciada em25/10/2026 pela subetapa8-A de inventário, ainda sem integração concluída. Este registro preserva o pedido do proprietário e sua condição explícita de não antecipar a implementação. Não criar agora manifesto, service worker, convite de instalação ou ícones; não realizar deploy ou alterar infraestrutura.
 
 Sequência: fechar as pendências pré-Etapa 8 → concluir integração da Etapa 8 → executar este escopo da Etapa 8.5 → validação visual/funcional em celular real → auditoria final da Etapa 9. Custos, bibliotecas e deploy seguem sujeitos às autorizações indicadas no pedido.
 
