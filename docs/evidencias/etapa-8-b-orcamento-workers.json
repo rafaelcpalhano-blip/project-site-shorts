@@ -1,0 +1,302 @@
+{
+  "created": "2026-10-25T17:04:56.205Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "compatibilityDate": "2026-10-25",
+  "result": {
+    "runtime": "workerd",
+    "scenarios": [
+      {
+        "name": "cold credential + worst measured mix",
+        "status": 200,
+        "error": null,
+        "items": 14,
+        "hasContinuation": true,
+        "limited": true,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 46,
+          "remaining": 2,
+          "ordinaryRemaining": 1
+        },
+        "operations": [
+          "oauth",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "batchGet",
+          "batchGet",
+          "runQuery",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "runQuery",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet"
+        ],
+        "commits": 1,
+        "committedQuota": 1,
+        "businessWrites": 0,
+        "transactions": 1,
+        "oauth": 1,
+        "retryTokens": [
+          ""
+        ],
+        "allRedirectsExplicit": true
+      },
+      {
+        "name": "two transaction retries then bounded failure",
+        "status": 503,
+        "error": "unavailable",
+        "items": null,
+        "hasContinuation": false,
+        "limited": false,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 47,
+          "remaining": 1,
+          "ordinaryRemaining": 0
+        },
+        "operations": [
+          "oauth",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "batchGet",
+          "batchGet",
+          "runQuery",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "runQuery",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet"
+        ],
+        "commits": 3,
+        "committedQuota": 1,
+        "businessWrites": 0,
+        "transactions": 3,
+        "oauth": 1,
+        "retryTokens": [
+          "",
+          "fixture-1",
+          "fixture-2"
+        ],
+        "allRedirectsExplicit": true
+      },
+      {
+        "name": "two retries recover with shared game",
+        "status": 200,
+        "error": null,
+        "items": 15,
+        "hasContinuation": true,
+        "limited": false,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 18,
+          "remaining": 30,
+          "ordinaryRemaining": 29
+        },
+        "operations": [
+          "oauth",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "batchGet",
+          "batchGet",
+          "runQuery",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet",
+          "batchGet"
+        ],
+        "commits": 3,
+        "committedQuota": 1,
+        "businessWrites": 0,
+        "transactions": 3,
+        "oauth": 1,
+        "retryTokens": [
+          "",
+          "fixture-1",
+          "fixture-2"
+        ],
+        "allRedirectsExplicit": true
+      },
+      {
+        "name": "reserved rollback after interruption",
+        "status": 503,
+        "error": "unavailable",
+        "items": null,
+        "hasContinuation": false,
+        "limited": false,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 6,
+          "remaining": 0,
+          "ordinaryRemaining": 0
+        },
+        "operations": [
+          "oauth",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "rollback"
+        ],
+        "commits": 1,
+        "committedQuota": 0,
+        "businessWrites": 0,
+        "transactions": 2,
+        "oauth": 1,
+        "retryTokens": [
+          "",
+          "fixture-1"
+        ],
+        "allRedirectsExplicit": true
+      },
+      {
+        "name": "rollback failure remains private",
+        "status": 503,
+        "error": "unavailable",
+        "items": null,
+        "hasContinuation": false,
+        "limited": false,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 6,
+          "remaining": 0,
+          "ordinaryRemaining": 0
+        },
+        "operations": [
+          "oauth",
+          "beginTransaction",
+          "batchGet",
+          "commit",
+          "beginTransaction",
+          "rollback"
+        ],
+        "commits": 1,
+        "committedQuota": 0,
+        "businessWrites": 0,
+        "transactions": 2,
+        "oauth": 1,
+        "retryTokens": [
+          "",
+          "fixture-1"
+        ],
+        "allRedirectsExplicit": true
+      },
+      {
+        "name": "credential failure sends no Firestore request",
+        "status": 503,
+        "error": "unavailable",
+        "items": null,
+        "hasContinuation": false,
+        "limited": false,
+        "cache": "no-store",
+        "usage": {
+          "dispatched": 1,
+          "remaining": 47,
+          "ordinaryRemaining": 46
+        },
+        "operations": [
+          "oauth"
+        ],
+        "commits": 0,
+        "committedQuota": 0,
+        "businessWrites": 0,
+        "transactions": 0,
+        "oauth": 1,
+        "retryTokens": [],
+        "allRedirectsExplicit": true
+      }
+    ],
+    "parallel": {
+      "requested": 10,
+      "dispatched": 4
+    },
+    "deployReady": false,
+    "limits": [
+      "only explicitly injected fetch transports counted",
+      "no live OAuth or cloud quota measurement",
+      "DNS/sockets/bindings/CPU not certified",
+      "cover decision still open"
+    ]
+  }
+}
