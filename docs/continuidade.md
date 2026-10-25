@@ -1602,3 +1602,20 @@ limitado pela ausência de verificação oficial estável de autoria na composi�
 Nenhuma regra ou código alterado neste bloco, nem novas permissões, serviços, tokens,
 commit ou deploy. Sem repetir testes funcionais: somente documentação e diff check.
 Aguardar aprovação/ajustes da política e escopo do piloto antes de implementar.
+## 25/10/2026 — refinamentos 7.6.11 retomados e validados
+
+Prompt visual/identificadores/pesquisa/monitoramento concluído em código e validações direcionadas. Relatório: [etapa-7-6-11.md](etapa-7-6-11.md); impacto anterior e decisões: [refinamentos-7-6-11-impacto.md](refinamentos-7-6-11-impacto.md). Proprietário escolheu expansão mn com mais dígitos e janela de30dias. IDs internos/relações/publicationNumber preservados; aliases somente novos registros, sem backfill. Novos eventos não importam logs antigos.
+
+145 testes na rodada integrada, complementos pontuais aprovados e3 testes REST em demo-clipzone-tests:8081; lint/build/diff-check aprovados. Corrigida asserção antiga do teste de login para o rótulo Login Administrativo já existente no HEAD, sem alteração de autenticação. Nenhuma nova dependência/deploy/produção/infraestrutura aplicada. Firestore8080 de uso permaneceu ativo; nenhum short/jogo criado pelos fixtures. API5174 reiniciada pelo proprietário e rotas novas confirmadas por GET405. Build5175 atualizada.
+
+Pendente somente conferência manual/estética real listada no relatório e arte Clipper de manutenção com ferramentas (fallback atual preserva identidade). Conservar na lembrança a revisão visual5174 adiada. Limitações: cookies não são pessoas únicas; ciclos fixos30dias; privado/removido sem prova de servidor não é ocultado; Twitch/TikTok/manual só revisão; índices apenas preparados em arquivo; sem limpeza automática de recibos/read-state e sem migração histórica.
+
+Entregar comandos separados por fase em [commits-7-6-11.md](commits-7-6-11.md). Não executar commits pelo usuário, não fazer push/deploy e não iniciar Etapa8. Próximo passo: validação manual e decisões posteriores do proprietário.
+
+## 25/10/2026 — aliases dos jogos manuais antigos autorizados e aplicados
+
+Autorização explícita recebida após o proprietário mostrar IDs longos de jogos já existentes. Executado somente em demo-clipzone:8080, com snapshot anterior fora do Git.13aliases atribuídos;1já existente preservado;14/14jogos manuais agora têm publicId e0pendentes.31jogos e36vínculos de shorts conferidos: demais campos e referências preservados. Sem alterar IGDB, comentários, cotas ou IDs internos.
+
+Detalhes, backup e comandos de manutenção: [aliases-jogos-manuais-locais.md](aliases-jogos-manuais-locais.md). Exjanitor=mn0008; Jogo em Desenvolvimento=mn0002; Teste de jogo=mn0007. Script idempotente/fixo local, sem rota pública e sem executar na inicialização. Testes unitários/SSR e1teste REST8081 passaram; lint/build aprovados. Atualizar catálogo na interface para refletir os novos dados. Não é necessário reiniciar API novamente. Não repetir migração para apenas atualizar tela; não restaurar snapshot/contador sobre banco em uso.
+
+Complemento de commit adicionado ao fim de commits-7-6-11.md. Sem commits/push/deploy automáticos e sem avanço para Etapa8. A restrição anterior de não migrar históricos continua valendo para produção e comentários antigos; autorização desta sessão limitou-se a jogos manuais locais.

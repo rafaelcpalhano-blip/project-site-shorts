@@ -19,3 +19,7 @@ test('ocultos e banidos não ganham link público e preservam consulta administr
 test('nomes extensos são escapados e ausência de dados não bloqueia a consulta provisória',()=>{
  const result=html({...base,name:'Jogo <script> & '.repeat(6)});assert.ok(result.includes('&lt;script&gt;'));assert.ok(!result.includes('<script>'));assert.ok(result.includes('Data não informada'));assert.ok(result.includes('Provisório'));assert.ok(result.includes('>Consultar jogo</a>'))
 })
+
+test('alias is the visible code while public navigation keeps the unchanged internal identifier',()=>{
+ const internal='manual-'+ 'a'.repeat(64),result=html({...base,id:internal,publicId:'mn0012'});assert.ok(result.includes('ID: mn0012'));assert.ok(!result.includes('ID: '+internal));assert.ok(result.includes('href="/jogos/'+internal+'"'))
+})

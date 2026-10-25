@@ -51,6 +51,7 @@ export function GameCatalogPanel({user,onUnauthorized}:{user:User;onUnauthorized
    <button disabled={working||!!bulk?.busy||!page.next} onClick={()=>void run(async()=>{const next=page.next!;await load(filter,next);if(active.current)setHistory([...history,next])})}>Próximos</button>
   </div></>}
   {detail&&<article className={styles.detail}><h3>{detail.game.name} · {state(detail.game)}</h3>
+   <p>ID: {detail.game.publicId??detail.game.id}</p>
    <p>Cadastro: {date(detail.game.createdAt)} · Origem: {detail.game.source} · Shorts vinculados: {detail.shortCount===null?'Não calculado':detail.shortCount}</p>
    {detail.game.status==='active'&&<p><Link to={'/jogos/'+detail.game.id}>Abrir ficha pública</Link></p>}
    {detail.game.source==='manual'&&detail.metadata&&<ManualGameEditor key={detail.game.id+':'+detail.game.revision} user={user} detail={detail} onBusyChange={busy=>{lock.current=busy;setWorking(busy)}} onUnauthorized={onUnauthorized} onSaved={async()=>{if(!active.current)return;setDetail(null);setAction(null);setConfirmed(false);setMessage('Informações salvas com histórico administrativo.');bulk?.invalidateLists()}}/>}

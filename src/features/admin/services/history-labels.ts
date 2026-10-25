@@ -1,9 +1,9 @@
 import type {HistoryKind} from './history-api'
 const actions:Record<HistoryKind,Record<string,string>>={
- game:{approve:'Aprovar cadastro provisório',hide:'Ocultar jogo',ban:'Banir jogo',unban:'Desbanir jogo',restore:'Restaurar jogo','edit-metadata':'Editar informações','create-provisional':'Cadastrar jogo provisório'},
+ game:{'assign-public-id':'Atribuir código reduzido',approve:'Aprovar cadastro provisório',hide:'Ocultar jogo',ban:'Banir jogo',unban:'Desbanir jogo',restore:'Restaurar jogo','edit-metadata':'Editar informações','create-provisional':'Cadastrar jogo provisório'},
  'game-request':{link:'Vincular solicitação ao IGDB',create:'Aceitar cadastro manual',reject:'Rejeitar solicitação'},
  comment:{approve:'Publicar comentário',reject:'Rejeitar comentário',remove:'Remover comentário',restore:'Restaurar comentário'},
- short:{dismiss:'Arquivar denúncias',block:'Bloquear vídeo',approve:'Publicar/desbloquear vídeo',remove:'Remover vídeo',restore:'Restaurar vídeo'},
+ short:{'report-received':'Receber denúncia','playback-review':'Encaminhar falhas para revisão','playback-block':'Ocultar após confirmação da fonte',published:'Publicar automaticamente',dismiss:'Arquivar denúncias',block:'Bloquear vídeo',approve:'Publicar/desbloquear vídeo',remove:'Remover vídeo',restore:'Restaurar vídeo'},
 }
 const states:Record<string,string>={active:'Ativo',hidden:'Oculto',disabled:'Oculto',inactive:'Oculto',banned:'Banido',pending:'Pendente',published:'Publicado',approved:'Publicado',removed:'Removido',rejected:'Rejeitado',linked:'Vinculado',reviewed:'Analisado'}
 export const historyAction=(kind:HistoryKind,action:string)=>actions[kind][action]??action
