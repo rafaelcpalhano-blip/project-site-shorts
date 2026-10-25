@@ -1,3 +1,5 @@
+import {FeedPagination} from './FeedPagination'
+import {useFeedPageScroll} from './use-feed-page-scroll'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { useState } from 'react'
 import { useDemo } from '../../../app/providers/demo-context'
@@ -20,6 +22,8 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
   ).sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id))
   const pages = Math.max(1, Math.ceil(matching.length / 15))
   const currentPage = Math.min(page, pages)
+  const {heading,requestScroll}=useFeedPageScroll(false,currentPage-1,gameId||filter)
+  const changePage=(position:number)=>{if(position===currentPage-1)return;requestScroll(position);setPage(position+1)}
   return <>
     <div className={styles.filters}>
       {TITLE_SEARCH_ENABLED && <div className="form-field">
@@ -36,7 +40,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
       </div>}
     </div>
     <div className={styles.heading}>
-      <h2>Últimos Postados</h2>
+      <h2 ref={heading} tabIndex={-1}>Últimos Postados</h2>
     </div>
     {matching.length ? <div className={styles.grid}>
       {matching.slice((currentPage - 1) * 15, currentPage * 15).map(short => <ShortCard key={short.id} short={short} gameName={games.find(game => game.id === short.gameId)?.name}
@@ -44,13 +48,7 @@ export function ShortFeed({ gameId }: { gameId?: string }) {
         onOpen={() => setSelected(short)} />)}
     </div> : <div className="inset"><h3>Nenhuma jogada encontrada</h3><p>Selecione outro jogo ou limpe os filtros.</p>
       <button type="button" onClick={() => { setQuery(''); setFilter(''); setPage(1) }}>Limpar filtros</button></div>}
-    <nav className={styles.pagination} aria-label="Paginação de shorts">
-      <button type="button" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>← Anterior</button>
-      {pages > 1 ? Array.from({ length: pages }, (_, index) => <button key={index}
-        type="button" aria-label={'Página ' + (index + 1)} aria-current={currentPage === index + 1 ? 'page' : undefined}
-        onClick={() => setPage(index + 1)}>{index + 1}</button>) : <span>1 / 1</span>}
-      <button type="button" disabled={currentPage === pages} onClick={() => setPage(currentPage + 1)}>Próxima →</button>
-    </nav>
+    <FeedPagination current={currentPage-1} available={pages} canNext={currentPage<pages} onChange={changePage}/>
     {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={()=>setSelected(null)} dialogProps={{short:selected,onClose:()=>setSelected(null)}} />}
   </>
 }

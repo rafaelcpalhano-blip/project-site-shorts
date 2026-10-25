@@ -1,3 +1,5 @@
+import {FeedPagination} from './FeedPagination'
+import {useFeedPageScroll} from './use-feed-page-scroll'
 import {saveFeedReturn,loadFeedReturn} from '../services/feed-return'
 import {loadPublicGames} from '../../games/services/load-public-games'
 import {createCursorPages} from '../services/cursor-pages'
@@ -71,6 +73,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
     const names=Object.fromEntries(await Promise.all(ids.map(async id=>{try{return [id,(await repository.getGame(id))?.name||'Jogo indisponível']}catch{return [id,'Jogo indisponível']}})))
     return {...result,items:result.items.map(short=>({...short,gameName:short.gameName||names[short.gameId]}))}
   })},[requestContext,restored,gameId])
+  const {heading,requestScroll}=useFeedPageScroll(loading,index,pager)
   useLayoutEffect(()=>{pagerCounts.current=patch=>pager.update(patch)},[pager])
   const context=useRef(pager),viewerTicket=useRef(0),selectedRef=useRef(selected)
   useLayoutEffect(()=>{context.current=pager;selectedRef.current=selected})
@@ -116,6 +119,12 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
     viewerTicket.current++;const id=selected?.id;setSelected(null)
     requestAnimationFrame(()=>{const node=document.querySelector<HTMLElement>('[data-short-id="'+id+'"] button');node?.scrollIntoView({block:'nearest'});node?.focus({preventScroll:true})})
   }
+  const changePage=(position:number)=>{
+    if(loading||position===index||position<0||position>=cursors.length)return
+    restoreScroll.current=undefined
+    requestScroll(position)
+    setLoading(true);setError('');setIndex(position)
+  }
   const refresh = () => {
     viewerTicket.current++;setSelected(null)
     setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); if(!gameId)invalidateGameCatalog()
@@ -141,7 +150,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
         <select id="persistent-order" value={order} onChange={event=>{setOrder(event.target.value as FeedOrder);setIndex(0);setCursors([undefined]);setError('');setLoading(true)}}>{(Object.keys(feedOrderLabels) as FeedOrder[]).map(value=><option key={value} value={value}>{feedOrderLabels[value]}</option>)}</select>
       </div>
     </div>
-    <div className={styles.heading}><h2>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
+    <div className={styles.heading}><h2 ref={heading} tabIndex={-1}>{TITLE_SEARCH_ENABLED && query?'Resultados para “'+query+'”':feedOrderLabels[order]}</h2><button onClick={refresh}>Atualizar feed</button></div>
     <div className={styles.results}>
     {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={()=>{refresh();document.getElementById('main-content')?.focus()}}>Tentar novamente</button></ClipperFailure>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
@@ -151,16 +160,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
     {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
     {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima geração horária.</p>}
-    <nav className={styles.pagination} aria-label="Paginação de shorts">
-      <button disabled={loading || index === 0} onClick={() => { setLoading(true); setError(''); setIndex(index - 1) }}>← Anterior</button>
-      {cursors.map((_, position) => <button key={position} disabled={loading || position === index} aria-label={'Página ' + (position + 1)}
-        aria-current={position === index ? 'page' : undefined}
-        onClick={() => { setLoading(true); setError(''); setIndex(position) }}>{position + 1}</button>)}
-      <button disabled={loading || !!error || !page.next} onClick={() => {
-        setCursors(current => [...current.slice(0, index + 1), page.next!])
-        setLoading(true); setError(''); setIndex(index + 1)
-      }}>{TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'}</button>
-    </nav>
+    <FeedPagination current={index} available={Math.max(index+1,cursors.length)} busy={loading} canNext={!error&&!!page.next} nextLabel={TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'} onChange={changePage}/>
     {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={closeViewer} dialogProps={{short:selected, items:page.items, hasPreviousPage:index>0, hasNextPage:!!page.next, onBoundary:boundary, onNavigate:setSelected, onLikeCount:updateLikeCount, onCommentCount:updateCommentCount, onModerated:()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}, onClose:closeViewer}} />}
   </div>
 }

@@ -14,3 +14,11 @@
 .filters > :global(.form-field) { align-content: start; gap: 12px; }
 .filters input, .filters select { min-height: 48px; }
 .searchActions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 4px; }
+
+.heading h2 { scroll-margin-block-start: 16px; }
+.pageNumbers { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; max-width: 100%; }
+.pagination button { min-width: 44px; min-height: 44px; }
+@media (max-width: 520px) {
+ .pageNumbers { flex-basis: 100%; order: -1; }
+ .pagination { gap: 8px; }
+}
