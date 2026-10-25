@@ -1625,3 +1625,14 @@ Complemento de commit adicionado ao fim de commits-7-6-11.md. Sem commits/push/d
 Após várias novas sessões anônimas, logs confirmaram429 em /api/session:8sessões na janela10min. Ajustada mensagem de leitura para identificar o limite, classificar rate-limit e orientar aguardar sem afirmar prazo fixo. Sem mudanças na proteção/cotas/cookies. Frontend comum/ordenado e comentários/detalhes compartilham a mensagem; sem retry automático.
 
 Criado teste reproduzível isolado: node --test tests/playback-feed-removal.test.mjs. Cinco cenários de14/15identidades, fonte negativa/permitida, retry duplicado e liberação administrativa com novo ciclo. Usa código real e respostas fictícias em memória, sem qualquer Firestore/rede externa.20testes direcionados, lint/build/diff-check aprovados. Guia: [teste-retirada-player-e-limite-sessoes.md](teste-retirada-player-e-limite-sessoes.md). Não injetar15ocorrências artificiais na base de uso nem desativar limite para testar. Build5175 atualizada; não exige reinício da API. Etapa8 não iniciada.
+
+
+## 25/10/2026 — catálogo mobile, retorno contextual e interface administrativa
+
+Rodada autorizada pelo prompt de correções mobile/persistência/administração. Relatório: [correcoes-mobile-navegacao-admin.md](correcoes-mobile-navegacao-admin.md). ADB confirmou encaminhamento 5174/5175 sem8080; catálogo/fichas dependiam do SDK direto8080. Novas leituras públicas pela API HTTPS da mesma origem, somente jogos ativos/campos públicos, cache compartilhado e retry preservados. Servidor continua usando8080, sem reset/migração ou alterações de produção.
+
+Retorno do jogo recupera página/filtro/ordem/scroll em contexto de aba limitado a10entradas/5min, sem armazenamento persistente; acesso direto/expirado cai no início, logo reinicia. Ajustes administrativos somente de apresentação e validação do link de fonte.41testes direcionados+1REST8081 aprovados,2retornos rechecados; lint/build/diff-check aprovados. API reiniciada pelo proprietário; rotas confirmadas; build5175 atualizada. Navegador5174 confirmou catálogo, pesquisa/seleção, ficha, retorno contextual/Voltar, página3 e logo.
+
+Homologação real no celular e aparência administrativa pendentes; proprietário enviará checklist e Lighthouse depois. Não iniciar Etapa8. Comandos por grupo em [commits-mobile-navegacao-admin.md](commits-mobile-navegacao-admin.md); sem commits/push automáticos, deploy, novas dependências ou alteração de autenticação/permissões/moderação. Dados locais de uso preservados.
+
+Confirmação posterior do proprietário: na5175 do celular, os dois catálogos carregaram e a lista ficou correta junto ao campo com teclado aberto. Grupo mobile validado no aparelho; retorno contextual completo, aparência administrativa e checklist/Lighthouse seguem pendentes. Não iniciar Etapa8.
