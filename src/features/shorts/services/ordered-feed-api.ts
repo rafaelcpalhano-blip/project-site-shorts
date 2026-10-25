@@ -1,3 +1,4 @@
+import {coordinatePublicRead} from '../../../lib/http/public-read-queue.ts'
 import { PublicReadFailure, sessionReadFailure } from '../../../lib/http/read-failure.ts'
 import { validThumbnail } from '../../../lib/validation/thumbnail.ts'
 import type {PublicShort} from '../../../lib/firebase/public-read-api'
@@ -11,6 +12,7 @@ export function createOrderedFeedClient(fetcher:typeof fetch=fetch){
   if(gameId!==undefined)publicId(gameId)
   if(cursor!==undefined&&(typeof cursor!=='string'||cursor.length>4096))throw Error('Cursor inválido. Atualize o feed.')
   const combined=signal?AbortSignal.any([signal,AbortSignal.timeout(20000)]):AbortSignal.timeout(20000),post=(url:string,body:unknown)=>fetcher(url,{method:'POST',credentials:'same-origin',redirect:'error',signal:combined,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  return coordinatePublicRead(fetcher,combined,async()=>{
   const session=await post('/api/session',{})
   if(!session.ok)throw sessionReadFailure(session.status)
   const response=await post('/api/feed/ordered',{order,...(gameId?{gameId}:{}),...(cursor?{cursor}:{})}),data=await response.json()
@@ -20,5 +22,6 @@ export function createOrderedFeedClient(fetcher:typeof fetch=fetch){
   if(new Set(data.items.map((row:PublicShort)=>row.id)).size!==data.items.length)throw Error('Resposta de ordenação inválida.')
   const items=data.items.map((row:PublicShort)=>{const {thumbnail,...rest}=row;const image=validThumbnail(thumbnail,row.platform,row.identity);return {...rest,...(image?{thumbnail:image}:{})}})
   return {items,next:data.next,order:data.order,orderingAt:data.orderingAt,limited:data.limited}
+  })
  }
 }

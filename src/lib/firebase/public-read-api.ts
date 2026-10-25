@@ -1,3 +1,4 @@
+import {coordinatePublicRead} from '../http/public-read-queue.ts'
 import type {GameDetails} from '../../features/games/services/game-details.ts'
 import type {Game} from '../../features/shorts/types/models.ts'
 export interface GameCursor {id:string;name:string}
@@ -14,6 +15,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
  async function call(path:string,input:unknown,signal?:AbortSignal) {
   const deadline=AbortSignal.timeout(20000),combined=signal?AbortSignal.any([signal,deadline]):deadline
   const post=(url:string,body:unknown)=>{combined.throwIfAborted();return fetcher(url,{method:'POST',credentials:'same-origin',redirect:'error',signal:combined,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
+  return coordinatePublicRead(fetcher,combined,async()=>{
   const session=await post('/api/session',{})
   if(!session.ok)throw sessionReadFailure(session.status)
   const response=await post(path,input)
@@ -22,6 +24,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
   const data=await response.json()
   combined.throwIfAborted()
   return data
+  })
  }
  function checkShort(value:unknown):PublicShort {
   const row=value as PublicShort
