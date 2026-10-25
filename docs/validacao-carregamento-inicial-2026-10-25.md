@@ -1,6 +1,6 @@
 # Validação recebida e latência inicial — 25/10/2026
 
-Status: análise concluída, regressão de latência reproduzida; correção de desempenho ainda não aplicada. Etapa8 não iniciada.
+Status da análise original: regressão de latência reproduzida. Posteriormente, o proprietário autorizou a correção localizada, implementada e testada em [correcao-contencao-leituras-publicas.md](correcao-contencao-leituras-publicas.md). As referências a código não alterado abaixo descrevem a rodada de diagnóstico. Etapa8 não iniciada.
 
 ## Evidências preservadas
 

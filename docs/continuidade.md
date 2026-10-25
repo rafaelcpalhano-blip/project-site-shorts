@@ -1652,3 +1652,12 @@ Recebidos Desktop04:09/Mobile04:10 da5175 e checklist com72marcações/3pendênc
 Relatório/plano: [validacao-carregamento-inicial-2026-10-25.md](validacao-carregamento-inicial-2026-10-25.md). Priorizar coordenação das leituras sem relaxar limites; depois reservar estado do catálogo/medir CLS e avaliar SDK Firestore ainda carregado sem necessidade nas leituras API. Imagens são oportunidade separada. Originais/hashes e diagnóstico ficam fora do Git em audit-performance/2026-10-25 do workspace.
 
 P01-MOB antigo já resolvido por confirmação posterior. A02-MOB esclarecido: apenas não executado, não bug; A07-EXTRA pendente/se aplicável. Não declarar checklist completo nem iniciar Etapa8; corrigir primeiro a latência reproduzida, com validação direcionada, e retomar fechamento. Sem deploy, novas dependências, dados de produção, mudança de autenticação/limites ou commits automáticos.
+
+
+## 25/10/2026 — contenção das leituras corrigida após autorização
+
+Coordenação compartilhada dos clientes de leituras públicas/feed ordenado pelo mesmo transporte na aba. Operações completas em sequência, com sessão/validações/contagem no servidor preservadas; sem alterar limites/auth/permissões ou endpoints. Cancelamento imediato ao solicitante e operação aguardando cancelada não enviada; falha não bloqueia próxima tentativa, sem retry automático; deadline20s inclui fila. Não é trava global entre abas/instâncias. Relatório: [correcao-contencao-leituras-publicas.md](correcao-contencao-leituras-publicas.md).
+
+42testes direcionados+1integração real8081 aprovados. Bootstrap471/219ms em fixtures contra contenção anterior2,25–4,4s; contador2 e terceira leitura429 confirmados. Lint/build/diff-check aprovados; build5175 atualizada, sem reiniciar API. Confirmação manual do primeiro carregamento PC/celular solicitada ao proprietário, pendente de retorno neste registro. Não repetido Lighthouse, não mexer8080/produção/infraestrutura/dependências, sem commits automáticos/Etapa8. CLS/SDK/imagens seguem oportunidades separadas.
+
+Confirmação posterior do proprietário: carregamento melhorou e os dois continuam funcionando, em resposta à conferência solicitada de feed/catálogo na5175 no PC/celular. Correção da contenção validada pelo proprietário; manter separadas as demais pendências do checklist.
