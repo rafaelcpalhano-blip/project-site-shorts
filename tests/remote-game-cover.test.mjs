@@ -52,23 +52,17 @@ test('DNS sem resposta termina pelo prazo sem iniciar transferência',async()=>{
 })
 function memory(){const docs=new Map([[nameStatePath,{version:1,ready:true}]]);return {docs,now:()=>new Date('2026-10-23T12:00:00Z'),store:{transact:async work=>{const writes=[];const result=await work({get:async path=>structuredClone(docs.get(path)??null),set:(p,d)=>writes.push([p,d]),create:(p,d)=>{assert.ok(!docs.has(p));writes.push([p,d])}});for(const [p,d]of writes)docs.set(p,d);return result}}}}
 const metadata={name:'Jogo',description:'',imageUrl:url,releaseDate:null,genres:[],gameModes:[],platforms:[],aliases:[]}
-test('capa externa falha sem alterar metadados; sucesso mantém auditoria e ID com URL final',async()=>{
+test('domínio não autorizado é recusado antes de inspeção e não altera registro ou auditoria',async()=>{
  const deps=memory(),created=await createManualGame({name:'Jogo'},'a'.repeat(64),deps),id=created.game.id,input={id,revision:0,confirmed:true,reason:'Capa conferida pelo administrador',details:metadata},before=structuredClone(deps.docs.get('games/'+id));let calls=0
- await assert.rejects(editManualGame(input,'owner',{...deps,inspectCover:async()=>{calls++;throw Error('segredo interno')}}),/invalid-cover/);assert.deepEqual(deps.docs.get('games/'+id),before)
- const final='https://second.example.org/final.webp';await editManualGame(input,'owner',{...deps,inspectCover:async candidate=>{calls++;assert.equal(candidate,url);return final}});assert.equal(calls,2);assert.equal(deps.docs.get('games/'+id).imageUrl,final);assert.equal(deps.docs.get('games/'+id).source,'manual');const logs=[...deps.docs.values()].filter(value=>value.action==='edit-metadata');assert.equal(logs.length,1);assert.equal(logs[0].after.imageUrl,final)
- await assert.rejects(editManualGame(input,'owner',{...deps,inspectCover:async()=>assert.fail('stale antes de consultar imagem')}),/stale-review/)
- deps.docs.set('games/igdb-1',{source:'IGDB',reviewVersion:0});await assert.rejects(editManualGame({...input,id:'igdb-1'},'owner',{...deps,inspectCover:async()=>assert.fail('não consultar capa de jogo oficial')}),/manual-edit-only/)
-})
-test('alteração concorrente durante verificação da URL é recusada na transação final',async()=>{
- const deps=memory(),{game:{id}}=await createManualGame({name:'Jogo'},'b'.repeat(64),deps)
- await assert.rejects(editManualGame({id,revision:0,confirmed:true,reason:'Capa conferida',details:metadata},'owner',{...deps,inspectCover:async()=>{deps.docs.get('games/'+id).reviewVersion=1;return url}}),/stale-review/)
- assert.equal(deps.docs.get('games/'+id).imageUrl,null);assert.equal([...deps.docs.values()].filter(value=>value.action==='edit-metadata').length,0)
+ await assert.rejects(editManualGame(input,'owner',{...deps,inspectCover:async()=>{calls++;return url}}),/invalid-input/)
+ assert.equal(calls,0);assert.deepEqual(deps.docs.get('games/'+id),before);assert.equal([...deps.docs.values()].filter(row=>row.action==='edit-metadata').length,0)
 })
 
-test('mapeamento manual aceita URL pública validada sem flexibilizar capas oficiais IGDB',async()=>{
+test('mapeamento usa fallback para domínio pendente sem apagar a URL do registro',async()=>{
  const {mapGameDetails}=await import('../src/features/games/services/game-details.ts')
- const base={status:'active',officialName:'Jogo',description:'',genres:[],platforms:[]}
- assert.equal(mapGameDetails('manual-test',{...base,source:'manual',imageUrl:url}).imageUrl,url)
+ const base={status:'active',officialName:'Jogo',description:'',genres:[],platforms:[]},legacy={...base,source:'manual',imageUrl:url}
+ assert.equal(mapGameDetails('manual-test',legacy).imageUrl,null);assert.equal(legacy.imageUrl,url)
  assert.equal(mapGameDetails('igdb-1',{...base,source:'IGDB',imageUrl:url}).imageUrl,null)
+ assert.equal(mapGameDetails('manual-test',{...base,source:'manual',imageUrl:'/images/games/capa.png'}).imageUrl,'/images/games/capa.png')
  assert.equal(mapGameDetails('igdb-1',{...base,source:'IGDB',imageUrl:'https://images.igdb.com/igdb/image/upload/t_thumb/test.jpg'}).imageUrl,'https://images.igdb.com/igdb/image/upload/t_cover_big_2x/test.jpg')
 })

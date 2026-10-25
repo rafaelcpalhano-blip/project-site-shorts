@@ -22,5 +22,5 @@ test('retorno usa link interno /admin somente quando conta está autorizada',()=
 test('formulário usa apenas campos existentes, confirmação e motivo obrigatório, sem upload',()=>{
  const metadata={name:'Jogo',description:'',imageUrl:null,releaseDate:null,genres:['Aventura','RPG'],gameModes:[],platforms:[],aliases:[]}
  const html=render(h(Editor,{user:{uid:'owner'},detail:{metadata,game:{id:'manual-test',revision:0}},onSaved:async()=>{},onUnauthorized(){},onBusyChange(){}}))
- assert.ok(html.includes('Editar jogo manual'));assert.ok(html.includes('Motivo da edição'));assert.ok(html.includes('Confirmo a alteração'));assert.ok(html.includes('Cancelar edição'));assert.ok(!html.includes('type="file"'));assert.ok(html.includes('Salvar informações do jogo'));assert.ok(html.includes('Aventura'+String.fromCharCode(10)+'RPG'))
+ assert.ok(html.includes('Editar jogo manual'));assert.ok(html.includes('Motivo da edição'));assert.ok(html.includes('Confirmo a alteração'));assert.ok(html.includes('Cancelar edição'));assert.ok(!html.includes('type="file"'));assert.ok(html.includes('Salvar informações do jogo'));assert.ok(html.includes('images.igdb.com'));assert.ok(html.includes('Somente essas duas origens'));assert.ok(!html.includes('link HTTPS público direto'));assert.ok(html.includes('Aventura'+String.fromCharCode(10)+'RPG'))
 })

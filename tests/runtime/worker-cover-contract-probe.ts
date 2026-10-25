@@ -11,7 +11,7 @@ async function proof(){
  check(manualGameCoverUrl('/images/games/fixture.png')==='/images/games/fixture.png','static cover path preserved')
  const igdb='https://images.igdb.com/igdb/image/upload/t_thumb/fixture.jpg'
  check(manualGameCoverUrl(igdb)==='https://images.igdb.com/igdb/image/upload/t_cover_big_2x/fixture.jpg','IGDB host and path normalized')
- check(manualGameCoverUrl('https://cdn.unapproved.org/fixture.png')==='https://cdn.unapproved.org/fixture.png','other public hosts accepted syntactically: no configurable host allowlist exists')
+ check(manualGameCoverUrl('https://cdn.unapproved.org/fixture.png')===undefined,'unapproved external source rejected before inspection')
  check(['/images/games/../private.png','http://cdn.unapproved.org/a.png','data:image/png;base64,x'].every(value=>manualGameCoverUrl(value)===undefined),'traversal and unsafe schemes rejected')
  const docs=new Map<string,RecordData>([[nameStatePath,{version:1,ready:true}]])
  const store:AtomicStore={get:async path=>structuredClone(docs.get(path)??null),transact:async work=>{
@@ -29,7 +29,7 @@ async function proof(){
  await save(igdb,1)
  check(inspections===0&&docs.get('games/'+id)?.imageUrl==='https://images.igdb.com/igdb/image/upload/t_cover_big_2x/fixture.jpg','real IGDB edit uses existing trusted-source branch')
  check(docs.get('shorts/fixture')?.gameId===id&&docs.get('games/'+id)?.reviewVersion===2&&[...docs.values()].filter(row=>row.action==='edit-metadata').length===2,'edits preserve game link and versioned audit')
- return {passed,deployReady:false,externalTransport:'known incompatibility reused from prior runtime evidence; no arbitrary URL fetched',limits:['synthetic documents and image only','not a live IGDB availability test','not a host allowlist implementation']}
+ return {passed,deployReady:false,externalTransport:'other hosts not authorized; no arbitrary URL fetched',limits:['synthetic documents and image only','not a live IGDB availability test','only safe local paths and exact IGDB URL format authorized']}
 }
 export default {async fetch(request:Request,env:{ASSETS:{fetch:(request:Request)=>Promise<Response>}}){
  if(new URL(request.url).pathname==='/__cover-contract-proof'){

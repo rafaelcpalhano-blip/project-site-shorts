@@ -1,9 +1,8 @@
-import { externalGameCoverUrl } from './external-game-cover.ts'
 import { gameCoverUrl } from './game-cover.ts'
 export function manualGameCoverUrl(value: unknown): string | undefined {
-  if (typeof value !== 'string') return
+  if (typeof value !== 'string' || /[\s\p{C}\\]/u.test(value)) return
   if (/^\/images\/games\/[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}\.(?:png|jpg|jpeg|webp)$/.test(value)) return value
-  return gameCoverUrl(value) ?? externalGameCoverUrl(value)
+  return gameCoverUrl(value)
 }
 export interface ManualGameDetails {
   name: string; description: string; imageUrl: string | null; releaseDate: string | null
