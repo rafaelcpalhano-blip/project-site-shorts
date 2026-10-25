@@ -1,3 +1,4 @@
+import {preparePublicIdentifier} from '../identifiers/public-identifiers.ts'
 import type {AtomicStore} from '../firestore/atomic-store.ts'
 import {validateGameRequestInput} from '../../src/lib/validation/public-input.ts'
 import {saoPauloDayKey} from '../../src/lib/validation/day-key.ts'
@@ -31,8 +32,10 @@ export async function createManualGame(input:unknown,visitor:string,options:{sto
   const path='gameCreationLimits/'+visitor+'-'+saoPauloDayKey(now),limit=await tx.get(path),count=limit?.count??0
   if(!Number.isSafeInteger(count)||Number(count)<0)throw new Error('invalid-game-quota')
   if(Number(count)>=3)throw new GameNameError('game-daily-limit',429)
+  const alias=await preparePublicIdentifier(tx,'manual-game',identity.manualId,now)
+  alias.apply()
   writeNameKeys(tx,identity,records,identity.manualId,now)
-  tx.create('games/'+identity.manualId,manualGameRecord(data.name,identity.normalizedName,now,true))
+  tx.create('games/'+identity.manualId,{...manualGameRecord(data.name,identity.normalizedName,now,true),publicId:alias.publicId})
   tx.set(path,{count:Number(count)+1,dateKey:saoPauloDayKey(now),updatedAt:now})
   tx.create('moderationLogs/'+crypto.randomUUID(),{contentType:'game',contentId:identity.manualId,action:'create-provisional',actor:'automatic',visitorHash:visitor,createdAt:now})
   return {game:{id:identity.manualId,name:data.name},created:true,repeated:false}

@@ -107,7 +107,7 @@ export function createRestStore(options: Options): AtomicStore {
       const text=query.sort.startsWith('text-'),field=adminListFields[query.kind][text?'text':'date'],direction=query.sort.endsWith('-asc')?'ASCENDING':'DESCENDING'
       const statusField=query.kind==='games'||query.kind==='gameRequests'||query.kind==='reportSummaries'?'status':'moderationStatus'
       const filters=query.kind==='games'&&query.filter==='all'?[]:[{fieldFilter:{field:{fieldPath:statusField},op:query.kind==='games'&&query.filter==='hidden'?'IN':'EQUAL',value:encode(query.kind==='games'&&query.filter==='hidden'?['hidden','disabled','inactive']:query.filter==='provisional'?'active':query.filter)}},...(query.kind==='games'&&query.filter==='provisional'?[{fieldFilter:{field:{fieldPath:'reviewStatus'},op:'EQUAL',value:encode('provisional')}}]:[])]
-      const selected={games:['officialName','status','reviewStatus','source','createdAt','reviewVersion'],gameRequests:['name','status','createdAt','revision','gameId','reason'],comments:['content','shortId','moderationStatus','createdAt','reviewVersion'],shorts:['title','moderationStatus','createdAt','administrativeBlock'],reportSummaries:['title','count','reviewedCount','firstReportedAt']}
+      const selected={games:['publicId','officialName','status','reviewStatus','source','createdAt','reviewVersion'],gameRequests:['name','status','createdAt','revision','gameId','reason'],comments:['publicId','content','shortId','moderationStatus','createdAt','reviewVersion'],shorts:['title','moderationStatus','createdAt','administrativeBlock'],reportSummaries:['title','count','reviewedCount','firstReportedAt']}
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:query.kind}],select:{fields:selected[query.kind].map(fieldPath=>({fieldPath}))},...(filters.length?{where:{compositeFilter:{op:'AND',filters}}}:{}),orderBy:[{field:{fieldPath:field},direction},{field:{fieldPath:'__name__'},direction}],limit:21,...(query.cursor?{startAt:{before:false,values:[encode(text?query.cursor.value:new Date(query.cursor.value)),{referenceValue:name(query.kind+'/'+query.cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
@@ -120,7 +120,7 @@ export function createRestStore(options: Options): AtomicStore {
       if(!['all','active','provisional','hidden','banned'].includes(query.filter)||!Number.isSafeInteger(query.limit)||query.limit<1||query.limit>21||query.cursor&&(!/^[\w-]{1,128}$/.test(query.cursor.id)||!Number.isFinite(Date.parse(query.cursor.time))))throw new Error('Consulta de catálogo inválida')
       const filters = query.filter==='all'?[]:[{fieldFilter:{field:{fieldPath:'status'},op:query.filter==='hidden'?'IN':'EQUAL',value:encode(query.filter==='hidden'?['hidden','disabled','inactive']:query.filter==='provisional'?'active':query.filter)}},
         ...(query.filter==='provisional'?[{fieldFilter:{field:{fieldPath:'reviewStatus'},op:'EQUAL',value:encode('provisional')}}]:[])]
-      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status','reviewStatus','source','createdAt','reviewVersion'].map(fieldPath=>({fieldPath}))},
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['publicId','officialName','status','reviewStatus','source','createdAt','reviewVersion'].map(fieldPath=>({fieldPath}))},
         ...(filters.length?{where:{compositeFilter:{op:'AND',filters}}}:{}),orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'},{field:{fieldPath:'__name__'},direction:'DESCENDING'}],limit:query.limit,
         ...(query.cursor?{startAt:{before:false,values:[encode(new Date(query.cursor.time)),{referenceValue:name('games/'+query.cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
@@ -176,7 +176,7 @@ export function createRestStore(options: Options): AtomicStore {
     async query(query) {
       const allowed = { gameRequests: ['status', 'createdAt'], comments: ['moderationStatus', 'createdAt'], shorts: ['moderationStatus', 'createdAt'], reportSummaries: ['status', 'lastReportedAt'], reports: ['shortId', 'createdAt'], moderationLogs: ['contentId', 'createdAt'] }
       const fieldsAllowed = allowed[query.collection]
-      if (!fieldsAllowed || query.filter.field !== fieldsAllowed[0] || query.orderBy !== fieldsAllowed[1] ||
+      if (!fieldsAllowed || !(query.collection==='moderationLogs'?['contentId','notificationChannel','notificationKind']: [fieldsAllowed[0]]).includes(query.filter.field) || query.orderBy !== fieldsAllowed[1] ||
           !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 21) throw new Error('Consulta inválida')
       const start = query.cursor
       if (start && (!(query.collection === 'comments'||query.collection === 'moderationLogs' ? /^[\w-]{1,128}$/ : /^[a-f0-9]{64}$/).test(start.id) || !Number.isFinite(Date.parse(start.time)))) throw new Error('Cursor inválido')

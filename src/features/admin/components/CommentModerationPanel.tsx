@@ -58,7 +58,7 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
     {page&&<>
       {!page.items.length&&<p>Nenhum comentário nesta janela da fila.</p>}
       <ul className={styles.list}>{page.items.map(item=><li key={item.id}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'comment',id:item.id,label:item.content,revision:item.revision,status:item.status}}/>
-        <p style={{overflowWrap:'anywhere'}}>ID: {item.id}</p><p style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{item.content}</p>
+        <p style={{overflowWrap:'anywhere'}}>ID: {item.publicId??item.id}</p><p style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{item.content}</p>
         <button disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{
           const result=await fetchCommentDetail(user,item.id)
           if(active.current){setDetail(result);setAction(null);setReason('')}

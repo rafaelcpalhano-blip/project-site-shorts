@@ -1,3 +1,4 @@
+import {identifierFields} from '../identifiers/public-identifiers.ts'
 import { commentNumber, nextCommentNumber } from './comment-number.ts'
 import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
@@ -56,6 +57,6 @@ export function mapComment(id: string, data: RecordData) {
   if (typeof data.content !== 'string' || data.content.length > 500 ||
       !(data.createdAt instanceof Date) || !Number.isFinite(data.createdAt.getTime()) ||
       !commentStatuses.includes(data.moderationStatus as typeof commentStatuses[number])) throw new Error('invalid-comment')
-  return {id:commentId(id),shortId:commentId(data.shortId),content:data.content,
+  return {...identifierFields(data,'comment'),id:commentId(id),shortId:commentId(data.shortId),content:data.content,
     status:String(data.moderationStatus),createdAt:data.createdAt.toISOString(),revision:counter(data.reviewVersion??0)}
 }

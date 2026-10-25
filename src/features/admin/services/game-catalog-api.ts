@@ -6,7 +6,7 @@ import { request } from './moderation-api.ts'
 export type CatalogFilter='all'|'active'|'provisional'|'hidden'|'banned'
 export type CatalogAction='approve'|'hide'|'ban'|'unban'|'restore'
 export type CatalogCursor={time:string;id:string;scope:CatalogFilter}|AdminListCursor
-export interface CatalogGame {id:string;name:string;source:string;status:string;provisional:boolean;createdAt:string|null;revision:number}
+export interface CatalogGame {id:string;publicId?:string;name:string;source:string;status:string;provisional:boolean;createdAt:string|null;revision:number}
 export interface CatalogPage {items:CatalogGame[];next:CatalogCursor|null}
 export interface CatalogDetail {metadata:ManualGameDetails|null;game:CatalogGame;actions:CatalogAction[];shortCount:number|null;unbanTarget:string|null;historyLimited:boolean;history:Array<{id:string;action:string;reason:string|null;actorUid:string|null;createdAt:string|null}>}
 export const fetchCatalog=(user:User,filter:CatalogFilter,cursor?:CatalogCursor,sort?:AdminSort)=>request<CatalogPage>(user,'games/catalog',{filter,cursor,sort})

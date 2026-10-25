@@ -1,3 +1,4 @@
+import {identifierFields} from '../identifiers/public-identifiers.ts'
 import { manualGameCoverUrl } from '../../src/lib/validation/manual-game-details.ts'
 import {loadAdminList} from '../admin/list-page.ts'
 import type { AtomicStore, GameCatalogFilter, RecordData } from '../firestore/atomic-store.ts'
@@ -17,7 +18,7 @@ function id(value:unknown):string {
 function time(value:unknown):string|null {return value instanceof Date&&Number.isFinite(value.getTime())?value.toISOString():null}
 function item(gameId:string,game:RecordData){
  if(typeof game.officialName!=='string'||!['active','hidden','disabled','inactive','banned'].includes(String(game.status)))throw new Error('invalid-game-record')
- return {id:gameId,name:game.officialName,source:game.source==='IGDB'?'IGDB':'manual',status:String(game.status),provisional:game.reviewStatus==='provisional',createdAt:time(game.createdAt),revision:counter(game.reviewVersion??0)}
+ return {...identifierFields(game,'manual-game'),id:gameId,name:game.officialName,source:game.source==='IGDB'?'IGDB':'manual',status:String(game.status),provisional:game.reviewStatus==='provisional',createdAt:time(game.createdAt),revision:counter(game.reviewVersion??0)}
 }
 export async function loadGameCatalog(input:unknown,store:AtomicStore){
  const data=object(input,['filter','cursor','sort']),filter=data.filter as GameCatalogFilter
@@ -75,6 +76,6 @@ export async function moderateCatalogGame(input:unknown,uid:string,options:{stor
   tx.set(path,next)
   tx.set('gameModerationStates/'+gameId,{revision,previousStatus:game.status,action,reason,actorUid:uid,updatedAt:now})
   tx.create('moderationLogs/'+crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-',''),{contentType:'game',contentId:gameId,action,reason,actorUid:uid,previousStatus:game.status,nextStatus:next.status,revision,createdAt:now})
-  return {id:gameId,status:next.status,revision}
+  return {...identifierFields(game,'manual-game'),id:gameId,status:next.status,revision}
  })
 }

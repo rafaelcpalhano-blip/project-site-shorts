@@ -1,3 +1,4 @@
+import {preparePublicIdentifier} from '../identifiers/public-identifiers.ts'
 import { nextCommentNumber } from './comment-number.ts'
 import { changeCommentCount } from './comment-count.ts'
 import { prepareEngagement } from '../ranking/engagement.ts'
@@ -48,9 +49,11 @@ export async function submitComment(input: unknown, visitorHash: string, options
       !!tx.hasPublishedComment && !await tx.hasPublishedComment(data.shortId)
     const publicationNumber=verdict.status==='approved'?await nextCommentNumber(tx,data.shortId,short):undefined
     const applyRanking=verdict.status==='approved'?await prepareEngagement(tx,{shortId:data.shortId,gameId:short.gameId as string,kind:'comment',sourceId:id,identity:visitorHash,at:now,now,active:true}):()=>{}
+    const alias=await preparePublicIdentifier(tx,'comment',id,now)
+    alias.apply()
     applyRanking()
     if (verdict.status === 'approved') tx.set('shorts/' + data.shortId, {...short, ...changeCommentCount(short.commentCount, 1), hasPublishedComments: true, lastCommentNumber: publicationNumber})
-    tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now,
+    tx.create('comments/' + id, { shortId: data.shortId, content: data.content, createdAt: now, publicId:alias.publicId,
       ...(publicationNumber!==undefined?{publicationNumber}:{}), moderationStatus: verdict.status, reviewVersion: 0 })
     // Ownership, request fingerprints and triage flags never enter public comment documents.
     tx.create('commentRequests/' + id, { visitorHash, payloadHash, flags: verdict.flags, createdAt: now })
