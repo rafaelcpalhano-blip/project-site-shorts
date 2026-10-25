@@ -1,0 +1,28 @@
+{
+  "observedDate": "2026-10-25",
+  "timezone": "America/Sao_Paulo",
+  "method": "Authenticated browser UI; sanitized manual observation",
+  "ownerStatement": "All existing environment focused on tests; definitive content registration starts after deploy",
+  "projectId": "clipzone-db02a",
+  "databaseId": "(default)",
+  "sourcePage": "https://console.cloud.google.com/firestore/databases/-default-/data/panel?project=clipzone-db02a",
+  "rootPanelText": "Seu banco de dados está pronto, basta adicionar dados.",
+  "rootCollectionsDisplayed": 0,
+  "collectionSelected": false,
+  "documentOpened": false,
+  "countQueryExecuted": false,
+  "transactionalEmptinessCertified": false,
+  "limits": [
+    "Root UI observation at one moment only",
+    "No concurrent-writer or orphan-subcollection guarantee",
+    "Recheck required immediately before any approved create-only initialization"
+  ],
+  "recommendedTarget": "clipzone-db02a/(default); reuse proposed, not initialized",
+  "remoteMutations": 0,
+  "resourcesCreated": 0,
+  "secretsRevealed": false,
+  "localDataImported": false,
+  "localDataModified": false,
+  "remoteSetupExecuted": false,
+  "deployExecuted": false
+}
