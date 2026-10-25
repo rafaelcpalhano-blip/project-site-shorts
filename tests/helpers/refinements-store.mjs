@@ -1,0 +1,6 @@
+import assert from 'node:assert/strict'
+export function memory(initial=[]){
+ const records=new Map(initial);let tail=Promise.resolve(),reads=0
+ const store={transact(work){const result=tail.then(async()=>{const writes=new Map();const value=await work({get:async path=>{assert.equal(writes.size,0,'all transaction reads must precede writes');reads++;return structuredClone(records.get(path)??null)},create:(path,data)=>{assert.ok(!records.has(path)&&!writes.has(path),'duplicate create');writes.set(path,structuredClone(data))},set:(path,data)=>writes.set(path,structuredClone(data))});for(const [path,data]of writes)records.set(path,data);return value});tail=result.catch(()=>{});return result},async query(q){let rows=[...records].filter(([path,data])=>path.startsWith(q.collection+'/')&&data[q.filter.field]===q.filter.value).map(([path,data])=>({id:path.split('/')[1],data:structuredClone(data)})).sort((a,b)=>b.data[q.orderBy]-a.data[q.orderBy]||b.id.localeCompare(a.id));if(q.cursor)rows=rows.filter(row=>row.data[q.orderBy].toISOString()<q.cursor.time||row.data[q.orderBy].toISOString()===q.cursor.time&&row.id<q.cursor.id);return rows.slice(0,q.limit)}}
+ return {store,records,get reads(){return reads}}
+}

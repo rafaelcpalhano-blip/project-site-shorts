@@ -1,3 +1,4 @@
+import {handlePlaybackFailure} from './playback-failure.ts'
 import {createVideoPreviewVerifier} from '../videos/preview.ts'
 import {createNetworkProtection} from '../security/network-abuse.ts'
 import {SubmissionError} from '../submissions/submit-short.ts'
@@ -28,7 +29,7 @@ export interface PublicApiOptions {
   titleSearchEnabled?: boolean
   gameTranslation?: (id: string) => Promise<void>
   admin?: AdminConfiguration
-  gameSearch?: { get?: (id: string) => Promise<CatalogGame | null>; search: (name: string) => Promise<CatalogGame[]>; maximumAttempts: number; windowMs: number }
+  gameSearch?: { get?: (id: string) => Promise<CatalogGame | null>; search: (name: string, offset?:number) => Promise<CatalogGame[]>; maximumAttempts: number; windowMs: number }
   origin: string
   visitorSecret: string
   store: SubmissionDependencies['store']
@@ -51,6 +52,7 @@ export async function createPublicApi(options: PublicApiOptions) {
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs })
   const adminLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'admin-auth' })
+  const playbackLimit=createAttemptLimiter({store:options.store,now:options.now,maximum:20,windowMs:60000,scope:'playback'})
   const reportLimit = createAttemptLimiter({ store: options.store, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
   const gameRequestLimit = createAttemptLimiter({ store: options.store, now: options.now,
@@ -74,7 +76,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       await adminLimit(visitor)
       return true
     })
-    if (['/api/admin/history', '/api/admin/games/edit', '/api/admin/games/catalog', '/api/admin/games/detail', '/api/admin/games/moderate', '/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
+    if (['/api/admin/updates', '/api/admin/updates/read', '/api/admin/history', '/api/admin/games/edit', '/api/admin/games/catalog', '/api/admin/games/detail', '/api/admin/games/moderate', '/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
       origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
       checkAbuse: async candidate => {
         const visitor = await identity.resolveVisitor(candidate)
@@ -95,6 +97,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })
     if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'like-attempts');await likeLimit(visitor)},...(network?{prepareNetworkLike:(tx,shortId)=>network.prepareContribution(tx,address,'like',shortId)}:{})})
+    if(path==='/api/playback/failure')return handlePlaybackFailure(request,{origin:options.origin,store:options.store,now:options.now,verify:options.verify,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'playback-attempts');await playbackLimit(visitor)}})
     if (path === '/api/reports') return handleReport(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })

@@ -1,0 +1,4 @@
+.failure {display:grid;justify-items:center;gap:12px;text-align:center;padding:16px;min-width:0;overflow-wrap:anywhere}
+.failure img {width:112px;height:168px;object-fit:contain}
+.failure h3,.failure p {margin:0;max-width:55ch}
+.failure button {min-height:44px;max-width:100%;white-space:normal}

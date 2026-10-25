@@ -1,3 +1,6 @@
+import {PlayerFailure} from './PlayerFailure'
+import {reportPlaybackFailure} from '../services/playback-failure-api'
+import type {PlaybackSignal} from '../services/playback-failure-api'
 import type {ReactNode} from 'react'
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import type { Short } from '../../shorts/types/models'
@@ -10,6 +13,10 @@ import styles from './OfficialPlayer.module.css'
 import { VideoSourceLink } from './PlayerInformation'
 export function OfficialPlayer({ short, navigation }: { short: Short; navigation?:ReactNode }) {
   const id = useId()
+  const [received,setReceived]=useState(false)
+  const mounted=useRef(true)
+  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false}},[])
+  const noteFailure=(signal:PlaybackSignal)=>{void reportPlaybackFailure(short.id,signal).then(ok=>{if(ok&&mounted.current)setReceived(true)})}
   const box = useRef<HTMLDivElement>(null)
   const scrollBox = useRef<HTMLDivElement>(null)
   const [horizontalScroll, setHorizontalScroll] = useState(false)
@@ -42,12 +49,12 @@ export function OfficialPlayer({ short, navigation }: { short: Short; navigation
     if (!active) return
     tiktokReady.current = false
     const observeAudio = createAudioObserver(audioPreference.set, audioPreference.getSnapshot())
-    const fail = () => { setStatus('failed'); playback.release(id) }
-    const timer = window.setTimeout(() => { if (!loaded.current) fail() }, 20000)
+    const fail = (signal:PlaybackSignal) => { setStatus('failed'); playback.release(id);void reportPlaybackFailure(short.id,signal).then(ok=>{if(ok&&mounted.current)setReceived(true)}) }
+    const timer = window.setTimeout(() => { if (!loaded.current) fail('timeout') }, 20000)
     const message = (event: MessageEvent) => {
       if (plan.platform !== 'TikTok') return
       const result = tikTokMessage(event, iframe.current?.contentWindow)
-      if (result === 'error') fail()
+      if (result === 'error') fail('tiktok-error')
       if (result === 'autoplay-blocked') { loaded.current = true; setStatus('blocked') }
       if (tiktokReady.current && (result === 'muted' || result === 'unmuted')) observeAudio(result === 'unmuted')
       if (result === 'playing') setStatus('ready')
@@ -85,7 +92,7 @@ export function OfficialPlayer({ short, navigation }: { short: Short; navigation
             }, 750)
           },
           onAutoplayBlocked: () => { if (!disposed) setStatus('blocked') },
-          onError: () => { if (!disposed) fail() },
+          onError: event => { if (!disposed) fail(([2,5,100,101,150,153].includes(event?.data)?'youtube-'+event.data:'network') as PlaybackSignal) },
         } })
       }).catch(() => { if (!disposed) setStatus('audio-unavailable') })
     }
@@ -111,18 +118,18 @@ export function OfficialPlayer({ short, navigation }: { short: Short; navigation
       }
       window.clearTimeout(timer); window.clearTimeout(visibilityTimer); window.removeEventListener('message', message)
       document.removeEventListener('visibilitychange', visibility); visible.disconnect() }
-  }, [active, id, plan.platform, plan.src, initialAudio])
-  const playerFrame = <div ref={box} className={!short.url ? styles.unavailable : short.platform === 'Twitch' ? styles.wide : styles.vertical}>
-      {active && plan.src ? <iframe ref={iframe} src={plan.src} title={short.title + ' · player oficial ' + plan.platform}
+  }, [active, id, plan.platform, plan.src, initialAudio, short.id])
+  const playerFrame = <div ref={box} className={status==='failed'?styles.failureFrame:!short.url ? styles.unavailable : short.platform === 'Twitch' ? styles.wide : styles.vertical}>
+      {status==='failed'?<PlayerFailure shortId={short.id} received={received} onRetry={()=>{loaded.current=false;started.current=false;setStatus('loading');playback.activate(id)}}/>:active && plan.src ? <iframe ref={iframe} src={plan.src} title={short.title + ' · player oficial ' + plan.platform}
         width="100%" height="100%" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowFullScreen
         referrerPolicy="strict-origin-when-cross-origin"
         onLoad={() => { loaded.current = true; setStatus(current=>current==='blocked'?current:'ready') }}
-        onError={() => { setStatus('failed'); playback.release(id) }} /> :
+        onError={() => { setStatus('failed'); playback.release(id);noteFailure('network') }} /> :
         <div className={styles.placeholder}>
-          <p>{plan.reason || (status === 'failed' ? 'Não foi possível carregar o player. Tente novamente ou abra na fonte.' : 'Assista pelo player oficial de ' + plan.platform + '.')}</p>
+          <p>{plan.reason || ('Assista pelo player oficial de ' + plan.platform + '.')}</p>
           {plan.src && <button className="primary" onClick={() => {
             loaded.current = false; setStatus('loading'); playback.activate(id)
-          }}>{status === 'failed' ? 'Tentar carregar novamente' : 'Retomar player'}</button>}
+          }}>Retomar player</button>}
         </div>}
     </div>
   return <section className={styles.player} aria-label={'Vídeo · ' + short.platform}>

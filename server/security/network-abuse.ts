@@ -3,7 +3,7 @@ import {SubmissionError} from '../submissions/submit-short.ts'
 import {saoPauloDayKey} from '../../src/lib/validation/day-key.ts'
 import {networkAddress} from './network-address.ts'
 export const networkLimits={sessionsPerWindow:8,sessionWindowMs:600000,sessionsPerDay:40,likeAttemptsPerMinute:60,submissionAttemptsPerMinute:20,publicationsPerDay:30,newLikesPerDay:200,newLikesPerVideoPerDay:20} as const
-export type NetworkScope='sessions'|'like-attempts'|'submission-attempts'|'contributions'
+export type NetworkScope='playback-attempts'|'sessions'|'like-attempts'|'submission-attempts'|'contributions'
 function integer(value:unknown){if(!Number.isSafeInteger(value)||Number(value)<0)throw Error('invalid-network-record');return Number(value)}
 function record(value:RecordData|null,scope:NetworkScope,day:string,now:Date){
  if(!value)return

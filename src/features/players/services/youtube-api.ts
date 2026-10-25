@@ -12,7 +12,7 @@ export interface YouTubeApi {
     onReady(event: { target: YouTubePlayer }): void
     onStateChange(event: { target: YouTubePlayer; data: number }): void
     onAutoplayBlocked(): void
-    onError(): void
+    onError(event: {data:number}): void
   } }) => YouTubePlayer
 }
 type ApiWindow = Window & { YT?: YouTubeApi; onYouTubeIframeAPIReady?: () => void }
