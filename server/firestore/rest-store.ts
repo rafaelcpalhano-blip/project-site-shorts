@@ -32,6 +32,8 @@ interface Options {
   projectId: string
   emulatorPort?: 8080 | 8081
   accessToken?: () => Promise<string>
+  fetcher?: typeof fetch
+  cleanupFetcher?: typeof fetch
 }
 export function createRestStore(options: Options): AtomicStore {
   if (!/^[a-z][a-z0-9-]{2,99}$/.test(options.projectId)) throw new Error('Projeto inválido')
@@ -46,7 +48,8 @@ export function createRestStore(options: Options): AtomicStore {
   const request = async (operation: string, body: unknown) => {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
     headers.Authorization = options.emulatorPort ? 'Bearer owner' : 'Bearer ' + await options.accessToken!()
-    const response = await fetch(origin + '/v1/' + root + ':' + operation, {
+    const transport=operation==='rollback'?(options.cleanupFetcher??options.fetcher??fetch):(options.fetcher??fetch)
+    const response = await transport(origin + '/v1/' + root + ':' + operation, {
       method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(15000),
     })
     const result = await response.json()
@@ -263,4 +266,3 @@ export function createRestStore(options: Options): AtomicStore {
     },
   }
 }
-
