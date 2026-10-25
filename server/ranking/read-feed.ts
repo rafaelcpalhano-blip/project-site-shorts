@@ -37,10 +37,25 @@ export async function readOrderedFeed(input:{order?:RankingQuery['mode'];gameId?
   // Never prefetch more candidates than the remaining visible slots.
   for(let start=0;start<page.items.length&&items.length<15;){
    const end=Math.min(page.items.length,start+4,start+15-items.length)
-   const window=await Promise.all(page.items.slice(start,end).map(async row=>{
+   const rows=page.items.slice(start,end)
+   let shorts:Awaited<ReturnType<NonNullable<AtomicStore['getMany']>>>|undefined
+   if(store.getMany){
+    const paths=rows.map(row=>'shorts/'+id(mode==='relevant'?row.data.shortId:row.id)),unique=[...new Set(paths)]
+    const loaded=await store.getMany(unique)
+    if(loaded.length!==unique.length)throw Error('ranking-invalid-batch')
+    const byPath=new Map(unique.map((path,index)=>[path,loaded[index]]))
+    shorts=paths.map(path=>byPath.get(path)!)
+    const fresh=[...new Set(shorts.filter(short=>short?.moderationStatus==='published'&&typeof short.gameId==='string'&&(!gameId||gameId===short.gameId)).map(short=>id(short!.gameId)))].filter(key=>!games.has(key))
+    if(fresh.length){
+     const records=await store.getMany(fresh.map(key=>'games/'+key))
+     if(records.length!==fresh.length)throw Error('ranking-invalid-batch')
+     fresh.forEach((key,index)=>games.set(key,Promise.resolve(records[index])))
+    }
+   }
+   const window=await Promise.all(rows.map(async (row,index)=>{
     const anchor:OrderedCursor={scope,readTime:point!,id:mode==='relevant'&&/^[-_a-zA-Z0-9]{1,192}$/.test(row.id)?row.id:id(row.id),time:new Date(timestamp(row.data.createdAt)).toISOString(),...(mode==='likes'?{value:likeCount(row.data.likeCount)}:mode==='relevant'?{value:Number(row.data.score),generationId,computedAt,metricsEpoch}: {})}
     if(mode==='relevant'&&(typeof row.data.score!=='number'||!Number.isFinite(anchor.value)||Number(anchor.value)<0))throw Error('ranking-invalid-score')
-    const shortId=mode==='relevant'?id(row.data.shortId):row.id,short=await store.get!('shorts/'+shortId)
+    const shortId=mode==='relevant'?id(row.data.shortId):row.id,short=shorts?shorts[index]:await store.get!('shorts/'+shortId)
     let item:ReturnType<typeof publicShort>|undefined
     if(short?.moderationStatus==='published'&&typeof short.gameId==='string'&&(!gameId||gameId===short.gameId)){
      const record=await game(id(short.gameId))

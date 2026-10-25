@@ -36,6 +36,8 @@ export interface AtomicStore {
   gameCatalogPage?: (query:GameCatalogQuery)=>Promise<Array<{id:string;data:RecordData}>>
   countGameShorts?: (gameId:string)=>Promise<number>
   scanGames?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
+  // Current-state reads, at most four distinct paths; results follow request order.
+  getMany?: (paths: string[]) => Promise<Array<RecordData | null>>
   get?: (path: string) => Promise<RecordData | null>
   publicPage?: (query: PublicPageQuery) => Promise<Array<{id:string;data:RecordData}>>
   searchShorts?: (query:SearchShortsQuery)=>Promise<Array<{id:string;data:RecordData}>>

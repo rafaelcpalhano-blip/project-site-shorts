@@ -100,6 +100,20 @@ export function createRestStore(options: Options): AtomicStore {
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status'].map(fieldPath=>({fieldPath}))},where:{fieldFilter:{field:{fieldPath:'status'},op:'EQUAL',value:encode('active')}},orderBy:[{field:{fieldPath:'officialName'},direction:'ASCENDING'},{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:51,...(cursor?{startAt:{before:false,values:[encode(cursor.name),{referenceValue:name('games/'+cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
+    async getMany(paths) {
+      if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
+      const documents=paths.map(name),expected=new Set(documents),records=new Map<string,RecordData|null>()
+      const result=await request('batchGet',{documents})
+      for(const row of Array.isArray(result)?result:[result]){
+        // Firestore may send a metadata-only row; found/missing rows are unordered.
+        if(row&&typeof row==='object'&&!('found' in row)&&!('missing' in row)&&('readTime' in row||'transaction' in row))continue
+        const found=row?.found,missing=row?.missing,key=found?.name??missing
+        if(!row||typeof row!=='object'||('found' in row)===('missing' in row)||typeof key!=='string'||!expected.has(key)||records.has(key)||found&&(typeof found!=='object'||Array.isArray(found)||found.fields!==undefined&&(!found.fields||typeof found.fields!=='object'||Array.isArray(found.fields))))throw new Error('Resposta de lote inválida')
+        records.set(key,found?decodeDocument(found).data:null)
+      }
+      if(records.size!==documents.length)throw new Error('Resposta de lote incompleta')
+      return documents.map(key=>records.get(key)!)
+    },
     async get(path) {
       const result = await request('batchGet', {documents:[name(path)]})
       const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
