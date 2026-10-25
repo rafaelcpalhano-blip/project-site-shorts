@@ -1,4 +1,4 @@
-import { PublicReadFailure } from '../http/read-failure.ts'
+import { PublicReadFailure, sessionReadFailure } from '../http/read-failure.ts'
 import { validThumbnail } from '../validation/thumbnail.ts'
 import type { Short } from '../../features/shorts/types/models.ts'
 import { publicCursor, publicId } from '../validation/public-read.ts'
@@ -12,7 +12,7 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
   const deadline=AbortSignal.timeout(20000),combined=signal?AbortSignal.any([signal,deadline]):deadline
   const post=(url:string,body:unknown)=>{combined.throwIfAborted();return fetcher(url,{method:'POST',credentials:'same-origin',redirect:'error',signal:combined,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
   const session=await post('/api/session',{})
-  if(!session.ok)throw new PublicReadFailure('Não foi possível iniciar a consulta. Aguarde e tente novamente.', 'session')
+  if(!session.ok)throw sessionReadFailure(session.status)
   const response=await post(path,input)
   combined.throwIfAborted()
   if(!response.ok)throw new PublicReadFailure(response.status===404?'Conteúdo indisponível.':response.status===429?'Muitas consultas. Aguarde antes de tentar novamente.':'Não foi possível carregar o conteúdo.', response.status===404?'unavailable':response.status===401||response.status===403?'session':response.status===429?'rate-limit':'request')

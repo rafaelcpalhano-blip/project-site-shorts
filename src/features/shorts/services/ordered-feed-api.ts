@@ -1,4 +1,4 @@
-import { PublicReadFailure } from '../../../lib/http/read-failure.ts'
+import { PublicReadFailure, sessionReadFailure } from '../../../lib/http/read-failure.ts'
 import { validThumbnail } from '../../../lib/validation/thumbnail.ts'
 import type {PublicShort} from '../../../lib/firebase/public-read-api'
 import {publicId} from '../../../lib/validation/public-read.ts'
@@ -12,7 +12,7 @@ export function createOrderedFeedClient(fetcher:typeof fetch=fetch){
   if(cursor!==undefined&&(typeof cursor!=='string'||cursor.length>4096))throw Error('Cursor inválido. Atualize o feed.')
   const combined=signal?AbortSignal.any([signal,AbortSignal.timeout(20000)]):AbortSignal.timeout(20000),post=(url:string,body:unknown)=>fetcher(url,{method:'POST',credentials:'same-origin',redirect:'error',signal:combined,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
   const session=await post('/api/session',{})
-  if(!session.ok)throw new PublicReadFailure('Não foi possível iniciar a consulta. Aguarde e tente novamente.', 'session')
+  if(!session.ok)throw sessionReadFailure(session.status)
   const response=await post('/api/feed/ordered',{order,...(gameId?{gameId}:{}),...(cursor?{cursor}:{})}),data=await response.json()
   if(!response.ok)throw new PublicReadFailure(data?.error==='ranking-not-ready'?'O ranking ainda não está disponível ou precisa de atualização. As outras ordenações continuam disponíveis.':response.status===409||data?.error==='invalid-ranking-cursor'?'A paginação expirou ou mudou. Atualize o feed para reiniciar.':response.status===429?'Muitas consultas. Aguarde antes de tentar novamente.':'Não foi possível carregar esta ordenação.')
   if(!data||data.order!==order||!Array.isArray(data.items)||data.items.length>15||typeof data.orderingAt!=='string'||!Number.isFinite(Date.parse(data.orderingAt))||typeof data.limited!=='boolean'||!Number.isSafeInteger(data.candidatesRead)||data.candidatesRead<0||data.candidatesRead>30||!Number.isSafeInteger(data.candidatesExamined)||data.candidatesExamined<0||data.candidatesExamined>data.candidatesRead||data.next!==null&&(typeof data.next!=='string'||data.next.length>4096||!data.next.startsWith('v1.')))throw Error('Resposta de ordenação inválida.')

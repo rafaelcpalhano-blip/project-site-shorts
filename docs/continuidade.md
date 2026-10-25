@@ -1619,3 +1619,9 @@ Autorização explícita recebida após o proprietário mostrar IDs longos de jo
 Detalhes, backup e comandos de manutenção: [aliases-jogos-manuais-locais.md](aliases-jogos-manuais-locais.md). Exjanitor=mn0008; Jogo em Desenvolvimento=mn0002; Teste de jogo=mn0007. Script idempotente/fixo local, sem rota pública e sem executar na inicialização. Testes unitários/SSR e1teste REST8081 passaram; lint/build aprovados. Atualizar catálogo na interface para refletir os novos dados. Não é necessário reiniciar API novamente. Não repetir migração para apenas atualizar tela; não restaurar snapshot/contador sobre banco em uso.
 
 Complemento de commit adicionado ao fim de commits-7-6-11.md. Sem commits/push/deploy automáticos e sem avanço para Etapa8. A restrição anterior de não migrar históricos continua valendo para produção e comentários antigos; autorização desta sessão limitou-se a jogos manuais locais.
+
+## 25/10/2026 — mensagem de novas sessões e teste reproduzível de retirada
+
+Após várias novas sessões anônimas, logs confirmaram429 em /api/session:8sessões na janela10min. Ajustada mensagem de leitura para identificar o limite, classificar rate-limit e orientar aguardar sem afirmar prazo fixo. Sem mudanças na proteção/cotas/cookies. Frontend comum/ordenado e comentários/detalhes compartilham a mensagem; sem retry automático.
+
+Criado teste reproduzível isolado: node --test tests/playback-feed-removal.test.mjs. Cinco cenários de14/15identidades, fonte negativa/permitida, retry duplicado e liberação administrativa com novo ciclo. Usa código real e respostas fictícias em memória, sem qualquer Firestore/rede externa.20testes direcionados, lint/build/diff-check aprovados. Guia: [teste-retirada-player-e-limite-sessoes.md](teste-retirada-player-e-limite-sessoes.md). Não injetar15ocorrências artificiais na base de uso nem desativar limite para testar. Build5175 atualizada; não exige reinício da API. Etapa8 não iniciada.

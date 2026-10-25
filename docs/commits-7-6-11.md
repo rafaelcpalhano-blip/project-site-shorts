@@ -137,3 +137,21 @@ git add `
 
 git commit -m "fix(admin): atribuir codigos reduzidos aos jogos manuais antigos"
 ```
+
+## 8. Mensagem do limite e teste reproduzível de retirada
+
+Complemento aos blocos anteriores. Não alterar limites para simular15visitantes.
+
+```powershell
+git add `
+  src/lib/http/read-failure.ts `
+  src/lib/firebase/public-read-api.ts `
+  src/features/shorts/services/ordered-feed-api.ts `
+  tests/mobile-recovery.test.mjs `
+  tests/playback-feed-removal.test.mjs `
+  docs/teste-retirada-player-e-limite-sessoes.md `
+  docs/continuidade.md `
+  docs/commits-7-6-11.md
+
+git commit -m "fix(feed): esclarecer limite de sessoes e validar retirada por falhas"
+```

@@ -44,3 +44,12 @@ test('formulário suspenso bloqueia envio e deixa textarea somente leitura para 
  assert.match(html,/<button[^>]*disabled=""/);assert.match(html,/Seu texto permanece aqui/)
  assert.equal(hasUnsavedViewerFields([{tagName:'TEXTAREA',type:'textarea',value:'Rascunho',disabled:false}]),true)
 })
+
+test('429 na criação de sessão explica a proteção no feed e comentários, sem consultar conteúdo nem repetir chamadas',async()=>{
+ for(const operation of ['feed','comments','detail','ordered']){
+  const calls=[],fetcher=async path=>{calls.push(path);return new Response('private internal detail',{status:429})},client=createPublicReadClient(fetcher)
+  const pending=operation==='feed'?client.listShorts():operation==='comments'?client.listComments('short'):operation==='detail'?client.getShort('short'):createOrderedFeedClient(fetcher)('latest')
+  await assert.rejects(pending,error=>error instanceof PublicReadFailure&&error.kind==='rate-limit'&&/limite de novas sessões/.test(error.message)&&/Aguarde/.test(error.message)&&!error.message.includes('private internal detail'))
+  assert.deepEqual(calls,['/api/session'])
+ }
+})
