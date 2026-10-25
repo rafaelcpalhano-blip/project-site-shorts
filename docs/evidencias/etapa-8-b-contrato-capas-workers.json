@@ -1,0 +1,31 @@
+{
+  "created": "2026-10-25T18:27:41.625Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "proof": {
+    "passed": [
+      "static cover path preserved",
+      "IGDB host and path normalized",
+      "other public hosts accepted syntactically: no configurable host allowlist exists",
+      "traversal and unsafe schemes rejected",
+      "real static edit bypasses remote inspector",
+      "real IGDB edit uses existing trusted-source branch",
+      "edits preserve game link and versioned audit"
+    ],
+    "deployReady": false,
+    "externalTransport": "known incompatibility reused from prior runtime evidence; no arbitrary URL fetched",
+    "limits": [
+      "synthetic documents and image only",
+      "not a live IGDB availability test",
+      "not a host allowlist implementation"
+    ]
+  },
+  "assets": [
+    "existing static PNG served with exact bytes and image/png",
+    "known gap: missing image falls back to SPA HTML with status 200"
+  ],
+  "fixtureOnly": true,
+  "deployReady": false
+}
