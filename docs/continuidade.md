@@ -1636,3 +1636,10 @@ Retorno do jogo recupera página/filtro/ordem/scroll em contexto de aba limitado
 Homologação real no celular e aparência administrativa pendentes; proprietário enviará checklist e Lighthouse depois. Não iniciar Etapa8. Comandos por grupo em [commits-mobile-navegacao-admin.md](commits-mobile-navegacao-admin.md); sem commits/push automáticos, deploy, novas dependências ou alteração de autenticação/permissões/moderação. Dados locais de uso preservados.
 
 Confirmação posterior do proprietário: na5175 do celular, os dois catálogos carregaram e a lista ficou correta junto ao campo com teclado aberto. Grupo mobile validado no aparelho; retorno contextual completo, aparência administrativa e checklist/Lighthouse seguem pendentes. Não iniciar Etapa8.
+
+
+## 25/10/2026 — paginação com rolagem ao título e janela compacta
+
+Corrigida troca manual de página para focar/alinha título do feed após renderizar, com16px de margem; inicial/player/retorno contextual preservam regras anteriores. Compartilhado pelos feeds persistente/demonstrativo. Numeração atual±2 (máximo5), Anterior/Próxima e saltos±5 apenas com destino disponível. Cursores são descobertos progressivamente; sem prefetch/contagem global/consultas extras para botões. Plano e limites em [paginacao-feed-rolagem.md](paginacao-feed-rolagem.md).
+
+11testes direcionados, lint/build/diff-check aprovados. Desktop5174 confirmou2→3→1→2 com título a15,609375px e focoH2. Proprietário confirmou alinhamento correto nas páginas1/2/3 no celular5175. Build5175 atualizada, sem reiniciar API. Volume/saltos testados com fixtures, sem gravar shorts/jogos. Dados locais preservados; sem deploy/produção/dependências/Etapa8. Retomar checklist geral, visual administrativo e Lighthouse ao fechar rodada funcional. Comandos de commits entregues por código/testes e documentação, sem execução automática.
