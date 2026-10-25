@@ -95,6 +95,11 @@ export function createRestStore(options: Options): AtomicStore {
       if(!point)throw new Error('Snapshot ausente')
       return {items:rows.filter(item=>item.document).map(item=>decodeDocument(item.document)),readTime:point}
     },
+    async publicGamesPage(cursor) {
+      if(cursor&&(!/^[\w-]{1,128}$/.test(cursor.id)||typeof cursor.name!=='string'||!cursor.name.trim()||cursor.name.length>500))throw new Error('Cursor de jogos inválido')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status'].map(fieldPath=>({fieldPath}))},where:{fieldFilter:{field:{fieldPath:'status'},op:'EQUAL',value:encode('active')}},orderBy:[{field:{fieldPath:'officialName'},direction:'ASCENDING'},{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:51,...(cursor?{startAt:{before:false,values:[encode(cursor.name),{referenceValue:name('games/'+cursor.id)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
     async get(path) {
       const result = await request('batchGet', {documents:[name(path)]})
       const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found

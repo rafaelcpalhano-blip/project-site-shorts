@@ -1,5 +1,5 @@
 import { PublicReadFailure, readFailureMessage } from '../../../lib/http/read-failure'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { FirstCommentCelebration } from '../../comments/components/FirstCommentCelebration'
 import { CommentSelectionModeration } from '../../admin/components/CommentSelectionModeration'
 import { InlineModeration } from '../../admin/components/InlineModeration'
@@ -18,6 +18,7 @@ import { PlayerInformation } from '../../players/components/PlayerInformation'
 import { OfficialPlayer } from '../../players/components/OfficialPlayer'
 const repository = createPublicRepository(database)
 export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onModerated, onBusyChange, navigation }: { navigation?:ReactNode; short: Short; onCommentCount?:(id:string,count:number)=>void; onBusyChange:(busy:boolean)=>void; onLikeCount:(id:string,count:number)=>void;onModerated:()=>void }) {
+  const location=useLocation()
   const admin=useAdminSession()
   const [selectingComments,setSelectingComments]=useState(false)
   const commentHeading=useRef<HTMLHeadingElement>(null)
@@ -56,7 +57,7 @@ export function FirestoreShortContent({ short, onLikeCount, onCommentCount, onMo
       <div className={styles.metadata}>
         <p className={styles.channel}>Nome do canal: <strong>{short.channelName?.trim() || 'Não informado'}</strong></p>
         <p className={styles.source}>Fonte: {short.platform}</p>
-        <p className={styles.game}>Jogo: <Link to={'/jogos/'+short.gameId}>{short.gameName || 'Ver jogo'}</Link></p>
+        <p className={styles.game}>Jogo: <Link to={'/jogos/'+short.gameId} state={location.pathname==='/'?{feedOrigin:location.key}:location.state}>{short.gameName || 'Ver jogo'}</Link></p>
       </div>
       {available && <LikeButton key={'like:'+short.id} shortId={short.id} disabled={loading||!!error||adminBusy||selectingComments} onCountChange={onLikeCount} onBusyChange={setLiking} />}
     </div>

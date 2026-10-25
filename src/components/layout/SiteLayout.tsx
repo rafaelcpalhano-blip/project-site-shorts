@@ -12,7 +12,7 @@ export function SiteLayout() {
 
   useEffect(() => {
     if (previousPath.current !== key) {
-      mainRef.current?.focus()
+      mainRef.current?.focus({preventScroll:true})
       previousPath.current = key
     }
   }, [key])

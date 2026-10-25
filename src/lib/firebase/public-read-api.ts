@@ -1,3 +1,6 @@
+import type {GameDetails} from '../../features/games/services/game-details.ts'
+import type {Game} from '../../features/shorts/types/models.ts'
+export interface GameCursor {id:string;name:string}
 import { PublicReadFailure, sessionReadFailure } from '../http/read-failure.ts'
 import { validThumbnail } from '../validation/thumbnail.ts'
 import type { Short } from '../../features/shorts/types/models.ts'
@@ -26,6 +29,22 @@ export function createPublicReadClient(fetcher:typeof fetch=fetch) {
   publicId(row.id);publicId(row.gameId);const {thumbnail,...rest}=row;const image=validThumbnail(thumbnail,row.platform,row.identity);return {...rest,...(image?{thumbnail:image}:{})}
  }
  return {
+  async listGames(cursor?:GameCursor):Promise<{items:Game[];next:GameCursor|null}> {
+   const validCursor=(value:GameCursor)=>{publicId(value?.id);if(typeof value.name!=='string'||!value.name.trim()||value.name.length>500)throw Error('Cursor inválido.');return value}
+   if(cursor)validCursor(cursor)
+   const data=await call('/api/games/list',cursor?{cursor}:{})
+   if(!Array.isArray(data?.items)||data.items.length>50||!Object.hasOwn(data,'next'))throw Error('Resposta inválida.')
+   const items=data.items.map((game:Game)=>{publicId(game?.id);if(typeof game.name!=='string'||!game.name.trim()||game.name.length>500)throw Error('Resposta inválida.');return {id:game.id,name:game.name}})
+   return {items,next:data.next===null?null:validCursor(data.next)}
+  },
+  async getGame(gameId:string):Promise<GameDetails|null> {
+   publicId(gameId)
+   try{
+    const game=await call('/api/games/detail',{gameId}) as GameDetails
+    if(game?.id!==gameId||typeof game.name!=='string'||!game.name.trim()||typeof game.description!=='string'||!Array.isArray(game.aliases)||!Array.isArray(game.genres)||!Array.isArray(game.gameModes)||!Array.isArray(game.platforms))throw Error('Resposta inválida.')
+    return game
+   }catch(error){if(error instanceof PublicReadFailure&&error.kind==='unavailable')return null;throw error}
+  },
   async listShorts(gameId?:string,cursor?:PublicCursor,signal?:AbortSignal):Promise<ReadPage<PublicShort>> {
    if(gameId!==undefined)publicId(gameId)
    const scope='shorts:'+(gameId??'*');publicCursor(cursor,scope)

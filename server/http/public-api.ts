@@ -92,7 +92,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
     if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
-    if (['/api/feed/ordered','/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit,ordered:{cursor:rankingCursor,now:options.now}})
+    if (['/api/games/list','/api/games/detail','/api/feed/ordered','/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit,ordered:{cursor:rankingCursor,now:options.now}})
     if (path === '/api/comments') return handleComment(request, {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })

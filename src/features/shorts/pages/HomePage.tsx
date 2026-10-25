@@ -29,7 +29,7 @@ function HomeContent() {
     <ClipperWelcome onDismiss={()=>shareButton.current?.focus()} />
     {import.meta.env.DEV && <small className={styles.environment}>{usesFirestore?'Desenvolvimento · dados locais':'Desenvolvimento · modo demonstrativo'}</small>}
     {message && <p role="status" aria-live="polite" aria-atomic="true" className={message==='Short publicado.'?styles.success:undefined}>{message}</p>}
-    <Suspense fallback={<FeedLoading />}>{usesFirestore ? <FirestoreFeed key={feedVersion} /> : <ShortFeed key={feedVersion} />}</Suspense>
+    <Suspense fallback={<FeedLoading />}>{usesFirestore ? <FirestoreFeed key={feedVersion} reset={feedVersion>0} /> : <ShortFeed key={feedVersion} />}</Suspense>
     {sharing && !usesFirestore && <SubmissionDialog onClose={() => setSharing(false)} onPublished={() => {
       setSharing(false); setFeedVersion(current => current + 1); setMessage('Short compartilhado nesta sessão.')
     }} />}

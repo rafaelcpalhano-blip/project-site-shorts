@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import type { Short } from '../types/models'
 import { cardArtwork, failedCardImages } from '../services/card-artwork'
 import styles from './ShortCard.module.css'
-export function ShortCard({ short, count, gameName, onOpen }: { short: Short; count?: number; gameName?: string; onOpen: () => void }) {
+export function ShortCard({ short, count, gameName, onOpen, gameLinkState }: { gameLinkState?:unknown; short: Short; count?: number; gameName?: string; onOpen: () => void }) {
   const game = { id: short.gameId, name: gameName || short.gameName || 'Jogo indisponível' }
   const [now, setNow] = useState(Date.now)
   useEffect(() => {
@@ -38,7 +38,7 @@ export function ShortCard({ short, count, gameName, onOpen }: { short: Short; co
         {short.likeCount!==undefined&&<span aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</span>}
         <button className={styles.comments} type="button" onClick={onOpen} aria-label={(count ?? short.commentCount) === undefined ? 'Abrir comentários; total indisponível' : (count ?? short.commentCount)+' comentários publicados'}>Comentários <span>{count ?? short.commentCount ?? '—'}</span></button>
       </div>
-      <Link className={styles.gameLink} to={'/jogos/' + game.id}>Ver jogo</Link>
+      <Link className={styles.gameLink} to={'/jogos/' + game.id} state={gameLinkState}>Ver jogo</Link>
     </div>
   </article>
 }

@@ -1,3 +1,5 @@
+import {saveFeedReturn,loadFeedReturn} from '../services/feed-return'
+import {loadPublicGames} from '../../games/services/load-public-games'
 import {createCursorPages} from '../services/cursor-pages'
 import type {Direction} from '../services/sequence-navigation'
 import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
@@ -10,10 +12,11 @@ import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
 import type { TitleSearchCursor } from '../../../lib/validation/title-search'
 import { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect, useSyncExternalStore } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import {GamePageNavigation} from '../../games/components/GamePageNavigation'
 import { database } from '../../../lib/firebase/client'
 import { createPublicRepository } from '../../../lib/firebase/public-repository'
-import type { Cursor, PublicCursor } from '../../../lib/firebase/public-repository'
+import type { PublicCursor } from '../../../lib/firebase/public-repository'
 import type { Game, Short } from '../types/models'
 import { ShortCard } from './ShortCard'
 import { DeferredDialog } from '../../../components/ui/DeferredDialog'
@@ -22,24 +25,26 @@ const loadViewer=createDeferredModule(()=>import('./ShortSequenceDialog').then(m
 import styles from './ShortFeed.module.css'
 type FeedCursor=PublicCursor|TitleSearchCursor|string
 interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean;orderingAt?:string}
+interface FeedReturn {order:FeedOrder;filter:string;index:number;scroll:number;query:string;draft:string;attempt:number;pager:ReturnType<typeof createCursorPages<Short,FeedCursor,FeedPage>>}
 const orderedFeed=createOrderedFeedClient()
 const searchTitles=createTitleSearchClient()
 const repository = createPublicRepository(database)
-export function FirestoreFeed({ gameId }: { gameId?: string }) {
-  const [order,setOrder]=useState<FeedOrder>('latest')
-  const [draft,setDraft]=useState('')
-  const [query,setQuery]=useState('')
-  const [filter, setFilter] = useState('')
+export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; reset?:boolean }) {
+  const location=useLocation()
+  const [restored]=useState(()=>!gameId&&!reset?loadFeedReturn<FeedReturn>(location.state?.feedReturn??location.key):undefined)
+  const [order,setOrder]=useState<FeedOrder>(restored?.order??'latest')
+  const [draft,setDraft]=useState(restored?.draft??'')
+  const [query,setQuery]=useState(restored?.query??'')
+  const [filter, setFilter] = useState(restored?.filter??'')
   const [games, setGames] = useState<Game[]>([])
-  const [gameCursor, setGameCursor] = useState<Cursor | null>(null)
   const [catalogError, setCatalogError] = useState('')
   const [catalogBusy, setCatalogLoading] = useState(false)
   const [page, setPage] = useState<FeedPage>({ items: [], next: null })
   const [cursors, setCursors] = useState<Array<FeedCursor | undefined>>([undefined])
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(restored?.index??0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [attempt, setAttempt] = useState(0)
+  const [attempt, setAttempt] = useState(restored?.attempt??0)
   const catalogVersion=useSyncExternalStore(subscribeGameCatalog,getGameCatalogVersion,getGameCatalogVersion)
   const [loadedCatalogVersion,setLoadedCatalogVersion]=useState(-1)
   const catalogLoading=catalogBusy||loadedCatalogVersion!==catalogVersion
@@ -58,22 +63,36 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
   },[])
   const selectedGame = gameId || filter
   const requestContext=useMemo(()=>({selectedGame,query,order,attempt}),[selectedGame,query,order,attempt])
-  const pager=useMemo(()=>{const {selectedGame,query,order}=requestContext;return createCursorPages<Short,FeedCursor,FeedPage>(async(cursor,signal)=>{
+  const pager=useMemo(()=>{
+    if(restored&&requestContext.selectedGame===(gameId||restored.filter)&&requestContext.query===restored.query&&requestContext.order===restored.order&&requestContext.attempt===restored.attempt)return restored.pager
+    const {selectedGame,query,order}=requestContext;return createCursorPages<Short,FeedCursor,FeedPage>(async(cursor,signal)=>{
     const result=TITLE_SEARCH_ENABLED&&query?await searchTitles({query,...(selectedGame?{gameId:selectedGame}:{}),...(cursor?{cursor:cursor as TitleSearchCursor}:{})},signal):await orderedFeed(order,selectedGame||undefined,typeof cursor==='string'?cursor:undefined,signal)
     const ids=[...new Set(result.items.filter(short=>!short.gameName).map(short=>short.gameId))]
     const names=Object.fromEntries(await Promise.all(ids.map(async id=>{try{return [id,(await repository.getGame(id))?.name||'Jogo indisponível']}catch{return [id,'Jogo indisponível']}})))
     return {...result,items:result.items.map(short=>({...short,gameName:short.gameName||names[short.gameId]}))}
-  })},[requestContext])
+  })},[requestContext,restored,gameId])
   useLayoutEffect(()=>{pagerCounts.current=patch=>pager.update(patch)},[pager])
   const context=useRef(pager),viewerTicket=useRef(0),selectedRef=useRef(selected)
   useLayoutEffect(()=>{context.current=pager;selectedRef.current=selected})
+  const snapshot=useRef<FeedReturn|undefined>(undefined)
+  const restoreScroll=useRef(restored?.scroll)
+  useLayoutEffect(()=>{snapshot.current={order,filter,index,scroll:0,query,draft,attempt,pager}})
+  useLayoutEffect(()=>()=>{
+    if(!gameId&&snapshot.current)saveFeedReturn(location.key,{...snapshot.current,scroll:window.scrollY})
+  },[location.key,gameId])
   useEffect(()=>()=>pager.cancel(),[pager])
+  useEffect(()=>{
+    if(loading||error||restoreScroll.current===undefined)return
+    const position=restoreScroll.current;restoreScroll.current=undefined
+    const frame=requestAnimationFrame(()=>window.scrollTo({top:position,behavior:'instant'}))
+    return()=>cancelAnimationFrame(frame)
+  },[loading,error])
   useEffect(() => {
     if(gameId)return
     let active = true
-    repository.listGames().then(result => {
-      if (active) { setGames(result.items); setGameCursor(result.next); setCatalogError('');setLoadedCatalogVersion(catalogVersion) }
-    }).catch(() => { if (active){setGames([]);setGameCursor(null);setCatalogError('Não foi possível carregar o catálogo.');setLoadedCatalogVersion(catalogVersion)} }).finally(()=>{if(active)setCatalogLoading(false)})
+    loadPublicGames(repository.listGames).then(items => {
+      if (active) { setGames(items); setCatalogError('');setLoadedCatalogVersion(catalogVersion) }
+    }).catch(() => { if (active){setGames([]);setCatalogError('Não foi possível carregar o catálogo.');setLoadedCatalogVersion(catalogVersion)} }).finally(()=>{if(active)setCatalogLoading(false)})
     return () => { active = false }
   }, [catalogVersion,gameId])
   useEffect(()=>{
@@ -102,7 +121,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     setLoading(true); setError(''); setIndex(0); setCursors([undefined]); setAttempt(value => value + 1); if(!gameId)invalidateGameCatalog()
   }
   return <div className={styles.feed}>
-    {gameId && <Link to="/">← Voltar ao início</Link>}
+    {gameId && <GamePageNavigation />}
     <div className={styles.filters}>
       {TITLE_SEARCH_ENABLED && <form className="form-field" onSubmit={event=>{event.preventDefault();setQuery(draft.trim());setIndex(0);setCursors([undefined]);setLoading(true);setError('');setAttempt(value=>value+1)}}>
         <label htmlFor="persistent-search">Buscar por título</label>
@@ -114,14 +133,9 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
         <select id="persistent-game" disabled={catalogLoading} value={filter} onChange={event => {
           setFilter(event.target.value); setIndex(0); setCursors([undefined]); setLoading(true); setError('')
         }}><option value="">Todos os jogos</option>{(loadedCatalogVersion===catalogVersion?games:[]).map(game => <option key={game.id} value={game.id}>{game.name}</option>)}</select>
-        {filter && <Link to={'/jogos/' + encodeURIComponent(filter)}>Ver ficha do jogo</Link>}
-        {gameCursor && loadedCatalogVersion===catalogVersion && <button disabled={catalogLoading} onClick={async () => {
-          setCatalogLoading(true)
-          try { const result = await repository.listGames(gameCursor); if(catalogVersion!==getGameCatalogVersion())return; setGames(current => [...current, ...result.items]); setGameCursor(result.next); setCatalogError('') }
-          catch { if(catalogVersion===getGameCatalogVersion())setCatalogError('Não foi possível carregar mais jogos. Tente novamente.') }
-          finally { if(catalogVersion===getGameCatalogVersion())setCatalogLoading(false) }
-        }}>{catalogLoading ? 'Carregando...' : 'Carregar mais jogos'}</button>}
-        {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError}</p>}
+        {filter && <Link to={'/jogos/' + encodeURIComponent(filter)} state={{feedOrigin:location.key}}>Ver ficha do jogo</Link>}
+        {catalogLoading&&<p role="status">Carregando jogos…</p>}
+        {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError} <button type="button" onClick={()=>invalidateGameCatalog()}>Recarregar catálogo</button></p>}
       </div>}
       <div className="form-field"><label htmlFor="persistent-order">Filtrar por relevância</label>
         <select id="persistent-order" value={order} onChange={event=>{setOrder(event.target.value as FeedOrder);setIndex(0);setCursors([undefined]);setError('');setLoading(true)}}>{(Object.keys(feedOrderLabels) as FeedOrder[]).map(value=><option key={value} value={value}>{feedOrderLabels[value]}</option>)}</select>
@@ -131,7 +145,7 @@ export function FirestoreFeed({ gameId }: { gameId?: string }) {
     <div className={styles.results}>
     {loading ? <p role="status">Carregando shorts...</p> : error ? <ClipperFailure message={error}><button onClick={()=>{refresh();document.getElementById('main-content')?.focus()}}>Tentar novamente</button></ClipperFailure>
       : page.items.length ? <div className={styles.grid}>{page.items.map(short =>
-        <ShortCard key={short.id} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
+        <ShortCard key={short.id} gameLinkState={gameId?location.state:{feedOrigin:location.key}} short={short} gameName={names[short.gameId]} onOpen={() => setSelected(short)} />)}</div>
       : <p role="status">{!TITLE_SEARCH_ENABLED&&page.next?'Nenhum short visível neste lote. Continue para consultar os próximos.':TITLE_SEARCH_ENABLED&&query&&page.next?'Nenhuma correspondência neste lote. Continue para consultar os próximos candidatos.':TITLE_SEARCH_ENABLED&&query?'Nenhuma correspondência nesta página. A consulta não tem mais candidatos.':'Nenhuma jogada publicada para este filtro.'}</p>}
     </div>
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}

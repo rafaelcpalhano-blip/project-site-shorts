@@ -1,3 +1,4 @@
+import {readGames,readGame} from '../public/read-games.ts'
 import {orderedFeed} from './ordered-feed.ts'
 import type {RankingCursorCodec} from './ordered-feed.ts'
 import {RankingRequestError} from '../ranking/cursor.ts'
@@ -16,6 +17,8 @@ export async function handlePublicRead(request: Request, options: {origin:string
   await options.checkAbuse(visitor)
   const input=await readInput(request),path=new URL(request.url).pathname
   if(path==='/api/feed/ordered'){if(!options.ordered)return reply(503,{error:'ranking-not-ready'});return reply(200,await orderedFeed(input,options.store,options.ordered))}
+  if(path==='/api/games/list')return reply(200,await readGames(input,options.store))
+  if(path==='/api/games/detail')return reply(200,await readGame(input,options.store))
   if(path==='/api/feed')return reply(200,await readFeed(input,options.store))
   if(path==='/api/shorts/detail')return reply(200,await readPublicShort(input,options.store))
   if(path==='/api/comments/list')return reply(200,await readComments(input,options.store))
