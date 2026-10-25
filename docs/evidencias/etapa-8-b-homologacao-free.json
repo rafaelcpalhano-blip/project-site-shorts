@@ -1,0 +1,243 @@
+{
+  "cpuAudit": {
+    "created": "2026-10-25T19:59:42.918Z",
+    "versions": {
+      "wrangler": "4.152.0",
+      "workerd": "1.20261019.1"
+    },
+    "ingress": {
+      "passed": [
+        "headers alone cannot establish Cloudflare transport outside edge entry",
+        "direct platform metadata uses CF address and ignores spoofed forwarding chain",
+        "IPv6 is passed to existing downstream network grouping",
+        "Worker subrequests and shared cross-zone address are refused",
+        "invalid, multiple, zoned and pseudo IPv4 addresses fail closed",
+        "entry refuses missing transport before API creation and preserves origin checks"
+      ],
+      "redirectErrorConstructorSupported": false,
+      "edgeAttested": false
+    },
+    "routing": [
+      "static JS uses assets route",
+      "API wins over colliding asset and SPA navigation"
+    ],
+    "workloads": [
+      {
+        "name": "publication-cold",
+        "requests": 10,
+        "counts": {
+          "documentReads": 7,
+          "queryMinimumReads": 0,
+          "writes": 9,
+          "deletes": 0,
+          "transactions": 3,
+          "authFetches": 0
+        },
+        "samples": 25,
+        "profileSpanUs": 108395,
+        "sampledNonIdleUs": 57997,
+        "sampledIdleUs": 50260,
+        "sampledNonIdleMeanMs": 5.7997,
+        "wallMeanMs": 8.401719999999932,
+        "wallMaxMs": 11.754199999999855,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "publication-warm",
+        "requests": 10,
+        "counts": {
+          "documentReads": 7,
+          "queryMinimumReads": 0,
+          "writes": 9,
+          "deletes": 0,
+          "transactions": 3,
+          "authFetches": 0
+        },
+        "samples": 19,
+        "profileSpanUs": 78580,
+        "sampledNonIdleUs": 61553,
+        "sampledIdleUs": 16916,
+        "sampledNonIdleMeanMs": 6.1553,
+        "wallMeanMs": 7.2037600000000115,
+        "wallMaxMs": 8.889099999999871,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "like",
+        "requests": 10,
+        "counts": {
+          "documentReads": 10,
+          "queryMinimumReads": 0,
+          "writes": 8,
+          "deletes": 0,
+          "transactions": 3,
+          "authFetches": 0
+        },
+        "samples": 22,
+        "profileSpanUs": 79747,
+        "sampledNonIdleUs": 49809,
+        "sampledIdleUs": 29822,
+        "sampledNonIdleMeanMs": 4.9809,
+        "wallMeanMs": 7.210570000000052,
+        "wallMaxMs": 10.30809999999974,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "comment",
+        "requests": 10,
+        "counts": {
+          "documentReads": 13,
+          "queryMinimumReads": 1,
+          "writes": 12,
+          "deletes": 0,
+          "transactions": 2,
+          "authFetches": 0
+        },
+        "samples": 31,
+        "profileSpanUs": 98813,
+        "sampledNonIdleUs": 75447,
+        "sampledIdleUs": 23255,
+        "sampledNonIdleMeanMs": 7.5447,
+        "wallMeanMs": 9.142799999999943,
+        "wallMaxMs": 11.621799999999894,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "auth-cold",
+        "requests": 10,
+        "counts": {
+          "documentReads": 1,
+          "queryMinimumReads": 0,
+          "writes": 1,
+          "deletes": 0,
+          "transactions": 1,
+          "authFetches": 2
+        },
+        "samples": 29,
+        "profileSpanUs": 95530,
+        "sampledNonIdleUs": 61059,
+        "sampledIdleUs": 34312,
+        "sampledNonIdleMeanMs": 6.1059,
+        "wallMeanMs": 8.609839999999986,
+        "wallMaxMs": 12.199599999999919,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "auth-warm",
+        "requests": 10,
+        "counts": {
+          "documentReads": 1,
+          "queryMinimumReads": 0,
+          "writes": 1,
+          "deletes": 0,
+          "transactions": 1,
+          "authFetches": 1
+        },
+        "samples": 14,
+        "profileSpanUs": 78265,
+        "sampledNonIdleUs": 53943,
+        "sampledIdleUs": 24212,
+        "sampledNonIdleMeanMs": 5.3943,
+        "wallMeanMs": 6.948539999999957,
+        "wallMaxMs": 9.880200000000059,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "moderation-remove",
+        "requests": 10,
+        "counts": {
+          "documentReads": 3,
+          "queryMinimumReads": 0,
+          "writes": 4,
+          "deletes": 0,
+          "transactions": 2,
+          "authFetches": 1
+        },
+        "samples": 16,
+        "profileSpanUs": 77196,
+        "sampledNonIdleUs": 58564,
+        "sampledIdleUs": 18500,
+        "sampledNonIdleMeanMs": 5.8564,
+        "wallMeanMs": 6.807110000000057,
+        "wallMaxMs": 7.784500000000207,
+        "productionCpuCertified": false
+      },
+      {
+        "name": "ranking-100",
+        "requests": 10,
+        "counts": {
+          "documentReads": 115,
+          "queryMinimumReads": 100,
+          "writes": 112,
+          "deletes": 0,
+          "transactions": 7,
+          "authFetches": 0
+        },
+        "samples": 39,
+        "profileSpanUs": 88186,
+        "sampledNonIdleUs": 66022,
+        "sampledIdleUs": 22037,
+        "sampledNonIdleMeanMs": 6.6022,
+        "wallMeanMs": 7.940460000000075,
+        "wallMaxMs": 11.52009999999973,
+        "productionCpuCertified": false
+      }
+    ],
+    "limits": [
+      "V8 sample estimates include synthetic-store/provider and profiler overhead; not billed CPU",
+      "no REST serialization, real providers, OAuth signer or remote network measured",
+      "no edge attestation; metadata in ingress tests is synthetic",
+      "no account plan, IAM, Spark or TOTP configuration inspected"
+    ],
+    "deployReady": false
+  },
+  "nativeTransportAudit": {
+    "created": "2026-10-25T20:02:27.926Z",
+    "versions": {
+      "wrangler": "4.152.0",
+      "workerd": "1.20261019.1"
+    },
+    "ingress": {
+      "passed": [
+        "headers alone cannot establish Cloudflare transport outside edge entry",
+        "direct platform metadata uses CF address and ignores spoofed forwarding chain",
+        "IPv6 is passed to existing downstream network grouping",
+        "Worker subrequests and shared cross-zone address are refused",
+        "invalid, multiple, zoned and pseudo IPv4 addresses fail closed",
+        "entry refuses missing transport before API creation and preserves origin checks"
+      ],
+      "redirectErrorConstructorSupported": false,
+      "edgeAttested": false
+    },
+    "nativeFetch": {
+      "redirectRefused": true,
+      "redirectHits": 1,
+      "targetHits": 0
+    },
+    "routing": [
+      "static JS uses assets route",
+      "API wins over colliding asset and SPA navigation"
+    ],
+    "workloads": [],
+    "limits": [
+      "V8 sample estimates include synthetic-store/provider and profiler overhead; not billed CPU",
+      "no REST serialization, real providers, OAuth signer or remote network measured",
+      "no edge attestation; metadata in ingress tests is synthetic",
+      "no account plan, IAM, Spark or TOTP configuration inspected"
+    ],
+    "deployReady": false
+  },
+  "regressionTests": {
+    "passed": 69,
+    "failed": 0,
+    "skipped": 0
+  },
+  "checks": {
+    "types": "passed",
+    "lint": "passed",
+    "build": "passed"
+  },
+  "remoteResourcesCreated": false,
+  "productionCpuCertified": false,
+  "advance8CAuthorized": false
+}
