@@ -25,7 +25,7 @@ test('busca escapa aspas e IDs não aceitam instruções de consulta', async () 
     return Response.json([])
   })
   await catalog.search('Game"; limit 500; "')
-  assert.ok(body.includes('search "Game\\"; limit 500; \\""; limit 10;'))
+  assert.ok(body.includes('search "Game\\"; limit 500; \\""; limit 11; offset 0;'))
   await assert.rejects(catalog.get('1; where id > 0'),/inválido/)
 })
 test('indisponibilidade não inventa resultados e URLs não oficiais são descartadas', async () => {

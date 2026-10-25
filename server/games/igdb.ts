@@ -64,11 +64,12 @@ export function createIgdbCatalog(credentials: Credentials, fetcher: Fetch = fet
   return {
     // Server-only token provider shared with Helix; never serialize to clients.
     accessToken: token,
-    async search(value: string) {
+    async search(value: string, offset = 0) {
       const { name } = validateGameRequestInput({ name: value })
+      if(!Number.isSafeInteger(offset)||offset<0||offset%10!==0||offset>Number.MAX_SAFE_INTEGER-10)throw new Error('Página IGDB inválida')
       // Escape the quoted API search literal; never accept arbitrary IGDB query syntax.
       const escaped = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
-      return query('search "' + escaped + '"; limit 10;')
+      return query('search "' + escaped + '"; limit 11; offset '+offset+';')
     },
     async get(externalId: string) {
       if (!/^[1-9]\d{0,9}$/.test(externalId)) throw new Error('Identificador IGDB inválido')

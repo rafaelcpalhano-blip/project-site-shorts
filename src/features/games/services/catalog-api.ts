@@ -19,15 +19,19 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
     }
     return response
   }
-  return {
-    async search(value: string): Promise<OfficialGame[]> {
+  const client = {
+    async search(value:string):Promise<OfficialGame[]> {return (await client.searchPage(value)).games},
+    async searchPage(value: string,cursor?:number): Promise<{games:OfficialGame[];next:number|null}> {
+      if(cursor!==undefined&&(!Number.isSafeInteger(cursor)||cursor<0||cursor%10!==0||cursor>Number.MAX_SAFE_INTEGER-10))throw new Error('Página inválida.')
       const { name } = validateGameRequestInput({ name: value })
       await call('/api/session', 'POST')
-      const result = await (await call('/api/games/search?q=' + encodeURIComponent(name), 'GET')).json()
+      const result = await (await call('/api/games/search?q=' + encodeURIComponent(name)+(cursor===undefined?'':'&cursor='+cursor), 'GET')).json()
       if (!Array.isArray(result?.games) || result.games.length > 10 || result.games.some((game: OfficialGame) =>
         !game || typeof game.externalId !== 'string' || !/^[1-9]\d{0,9}$/.test(game.externalId) || typeof game.officialName !== 'string' || !game.officialName.trim() || game.officialName.length > 500 ||
         (game.releaseDate !== null && typeof game.releaseDate !== 'string') || !Array.isArray(game.platforms) || game.platforms.some(platform => typeof platform !== 'string'))) throw new Error('Resposta de catálogo inválida.')
-      return result.games
+      const next=result.next??null
+      if(next!==null&&(!Number.isSafeInteger(next)||next!==(cursor??0)+10))throw new Error('Página de catálogo inválida.')
+      return {games:result.games,next}
     },
     async includeManual(value: string): Promise<{game:{id:string;name:string};created:boolean}> {
       const {name}=validateGameRequestInput({name:value})
@@ -57,4 +61,5 @@ export function createGameCatalogClient(fetcher: typeof fetch = fetch) {
       return { id: result.id, name: result.name }
     },
   }
+  return client
 }
