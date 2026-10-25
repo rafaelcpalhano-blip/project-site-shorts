@@ -1,0 +1,30 @@
+{
+  "kind": "review-only-not-an-IAM-deployment-manifest",
+  "applyAllowed": false,
+  "projectId": "<projeto-a-aprovar>",
+  "databaseId": "(default)",
+  "runtimePermissionsToValidate": [
+    "datastore.databases.get",
+    "datastore.entities.get",
+    "datastore.entities.list",
+    "datastore.entities.create",
+    "datastore.entities.update",
+    "datastore.entities.delete"
+  ],
+  "excludedCapabilities": [
+    "billing",
+    "database-creation",
+    "index-administration",
+    "IAM-administration",
+    "managed-import-export",
+    "managed-backup-restore",
+    "auth-user-administration"
+  ],
+  "notes": [
+    "Candidate custom runtime role; not created or granted. Verify exact method permissions before approval.",
+    "Service-account requests use IAM and bypass Firestore client Security Rules.",
+    "Do not substitute Owner/Editor/Firebase Admin to resolve missing permissions.",
+    "IAM data permissions are not a per-collection or per-UID application authorization mechanism.",
+    "Temporary operator capabilities for project/database/index setup need separate approval; never place in runtime."
+  ]
+}

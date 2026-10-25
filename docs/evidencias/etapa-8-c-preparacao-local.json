@@ -1,0 +1,43 @@
+{
+  "created": "2026-10-25T20:55:25.855Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "result": {
+    "passed": [
+      "no default remote target; audit only points to isolated 8081",
+      "remote preview never grants execution or imports local data",
+      "empty initialization describes two create-only markers, no content or execution",
+      "OAuth assertion uses RSA signature, fixed endpoint/audience/scope and no delegated subject",
+      "token cache, concurrent refresh and early expiration are bounded to one supplier",
+      "invalid response, expired lease and provider errors remain private and never reuse rejected token",
+      "oversized OAuth response rejected and response stream cancelled",
+      "credential failure sends no Firestore request; next valid supplier can serve isolated fake REST",
+      "missing credential hooks and invalid account identity fail before exchange; expired cache never masks refresh failure"
+    ],
+    "remoteCalls": 0,
+    "realCredentials": false,
+    "remoteReady": false
+  },
+  "indexInventory": {
+    "composite": 37,
+    "fieldOverrides": 15,
+    "duplicateDefinitions": 0
+  },
+  "limits": [
+    "fake OAuth exchange and generated ephemeral RSA keys only",
+    "no remote project/account/IAM inspection",
+    "preview metadata not applied; no content migration",
+    "real signer custody and Spark eligibility still need separate approval"
+  ],
+  "remoteReady": false,
+  "validation": {
+    "nodeRelatedPassed": 19,
+    "isolatedFirestorePassed": 9,
+    "types": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "publicAccessFixtureUpdated": "publicationNumber=1 for approved comment; no rule or reader change"
+  }
+}
