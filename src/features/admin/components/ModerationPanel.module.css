@@ -19,7 +19,7 @@
 .bulkSelection input { width: 20px; height: 20px; margin: 0; accent-color: var(--color-accent); }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
-.list .catalogRow { display: grid; grid-template-columns: 44px minmax(0, 1fr) 140px 200px; justify-content: initial; align-items: center; gap: 12px; }
+.list .catalogRow { display: grid; grid-template-columns: 44px minmax(100px, 150px) minmax(0, 1fr) 200px; justify-content: initial; align-items: center; gap: 12px; }
 .catalogSelection, .catalogInfo, .catalogConsult, .catalogActions { min-width: 0; text-align: left; overflow-wrap: anywhere; }
 .catalogSelection .bulkSelection { flex-wrap: wrap; }
 .catalogInfo p { margin: 4px 0; }
@@ -27,5 +27,21 @@
 .catalogNote { display: block; margin-top: 6px; font-size: .75rem; color: var(--color-muted); }
 @media (max-width: 760px) {
  .list .catalogRow { grid-template-columns: 44px minmax(0, 1fr); align-items: start; }
- .catalogConsult, .catalogActions { grid-column: 2; }
+ .catalogRow .rowCode, .catalogInfo, .catalogActions { grid-column: 2; }
+ .catalogSelection { grid-row: 1 / span 3; }
+}
+
+.list .dataRow { display: grid; grid-template-columns: 44px minmax(100px, 150px) minmax(0, 1fr) 200px; gap: 12px; align-items: start; }
+.rowSelection, .rowCode, .rowInfo, .rowActions { min-width: 0; overflow-wrap: anywhere; }
+.rowCode { font-size: .85rem; }
+.catalogActions { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.rowActions { justify-self: start; }
+.list .updateRow { display: grid; grid-template-columns: minmax(0, 1fr) 200px; align-items: start; }
+.sourceLine { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; }
+@media (max-width: 760px) {
+ .list .dataRow { grid-template-columns: 44px minmax(0, 1fr); }
+ .dataRow .rowSelection { grid-column: 1; grid-row: 1 / span 3; }
+ .dataRow .rowCode, .dataRow .rowInfo, .dataRow .rowActions { grid-column: 2; }
+ .list .updateRow { grid-template-columns: minmax(0, 1fr); }
+ .rowActions { max-width: 100%; }
 }

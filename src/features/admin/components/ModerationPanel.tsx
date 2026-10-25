@@ -68,10 +68,10 @@ export function ModerationPanel({ user, onUnauthorized,initialShortId }: { user:
     {feedback && <p role="status">{feedback}</p>}
     {page && <div>
       {!page.items.length && <p>Nenhum item nesta janela da fila.</p>}
-      <ul className={styles.list}>{page.items.map(item => <li key={item.id}>{queue!=='reviewed'&&<AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'video',id:item.id,label:item.title??'',status:item.status,queue:queue==='blocked'||queue==='unblocked'?'pending':queue,count:item.count,reviewedCount:item.reviewedCount}}/>}
-        <div><strong>{item.title || 'Vídeo denunciado'}</strong><p style={{overflowWrap:'anywhere'}}>ID: {item.id}</p><p>{date(item.time)}{item.count !== undefined &&
+      <ul className={styles.list}>{page.items.map(item => <li key={item.id} className={styles.dataRow}><div className={styles.rowSelection}>{queue!=='reviewed'&&<AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'video',id:item.id,label:item.title??'',status:item.status,queue:queue==='blocked'||queue==='unblocked'?'pending':queue,count:item.count,reviewedCount:item.reviewedCount}}/>}</div>
+        <p className={styles.rowCode}>ID: {item.id}</p><div className={styles.rowInfo}><strong>{item.title || 'Vídeo denunciado'}</strong><p>{date(item.time)}{item.count !== undefined &&
           ' · ' + Math.max(0, item.count - (item.reviewedCount ?? 0)) + ' denúncia(s) desde a última análise'}</p></div>
-        <button disabled={working||!!bulk?.busy} onClick={() => void run(() => open(item.id))}>Revisar</button>
+        <button className={styles.rowActions} disabled={working||!!bulk?.busy} onClick={() => void run(() => open(item.id))}>Revisar</button>
       </li>)}</ul>
       <div className={styles.actions}>
         <button disabled={working||!!bulk?.busy || !history.length} onClick={() => void run(async () => {

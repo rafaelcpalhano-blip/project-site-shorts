@@ -57,9 +57,9 @@ export function CommentModerationPanel({user,onUnauthorized}:{user:User;onUnauth
     {message&&<p role="status">{message}</p>}
     {page&&<>
       {!page.items.length&&<p>Nenhum comentário nesta janela da fila.</p>}
-      <ul className={styles.list}>{page.items.map(item=><li key={item.id}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'comment',id:item.id,label:item.content,revision:item.revision,status:item.status}}/>
-        <p style={{overflowWrap:'anywhere'}}>ID: {item.publicId??item.id}</p><p style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{item.content}</p>
-        <button disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{
+      <ul className={styles.list}>{page.items.map(item=><li key={item.id} className={styles.dataRow}><div className={styles.rowSelection}><AdminBulkSelect disabled={working} onChoose={()=>{setDetail(null);setAction(null)}} row={{kind:'comment',id:item.id,label:item.content,revision:item.revision,status:item.status}}/></div>
+        <p className={styles.rowCode}>ID: {item.publicId??item.id}</p><p className={styles.rowInfo} style={{whiteSpace:'pre-wrap'}}>{item.content}</p>
+        <button className={styles.rowActions} disabled={working||!!bulk?.busy} onClick={()=>void run(async()=>{
           const result=await fetchCommentDetail(user,item.id)
           if(active.current){setDetail(result);setAction(null);setReason('')}
         })}>Revisar comentário</button>
