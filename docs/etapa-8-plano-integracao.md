@@ -1,6 +1,6 @@
 # Etapa 8 — plano de integração
 
-Iniciada em25/10/2026 por autorização do proprietário.8-A concluída em inventário;8-B–F ainda não executadas. Nada publicado.
+Iniciada em25/10/2026 por autorização do proprietário.8-A concluída em inventário;8-B iniciada com provas locais e bloqueios demonstrados;8-C–F ainda não executadas. Nada publicado.
 
 Decisões: homologação primeiro em endereço gratuito (a escolher); banco remoto sem conteúdo de teste; locais preservados; não habilitar serviços pagos ou infraestrutura sem aprovação específica. Diagnóstico do repositório e fontes: [8-A](etapa-8-a-inventario-integracao.md).
 
@@ -13,10 +13,10 @@ Decisões: homologação primeiro em endereço gratuito (a escolher); banco remo
 |8-E — Origem e publicação controlada|Assets/API, HTTPS/domínio, login, cookies, cabeçalhos/cache e roteiro de rollback|Pacote revisável; DNS/deploy/recursos só com autorização específica|Alta|
 |8-F — Homologação integrada|Fluxos PC/celular no destino, fontes externas, autorização e leitura de desempenho|Bloqueios resolvidos, evidências e limitações aceitas pelo proprietário|Alta|
 
-## 8-B: próximo trabalho concreto
+## 8-B: trabalho e gate de compatibilidade
 
 1. Confirmar o candidato Workers com Static Assets a partir das limitações documentadas, sem criar recurso.
-2. Definir e justificar ferramenta local para executar o runtime real de teste; Wrangler não está instalado. Não confundir tsc/Node verde com Workers validado, nem instalar automaticamente novos pacotes.
+2. Ferramenta autorizada pelo proprietário e instalada somente no laboratório externo: Wrangler4.152.0/workerd1.20261019.1. Provas locais iniciais concluídas; manter ferramentas fora das dependências da aplicação. Não confundir checks parciais aprovados com composição pronta para deploy.
 3. Provar caminhos/erros com Request/Response, origem/cookie, IPv4/IPv6 e extração confiável de endereço; manter APIs administrativas protegidas.
 4. Provar RS256/certificados públicos/Buffer/WebCrypto com os testes existentes e fixtures; sem login real ou credencial de produção.
 5. Resolver o adaptador de capas externas com defesa equivalente ao DNS/IP pinado. Se incompatível, apresentar alternativa antes de escolher outro runtime, introduzir serviço pago ou reduzir funcionalidade.
@@ -40,3 +40,19 @@ Etapa8.5: PWA/manifesto/ícones/instalação depois da8 concluída, aprovação 
 ## Pendências transportadas, sem bloquear o inventário
 
 A02-MOB não executado, A07-EXTRA quando houver segundo administrador autorizado, revisão estética anterior e oportunidadesCLS/SDK/imagens permanecem rastreadas. A correção de contenção foi confirmada no uso real; não reabrir como bug não resolvido. Homologação final não deve marcar não executados como aprovados.
+
+## Progresso 8-B — 25/10/2026
+
+Checkpoint restaurável do commit9782f90 criado e verificado. Relatório: [etapa-8-b-runtime-api.md](etapa-8-b-runtime-api.md).58 testes existentes+4 novos de orçamento aprovados;14 verificações do runtime local concluídas. Baseline não publicável: transporte de capas rejeita maxHeaderSize e feed sem lote exigiu65 chamadas REST contra50 do Free; leituras corrigidas na continuação abaixo, sem certificar orçamento de retries/OAuth. DNS lookup observado diverge da limitação documental inicial. Continuar8-B com decisão de transporte e orçamento sem enfraquecer proteções; não avançar banco/deploy. Nenhuma ação manual necessária agora; commits podem aguardar o retorno do proprietário.
+
+## Continuação 8-B — leituras em lote implementadas
+
+Relatório [etapa-8-b-leituras-em-lote.md](etapa-8-b-leituras-em-lote.md). Lotes opcionais de até4 documentos atuais preservam o fallback, a visibilidade e a paginação. Medições sem retries/OAuth:20→9,34→12,65→21; combinação mista43/latest e45/relevant.66 testes Node relacionados+1integração real8081 aprovados, lint/build/diff-check aprovados. Serviços em uso não reiniciados; testes manuais e carregamento do código novo da API podem aguardar o proprietário.
+
+Transporte de capas não alterado. Além do maxHeaderSize, HTTP Workers não aceita lookup/createConnection e sockets bloqueiam IPs Cloudflare, impedindo presumir equivalência para todos os domínios públicos permitidos. Recomendação de candidata Node local enviada ao proprietário para decisão; não escolher hospedagem/alterar infraestrutura.8-B continua aberta por transporte, entrada confiável, credenciais fictícias, retry/OAuth/CPU e jobs;8-C–F ainda não executadas.
+
+## 25/10/2026 — decisão: somente Workers, revisar alternativas
+
+Proprietário respondeu à proposta Node: “Manter apenas Workers e revisar as alternativas primeiro”. Isso substitui a recomendação anterior como direção autorizada; nenhuma entrada Node foi preparada. Relatório [etapa-8-b-alternativas-workers.md](etapa-8-b-alternativas-workers.md) compara fetch, compatibilidade Node dentro do Workers, sockets, resolveOverride, fontes confiáveis, upload/armazenamento controlado e Static Assets. Não há equivalência comprovada para URLs arbitrárias+mesmo pinning apenas com as opções examinadas. Upload/R2 exigiria novo fluxo e recurso/custos aprovados; fontes confiáveis reduziriam o contrato atual. Nenhuma alternativa implementada ou selecionada automaticamente.
+
+Corrigida apenas fixture do probe: hostname permitido e contador de resolução demonstram recusa efetiva de DNS privado, sem depender de rejeição sintática prévia.14 checks workerd novamente concluídos; deployReady=false, evidência sanitizada atualizada. Lint/diff-check aprovados; sem mudanças funcionais, build/Lighthouse/suíte completa desnecessários.8-B permanece aberta. Pode continuar com provas independentes do restante da API Workers; decisão sobre capas antes de habilitar/publicar essa funcionalidade. Sem ação manual no computador necessária agora, sem deploy/infraestrutura/dados remotos/commits automáticos.

@@ -120,3 +120,7 @@ Manter backups locais existentes; não chamar export/reset só para este invent�
 Leitura de código/configurações, Git limpo na entrada, documentação oficial consultada e diff-check documental. Sem teste completo, novo Lighthouse, build, consulta ao banco, login em conta externa ou operação de infraestrutura: não houve mudança de aplicação que justificasse repetir esses testes nesta8-A.
 
 Próxima subetapa:8-B — provas locais de runtime e composição do backend, sem produção. Dependências de ferramenta não instaladas; propor e justificar eventual ferramenta de teste Workers antes de instalá-la. Planejamento completo em [etapa-8-plano-integracao.md](etapa-8-plano-integracao.md).
+
+## Evidência posterior da 8-B — 25/10/2026
+
+Consultar [provas locais e limitações](etapa-8-b-runtime-api.md). A alegação documental de lookup indisponível não se reproduziu literalmente em workerd1.20261019.1: consulta ao domínio reservado retornou queryA ENOTFOUND. O transporte atual de capas, porém, falhou concretamente em maxHeaderSize não implementado, sem remover opções de proteção. Não confundir essa divergência DNS com equivalência de IP/TLS. Orçamento do feed agora medido em20/34/65 chamadas REST conforme cenário; a hipótese de exceder50 foi confirmada no pior caso simulado. Wrangler instalado apenas fora do repositório mediante autorização expressa, com14 checks locais e deployReady=false. Nenhuma composição remota/infraestrutura criada.

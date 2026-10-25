@@ -1,0 +1,35 @@
+{
+  "created": "2026-10-25T16:44:41.232Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "compatibilityDate": "2026-10-25",
+  "result": {
+    "runtime": "workerd",
+    "passed": [
+      "node:net IPv4/IPv6",
+      "RS256 valid token and live account",
+      "deny forged signature",
+      "deny missing TOTP",
+      "deny non-allowlisted UID",
+      "certificate cache preserves privileged account recheck boundary",
+      "signed secure session cookie with WebCrypto HMAC",
+      "signed cookie accepted",
+      "untrusted IP headers cannot supply transport context",
+      "foreign origin denied",
+      "unknown API returns 404",
+      "reserved .test DNS fails closed; runtime behavior recorded",
+      "cover inspector denies private DNS before transfer",
+      "current HTTPS cover transport rejects maxHeaderSize (known blocker)"
+    ],
+    "dnsBehavior": "queryA ENOTFOUND cdn.example.test",
+    "transportError": "The options.maxHeaderSize option is not implemented",
+    "deployReady": false,
+    "blockers": [
+      "cover transport requires equivalent DNS/IP/TLS protection",
+      "REST budget needs bounded composition",
+      "CPU and remote edge behavior not measured"
+    ]
+  }
+}
