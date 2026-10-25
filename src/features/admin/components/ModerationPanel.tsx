@@ -6,7 +6,7 @@ import {queueDescriptions} from './filter-descriptions'
 import {AdminOrder} from './AdminOrder'
 import type {AdminSort} from '../types/list-order'
 import { RefreshButton } from './RefreshButton'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import type { User } from 'firebase/auth'
 import { fetchQueue, fetchDetail, sendReview, AdminRequestError } from '../services/moderation-api'
 import type { QueueCursor, QueuePage, ReviewDetail, ReviewAction } from '../types/moderation'
@@ -16,7 +16,7 @@ import styles from './ModerationPanel.module.css'
 const queueLabels = {reports:'Denúncias abertas',reviewed:'Denúncias analisadas',pending:'Todos os pendentes / bloqueados',unblocked:'Pendentes de publicação',blocked:'Bloqueados pela administração',removed:'Vídeos removidos'}
 const date = (value: string) => new Date(value).toLocaleString('pt-BR')
 const labels: Record<ReviewAction, string> = { block:'Bloquear vídeo', dismiss: 'Arquivar denúncias', approve: 'Publicar vídeo', remove: 'Remover vídeo', restore: 'Restaurar vídeo' }
-export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauthorized: () => void }) {
+export function ModerationPanel({ user, onUnauthorized,initialShortId }: { user: User; onUnauthorized: () => void;initialShortId?:string }) {
  const bulk=useAdminBulk()
   const [sort,setSort]=useState<AdminSort>('date-desc')
  const [queue, setQueue] = useState<keyof typeof queueLabels>('reports')
@@ -25,12 +25,14 @@ export function ModerationPanel({ user, onUnauthorized }: { user: User; onUnauth
   const [detail, setDetail] = useState<ReviewDetail | null>(null)
   const [reason, setReason] = useState('')
   const [action, setAction] = useState<ReviewAction | null>(null)
-  const [working, setWorking] = useState(false)
+  const [working, setWorking] = useState(Boolean(initialShortId))
   const [feedback, setFeedback] = useState('')
   const [error, setError] = useState('')
-  const lock = useRef(false)
+  const lock = useRef(Boolean(initialShortId))
   const active = useRef(true)
   useEffect(() => { active.current = true; return () => { active.current = false } }, [])
+  const initialUnauthorized=useEffectEvent(onUnauthorized)
+  useEffect(()=>{if(!initialShortId)return;let disposed=false;void fetchDetail(user,initialShortId).then(result=>{if(!disposed)setDetail(result)}).catch(error=>{if(disposed)return;if(error instanceof AdminRequestError&&error.unauthorized)initialUnauthorized();else setError('Não foi possível abrir a revisão.')}).finally(()=>{if(!disposed){lock.current=false;setWorking(false)}});return()=>{disposed=true}},[user,initialShortId])
   const run = async (work: () => Promise<void>,preserveFeedback=false) => {
     if (lock.current||bulk?.busy) return
     bulk?.clear(preserveFeedback)

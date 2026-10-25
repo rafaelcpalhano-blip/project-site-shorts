@@ -1,3 +1,4 @@
+import {loadUpdates,markUpdateRead} from '../admin/updates.ts'
 import {loadAdminHistory} from '../admin/history.ts'
 import { editManualGame } from '../games/edit-manual-game.ts'
 import { loadGameCatalog, loadCatalogGame, moderateCatalogGame } from '../games/admin-catalog.ts'
@@ -28,6 +29,8 @@ export async function handleAdminModeration(request: Request, options: {
     const admin = await options.admin.authorize(request)
     const input = await readInput(request)
     const path = new URL(request.url).pathname
+    if(path==='/api/admin/updates')return reply(200,await loadUpdates(input,admin.uid,options.store))
+    if(path==='/api/admin/updates/read')return reply(200,await markUpdateRead(input,admin.uid,options.store,options.now))
     if (path === '/api/admin/history') return reply(200, await loadAdminHistory(input, options.store))
     if (path === '/api/admin/games/edit') return reply(200, await editManualGame(input, admin.uid, options))
     if (path === '/api/admin/games/catalog') return reply(200, await loadGameCatalog(input, options.store))

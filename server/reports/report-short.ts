@@ -1,3 +1,4 @@
+import {updateFields} from '../admin/update-event.ts'
 import { shortGameVisible } from '../games/visibility.ts'
 import { validateReportInput } from '../../src/lib/validation/report-input.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
@@ -21,6 +22,7 @@ export async function reportShort(input: unknown, visitor: string, options: { st
     tx.create('reports/' + id, { ...report, visitorHash: visitor, createdAt: now, status: 'pending' })
     tx.set('reportSummaries/' + report.shortId, { ...(summary ?? {}), shortId: report.shortId, title: typeof short.title==='string'?short.title:'', count: Number(count) + 1,
       firstReportedAt: summary?.firstReportedAt ?? now, lastReportedAt: now, status: 'pending' })
+    tx.create('moderationLogs/'+crypto.randomUUID(),{...updateFields('reports',{shortId:report.shortId,title:short.title,platform:short.platform}),contentType:'short',contentId:report.shortId,action:'report-received',reason:report.reason,createdAt:now,actor:'anonymous'})
     // Reporting never changes publication, video reservations or daily quotas.
     return { received: true, duplicate: false }
   })

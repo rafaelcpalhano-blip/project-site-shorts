@@ -1,4 +1,5 @@
 import { isVisibleGame } from '../games/visibility.ts'
+import {updateFields} from '../admin/update-event.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 import { hasTechnicalEligibility } from '../submissions/decision.ts'
@@ -87,13 +88,14 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
     if (!Number.isFinite(now.getTime())) throw new Error('invalid-clock')
     let quotaPath: string | undefined
     let quota: RecordData | null = null
-    let ownerHash = ''
+    let ownerHash = '',gameName:unknown=''
     if (input.action === 'approve' || input.action === 'restore') {
       if (!verified || ['normalizedUrl', 'gameId', 'title', 'channelName'].some(key => short[key] !== verified![key])) throw new ReviewError('stale-review')
       const reservation = await tx.get('videoIdentities/' + input.shortId)
       if (reservation?.shortId !== input.shortId) throw new ReviewError('invalid-video', 422)
       if (input.action === 'approve' || restoreStatus === 'published') {
         const game = await tx.get('games/' + String(short.gameId))
+        gameName=game?.officialName
         if (!isVisibleGame(game)) throw new ReviewError('invalid-video', 422)
       }
       if (input.action === 'approve' && !publishedBeforeBlock(short)) {
@@ -118,6 +120,7 @@ export async function reviewShort(input: ReviewInput, uid: string, options: {
     if (quotaPath) tx.set(quotaPath, { ...(quota ?? {}), identifierHash: ownerHash,
       dateKey: saoPauloDayKey(now), count: counter(quota?.count ?? 0) + 1, updatedAt: now })
     tx.create('moderationLogs/' + crypto.randomUUID(), {
+      ...(input.action==='approve'&&!short.administrativeBlock?updateFields('published',{shortId:input.shortId,title:short.title,platform:short.platform,gameName}):{}),
       contentType: 'short', contentId: input.shortId, action: input.action, reason: input.reason,
       previousStatus: status, resultingStatus: nextStatus, reportCount: count, revision: revision + 1,
       createdAt: now, actor: uid,

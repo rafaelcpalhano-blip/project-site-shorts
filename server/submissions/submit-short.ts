@@ -1,3 +1,4 @@
+import {updateFields} from '../admin/update-event.ts'
 import { createThumbnail } from '../videos/thumbnail.ts'
 import { emptyRankingMetric } from '../ranking/engagement.ts'
 import { isVisibleGame } from '../games/visibility.ts'
@@ -73,6 +74,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     // Private ownership supports later quota accounting on approval; never in public short documents.
     transaction.create('submissionOwners/' + identityId, { visitorHash, createdAt: now })
     transaction.create('moderationLogs/' + crypto.randomUUID(), {
+      ...(decision.status==='published'?updateFields('published',{shortId:identityId,title,platform:submission.platform,gameName:game.officialName}):{}),
       contentType: 'short', contentId: identityId, action: decision.status,
       reasonCode: decision.reason, createdAt: now, actor: 'automatic',
     })
