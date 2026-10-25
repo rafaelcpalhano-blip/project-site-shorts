@@ -1,0 +1,49 @@
+{
+  "created": "2026-10-25T16:53:42.306Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "compatibilityDate": "2026-10-25",
+  "certificateFixture": "self-signed X509; synthetic identity only",
+  "runtime": {
+    "runtime": "workerd",
+    "passed": [
+      "RS256 verified with X509 certificate",
+      "deny forged signature",
+      "deny missing TOTP",
+      "deny outsider UID",
+      "cached certificate never authorizes rejected claims",
+      "deny disabled account",
+      "deny revoked session",
+      "deny removed MFA",
+      "current account rechecked despite cached certificate",
+      "upstream auth failure grants no access",
+      "empty admin allowlist fails closed",
+      "remote store refuses missing credential supplier",
+      "REST batch maps unordered found/missing in workerd",
+      "REST rereads credential supplier on next request",
+      "credential supplier failure prevents outbound request",
+      "visible feed preserves order and DTO through REST batches",
+      "hidden feed remains empty with bounded batches and continuation"
+    ],
+    "deployReady": false,
+    "limits": [
+      "synthetic X509/account/credential fixtures only",
+      "no real OAuth supplier or Google calls",
+      "no edge IP attestation or CPU quota proof",
+      "external cover decision unresolved"
+    ]
+  },
+  "routing": [
+    "SPA /",
+    "SPA /jogos/fixture",
+    "real JS asset",
+    "API bypasses SPA/assets /api",
+    "API bypasses SPA/assets /api/unknown",
+    "API bypasses SPA/assets /api/collision.txt",
+    "unconfigured admin fails closed",
+    "spoofed IP cannot supply trusted context"
+  ],
+  "deployReady": false
+}
