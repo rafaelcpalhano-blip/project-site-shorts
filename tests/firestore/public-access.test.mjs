@@ -41,7 +41,7 @@ before(async () => {
     })
     await setDoc(doc(db, 'shorts', 'hidden'), { moderationStatus: 'pending', createdAt: date })
     for (const status of ['pending', 'approved', 'rejected', 'removed']) {
-      await setDoc(doc(db, 'comments', status), { shortId: 's00', content: status, createdAt: date, moderationStatus: status })
+      await setDoc(doc(db, 'comments', status), { shortId: 's00', content: status, createdAt: date, moderationStatus: status, ...(status === 'approved' ? { publicationNumber: 1 } : {}) })
     }
     await setDoc(doc(db, 'comments', 'hidden-parent'), {
       shortId: 'hidden', content: 'Não público', createdAt: date, moderationStatus: 'approved',
@@ -88,7 +88,7 @@ test('leituras de shorts pendentes e consultas sem restrições são negadas', a
 test('somente comentários aprovados de shorts públicos são lidos', async () => {
   const repository = repositoryFor(database)
   const page = await repository.listComments('s00')
-  assert.deepEqual(page.items.map(item => item.id), ['approved'])
+  assert.deepEqual(page.items.map(item => item.id), ['approved']); assert.equal(page.items[0].number, 1)
   for (const id of ['pending', 'rejected', 'removed', 'hidden-parent']) await assertFails(getDoc(doc(database, 'comments', id)))
   await assert.rejects(repository.listComments('hidden'), /indisponível/)
 })
