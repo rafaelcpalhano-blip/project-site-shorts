@@ -1,6 +1,6 @@
 # Plano 7.6.10 — Otimizações localizadas antes da Etapa8
 
-Estado: A–D concluídas; E/F aguardam autorização. D separou visualizadores sob demanda, reduziu JS inicial em4,40% (39.218B) e validou90testes; detalhes e limitações em etapa-7-6-10-d.md. Consulte os relatórios etapa-7-6-10-a.md, etapa-7-6-10-b.md e etapa-7-6-10-c.md para evidências, critérios e limites. B alterou imagens locais; C somente seleção/recuperação de miniaturas no card, sem mudar prioridade por falta de ganho comprovado. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
+Estado: A–D concluídas; E executada com149testes e navegador em6larguras, aceite físico pendente; F aguarda autorização. Consulte etapa-7-6-10-e.md para diagnóstico YouTube150, evidências e checklist físico. D separou visualizadores sob demanda, reduziu JS inicial em4,40% (39.218B) e validou90testes; detalhes e limitações em etapa-7-6-10-d.md. Consulte os relatórios etapa-7-6-10-a.md, etapa-7-6-10-b.md e etapa-7-6-10-c.md para evidências, critérios e limites. B alterou imagens locais; C somente seleção/recuperação de miniaturas no card, sem mudar prioridade por falta de ganho comprovado. Base: Lighthouse mobile65/desktop86, CLS0 em ambos, mobileFCP4,81s/LCP6,87s/TBT11ms, avisos de timeout/IndexedDB. Boas-vindas fechadas e anonimato confirmados. Evidências e limites em lighthouse-validacao-2026-10-24.md.
 
 ## Compromisso de preservação
 
@@ -63,4 +63,4 @@ Aceite: ganho avaliado contra referência pertinente, layout estável nos cenár
 5. Se houver regressão ou benefício insuficiente, corrigir/reverter apenas a etapa, preservando alterações anteriores e dados.
 6. Atualizar relatório/continuidade, entregar blocos PowerShell com arquivos explícitos por commit e informar próxima etapa. Commits executados pelo proprietário.
 
-Prioridade: A obrigatória para referência/diagnóstico; B e C maior oportunidade inicial de redução de imagens; D condicionada à análise de importações; E e F obrigatórias para validar o conjunto. Próxima etapa:7.6.10-E, aguardando aprovação. Publicação/hospedagem permanecem fora deste plano.
+Prioridade: A obrigatória para referência/diagnóstico; B e C maior oportunidade inicial de redução de imagens; D condicionada à análise de importações; E e F obrigatórias para validar o conjunto. Próxima etapa:7.6.10-F, após estabilidade/aceite e autorização; checklist físico da E permanece pendente. Publicação/hospedagem permanecem fora deste plano.
