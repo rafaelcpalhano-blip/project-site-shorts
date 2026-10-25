@@ -1,4 +1,5 @@
 import {isIP} from 'node:net'
+import {serveStaticGameCover} from './static-game-cover.ts'
 import {createOutboundBudget} from './outbound-budget.ts'
 type Budget=ReturnType<typeof createOutboundBudget>
 export interface WorkerTransport {clientAddress:string}
@@ -24,7 +25,7 @@ export function createWorkerEntry(options:Options){
    const url=new URL(request.url)
    if(url.origin!==options.origin)return reply(403,'invalid-origin')
    const api=url.pathname==='/api'||url.pathname.startsWith('/api/')
-   if(!api)return await options.assets(request)
+   if(!api)return url.pathname.startsWith('/images/games/')?await serveStaticGameCover(request,options.assets):await options.assets(request)
    const supplied=request.headers.get('origin'),mutating=!['GET','HEAD','OPTIONS'].includes(request.method)
    if(supplied!==null&&supplied!==options.origin||mutating&&supplied!==options.origin||request.headers.get('sec-fetch-site')==='cross-site')return reply(403,'invalid-origin')
    const trusted=options.trustedTransport(request)

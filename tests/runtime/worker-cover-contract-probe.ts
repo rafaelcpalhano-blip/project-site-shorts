@@ -1,4 +1,5 @@
 // Local compatibility fixture only; no provider requests or production entry.
+import {serveStaticGameCover} from '../../server/runtime/static-game-cover.ts'
 import {editManualGame} from '../../server/games/edit-manual-game.ts'
 import {createManualGame} from '../../server/games/manual-game.ts'
 import {nameStatePath} from '../../server/games/name-keys.ts'
@@ -34,5 +35,5 @@ export default {async fetch(request:Request,env:{ASSETS:{fetch:(request:Request)
  if(new URL(request.url).pathname==='/__cover-contract-proof'){
   try{return Response.json(await proof())}catch{return Response.json({error:'cover-proof-failed'},{status:500})}
  }
- return env.ASSETS.fetch(request)
+ return new URL(request.url).pathname.startsWith('/images/games/')?serveStaticGameCover(request,req=>env.ASSETS.fetch(req)):env.ASSETS.fetch(request)
 }}
