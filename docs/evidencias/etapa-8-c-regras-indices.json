@@ -1,0 +1,151 @@
+{
+  "observedDate": "2026-10-25",
+  "timezone": "America/Sao_Paulo",
+  "method": "Authenticated console UI; sanitized manual transcription; no CLI/API export",
+  "authorizedScope": "Read-only comparison of published Firestore rules and indexes with repository files",
+  "projectId": "clipzone-db02a",
+  "databaseId": "(default)",
+  "remote": {
+    "rulesUiActive": true,
+    "rulesUiDate": "19/10/2026 13:43:49 UTC-3",
+    "rulesTextObserved": "rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n  }\n}",
+    "compositeIndexesDisplayed": 0,
+    "manualIndexesUiText": "Nenhuma linha a ser exibida",
+    "singleFieldExemptionsDisplayed": 0,
+    "exemptionsUiText": "Nenhuma linha a ser exibida",
+    "automaticIndexing": {
+      "collection": {
+        "ascending": true,
+        "descending": true,
+        "arrayContains": true
+      },
+      "collectionGroup": {
+        "ascending": false,
+        "descending": false,
+        "arrayContains": false
+      }
+    }
+  },
+  "local": {
+    "rulesFile": "firestore/firestore.rules",
+    "rulesSha256": "177a9f6721e20b444e871a63cfaabafb9a83d098de6261d5f832698c0c559150",
+    "indexesFile": "firestore/firestore.indexes.json",
+    "indexesSha256": "644d824beca0a7a375f4aade3cd74f75cbb57fee4631e0844124a5620a7b2eec",
+    "compositeIndexes": 37,
+    "fieldOverrides": 15,
+    "duplicateCompositeDefinitions": 0,
+    "compositeByCollection": {
+      "comments": 6,
+      "gameRequests": 4,
+      "games": 8,
+      "moderationLogs": 3,
+      "rankingItems": 2,
+      "reportSummaries": 5,
+      "reports": 1,
+      "shorts": 8
+    },
+    "clientReadException": "games: get active; list active with non-null limit <= 51",
+    "clientWritesAllowed": false,
+    "shortsCommentsDirectClientAccessAllowed": false,
+    "fieldOverridesDefinitions": [
+      {
+        "collectionGroup": "shorts",
+        "fieldPath": "searchFragments",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "shorts",
+        "fieldPath": "titleSearchVersion",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "shortLikes",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "likeAttempts",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingMetrics",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingRuns",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingBudgets",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingState",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingSignals",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingHours",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "rankingDays",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "shorts",
+        "fieldPath": "thumbnail",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "shorts",
+        "fieldPath": "administrativeBlock",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "networkAbuse",
+        "fieldPath": "*",
+        "indexes": []
+      },
+      {
+        "collectionGroup": "networkAbuse",
+        "fieldPath": "expiresAt",
+        "indexes": [
+          {
+            "order": "ASCENDING",
+            "queryScope": "COLLECTION"
+          }
+        ]
+      }
+    ]
+  },
+  "sourcePages": {
+    "rules": "https://console.cloud.google.com/firestore/databases/-default-/security/rules?project=clipzone-db02a",
+    "compositeIndexes": "https://console.cloud.google.com/firestore/databases/-default-/indexes/manual?project=clipzone-db02a",
+    "singleFields": "https://console.cloud.google.com/firestore/databases/-default-/indexes/automatic?project=clipzone-db02a"
+  },
+  "remoteMutations": 0,
+  "documentQueriesExecutedByAgent": 0,
+  "userListsAccessed": false,
+  "runtimeCodeChanged": false,
+  "rulesOrIndexesFilesChanged": false,
+  "limits": [
+    "Visual configuration snapshot, not authenticated raw export",
+    "No real remote query/read/write or deployed API verification",
+    "No remote IAM or TOTP validation in this scope",
+    "Observed configuration can change after this check"
+  ],
+  "publicationAuthorized": false,
+  "publicationExecuted": false
+}
