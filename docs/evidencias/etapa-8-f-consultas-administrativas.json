@@ -1,0 +1,111 @@
+{
+  "startedAt": "2026-10-26T21:41:48.387Z",
+  "completedAt": "2026-10-26T21:44:48.408Z",
+  "workerVersion": "a0d58723-b19c-4439-a2d2-85a402571691",
+  "stopReason": null,
+  "receivedEvents": 9,
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102IndependentlyInspected": false,
+  "remoteConfigurationChanged": false,
+  "editorialWritesByAgent": false,
+  "ownerActionAttribution": "Window and requested manual actions; not independently correlated to a request ID",
+  "paths": [
+    {
+      "path": "/api/admin/games/catalog",
+      "eventsReceived": 4,
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "cpuMs": [
+        12,
+        5,
+        4,
+        4
+      ],
+      "successfulMeasuredRequests": 4,
+      "firstRouteOrApplicationRequests": [
+        {
+          "cpuMs": 12,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      ],
+      "reusedCpuByIsolate": {
+        "isolate-2": [
+          5,
+          4,
+          4
+        ]
+      },
+      "threeConsecutiveReusedRequestsWithin10MsInOneIsolate": true,
+      "scope": "Current default list/filter only; not all sort/filter combinations or mutation authorization"
+    },
+    {
+      "path": "/api/admin/comments/queue",
+      "eventsReceived": 0,
+      "statuses": [],
+      "cpuMs": [],
+      "successfulMeasuredRequests": 0,
+      "firstRouteOrApplicationRequests": [],
+      "reusedCpuByIsolate": {},
+      "threeConsecutiveReusedRequestsWithin10MsInOneIsolate": false,
+      "scope": "Current default list/filter only; not all sort/filter combinations or mutation authorization"
+    }
+  ],
+  "stage8FComplete": false,
+  "launchApproved": false,
+  "ownerFunctionalConfirmation": {
+    "reportedOn": "2026-10-26",
+    "answer": "Feito; as duas listas carregaram normalmente",
+    "bothListsLoaded": true,
+    "independentBrowserInspection": false
+  },
+  "commentsComplementaryCollectionPending": false,
+  "automaticSuspension": {
+    "includedInInitialPreparation": false,
+    "preparationRejectedByAutomaticReview": true,
+    "reason": "Review considered current authorization limited to observation, not conditional remote deployment",
+    "saferAlternativeUsed": "Observation-only collector; stop test and request a separate suspension decision on relevant failure",
+    "remoteSuspensionPerformed": false
+  },
+  "publicProbeNote": "One GET of public configuration by agent confirmed live-stream receipt; no cookie/session issued. Other administrative actions performed by owner.",
+  "scopeNotes": [
+    "No raw request headers, tokens, bodies, query strings, IPs or record contents saved",
+    "Ordinary technical counters may update during owner accesses; no editorial writes by agent",
+    "First route use is not proof of isolate/process cold start",
+    "Default catalog query only; no proof of other sorts/filters or valid mutations",
+    "Tail events observed only; owner actions are not linked by an independent request ID"
+  ],
+  "commentsComplementaryCollection": {
+    "startedAt": "2026-10-26T21:45:53.236Z",
+    "completedAt": "2026-10-26T21:48:53.260Z",
+    "workerVersion": "a0d58723-b19c-4439-a2d2-85a402571691",
+    "eventsReceived": 1,
+    "targetEventsReceived": 0,
+    "stopReason": null,
+    "exceptionsObserved": 0,
+    "exceededCpuObserved": 0,
+    "remoteChanges": false,
+    "ownerCompletionResponsePending": false,
+    "ownerFunctionalConfirmation": {
+      "reportedOn": "2026-10-26",
+      "loadPassed": true,
+      "visibleMessage": "Nenhum comentário nesta janela da fila",
+      "ownerReportsNoCommentsToViewInCurrentVersion": true,
+      "scope": "Current queue/filter empty state; does not prove all comment collections globally empty",
+      "independentBrowserOrDatabaseInspection": false,
+      "existingCommentRenderingValidated": false,
+      "moderationMutationValidated": false,
+      "cpuStillUnmeasured": true
+    }
+  },
+  "commentsCpuStillUnmeasured": true,
+  "allAdministrativeCoverageComplete": false,
+  "catalogDefaultQueryWarmSampleComplete": true,
+  "additionalCollectionStartedAutomatically": false
+}

@@ -58,3 +58,11 @@ Enquanto isso, avançam tarefas independentes da 8-F. A PWA continua após a con
 ## Autorização posterior de sequência local
 
 Em26/10/2026 o proprietário escolheu “Preparar a PWA localmente em paralelo”. A8.5 pode avançar localmente antes do fechamento da8-F, sem deploy e sem eliminar qualquer gate. Essa escolha supera a dependência de ordem local descrita acima, preservando o encerramento técnico e a autorização de lançamento separados. Instalação, standalone e players em celulares reais continuam pendentes de validação pelo proprietário.
+
+## Resumo de acompanhamento — 26/10/2026
+
+- Cabeçalhos estáticos e dinâmicos publicados/checados; painel confirmado após a última versãoa0d58723-b19c-4439-a2d2-85a402571691.
+- PWA preparada e publicada por autorizações posteriores específicas; proprietário confirmou instalação/abertura/navegação básicas no celular. Matriz ampliada9-A ainda pendente.
+-8-F em andamento: catálogo administrativo medido em12/5/4/4ms, três reusos≤10ms; primeiro uso12ms ainda requer investigação. Comentários funcionais conforme proprietário, semCPU capturada nas duas janelas. Não repetir catálogo para suprir essa lacuna.
+- Suporte técnicoTikTok/Embed enviado e confirmado pelo proprietário; aguardando possível resposta. Validação backend e bloqueio de lançamento mantidos.
+- Permanecem CPU de ações legítimas/escritas/moderação e demais lacunas, ranking/jobs, recuperação real sob aprovação, matriz9-A e auditorias9-B/9-B.5 antes do lançamento9-C autorizado. Não marcar toda a8-F concluída por entregas parciais.

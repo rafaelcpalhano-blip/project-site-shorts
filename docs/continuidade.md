@@ -2033,3 +2033,23 @@ Próximo: proprietário confirma abertura/continuidade normal do painel/admin na
 ## 26/10/2026 — painel confirmado após deploy dos cabeçalhos
 
 O proprietário confirmou: “Sim, o painel abriu normalmente”, na sessão habitual após o deploy autorizado de cabeçalhos. Concluída a checagem de continuidade administrativa desse pacote, somada às13verificações HTTP e provas locais anteriores. Não interpretar como medição independente de novo desafio Google/TOTP, todos os fluxos administrativos ouCPU. Nenhum código, teste, deploy ou consulta ao TikTok adicional nesta rodada. Este ajuste de cabeçalhos está verificado no escopo descrito; demais gates8-F e lançamento permanecem abertos.
+
+## 26/10/2026 — consultas administrativas, catálogo medido
+
+O proprietário autorizou e confirmou uso supervisionado somente de leitura: as duas listas carregaram normalmente. Revisão local esclareceu os botões explícitos Atualizar catálogo de jogos/Atualizar comentários; abrir seção não prova disparo de consulta. Primeira janela recebeu9eventos: catálogo200 em12/5/4/4ms, com três reusos consecutivos no mesmo isolate≤10ms; o12ms era primeiro uso da rota com aplicação já existente, sem atribuição causal definitiva. Adminsession200/6ms não mede novoGoogle/TOTP. Semexceções/exceededCpu nos eventos recebidos;1102nãoinspecionado emcorpo. Comentários sem eventos na primeirajanela: coleta complementar solicitada, sem repetir catálogo. Relatório: etapa-8-f-consultas-administrativas.md/json.
+
+Revisão automática rejeitou incluir deploy condicional de suspensão na preparação, por considerar autorização atual somente observacional; não houve execução dessa proposta. Coletor utilizado foi somente leitura, com parada da coleta e decisão separada para eventual suspensão. Não houve deploy, suspensão, alteração de configuração, conteúdo editorial pelo agente ou novas consultasTikTok. Semcorpos/headers/tokens/IPs/dados de registros nos relatórios.8-F e lançamento permanecem abertos.
+
+## 26/10/2026 — fechamento da rodada administrativa de observação
+
+A janela complementar de180segundos terminou com1evento público de configuração (2ms), sem eventos de comments/queue, exceções ouexceededCpu recebidos. A conexão do stream foi confirmada, mas isso não confirma cobertura da consulta alvo. Não atribuir causa a cache, tela, atraso, rede ou perda do stream sem prova. O proprietário confirmou funcionamento das duas listas na primeira resposta; ainda não houve resposta à solicitação complementar no momento deste registro. **Comentários funcionais conforme relato, CPU ainda sem amostra.** Nenhuma terceira janela foi aberta automaticamente, para evitar repetições sem coordenação.
+
+Catálogo mantém a amostra válida:200/12,5,4,4ms; três reusos consecutivos no mesmo isolate dentro de10ms. Primeiro uso da rota excedeu a meta com aplicação já existente; causa e risco de primeiro uso continuam em revisão. Não generalizar a outros filtros, ordenações, carga ou escritas. Os coletores foram observacionais e não alteraram o ambiente; eventual suspensão remota requer decisão separada na condição aplicada por revisão automática.
+
+Sem mudança de código, deploy, conteúdo editorial pelo agente, nova consultaTikTok, suíte automatizada ouLighthouse nesta rodada. Relatório/evidência: etapa-8-f-consultas-administrativas.md e etapa-8-f-consultas-administrativas.json. Próxima coleta, quando o proprietário puder, deve ser coordenada apenas para a consulta ainda ausente. Demais gates8-F e lançamento não concluídos.
+
+## 26/10/2026 — confirmação do estado vazio da fila de comentários
+
+O proprietário confirmou conclusão do teste complementar: a tela carregou normalmente e exibiu “Nenhum comentário nesta janela da fila”; informou que nesta versão ainda não há comentários para visualizar. Registra-se sucesso funcional do estado vazio da fila/filtro consultado, sem afirmar inspeção independente do banco ou ausência global de comentários em todos os estados. Renderização de registros existentes, paginação com itens e decisões de moderação continuam não comprovadas por esse teste.
+
+A confirmação humana não fornece medição deCPU: nenhum evento comments/queue foi recebido nas janelas registradas. Não atribuir a causa dessa lacuna à lista estar vazia; a própria consulta vazia também é uma operação que precisaria ser capturada. Não foi aberta outra coleta, criado comentário fictício, alterado conteúdo ou realizado deploy. Nenhum novo teste automatizado foi necessário para essa atualização documental. Demais pendências8-F e bloqueioTikTok mantidos.

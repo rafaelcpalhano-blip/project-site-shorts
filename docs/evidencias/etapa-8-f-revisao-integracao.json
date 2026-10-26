@@ -258,5 +258,22 @@
     "deploymentEvidence": "etapa-8-f-api-headers-homologacao.json",
     "ownerAdminConfirmationPending": false,
     "ownerAdminPanelOpenedNormally": true
+  },
+  "administrativeReadCpu": {
+    "source": "etapa-8-f-consultas-administrativas.json",
+    "catalogCpuMs": [
+      12,
+      5,
+      4,
+      4
+    ],
+    "catalogThreeReusedWithin10Ms": true,
+    "catalogFirstUseApplicationAlreadyExisted": true,
+    "commentsFunctionalOwnerConfirmation": true,
+    "commentsCpuUnmeasured": true,
+    "newRuntimeDeployment": false,
+    "fullStage8FApproved": false,
+    "commentsEmptyQueueOwnerConfirmed": true,
+    "commentsWithRecordsNotYetValidated": true
   }
 }

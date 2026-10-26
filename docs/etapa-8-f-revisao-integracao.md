@@ -94,3 +94,11 @@ Próximo: proprietário confirma abertura/continuidade normal do painel/admin na
 ## 26/10/2026 — painel confirmado após deploy dos cabeçalhos
 
 O proprietário confirmou: “Sim, o painel abriu normalmente”, na sessão habitual após o deploy autorizado de cabeçalhos. Concluída a checagem de continuidade administrativa desse pacote, somada às13verificações HTTP e provas locais anteriores. Não interpretar como medição independente de novo desafio Google/TOTP, todos os fluxos administrativos ouCPU. Nenhum código, teste, deploy ou consulta ao TikTok adicional nesta rodada. Este ajuste de cabeçalhos está verificado no escopo descrito; demais gates8-F e lançamento permanecem abertos.
+
+## 26/10/2026 — fechamento da rodada administrativa de observação
+
+A janela complementar de180segundos terminou com1evento público de configuração (2ms), sem eventos de comments/queue, exceções ouexceededCpu recebidos. A conexão do stream foi confirmada, mas isso não confirma cobertura da consulta alvo. Não atribuir causa a cache, tela, atraso, rede ou perda do stream sem prova. O proprietário confirmou funcionamento das duas listas na primeira resposta; ainda não houve resposta à solicitação complementar no momento deste registro. **Comentários funcionais conforme relato, CPU ainda sem amostra.** Nenhuma terceira janela foi aberta automaticamente, para evitar repetições sem coordenação.
+
+Catálogo mantém a amostra válida:200/12,5,4,4ms; três reusos consecutivos no mesmo isolate dentro de10ms. Primeiro uso da rota excedeu a meta com aplicação já existente; causa e risco de primeiro uso continuam em revisão. Não generalizar a outros filtros, ordenações, carga ou escritas. Os coletores foram observacionais e não alteraram o ambiente; eventual suspensão remota requer decisão separada na condição aplicada por revisão automática.
+
+Sem mudança de código, deploy, conteúdo editorial pelo agente, nova consultaTikTok, suíte automatizada ouLighthouse nesta rodada. Relatório/evidência: etapa-8-f-consultas-administrativas.md e etapa-8-f-consultas-administrativas.json. Próxima coleta, quando o proprietário puder, deve ser coordenada apenas para a consulta ainda ausente. Demais gates8-F e lançamento não concluídos.
