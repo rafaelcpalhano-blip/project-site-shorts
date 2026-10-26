@@ -1,6 +1,6 @@
 # Etapa 8-F — recuperação compatível com Firebase Spark
 
-26/10/2026. **Procedimento proposto e limites registrados; não é backup do banco remoto nem restauração de produção executada.** Nenhum dado privado foi copiado nesta rodada. Não ativar billing, Cloud Storage, PITR, backup gerenciado, agendamento ou serviço adicional por inferência.
+26/10/2026. **Procedimento proposto e núcleo local de captura/integridade preparado; não é backup do banco remoto nem restauração de produção executada.** Nenhum dado privado foi copiado nesta rodada. Não ativar billing, Cloud Storage, PITR, backup gerenciado, agendamento ou serviço adicional por inferência.
 
 ## O que já está provado
 
@@ -22,7 +22,7 @@ Voltar uma versão do Worker não restaura documentos removidos. Restaurar docum
 
 A exportação/importação **gerenciada** do Firestore exige billing/Blaze e bucket Cloud Storage; está excluída da premissa atual. Não usar o botão Exportar ou comandos de exportação gerenciada como se fossem backup gratuito do Spark. Fonte: [documentação oficial](https://firebase.google.com/docs/firestore/manage-data/export-import).
 
-Proposta: ferramenta local explícita de leitura por REST, usando somente permissões já existentes, gravando fora do repositório em pasta privada do proprietário. Essa ferramenta ainda precisa ser implementada e revisada; não apresentar simples paginação como snapshot atômico. Antes de uma execução real:
+Proposta: ferramenta local explícita de leitura por REST, usando somente permissões já existentes, gravando fora do repositório em pasta privada do proprietário. O núcleo local de enumeração e integridade foi preparado e testado em fixtures, conforme seção posterior; ainda faltam adaptador HTTP autenticado com resposta limitada, gravação privada segura e validação real autorizada. Não apresentar simples paginação como snapshot atômico. Antes de uma execução real:
 
 1. Confirmar exatamente `clipzone-db02a/(default)`, conta/identidade, Spark e margem de quota; não mudar projeto ativo nem ampliar IAM.
 2. Delimitar coleções e subcoleções, incluir metadados de integridade junto dos dados de negócio e verificar como manter uma visão consistente durante a leitura. Abortos e inconsistências não produzem backup marcado como completo.
@@ -54,3 +54,36 @@ Manter a estratégia já registrada para erro de CPU/1102, falha de proteção o
 - [ ] Executar ensaio de recuperação autorizado e registrar tempo/perdas toleráveis reais, sem inventar RPO/RTO.
 
 Não foram criados recursos, cópias remotas, arquivos com dados de produção ou tarefas recorrentes. A decisão de ranking/agendamento continua separada: testes locais mostram limites, mas a CPU real e a aprovação da operação remota ainda são necessárias.
+
+
+## Preparação local concluída nesta rodada — sem operação remota
+
+Implementados `server/recovery/read-only-snapshot.ts` e nove casos em `tests/read-only-snapshot.test.mjs`. Não há transporte de rede padrão, acesso a credenciais, escritor de arquivos, comando remoto, endpoint, agendamento ou implementação de restauração. O módulo não foi importado pela aplicação publicada e não houve deploy.
+
+- Exige alvo explícito permitido e banco(default), um `readTime` fixo e tetos de requisições, documentos e bytes de respostas. Sem PITR: restringe-se à janela documentada de uma hora e aborta se ela vencer durante a leitura.
+- Enumera coleções e documentos de forma paginada com o mesmo instante em todas as chamadas. Descobre subcoleções sob pais ausentes com `showMissing`; preserva esses caminhos como estrutura, sem inventar documentos para restaurar. Documentos realmente vazios são distinguidos pela metadata.
+- Conserva os campos no formato JSON tipado do Firestore, incluindo inteiros64 como texto e timestamps com nanossegundos; não arredonda para Number ou Date do JavaScript. Não é um decodificador nem validador completo dos tipos wire para restauração.
+- Recusa alvo/caminho divergente, páginas/tokens repetidos, metadata contraditória, envelopes de erro e ultrapassagem dos tetos. Falha de transporte não devolve resultado parcial como captura concluída. O adaptador futuro deve rejeitar HTTP não2xx/redirecionamentos, impor limite de bytes antes do parse e respeitar o AbortSignal; o núcleo só contabiliza JSON já recebido.
+- Manifesto inclui escopo descoberto, instante, documentos e SHA256 sobre conteúdo canônico. A verificação offline detecta alteração de conteúdo, duplicidade, alvo e topologia incompatíveis. **Checksum não comprova autoria, autenticidade nem completude independente de uma fonte defeituosa**; não tratar arquivo arbitrário como backup confiável por ter hash correto.
+
+Nove provas locais aprovadas e suíte completa de677 testes Node sem falhas; tipos servidor e lint aprovados. Não houve nova execução workerd porque a aplicação/runtime não foi alterada; os32 casos anteriores têm escopo histórico próprio. Evidência sanitizada em [etapa-8-f-recuperacao-local.json](evidencias/etapa-8-f-recuperacao-local.json).
+
+Protocolo fundamentado em [listCollectionIds/readTime](https://firebase.google.com/docs/firestore/reference/rest/v1/projects.databases.documents/listCollectionIds) e [listDocuments/readTime/showMissing](https://firebase.google.com/docs/firestore/reference/rest/v1/projects.databases.documents/listDocuments). O uso efetivo, permissões e cotas no Spark ainda não foram comprovados contra o projeto real nesta rodada. Request count não equivale a leituras faturáveis; orçamento de quota e destino privado exigem revisão antes da primeira cópia real.
+
+Continuam pendentes: transporte autenticado revisado, arquivo privado com ACL/destino/teto aprovados, inventário real consistente autorizado, verificação dos registros salvos e ensaio de restauração isolado com esse novo formato. Auth/TOTP/IAM/segredos permanecem fora da cópia de documentos. Nenhum dado de produção foi lido, copiado ou escrito; nenhum serviço pago, dependência, recurso ou cron foi criado.
+
+## Transporte limitado preparado localmente
+
+Adicionado `server/recovery/bounded-snapshot-transport.ts`, com oito testes em `tests/bounded-snapshot-transport.test.mjs`. Exige implementação de fetch e provedor de token explicitamente injetados: não descobre credenciais nem usa rede por padrão. O provedor injetado recebe sinal de cancelamento e deverá respeitá-lo; a espera local também é limitada, mas a ferramenta não consegue interromper efeitos externos de um provedor que ignore esse contrato.
+
+Antes de obter token, recusa destinos fora de firestore.googleapis.com, projeto divergente, métodos de alteração, rotas incompatíveis e parâmetros inesperados. Aceita somente GET de documentos e POST de listCollectionIds; exige banco(default), paginação de100, readTime e showMissing nas leituras de documentos. Não segue redirects, não repete falhas, exige HTTP2xx/JSON e limita o corpo transmitido antes de converter texto/JSON, inclusive sem Content-Length. Timeout/abort interrompem a espera e cancelam o leitor; erros devolvidos não incluem respostas privadas ou tokens. O teto total permanece no núcleo de captura; o transporte acrescenta teto por resposta.
+
+Validação:17 testes específicos (nove do núcleo e oito do transporte), suíte completa de685 testes Node sem falhas, tipos servidor e lint dos arquivos novos aprovados. A primeira execução completa em sandbox falhou por EPERM nos temporários do Vite; a repetição com permissão de escrita no repositório passou. Não houve alteração do runtime, deploy, leitura de dados reais ou acesso a credenciais.
+
+Não há comando executável de backup, fonte real de token, escritor privado ou restauração desse novo formato. Ainda faltam a revisão do destino/ACL e orçamento, integração de autenticação autorizada, captura real aprovada e ensaio de recuperação isolado. Não apresentar esta preparação como backup de produção concluído.
+
+## Integração local do núcleo com o transporte
+
+Três provas em `tests/snapshot-transport-integration.test.mjs` exercitam a composição real dos dois módulos com HTTP/token fictícios: preservação de fields wire/inteiros64/timestamps e checksum; HTTP429 interrompe a travessia sem retry ou resultado parcial; resposta maior que o teto é recusada antes do parse. A rede global real fica bloqueada nesses testes.
+
+Os20 testes de recuperação passaram e o lint do arquivo novo passou. Nenhuma implementação da aplicação mudou nesta rodada: não foi repetida a suíte geral, cujo último resultado continua685/0 e não deve ser apresentado como uma execução de688 casos. Esses testes não comprovam backup remoto, restauração, validade de credenciais ou cotas reais.
