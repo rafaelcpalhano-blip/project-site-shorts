@@ -131,13 +131,61 @@
       "diagnosticsEnabled": false,
       "jobsEnabled": false,
       "publicLaunchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T16:36:47.900Z",
+      "exitCode": 0,
+      "version": "73ef1d83-609e-4ac0-a5cb-38cef2e4fc2b",
+      "priorKnownVersion": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T16:58:13.307Z",
+      "exitCode": 0,
+      "version": "07e1bb94-6032-4c04-b31e-7beb51c77045",
+      "priorKnownVersion": "73ef1d83-609e-4ac0-a5cb-38cef2e4fc2b",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T17:25:38.391Z",
+      "exitCode": 0,
+      "version": "594a4547-bfdc-43e8-891c-ddd1933a4e2f",
+      "priorKnownVersion": "07e1bb94-6032-4c04-b31e-7beb51c77045",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T17:28:37.001Z",
+      "exitCode": 0,
+      "version": "8ced364c-e1c5-4542-9618-5cba2b260f40",
+      "priorKnownVersion": "594a4547-bfdc-43e8-891c-ddd1933a4e2f",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
     }
   ],
   "currentDeployment": {
-    "deployedAt": "2026-10-26T08:36:55.966Z",
+    "deployedAt": "2026-10-26T17:28:37.001Z",
     "exitCode": 0,
-    "version": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
-    "priorKnownVersion": "04862db7-20a2-49db-ba0f-dfad52207133",
+    "version": "8ced364c-e1c5-4542-9618-5cba2b260f40",
+    "priorKnownVersion": "594a4547-bfdc-43e8-891c-ddd1933a4e2f",
     "secretsUnchanged": true,
     "headersPreserved": true,
     "routingUnchanged": true,
@@ -148,14 +196,14 @@
   "validation": {
     "node": {
       "exitCode": 0,
-      "passed": 660,
+      "passed": 668,
       "failed": 0,
       "failures": []
     },
     "workerd": [
       {
         "name": "worker-cpu-provider-probe",
-        "passed": 15,
+        "passed": 16,
         "externalFetchAttempts": 0
       },
       {
@@ -181,10 +229,416 @@
     "publicationQuotaSpentOnUnverifiedAttempts": false,
     "contentWrittenByAgent": false
   },
-  "cpuLimitations": "Observed 11/17ms before and 13/11ms after; no exceededCpu/exceptions in these four events. Cold/reuse markers not retained by this collector; cannot classify conclusively. Not a successful publication CPU measurement or proof of Free-tier headroom.",
-  "providerState": "Intermittent: official endpoint returned 429 in Workers, later preview 200 with channel, then UI showed rate limiting again. No provider bypass or repeated automatic requests.",
+  "cpuLimitations": "Observed 11/17ms before and 13/11ms after; no exceededCpu/exceptions in these four events. Cold/reuse markers not retained by this collector; cannot classify conclusively. Not a successful publication CPU measurement or proof of Free-tier headroom. New collection retained only session 12ms/outcome ok; preview event absent. Collection incomplete: no preview CPU or lack of runtime errors can be inferred. Latest bounded preview: session14ms, preview3ms; authorized submission window: session11ms, submission20ms, outcomes ok/no exceptions. No cold/reuse markers retained; no claim of warm headroom, successful-publication CPU or launch readiness. Identified-only probe32/21/18ms lacks initialization markers. No-store probe session13ms/applicationCreated true, game detail15ms/applicationCreated true, submission10ms/applicationCreated false and firstRoute true. Different request initialization states; not successful-publication headroom or proof of recurring warm-route excess. All captured outcomes ok/no exceptions.",
+  "providerState": "Still source-rate-limited from hosted validation after honest client identification and no-store; two bounded non-publishing probes separated by more than Retry-After. Server confirmation remains mandatory; no workaround based on client assertions.",
   "tiktokPublicationConfirmed": false,
   "providerBlockResolved": false,
   "stage8FComplete": false,
-  "publicLaunchApproved": false
+  "publicLaunchApproved": false,
+  "ownerRetest": {
+    "reportedOn": "2026-10-26",
+    "publicationSucceeded": false,
+    "channelAutofillSucceeded": false,
+    "channelEnteredManually": true,
+    "errorCodeInferredFromDisplayedMessage": "source-rate-limited",
+    "upstreamStatusNotIndependentlyCapturedDuringOwnerAction": true,
+    "noNewProviderRequestsByAgentForThisConfirmation": true
+  },
+  "previousValidation": {
+    "node": {
+      "exitCode": 0,
+      "passed": 660,
+      "failed": 0,
+      "failures": []
+    },
+    "workerd": [
+      {
+        "name": "worker-cpu-provider-probe",
+        "passed": 15,
+        "externalFetchAttempts": 0
+      },
+      {
+        "name": "worker-finalization-probe",
+        "passed": 16,
+        "externalFetchAttempts": 0
+      }
+    ],
+    "typesFrontendAndServerPassed": true,
+    "lintPassed": true,
+    "postDeploymentHeaderChecks": 7,
+    "privateValuesAbsentFromBuild": true
+  },
+  "ownerPreference": "Automatic channel metadata remains the default; manual-only default declined.",
+  "automaticProfileOptimization": {
+    "profileOnlyPreview": true,
+    "freshVideoVerificationAtSubmission": true,
+    "publicNameCacheSeconds": 300,
+    "publicNameCacheMaximumEntries": 32,
+    "cacheContainsVideoEvidence": false,
+    "cacheContainsRequestTransport": false,
+    "providerCallsFirstUncachedCreator": 2,
+    "providerCallsCachedCreator": 1,
+    "countsExcludeShortLinkResolution": true,
+    "sourceVerificationRelaxed": false,
+    "live": {
+      "startedAt": "2026-10-26T16:36:56.240Z",
+      "contentWrites": 0,
+      "requests": [
+        {
+          "path": "/api/session",
+          "status": 204
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 503,
+          "error": "source-rate-limited",
+          "retryAfter": "60",
+          "hasTitle": false,
+          "hasChannel": false
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "cpuMs": 12,
+          "outcome": "ok",
+          "exceptionCount": 0
+        }
+      ],
+      "diagnostics": [],
+      "providerRetries": 0,
+      "complete": false,
+      "finishedAt": "2026-10-26T16:37:18.980Z"
+    },
+    "successProvenInFixtureOnly": true,
+    "supersededBy": "URL handle preview with zero provider calls; profile lookup/cache removed from live path"
+  },
+  "nextDecision": "Choose authorized authenticated follow-up channel for developer Embed/oEmbed issue; no new message sent. Server validation remains mandatory and publication unresolved.",
+  "cacheRecheck": {
+    "firstConditionalStatus": 200,
+    "laterConditionalStatus": 304,
+    "finalChecksPassed": 7,
+    "noProductChangeForTransientResponse": true
+  },
+  "previousProfileOnlyValidation": {
+    "node": {
+      "exitCode": 0,
+      "passed": 666,
+      "failed": 0,
+      "failures": []
+    },
+    "workerd": [
+      {
+        "name": "worker-cpu-provider-probe",
+        "passed": 16,
+        "externalFetchAttempts": 0
+      },
+      {
+        "name": "worker-finalization-probe",
+        "passed": 16,
+        "externalFetchAttempts": 0
+      }
+    ],
+    "typesFrontendAndServerPassed": true,
+    "lintPassed": true,
+    "postDeploymentHeaderChecks": 7,
+    "privateValuesAbsentFromBuild": true
+  },
+  "urlFlowAudit": {
+    "canonicalAndShortUrlSameVerifierProvenInNodeAndWorkerd": true,
+    "fullUrlsBypassRedirectResolver": true,
+    "profileLookupCouldPreviouslySetSubmissionBackoff": true,
+    "profileLookupRemovedFromPreview": true,
+    "previewProviderCalls": 0,
+    "completeUrlSubmissionProviderCalls": 1,
+    "shortResolutionSeparateAndRestrictedToOfficialHosts": true,
+    "channelFieldIsUrlHandleNotVerifiedDisplayName": true,
+    "videoEvidenceFromClientAccepted": false,
+    "publicationVerifierUnchanged": true,
+    "livePreview": {
+      "startedAt": "2026-10-26T16:59:55.768Z",
+      "contentWrites": 0,
+      "requests": [
+        {
+          "path": "/api/session",
+          "status": 204
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "retryAfter": null,
+          "hasTitle": false,
+          "hasChannel": true
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "cpuMs": 14,
+          "outcome": "ok",
+          "exceptionCount": 0
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "cpuMs": 3,
+          "outcome": "ok",
+          "exceptionCount": 0
+        }
+      ],
+      "diagnostics": [],
+      "providerRetries": 0,
+      "complete": true,
+      "finishedAt": "2026-10-26T17:00:03.830Z"
+    },
+    "sameVerifierLocalLive": {
+      "observedAt": "2026-10-26T16:56:10.672Z",
+      "runtime": "Node on development computer, not Cloudflare network",
+      "requests": [
+        {
+          "officialVideoEndpoint": true,
+          "redirect": "error"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "response",
+          "status": 200
+        },
+        {
+          "stage": "shape",
+          "validProvider": true,
+          "identityMatches": true
+        }
+      ],
+      "existence": "confirmed",
+      "formatPolicy": "tiktok-platform-exception",
+      "hasChannel": false,
+      "contentWrites": 0,
+      "retries": 0,
+      "workersPublicationProven": false
+    }
+  },
+  "singleAuthorizedPublication": {
+    "ownerExplicitlyApproved": true,
+    "attempts": 1,
+    "videoId": "7688744049095806228",
+    "game": "Counter-Strike 2",
+    "browserConfirmationUsed": true,
+    "uiResult": "source-rate-limited",
+    "published": false,
+    "publicationQuotaConsumed": false,
+    "publicationResponseStatus": 503,
+    "upstreamStatusDuringThisAttemptNotSeparatelyLogged": true,
+    "tail": {
+      "startedAt": "2026-10-26T17:01:21.179Z",
+      "traces": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "cpuMs": 11,
+          "outcome": "ok",
+          "exceptionCount": 0
+        },
+        {
+          "path": "/api/shorts",
+          "status": 503,
+          "cpuMs": 20,
+          "outcome": "ok",
+          "exceptionCount": 0
+        }
+      ],
+      "diagnostics": [],
+      "providerRetries": 0,
+      "complete": true,
+      "finishedAt": "2026-10-26T17:02:06.197Z"
+    },
+    "retried": false,
+    "playbackNotTestedBecauseNoPublication": true
+  },
+  "officialApiReview": {
+    "oembedStillDocumented": true,
+    "embedVideosPageWarnsDeprecationSoon": true,
+    "warningDoesNotExplain429ByItself": true,
+    "displayApiRequiresApprovedAppAndCreatorAuthorization": true,
+    "videoQueryRestrictedToAuthorizedCreatorVideos": true,
+    "browserPlayerMessagesNotTrustedPublicationEvidence": true,
+    "architectureChanged": false
+  },
+  "ownerRequiresServerVerification": {
+    "browserOnlyProofRejected": true,
+    "syntaxOnlyPublicationRejected": true,
+    "independentServerConfirmationStillMandatory": true,
+    "privateQueueNotAuthorized": true
+  },
+  "transportInvestigation": {
+    "loopbackHeaderComparison": {
+      "observedAt": "2026-10-26T17:22:20.310Z",
+      "scope": "Loopback HTTP header comparison only; no TikTok call or remote content",
+      "node": {
+        "userAgent": "node",
+        "accept": "*/*",
+        "acceptEncoding": "gzip, deflate"
+      },
+      "localWorkerd": {
+        "userAgent": null,
+        "accept": null,
+        "acceptEncoding": null
+      },
+      "cloudflareProductionHeadersNotProven": true
+    },
+    "localWorkerdDoesNotProveProductionOutgoingHeaders": true,
+    "explicitHonestApplicationUserAgent": true,
+    "jsonAccept": true,
+    "noStoreVideoVerification": true,
+    "noBrowserImpersonation": true,
+    "retryAfterAndNoAutomaticRetriesPreserved": true,
+    "identifiedOnly": {
+      "startedAt": "2026-10-26T17:26:00.498Z",
+      "purpose": "Single source validation through real submission path using verified absent game; content creation blocked before writes",
+      "requests": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "retryAfter": null
+        },
+        {
+          "path": "/api/games/detail",
+          "status": 404,
+          "error": "game-unavailable",
+          "retryAfter": null
+        },
+        {
+          "path": "/api/shorts",
+          "status": 503,
+          "error": "source-rate-limited",
+          "retryAfter": "60"
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "cpuMs": 32,
+          "outcome": "ok",
+          "exceptionCount": 0
+        },
+        {
+          "path": "/api/games/detail",
+          "status": 404,
+          "cpuMs": 21,
+          "outcome": "ok",
+          "exceptionCount": 0
+        },
+        {
+          "path": "/api/shorts",
+          "status": 503,
+          "cpuMs": 18,
+          "outcome": "ok",
+          "exceptionCount": 0
+        }
+      ],
+      "providerRetries": 0,
+      "sourceVerified": false,
+      "realPublicationAttempted": false,
+      "gameAbsenceConfirmed": true,
+      "noEditorialWritesByVerifiedMissingGameGuard": true,
+      "complete": true,
+      "finishedAt": "2026-10-26T17:26:09.302Z"
+    },
+    "identifiedAndNoStore": {
+      "startedAt": "2026-10-26T17:28:51.876Z",
+      "purpose": "Single source validation through real submission path using verified absent game; content creation blocked before writes",
+      "requests": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "retryAfter": null
+        },
+        {
+          "path": "/api/games/detail",
+          "status": 404,
+          "error": "game-unavailable",
+          "retryAfter": null
+        },
+        {
+          "path": "/api/shorts",
+          "status": 503,
+          "error": "source-rate-limited",
+          "retryAfter": "60"
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "cpuMs": 13,
+          "outcome": "ok",
+          "exceptionCount": 0,
+          "initialization": {
+            "applicationCreated": true,
+            "firstApiInIsolate": true,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/games/detail",
+          "status": 404,
+          "cpuMs": 15,
+          "outcome": "ok",
+          "exceptionCount": 0,
+          "initialization": {
+            "applicationCreated": true,
+            "firstApiInIsolate": true,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/shorts",
+          "status": 503,
+          "cpuMs": 10,
+          "outcome": "ok",
+          "exceptionCount": 0,
+          "initialization": {
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        }
+      ],
+      "providerRetries": 0,
+      "sourceVerified": false,
+      "realPublicationAttempted": false,
+      "gameAbsenceConfirmed": true,
+      "noEditorialWritesByVerifiedMissingGameGuard": true,
+      "complete": true,
+      "finishedAt": "2026-10-26T17:29:00.540Z"
+    },
+    "rateLimitResolved": false,
+    "sourceStatusDuringTheseTwoActionsNotSeparatelyLogged": true
+  },
+  "supportDraftPreparedNotSent": false,
+  "alternativeHostingReadOnlyReview": {
+    "renderFreeReviewed": true,
+    "notRecommendedAsImmediateProductionFix": true,
+    "providerAccessFromOtherHostNotProven": true,
+    "noAccountOrResourcesCreated": true,
+    "reference": "https://render.com/docs/free"
+  },
+  "supportSubmission": {
+    "ownerAuthorized": true,
+    "officialChannel": "https://www.tiktok.com/legal/report/feedback",
+    "ownerConfirmedCaptchaAndSubmission": true,
+    "confirmationReportedOn": "2026-10-26",
+    "independentAgentReceiptInspection": false,
+    "ticketNumberProvided": false,
+    "responseReceived": true,
+    "secondMessageSent": false,
+    "responseEvidence": "Owner pasted support email text on 2026-10-26; not independently read from mailbox",
+    "responseType": "Routing instructions for in-app or authenticated website support; no technical resolution",
+    "technicalDiagnosisProvided": false,
+    "followUpSent": false
+  }
 }

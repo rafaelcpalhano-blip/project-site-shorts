@@ -233,11 +233,17 @@
     "launchApproved": false
   },
   "currentRuntime": {
-    "version": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
+    "version": "8ced364c-e1c5-4542-9618-5cba2b260f40",
     "diagnosticsEnabled": false,
     "jobsEnabled": false,
     "source": "etapa-8-f-tiktok-disponibilidade.json",
     "tiktokBlockResolved": false,
-    "tiktokPublicationConfirmed": false
+    "tiktokPublicationConfirmed": false,
+    "tiktokAutomaticPreviewOptimized": true,
+    "tiktokProviderStillRateLimited": true,
+    "tiktokPreviewProviderCalls": 0,
+    "tiktokSingleRealSubmissionStillRateLimited": true,
+    "tiktokServerVerificationMandatory": true,
+    "tiktokTransportIdentifiedAndNoStore": true
   }
 }

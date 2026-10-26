@@ -46,3 +46,15 @@ Entrega organizada por gravidade: crítico (impede publicação), alto (corrigir
 Conclusão obrigatória: parecer sobre divulgação pública, impedimentos restantes, informações que podem continuar públicas, informações que devem permanecer privadas e checklist antes de mudar a visibilidade. IDs públicos de projeto e configurações públicas do SDK não devem ser confundidos automaticamente com credenciais privadas; avaliar restrições, permissões e contexto reais. Licenças sem comprovação permanecem não verificadas.
 
 Nenhuma ação desta fase foi antecipada para o GitHub. A verificação pontual de segredos nos arquivos de cada entrega continua sendo uma checagem de higiene, não uma auditoria de todo o histórico.
+
+## Bloqueio obrigatório de lançamento — TikTok
+
+Postagem TikTok ainda não aprovada. O relato ao suporte oficial foi enviado, com confirmação informada pelo proprietário; envio de chamado não equivale a correção. Aguardar possível resposta sem repetir consultas em sequência nem criar monitoramento automático por inferência.
+
+Antes de encerrar essa pendência, comprovar em homologação: link completo e curto reconhecidos; preenchimento automático do canal; confirmação efetiva da fonte no backend; publicação legítima autorizada; vídeo reproduzindo no PC e celular; manutenção de limites, duplicatas e recusa de ID inexistente/indisponível. Fixtures não substituem essas provas reais. Uma nova publicação real requer autorização própria; a tentativa única anterior já foi utilizada.
+
+Enquanto isso, avançam tarefas independentes da 8-F. A PWA continua após a conclusão técnica da Etapa8. Nenhum lançamento público será considerado pronto com o TikTok pendente; não substituir validação no servidor por URL válida, HTTP200 do player ou declaração do navegador.
+
+## Autorização posterior de sequência local
+
+Em26/10/2026 o proprietário escolheu “Preparar a PWA localmente em paralelo”. A8.5 pode avançar localmente antes do fechamento da8-F, sem deploy e sem eliminar qualquer gate. Essa escolha supera a dependência de ordem local descrita acima, preservando o encerramento técnico e a autorização de lançamento separados. Instalação, standalone e players em celulares reais continuam pendentes de validação pelo proprietário.
