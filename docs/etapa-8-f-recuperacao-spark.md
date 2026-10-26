@@ -103,3 +103,7 @@ Continua pendente ferramenta autenticada de captura real, escritor privado/ACL/d
 ## Verificador Windows e autenticacao local preparados
 
 26/10/2026: verificador ACL somente de leitura e composicao do provedor OAuth existente preparados; 50 testes relacionados aprovados e seis integracoes ACL repetidas com a verificacao do arquivo criado. Sem leitura de chave privada, OAuth real, consulta remota ou deploy. Detalhes e limites em [etapa-8-f-backup-acl-autenticacao.md](etapa-8-f-backup-acl-autenticacao.md). Ainda falta composicao operacional, carga explicita de credencial e aprovacao especifica de escopo/destino/orcamento antes da copia real. Nao considerar esta etapa como backup remoto concluido.
+
+## Composicao local integrada
+
+26/10/2026: captura, transporte, token e escritor conectados em biblioteca opt-in, sem CLI ou carga de chave real. 57 testes relacionados aprovados; apos ajuste final do preflight, 16 diretamente afetados repetidos sem falhas. Tipos/lint aprovados. Proposta de escopo/destino/tetos e limites em [etapa-8-f-backup-integrado.md](etapa-8-f-backup-integrado.md). Ainda falta entrada operacional com credencial explicita, prova com chave sintetica e autorizacao especifica antes da primeira copia real. Nenhuma operacao remota ou deploy.

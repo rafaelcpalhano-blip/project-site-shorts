@@ -22,6 +22,25 @@ async function plainDirectory(directory: string) {
   return realpath(target)
 }
 
+export async function checkPrivateSnapshotDestination(options: {
+  directory: string; repositoryRoot: string; basename: string
+  verifyPrivateDirectory: (canonicalDirectory: string) => Promise<boolean>
+}): Promise<string> {
+  try {
+    if (typeof options.basename !== 'string' || !/^[a-z0-9][a-z0-9-]{0,79}$/.test(options.basename) ||
+        /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/.test(options.basename) ||
+        !isAbsolute(options.directory) || !isAbsolute(options.repositoryRoot) ||
+        typeof options.verifyPrivateDirectory !== 'function') throw refused()
+    const directory = await plainDirectory(options.directory)
+    if (inside(await realpath(options.repositoryRoot), directory) ||
+        await options.verifyPrivateDirectory(directory) !== true) throw refused()
+    try { await lstat(resolve(directory, options.basename + '.snapshot.json')); throw refused() } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw refused()
+    }
+    return directory
+  } catch { throw refused() }
+}
+
 async function readExact(path: string, expected: Buffer, maximum: number) {
   if (!(await lstat(path)).isFile() || (await lstat(path)).isSymbolicLink()) throw refused()
   const file = await open(path, 'r')
@@ -57,26 +76,16 @@ export async function writePrivateSnapshot(options: Source & {
   try {
     const snapshot = structuredClone(options.snapshot)
     const {projectId, databaseId, maxBytes, basename} = options
-    if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 33554432 ||
-        !/^[a-z0-9][a-z0-9-]{0,79}$/.test(basename) || /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/.test(basename) ||
-        !isAbsolute(options.directory) || !isAbsolute(options.repositoryRoot) ||
-        typeof options.verifyPrivateDirectory !== 'function') throw refused()
+    if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 33554432) throw refused()
     await verifyFirestoreSnapshot(snapshot, {projectId, databaseId})
     const bytes = Buffer.from(JSON.stringify(snapshot) + '\n', 'utf8')
     if (bytes.length > maxBytes) throw refused()
-    const directory = await plainDirectory(options.directory)
-    const repository = await realpath(options.repositoryRoot)
-    if (inside(repository, directory)) throw refused()
+    const directory = await checkPrivateSnapshotDestination(options)
     const guard = async () => {
       if (await plainDirectory(options.directory) !== directory ||
           await options.verifyPrivateDirectory(directory) !== true) throw refused()
     }
-    await guard()
     const finalPath = resolve(directory, basename + '.snapshot.json')
-    // Refuse an existing file, directory, symlink or junction before creating a partial.
-    try { await lstat(finalPath); throw refused() } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw refused()
-    }
     const partialPath = resolve(directory, basename + '.' + randomUUID() + '.partial')
     const file = await open(partialPath, 'wx', 0o600)
     try { await file.writeFile(bytes); await file.sync() } finally { await file.close() }

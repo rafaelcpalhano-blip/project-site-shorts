@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-26",
+  "scope": "injected-local-backup-composition",
+  "relatedTests": {"passed": 57, "failed": 0, "skipped": 0, "newCases": 7},
+  "finalAffectedTestsRerun": {"passed": 16, "failed": 0},
+  "strictTypesPassed": true,
+  "lintPassed": true,
+  "preflightBeforeOAuth": true,
+  "fullFlowWithRealWindowsDirectoryAndFakeSourcePassed": true,
+  "realKeyLoaded": false,
+  "remoteNetworkUsed": false,
+  "productionDataAccessed": false,
+  "existingDirectoryAclChanged": false,
+  "runtimeChanged": false,
+  "deployPerformed": false,
+  "newDependencies": false,
+  "fullSuiteRerun": false,
+  "previousFullSuite": {"passed": 704, "failed": 0},
+  "realCredentialEntrypointReady": false,
+  "realBackupPerformed": false,
+  "proposedLimitsNotRemoteQuotaCertification": {
+    "documents": 500, "firestoreRequests": 250,
+    "coreJsonResponseBytes": 5242880, "perResponseTransportBytes": 1048576,
+    "fileBytes": 8388608, "cooperativeTimeoutMs": 120000
+  }
+}
