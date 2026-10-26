@@ -1,5 +1,7 @@
 # Etapa 8-E — otimização de CPU e diagnóstico dos provedores
 
+Atualização posterior: proprietário aceitou a ressalva de picos isolados e autorizou somente homologação controlada. Endereço reaberto, sem aprovação de lançamento. Estado atual e CPU por endpoint em [homologação controlada](etapa-8-e-homologacao-controlada.md); o restante preserva a rodada histórica.
+
 26/10/2026. Base9c53dda. **Otimizações entregues e verificadas; endereço público permanece suspenso.** Última versão e310298a-d45e-4a07-b97a-fee12a5ccbb3, workers_dev=false, preview_urls=false, jobs=false e diagnóstico do provedor desligado. Página e /api/admin/config retornaram404. Sem custo/upgrade, novas permissões, migração ou conteúdo de teste remoto. Etapa8 ainda aberta; não iniciar8.5/9.
 
 ## Ajustes e motivo

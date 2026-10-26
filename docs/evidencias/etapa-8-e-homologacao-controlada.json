@@ -1,0 +1,2395 @@
+{
+  "observedAt": "2026-10-26T06:57:00.999Z",
+  "origin": "https://www.clipzone.workers.dev",
+  "projectId": "clipzone-db02a",
+  "approval": "Controlled homologation explicitly approved by owner; no launch approval",
+  "currentVersion": "de3954d1-9e10-4eb3-b09a-55d23e8572d1",
+  "state": "controlled-homologation-open-not-launch-approved",
+  "launchApproved": false,
+  "stage9Ready": false,
+  "workersDevEnabled": true,
+  "previewUrlsEnabled": false,
+  "jobsEnabled": false,
+  "providerDiagnosticsEnabled": false,
+  "homologationObservationsEnabled": true,
+  "validation": {
+    "nodePassed": 650,
+    "nodeFailed": 0,
+    "workerdSpecificPassed": 14,
+    "workerdIntegratedPassed": 16,
+    "isolatedFirestore8081PreviousProofPassed": 1,
+    "typesAndLintPassed": true
+  },
+  "measuredHttpRequests": 74,
+  "cpuRecords": 44,
+  "observedIsolates": 4,
+  "applicationInitializations": [
+    {
+      "isolate": "isolate-1",
+      "path": "/api/session",
+      "cpuMs": 12,
+      "firstApiInIsolate": true
+    },
+    {
+      "isolate": "isolate-2",
+      "path": "/api/feed",
+      "cpuMs": 9,
+      "firstApiInIsolate": true
+    },
+    {
+      "isolate": "isolate-3",
+      "path": "/api/session",
+      "cpuMs": 8,
+      "firstApiInIsolate": true
+    },
+    {
+      "isolate": "isolate-4",
+      "path": "/api/session",
+      "cpuMs": 8,
+      "firstApiInIsolate": true
+    }
+  ],
+  "cpuByEndpoint": [
+    {
+      "path": "/api/admin/comments/queue",
+      "status": 401,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        1
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 1
+    },
+    {
+      "path": "/api/admin/config",
+      "status": 200,
+      "samples": 6,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        1,
+        0
+      ],
+      "reusedRouteMs": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "maxCpuMs": 1
+    },
+    {
+      "path": "/api/admin/games/catalog",
+      "status": 401,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/admin/queue",
+      "status": 401,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/admin/session",
+      "status": 401,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/comments",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/comments/list",
+      "status": 404,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/feed",
+      "status": 200,
+      "samples": 8,
+      "applicationInitializationMs": [
+        9
+      ],
+      "firstRouteInExistingApplicationMs": [
+        5,
+        3
+      ],
+      "reusedRouteMs": [
+        4,
+        3,
+        2,
+        2,
+        2
+      ],
+      "maxCpuMs": 9
+    },
+    {
+      "path": "/api/feed/ordered",
+      "status": 503,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/games/confirm",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/games/list",
+      "status": 200,
+      "samples": 6,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        4,
+        2
+      ],
+      "reusedRouteMs": [
+        3,
+        3,
+        3,
+        1
+      ],
+      "maxCpuMs": 4
+    },
+    {
+      "path": "/api/games/manual",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/games/search",
+      "status": 200,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        4
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 4
+    },
+    {
+      "path": "/api/likes/set",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        3
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 3
+    },
+    {
+      "path": "/api/likes/state",
+      "status": 404,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        4
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 4
+    },
+    {
+      "path": "/api/playback/failure",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        4
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 4
+    },
+    {
+      "path": "/api/reports",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/session",
+      "status": 204,
+      "samples": 5,
+      "applicationInitializationMs": [
+        12,
+        8,
+        8
+      ],
+      "firstRouteInExistingApplicationMs": [
+        0
+      ],
+      "reusedRouteMs": [
+        0
+      ],
+      "maxCpuMs": 12
+    },
+    {
+      "path": "/api/session",
+      "status": 403,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [],
+      "reusedRouteMs": [
+        0
+      ],
+      "maxCpuMs": 0
+    },
+    {
+      "path": "/api/shorts",
+      "status": 400,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        0
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 0
+    },
+    {
+      "path": "/api/shorts/detail",
+      "status": 404,
+      "samples": 1,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        2
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 2
+    },
+    {
+      "path": "/api/shorts/preview",
+      "status": 200,
+      "samples": 2,
+      "applicationInitializationMs": [],
+      "firstRouteInExistingApplicationMs": [
+        4,
+        5
+      ],
+      "reusedRouteMs": [],
+      "maxCpuMs": 5
+    }
+  ],
+  "exceededCpuObserved": 0,
+  "error1102Observed": 0,
+  "exceptionsObserved": 0,
+  "recurringReusedRouteCpuAbove10msObserved": false,
+  "requests": [
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "session-new",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "feed-1",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "catalog-1",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "config-1",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "feed-2",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "catalog-2",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "config-2",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "feed-3",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "catalog-3",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "config-3",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "session-reused-1",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "session-reused-2",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "youtube",
+      "path": "/api/shorts/preview",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "twitch",
+      "path": "/api/shorts/preview",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "igdb",
+      "path": "/api/games/search",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "short-missing",
+      "path": "/api/shorts/detail",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "comments-missing",
+      "path": "/api/comments/list",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "ranking-readiness",
+      "path": "/api/feed/ordered",
+      "method": "POST",
+      "status": 503,
+      "error": "ranking-not-ready",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "like-state-missing",
+      "path": "/api/likes/state",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "submission-invalid",
+      "path": "/api/shorts",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "like-invalid",
+      "path": "/api/likes/set",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "comment-invalid",
+      "path": "/api/comments",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "report-invalid",
+      "path": "/api/reports",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "playback-invalid",
+      "path": "/api/playback/failure",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "manual-game-invalid",
+      "path": "/api/games/manual",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "official-game-invalid",
+      "path": "/api/games/confirm",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "admin-session-denied",
+      "path": "/api/admin/session",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "admin-catalog-denied",
+      "path": "/api/admin/games/catalog",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "admin-video-queue-denied",
+      "path": "/api/admin/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "admin-comment-queue-denied",
+      "path": "/api/admin/comments/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "name": "foreign-origin-denied",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 403,
+      "error": "invalid-origin",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "feed-1",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "catalog-1",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "config-1",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "feed-2",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "catalog-2",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "config-2",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "feed-3",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "catalog-3",
+      "path": "/api/games/list",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "config-3",
+      "path": "/api/admin/config",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "session-reused",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "youtube",
+      "path": "/api/shorts/preview",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "name": "twitch",
+      "path": "/api/shorts/preview",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "session-new",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "feed-first",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "feed-reused",
+      "path": "/api/feed",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false,
+      "items": 0
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "twitch",
+      "path": "/api/shorts/preview",
+      "method": "POST",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "igdb",
+      "path": "/api/games/search",
+      "method": "GET",
+      "status": 200,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "short-missing",
+      "path": "/api/shorts/detail",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "comments-missing",
+      "path": "/api/comments/list",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "ranking-readiness",
+      "path": "/api/feed/ordered",
+      "method": "POST",
+      "status": 503,
+      "error": "ranking-not-ready",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "like-state-missing",
+      "path": "/api/likes/state",
+      "method": "POST",
+      "status": 404,
+      "error": "short-unavailable",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "submission-invalid",
+      "path": "/api/shorts",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "like-invalid",
+      "path": "/api/likes/set",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "comment-invalid",
+      "path": "/api/comments",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "report-invalid",
+      "path": "/api/reports",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "playback-invalid",
+      "path": "/api/playback/failure",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "manual-game-invalid",
+      "path": "/api/games/manual",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "official-game-invalid",
+      "path": "/api/games/confirm",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "admin-session-denied",
+      "path": "/api/admin/session",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "admin-catalog-denied",
+      "path": "/api/admin/games/catalog",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "admin-video-queue-denied",
+      "path": "/api/admin/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "admin-comment-queue-denied",
+      "path": "/api/admin/comments/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "name": "foreign-origin-denied",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 403,
+      "error": "invalid-origin",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "session-new",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 204,
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "comment-invalid",
+      "path": "/api/comments",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "report-invalid",
+      "path": "/api/reports",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "playback-invalid",
+      "path": "/api/playback/failure",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "manual-game-invalid",
+      "path": "/api/games/manual",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "official-game-invalid",
+      "path": "/api/games/confirm",
+      "method": "POST",
+      "status": 400,
+      "error": "invalid-input",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "admin-session-denied",
+      "path": "/api/admin/session",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "admin-video-queue-denied",
+      "path": "/api/admin/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "admin-comment-queue-denied",
+      "path": "/api/admin/comments/queue",
+      "method": "POST",
+      "status": 401,
+      "error": "invalid-token",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "name": "foreign-origin-denied",
+      "path": "/api/session",
+      "method": "POST",
+      "status": 403,
+      "error": "invalid-origin",
+      "error1102": false,
+      "expected": true,
+      "titlePresent": false,
+      "channelPresent": false
+    }
+  ],
+  "traces": [
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/session",
+      "status": 204,
+      "outcome": "ok",
+      "cpuMs": 12,
+      "wallMs": 443,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 1,
+        "firstApiInIsolate": true,
+        "applicationCreated": true,
+        "firstRouteInIsolate": true,
+        "route": "/api/session"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 5,
+      "wallMs": 97,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 2,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 70,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 3,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 1,
+      "wallMs": 1,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 4,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 76,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 5,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 102,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 6,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 7,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 89,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 8,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 157,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 9,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 10,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 1,
+      "path": "/api/session",
+      "status": 204,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 1,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-1",
+        "sequence": 11,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/session"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 9,
+      "wallMs": 390,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 1,
+        "firstApiInIsolate": true,
+        "applicationCreated": true,
+        "firstRouteInIsolate": true,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 119,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 2,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 3,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 46,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 4,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 60,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 5,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 6,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 57,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 7,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/games/list",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 1,
+      "wallMs": 86,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 8,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/games/list"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/admin/config",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 9,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/admin/config"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/session",
+      "status": 204,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 10,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/session"
+      }
+    },
+    {
+      "round": 1,
+      "wave": 2,
+      "path": "/api/shorts/preview",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 167,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 11,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/shorts/preview"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/session",
+      "status": 204,
+      "outcome": "ok",
+      "cpuMs": 8,
+      "wallMs": 379,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 1,
+        "firstApiInIsolate": true,
+        "applicationCreated": true,
+        "firstRouteInIsolate": true,
+        "route": "/api/session"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 97,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 2,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/feed",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 64,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 3,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/feed"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/shorts/preview",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 5,
+      "wallMs": 630,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 4,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/shorts/preview"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/games/search",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 887,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 5,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/games/search"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/shorts/detail",
+      "status": 404,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 75,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 6,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/shorts/detail"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/comments/list",
+      "status": 404,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 60,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 7,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/comments/list"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/feed/ordered",
+      "status": 503,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 63,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 8,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/feed/ordered"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/likes/state",
+      "status": 404,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 118,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 9,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/likes/state"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/shorts",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 1,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 10,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/shorts"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/likes/set",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 3,
+      "wallMs": 79,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 11,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/likes/set"
+      }
+    },
+    {
+      "round": 2,
+      "wave": 1,
+      "path": "/api/admin/games/catalog",
+      "status": 401,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 26,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 18,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/games/catalog"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/session",
+      "status": 204,
+      "outcome": "ok",
+      "cpuMs": 8,
+      "wallMs": 356,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 1,
+        "firstApiInIsolate": true,
+        "applicationCreated": true,
+        "firstRouteInIsolate": true,
+        "route": "/api/session"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/comments",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 74,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 2,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/comments"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/reports",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 25,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 3,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/reports"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/playback/failure",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 4,
+      "wallMs": 86,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 4,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/playback/failure"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/games/manual",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 38,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 5,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/games/manual"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/games/confirm",
+      "status": 400,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 36,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 6,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/games/confirm"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/admin/session",
+      "status": 401,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 56,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 7,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/session"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/admin/queue",
+      "status": 401,
+      "outcome": "ok",
+      "cpuMs": 2,
+      "wallMs": 51,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 8,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/queue"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/admin/comments/queue",
+      "status": 401,
+      "outcome": "ok",
+      "cpuMs": 1,
+      "wallMs": 25,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 9,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": true,
+        "route": "/api/admin/comments/queue"
+      }
+    },
+    {
+      "round": 3,
+      "wave": 1,
+      "path": "/api/session",
+      "status": 403,
+      "outcome": "ok",
+      "cpuMs": 0,
+      "wallMs": 0,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-4",
+        "sequence": 10,
+        "firstApiInIsolate": false,
+        "applicationCreated": false,
+        "firstRouteInIsolate": false,
+        "route": "/api/session"
+      }
+    }
+  ],
+  "collector": {
+    "firstTwoAttemptsIncomplete": true,
+    "incompleteAttemptsSuspended": true,
+    "allMissingPathsCoveredBySubsequentBatches": true,
+    "finalBatchExpected": 10,
+    "finalBatchRecorded": 10,
+    "finalBatchComplete": true,
+    "smallBatchesAnd800msPacingUsed": true,
+    "underlyingEventLossCauseNotConfirmed": true,
+    "rawHeadersCookiesTokensUrlsOrBodiesSaved": false
+  },
+  "tiktok": {
+    "previousOfficialOembedStatus": 429,
+    "requestsThisRound": 0,
+    "newKeysProxyOrBypass": false,
+    "separateUnresolvedProviderLimitation": true
+  },
+  "securityAndData": {
+    "adminUidGoogleTotpUnchanged": true,
+    "crossOriginRejected": true,
+    "adminWithoutTokenRejected": true,
+    "eightSecretValuesPreserved": true,
+    "localYouTubeKeyAndSevenIpsUnchanged": true,
+    "contentWrites": 0,
+    "localEmulator8080Untouched": true,
+    "paidPlanBillingPermissionsIndexesRulesOrExternalServicesChanged": false,
+    "contentWritesScope": "Agent collections only; owner independently published definitive Twitch content"
+  },
+  "suspensionStrategy": {
+    "immediateSuspendOn": [
+      "exceededCpu",
+      "1102",
+      "unexpected-response",
+      "exceptions",
+      "missing-observation"
+    ],
+    "recurrence": "Two consecutive or three of last ten reused-route samples above 10ms, on the same endpoint"
+  },
+  "monitoringScope": "Bounded controlled collections only; no unattended 24/7 monitor or paid log service created",
+  "pending": [
+    "CPU of successful Google/TOTP login and publication; independent unauthorized UID/revoked-token checks",
+    "Successful likes/comments/reports/moderation CPU and behavior without fictional remote content",
+    "Repeated initialization spikes investigated; 12ms and 15ms observed without runtime limit errors",
+    "Ranking initialization/generation; jobs remain disabled pending separate decision",
+    "TikTok successful metadata/publication or explicit owner acceptance of provider limitation",
+    "PC/mobile playback and manual checklist; representative Lighthouse after stabilization",
+    "Definitive-content preservation/restoration procedure and owner approval of release checklist"
+  ],
+  "ownerConfirmationAndContentReadings": {
+    "observedAt": "2026-10-26T07:07:19.126Z",
+    "origin": "https://www.clipzone.workers.dev",
+    "ownerReportedGoogleTotpLoginSucceeded": true,
+    "ownerReportedTwitchPublicationSucceeded": true,
+    "retroactiveCpuAttributed": false,
+    "tiktokRequests": 0,
+    "businessWritesByAgent": 0,
+    "requests": [
+      {
+        "name": "session",
+        "path": "/api/session",
+        "status": 204,
+        "error1102": false
+      },
+      {
+        "name": "definitive-feed",
+        "path": "/api/feed",
+        "status": 200,
+        "items": 1,
+        "error1102": false
+      },
+      {
+        "name": "short-detail-1",
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "short-detail-2",
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "short-detail-3",
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "like-state-1",
+        "path": "/api/likes/state",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "like-state-2",
+        "path": "/api/likes/state",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "like-state-3",
+        "path": "/api/likes/state",
+        "status": 200,
+        "error1102": false
+      },
+      {
+        "name": "comments-1",
+        "path": "/api/comments/list",
+        "status": 200,
+        "items": 0,
+        "error1102": false
+      },
+      {
+        "name": "comments-2",
+        "path": "/api/comments/list",
+        "status": 200,
+        "items": 0,
+        "error1102": false
+      },
+      {
+        "name": "comments-3",
+        "path": "/api/comments/list",
+        "status": 200,
+        "items": 0,
+        "error1102": false
+      },
+      {
+        "name": "game-detail",
+        "path": "/api/games/detail",
+        "status": 200,
+        "error1102": false
+      }
+    ],
+    "traces": [
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 15,
+        "wallMs": 484,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": true,
+          "applicationCreated": true,
+          "firstRouteInIsolate": true,
+          "route": "/api/session"
+        }
+      },
+      {
+        "path": "/api/feed",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 8,
+        "wallMs": 162,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "/api/feed"
+        }
+      },
+      {
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 5,
+        "wallMs": 297,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "/api/shorts/detail"
+        }
+      },
+      {
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 4,
+        "wallMs": 86,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": false,
+          "route": "/api/shorts/detail"
+        }
+      },
+      {
+        "path": "/api/shorts/detail",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 5,
+        "wallMs": 84,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": false,
+          "route": "/api/shorts/detail"
+        }
+      },
+      {
+        "path": "/api/likes/state",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 8,
+        "wallMs": 168,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "/api/likes/state"
+        }
+      },
+      {
+        "path": "/api/likes/state",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 6,
+        "wallMs": 211,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "/api/likes/state"
+        }
+      },
+      {
+        "path": "/api/likes/state",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 124,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": false,
+          "route": "/api/likes/state"
+        }
+      },
+      {
+        "path": "/api/comments/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 4,
+        "wallMs": 115,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "/api/comments/list"
+        }
+      },
+      {
+        "path": "/api/comments/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 76,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": false,
+          "route": "/api/comments/list"
+        }
+      },
+      {
+        "path": "/api/comments/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 92,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": false,
+          "route": "/api/comments/list"
+        }
+      },
+      {
+        "path": "/api/games/detail",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 2,
+        "wallMs": 71,
+        "exceptionCount": 0,
+        "observation": {
+          "firstApiInIsolate": false,
+          "applicationCreated": false,
+          "firstRouteInIsolate": true,
+          "route": "other"
+        }
+      }
+    ],
+    "clip": {
+      "shortId": "3abedf688139f2c7a32acd98747f688b92d7dde8f16f44e7362f86bc420e60be",
+      "gameId": "igdb-417164",
+      "platform": "Twitch",
+      "inPublicFeed": true,
+      "titlePresent": true,
+      "channelPresent": true
+    },
+    "likeReadOnly": {
+      "count": 0,
+      "liked": false,
+      "revision": 0
+    },
+    "game": {
+      "idMatches": true,
+      "namePresent": true
+    },
+    "finalState": "controlled-homologation-open-not-launch-approved",
+    "exceededCpuObserved": 0,
+    "error1102Observed": 0,
+    "completedAt": "2026-10-26T07:07:43.727Z"
+  },
+  "totalHttpRequestsIncludingOwnerContentProbe": 86,
+  "totalCpuRecordsIncludingOwnerContentProbe": 56
+}

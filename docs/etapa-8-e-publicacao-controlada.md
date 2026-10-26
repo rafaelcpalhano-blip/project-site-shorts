@@ -1,5 +1,7 @@
 # Etapa 8-E — primeira publicação e suspensão controlada
 
+Atualização posterior: proprietário aceitou a ressalva de picos isolados e autorizou somente homologação controlada. Endereço reaberto, sem aprovação de lançamento. Estado atual e CPU por endpoint em [homologação controlada](etapa-8-e-homologacao-controlada.md); o restante preserva a rodada histórica.
+
 Retomada posterior: otimizações e três rodadas adicionais registradas em [CPU e provedores](etapa-8-e-cpu-provedores.md). Estado público continua suspenso; versão atual e310298a-d45e-4a07-b97a-fee12a5ccbb3. O restante preserva a primeira rodada histórica.
 
 26/10/2026. **O Worker foi publicado e respondeu em HTTPS; o acesso público foi suspenso preventivamente após o gate de CPU.** Estado final: workers_dev=false, preview_urls=false, jobs=false. Página e /api/admin/config retornam404 após a suspensão. Worker, assets, segredos, banco e domínio Auth preservados. Etapa8 não concluída; não avançar para8.5/9.
