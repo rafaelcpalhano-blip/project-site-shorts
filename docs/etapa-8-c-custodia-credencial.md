@@ -1,5 +1,7 @@
 # Etapa 8-C — custódia da credencial de runtime
 
+Atualização: o handoff descrito abaixo foi concluído pelo proprietário; credencial validada para OAuth e leitura dos três marcadores. Consulte o resultado real ao final. A descrição da preparação é histórica.
+
 26/10/2026. Preparação local e handoff, sem gerar chave. Alvo mantido: clipzone-db02a/(default), identidade clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com e papel mínimo já verificado. Base desta rodada:31ab0c1. Índices/IAM/metadados concluídos conforme etapa-8-c-preparacao-remota.md; não reinicializar o banco.
 
 ## Armazenamento privado
@@ -30,3 +32,13 @@ Não executar wrangler secret put como se fosse armazenamento neutro: a document
 Rotação futura: preparar nova credencial, validar o uso no destino e só então revogar a anterior sob autorização; não apagar chave funcional antes da validação. Em caso de exposição, tratar revogação de forma explícita e nunca tentar reutilizar o segredo exposto. Não implementado agendamento automático de rotação.
 
 Fontes oficiais: [criação de chaves Google](https://docs.cloud.google.com/iam/docs/keys-create-delete) e [segredos Workers](https://developers.cloudflare.com/workers/configuration/secrets/). Sem deploy, ativação de APIs, alteração IAM/regras/billing, testes completos, Lighthouse ou reinício dos servidores. Dados locais preservados. A8-C permanece pendente de credencial/teste real; domínio HTTPS/TOTP/CPU/provedores/jobs e validação final ainda posteriores.
+
+## Resultado real — 26/10/2026
+
+O proprietário gerou o JSON e mostrou somente sua localização/nome no Explorer, sem expor o conteúdo. A extensão oculta do Windows resultou em clipzone-runtime.json.json. Foi corrigido apenas o nome para clipzone-runtime.json, recusando sobrescrita; não houve criação de outra chave. Arquivo regular, sem reparse point, tamanho dentro do limite. ACL do arquivo conferida antes da leitura: duas concessões Allow, somente usuário Windows atual e SYSTEM.
+
+--check importou a chave com createServiceKeySigner e produziu assinatura local sem transmitir segredo. --probe autenticou com createServiceTokenSupplier da aplicação, usando exclusivamente a identidade clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com e o escopo datastore; não houve fallback para a conta do operador/CLI. Leitura dos três marcadores gameNameState/v1, adminQueueState/reportTitles e rankingState/metrics confirmou version1/ready e o formato esperado dos dois primeiros. O transporte recusava operações e documentos fora da lista. Nenhuma escrita, criação de sessão administrativa ou consulta de jogos/shorts/usuários realizada.
+
+Evidência sanitizada: [etapa-8-c-credencial-runtime.json](evidencias/etapa-8-c-credencial-runtime.json). Nenhum PEM, private_key_id, token, assertion, corpo de credencial ou header Authorization incluído no relatório/Git. O arquivo privado permanece fora do repositório. Não copiado para .env, VITE_*, bundle ou Cloudflare. Sem deploy, mudança de regra, IAM, billing, API, domínio ou dados. Sem repetir suíte/build/Lighthouse ou reiniciar serviços locais.
+
+Custódia local e teste OAuth/leitura da identidade real agora concluídos. Esta prova não valida permissões de escrita/transação via runtime, CPU no Workers Free, revogação/MFA/TOTP, sessões/cookies/origem, provedores ou publicação HTTPS. Essas validações continuam para homologação sob escopo próprio; não ampliar permissões por suposição nem declarar a Etapa8 completa. Próximo: apresentar endereço/origem gratuitos e conjunto exato de bindings/domínio/versão/publicação para aprovação antes de qualquer alteração remota adicional. Não executar secret put ou deploy automaticamente.

@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-26T04:11:30.564Z",
+  "projectId": "clipzone-db02a",
+  "serviceAccountEmail": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
+  "localKeyImported": true,
+  "networkProbe": true,
+  "writes": 0,
+  "oauthAndMarkerReadVerified": true,
+  "markerPaths": [
+    "gameNameState/v1",
+    "adminQueueState/reportTitles",
+    "rankingState/metrics"
+  ],
+  "timezone": "America/Sao_Paulo",
+  "filenameDuplicateExtensionCorrected": true,
+  "fileAclVerified": {
+    "onlyCurrentUserAndSystem": true,
+    "allowPrincipals": 2,
+    "reparsePoint": false
+  },
+  "operatorCredentialUsed": false,
+  "credentialCreatedByOwner": true,
+  "privateMaterialIncluded": false,
+  "remoteChanges": false,
+  "workersDeploymentTested": false,
+  "transactionsOrWritesTested": false
+}
