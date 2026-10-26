@@ -1,0 +1,104 @@
+{
+  "preparedAt": "2026-10-26T04:24:40.666623+00:00",
+  "method": "Read-only authenticated Console and Auth GET; local Wrangler dry-run",
+  "cloudflare": {
+    "currentPlan": "Free",
+    "monthlyBaseObservedUSD": 0,
+    "accountSubdomain": "clipzone.workers.dev",
+    "projectsDisplayed": 0,
+    "requestsTodayDisplayed": 0,
+    "workerCreated": false,
+    "accountIdIncluded": false
+  },
+  "proposal": {
+    "workerName": "www",
+    "origin": "https://www.clipzone.workers.dev",
+    "hostname": "www.clipzone.workers.dev",
+    "addressReserved": false,
+    "apiSameOrigin": true,
+    "jobsEnabled": false,
+    "publishFirestoreRules": false,
+    "newPaidServices": false,
+    "secretBindingNames": [
+      "FIREBASE_SERVICE_PRIVATE_KEY",
+      "CLIPZONE_VISITOR_SECRET",
+      "CLIPZONE_NETWORK_SECRET",
+      "FIREBASE_AUTH_API_KEY",
+      "CLIPZONE_ADMIN_UIDS",
+      "TWITCH_CLIENT_ID",
+      "TWITCH_CLIENT_SECRET",
+      "YOUTUBE_API_KEY"
+    ]
+  },
+  "auth": {
+    "observedAt": "2026-10-26T04:17:56.521Z",
+    "projectId": "clipzone-db02a",
+    "configResourceName": "projects/818748049569/config",
+    "method": "GET project config only",
+    "subtype": "IDENTITY_PLATFORM",
+    "authorizedDomains": [
+      "localhost",
+      "clipzone-db02a.firebaseapp.com",
+      "clipzone-db02a.web.app",
+      "127.0.0.1"
+    ],
+    "mfa": {
+      "state": "ENABLED",
+      "providerConfigs": [
+        {
+          "state": "ENABLED",
+          "totpProviderConfig": {
+            "adjacentIntervals": 1
+          }
+        }
+      ]
+    }
+  },
+  "localConfigurationPresence": {
+    "FIREBASE_AUTH_API_KEY": true,
+    "CLIPZONE_ADMIN_UIDS": true,
+    "TWITCH_CLIENT_ID": true,
+    "TWITCH_CLIENT_SECRET": true,
+    "YOUTUBE_API_KEY": true,
+    "adminUidCount": 1,
+    "valuesIncluded": false
+  },
+  "dryRun": {
+    "wranglerVersion": "4.152.0",
+    "mode": "deploy --dry-run",
+    "success": true,
+    "assetsRead": 37,
+    "workerKiB": 287.83,
+    "workerGzipKiB": 61.94,
+    "devVarsFromEnvDisabled": true,
+    "credentialRead": false,
+    "remoteUpload": false,
+    "cpuMeasured": false,
+    "dependenciesInstalled": false,
+    "scopeNote": "Code bundle verified before name/origin metadata update; current JSON template checked locally, not deployed."
+  },
+  "pending": [
+    "Explicit remote publication and secret-transmission approval",
+    "Wrangler operator authentication",
+    "Review provider-key restrictions without automatic change",
+    "Real HTTPS Google+TOTP+UID and cookie/origin checks",
+    "Real Workers CPU and application operations",
+    "Separate jobs/cron approval",
+    "Optional translation AI free eligibility",
+    "Owner content and final PC/mobile/Lighthouse validation"
+  ],
+  "remoteMutations": true,
+  "secretsGeneratedOrUploaded": false,
+  "deployPerformed": false,
+  "updatedAt": "2026-10-26T04:33:30.184770+00:00",
+  "accountSubdomainChange": {
+    "authorizedByOwner": true,
+    "applied": true,
+    "verifiedSubdomain": "clipzone.workers.dev",
+    "projectsDisplayedAfter": 0,
+    "workerCreated": false,
+    "publicationAuthorizedByThisChange": false,
+    "secretTransmissionAuthorizedByThisChange": false
+  },
+  "remoteMutationScope": "Only approved account subdomain rename; Auth GET was read-only; no Worker or deployment"
+}

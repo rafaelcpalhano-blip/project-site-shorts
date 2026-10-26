@@ -1,7 +1,7 @@
 // REVIEW TEMPLATE ONLY. Not an active Wrangler configuration; do not deploy yet.
-// Origin/account address is unresolved; no secrets or production bindings here.
+// Proposed origin verified from account subdomain; no Worker created or secrets here.
 {
-  "name": "clipzone-homologacao",
+  "name": "www",
   "main": "../../server/runtime/cloudflare-main.ts",
   "compatibility_date": "2026-10-25",
   "compatibility_flags": ["nodejs_compat"],
@@ -15,7 +15,7 @@
     "run_worker_first": ["/api", "/api/*", "/images/games/*"]
   },
   "vars": {
-    "CLIPZONE_ORIGIN": "<endereco-HTTPS-exato-a-aprovar>",
+    "CLIPZONE_ORIGIN": "https://www.clipzone.workers.dev",
     "FIREBASE_PROJECT_ID": "clipzone-db02a",
     "FIREBASE_AUTH_PROJECT_ID": "clipzone-db02a",
     "FIREBASE_SERVICE_EMAIL": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
