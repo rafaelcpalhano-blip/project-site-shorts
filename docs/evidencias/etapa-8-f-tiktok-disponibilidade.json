@@ -314,7 +314,7 @@
     "successProvenInFixtureOnly": true,
     "supersededBy": "URL handle preview with zero provider calls; profile lookup/cache removed from live path"
   },
-  "nextDecision": "Choose authorized authenticated follow-up channel for developer Embed/oEmbed issue; no new message sent. Server validation remains mandatory and publication unresolved.",
+  "nextDecision": "Await possible technical reply to the submitted Developers Bug Report / Embed request; no automatic mailbox monitoring configured. Keep server validation and TikTok launch blocker; do not duplicate the report.",
   "cacheRecheck": {
     "firstConditionalStatus": 200,
     "laterConditionalStatus": 304,
@@ -640,5 +640,31 @@
     "responseType": "Routing instructions for in-app or authenticated website support; no technical resolution",
     "technicalDiagnosisProvided": false,
     "followUpSent": false
+  },
+  "developerEmbedFollowUp": {
+    "ownerAuthorized": true,
+    "preparedOn": "2026-10-26",
+    "channel": "https://developers.tiktok.com/portal/support",
+    "category": "Bug Report",
+    "topic": "Embed",
+    "publicContactEmailUsed": true,
+    "publicDomainAndExampleOnly": true,
+    "attachmentsProvided": false,
+    "secretsOrPrivateIpProvided": false,
+    "missingLogIdExplicitlyDisclosed": true,
+    "newProviderProbePerformed": false,
+    "submitClickedOnce": true,
+    "captchaRequired": true,
+    "captchaSolvedByAgent": false,
+    "receiptConfirmed": true,
+    "ticketNumberProvided": false,
+    "tabPreservedForOwner": true,
+    "newLoginPerformedByAgent": false,
+    "termsAcceptedByAgent": false,
+    "receiptEvidence": "Owner reported completing CAPTCHA and seeing submission confirmation",
+    "ownerConfirmedOn": "2026-10-26",
+    "independentAgentReceiptInspection": false,
+    "technicalResponseReceived": false,
+    "duplicateMessageSent": false
   }
 }

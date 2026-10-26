@@ -233,10 +233,10 @@
     "launchApproved": false
   },
   "currentRuntime": {
-    "version": "8ced364c-e1c5-4542-9618-5cba2b260f40",
+    "version": "a0d58723-b19c-4439-a2d2-85a402571691",
     "diagnosticsEnabled": false,
     "jobsEnabled": false,
-    "source": "etapa-8-f-tiktok-disponibilidade.json",
+    "source": "etapa-8-f-api-headers-homologacao.json",
     "tiktokBlockResolved": false,
     "tiktokPublicationConfirmed": false,
     "tiktokAutomaticPreviewOptimized": true,
@@ -245,5 +245,18 @@
     "tiktokSingleRealSubmissionStillRateLimited": true,
     "tiktokServerVerificationMandatory": true,
     "tiktokTransportIdentifiedAndNoStore": true
+  },
+  "apiHeaderPreparation": {
+    "source": "etapa-8-f-api-headers-local.json",
+    "nodeTestsPassed": 704,
+    "workerdCasesPassed": 20,
+    "deployed": true,
+    "explicitHomologationApprovalPending": false,
+    "edgeCpuMeasured": false,
+    "assetsByteIdentical": 43,
+    "remoteChecksPassed": 13,
+    "deploymentEvidence": "etapa-8-f-api-headers-homologacao.json",
+    "ownerAdminConfirmationPending": false,
+    "ownerAdminPanelOpenedNormally": true
   }
 }

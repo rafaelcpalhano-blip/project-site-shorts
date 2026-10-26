@@ -76,3 +76,21 @@ O proprietário confirmou, após atualizar o site, que o painel administrativo a
 **Pacote de cabeçalhos/cache aplicado e verificado nesse escopo.** Permanecem abertas as demais pendências da 8-F: CPU das ações válidas e investigação de inicializações, lacunas de consultas administrativas, TikTok 429, relevância/jobs e recuperação. Checklist completo PC/mobile/players e Lighthouse permanece na 9-A do cronograma atualizado. PWA 8.5, auditoria GitHub 9-B.5 e lançamento não foram antecipados.
 
 Evidência: [etapa-8-f-headers-publicados.json](evidencias/etapa-8-f-headers-publicados.json).
+
+## 26/10/2026 — cobertura local dos cabeçalhos dinâmicos
+
+Prosseguindo nas tarefas independentes do TikTok, foi preparada política comum para respostas da API e falhas anteriores à composição: no-store/nosniff/no-referrer e HSTS de1dia apenas para URL HTTPS. Assets, origem/IP/CSRF, cookies, Google/TOTP/UID, limites, providers, roteamento e jobs preservados. Oito provas novas e12contratos de entrada passaram no Node/workerd; suíte geral704/0, tipos servidor e lint global aprovados. Pacote congelável com43 assets byte a byte iguais aos publicados, checkpoint e dry-run preparado. Não houve deploy, acesso ao banco, chamada ao TikTok ou nova medição deCPU. Relatório/evidências: etapa-8-f-api-headers.md e etapa-8-f-api-headers-local.json. Aplicação na homologação depende de autorização específica; referência ativa conhecida5b2a243b-9c90-4fd0-94e0-592772f91b1d. Demais gates8-F e lançamento continuam abertos.
+
+## 26/10/2026 — cabeçalhos dinâmicos publicados com autorização específica
+
+O proprietário autorizou publicar exclusivamente o pacote testado de cabeçalhos da API. Versão `a0d58723-b19c-4439-a2d2-85a402571691`, na homologação https://www.clipzone.workers.dev; anterior `5b2a243b-9c90-4fd0-94e0-592772f91b1d` conferida ativa antes da execução e preservada como referência de rollback. Bundle congelado do dry-run enviado,43assets idênticos ao pacote PWA, mesmos oito valores de segredos fornecidos e arquivo privado intacto; roteamento preservado, jobs/diagnósticos desligados. Não houve alteração de dados, Firebase, planos ou permissões.
+
+Treze verificações remotas passaram: home/admin, bundle com hash, manifesto e cinco ícones iguais ao pacote, cache e tipos corretos; APIconfig200 no projeto correto, rota inexistente404, método inadequado405 com Allow preservado e POST de comentário sem Origin recusado403 antes do handler. Respostas da API com HSTS1dia/no-store/nosniff/no-referrer; nenhum cookie emitido nessas requisições. Não houve emissão de sessão, escrita editorial, consulta de validação ao TikTok, nova medição deCPU ou teste deGoogle/TOTP. Falha503 de bootstrap foi comprovada apenas nos fixtures, sem forçar erro de configuração remoto.
+
+A primeira checagem parou por uma suposição do verificador local: aceitava somente application/javascript; o asset retorna text/javascript válido. Corrigido apenas o verificador para aceitar ambos; rodada final aprovada sem mudança no site ou novo deploy. Registro inicial preservado no workspace privado. A suíte local anterior704/0 e20provas workerd continuam evidências do mesmo pacote, sem repetição desnecessária depois do deploy.
+
+Próximo: proprietário confirma abertura/continuidade normal do painel/admin na sessão habitual, sem forçar logout/login ou enviar códigos. Evidência: etapa-8-f-api-headers-homologacao.json. Este gate de cabeçalhos foi aplicado e verificado no escopo descrito; demais pendências8-F, resposta técnica TikTok e lançamento continuam abertos.
+
+## 26/10/2026 — painel confirmado após deploy dos cabeçalhos
+
+O proprietário confirmou: “Sim, o painel abriu normalmente”, na sessão habitual após o deploy autorizado de cabeçalhos. Concluída a checagem de continuidade administrativa desse pacote, somada às13verificações HTTP e provas locais anteriores. Não interpretar como medição independente de novo desafio Google/TOTP, todos os fluxos administrativos ouCPU. Nenhum código, teste, deploy ou consulta ao TikTok adicional nesta rodada. Este ajuste de cabeçalhos está verificado no escopo descrito; demais gates8-F e lançamento permanecem abertos.

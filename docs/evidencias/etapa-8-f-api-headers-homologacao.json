@@ -1,0 +1,163 @@
+{
+  "deployment": {
+    "deployedAt": "2026-10-26T21:28:28.860Z",
+    "explicitOwnerAuthorization": true,
+    "scope": "API HTTPS headers controlled homologation only",
+    "exitCode": 0,
+    "version": "a0d58723-b19c-4439-a2d2-85a402571691",
+    "priorVersion": "5b2a243b-9c90-4fd0-94e0-592772f91b1d",
+    "approvedBundleSha256": "6ba55405196812dd7161b9643c6cd18d1539b597916fa45aecf27602e0ff15af",
+    "uploadedFrozenDryRunBundle": true,
+    "assetFiles": 43,
+    "staticAssetsByteIdentical": true,
+    "secretFileUnchanged": true,
+    "sameEightSecretValuesSupplied": true,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "routingUnchanged": true,
+    "publicLaunchApproved": false
+  },
+  "remoteVerification": {
+    "observedAt": "2026-10-26T21:29:54.240Z",
+    "readOnlyBusinessScope": true,
+    "checks": [
+      {
+        "path": "/",
+        "status": 200,
+        "mime": "text/html",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/admin",
+        "status": 200,
+        "mime": "text/html",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/assets/index-B-pmZ_Br.js",
+        "status": 200,
+        "mime": "text/javascript",
+        "cache": "public, max-age=31536000, immutable",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "status": 200,
+        "mime": "application/manifest+json",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-180.png",
+        "status": 200,
+        "mime": "image/png",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-192.png",
+        "status": 200,
+        "mime": "image/png",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-512.png",
+        "status": 200,
+        "mime": "image/png",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-64.webp",
+        "status": 200,
+        "mime": "image/webp",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-maskable-512.png",
+        "status": 200,
+        "mime": "image/png",
+        "cache": "public, max-age=0, must-revalidate",
+        "exactContentChecked": true,
+        "passed": true
+      },
+      {
+        "path": "/api/admin/config",
+        "method": "GET",
+        "status": 200,
+        "hsts": "max-age=86400",
+        "cache": "no-store",
+        "referrer": "no-referrer",
+        "noCookie": true,
+        "passed": true
+      },
+      {
+        "path": "/api/nonexistent-api-header-check",
+        "method": "GET",
+        "status": 404,
+        "hsts": "max-age=86400",
+        "cache": "no-store",
+        "referrer": "no-referrer",
+        "noCookie": true,
+        "passed": true
+      },
+      {
+        "path": "/api/session",
+        "method": "GET",
+        "status": 405,
+        "hsts": "max-age=86400",
+        "cache": "no-store",
+        "referrer": "no-referrer",
+        "noCookie": true,
+        "passed": true
+      },
+      {
+        "path": "/api/comments",
+        "method": "POST",
+        "status": 403,
+        "hsts": "max-age=86400",
+        "cache": "no-store",
+        "referrer": "no-referrer",
+        "noCookie": true,
+        "passed": true
+      }
+    ],
+    "providerCallsAttempted": false,
+    "editorialWritesAttempted": false,
+    "sessionIssuanceAttempted": false,
+    "cpuMeasured": false,
+    "bootstrap503ForcedRemotely": false,
+    "publicLaunchApproved": false,
+    "passed": 13,
+    "allChecksPassed": true,
+    "completedAt": "2026-10-26T21:29:55.514Z"
+  },
+  "ownerAdminConfirmationPending": false,
+  "initialVerifierMimeAssumptionCorrected": true,
+  "initialVerifierNote": "Local verification first expected application/javascript only; the valid text/javascript returned by assets is now accepted. No site change or redeployment was needed. Initial result preserved privately.",
+  "bootstrap503RemoteProof": false,
+  "bootstrap503LocalFixturesPassed": true,
+  "stage8FComplete": false,
+  "tiktokResolved": false,
+  "publicLaunchApproved": false,
+  "ownerAdminConfirmation": {
+    "reportedOn": "2026-10-26",
+    "answer": "Sim, o painel abriu normalmente",
+    "source": "Owner confirmation after updating/opening admin in usual session",
+    "freshGoogleTotpChallengeIndependentlyMeasured": false,
+    "independentAgentInspection": false
+  },
+  "headerDeploymentScopeValidated": true
+}
