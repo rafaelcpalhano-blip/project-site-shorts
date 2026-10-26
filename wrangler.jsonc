@@ -1,0 +1,31 @@
+// Public deployment configuration. Secrets are supplied privately by the operator.
+{
+  "name": "www",
+  "main": "./server/runtime/cloudflare-main.ts",
+  "compatibility_date": "2026-10-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "send_metrics": false,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": [
+      "/api",
+      "/api/*",
+      "/images/games/*"
+    ]
+  },
+  "vars": {
+    "CLIPZONE_ORIGIN": "https://www.clipzone.workers.dev",
+    "FIREBASE_PROJECT_ID": "clipzone-db02a",
+    "FIREBASE_AUTH_PROJECT_ID": "clipzone-db02a",
+    "FIREBASE_SERVICE_EMAIL": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
+    "FIREBASE_AUTH_APP_ID": "1:818748049569:web:c73f2f86ab6e589f6a88e0",
+    "CLIPZONE_JOBS_ENABLED": "false"
+  },
+  "upload_source_maps": false
+}
