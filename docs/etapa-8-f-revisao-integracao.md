@@ -1,5 +1,8 @@
 # Etapa 8-F — revisão da integração iniciada
 
+> Retificação de 26/10/2026: `.dev` tem preload HSTS. HTTP 200 no curl não demonstra falha da primeira navegação em browsers compatíveis. A navegação in-app terminou em HTTPS. Preservar static-first; ver [verificação HTTPS/HSTS](etapa-8-f-https-hsts.md). Cabeçalhos ainda não publicados: deploy específico rejeitado pela revisão automática antes de executar, aguardando autorização do proprietário. As observações abaixo registram a revisão inicial e devem ser lidas com esta retificação.
+
+
 26/10/2026. Segue o [cronograma atualizado](cronograma-finalizacao.md). Revisão em andamento, sem aprovação de conclusão da 8-E, da Etapa 8 ou de lançamento. Site continua na homologação controlada já autorizada; não houve novo deploy nesta rodada.
 
 ## Conferência web efetivamente realizada
@@ -12,7 +15,7 @@ Seis GETs sem autenticação, sem cookie e sem gravação de conteúdo: HTTP rai
 | API separada da SPA | Configuração JSON 200; rota inexistente JSON 404 | Aprovado nesta amostra |
 | Cache da API | `Cache-Control: no-store` | Preservado |
 | Sessão do visitante | Código emite `__Host-`, Secure, HttpOnly, SameSite=Strict, Path=/; amostras anteriores válidas | Nenhuma nova emissão nesta rodada; não alegar nova prova de cookie recebido |
-| HTTP sem TLS | Raiz HTTP retorna HTML 200 sem Location, confirmado por GET e HEAD | Pendência da 8-E antes do lançamento |
+| HTTP em cliente sem preload | Raiz HTTP retorna HTML 200 sem Location, confirmado por GET e HEAD | Não há redirect no servidor; navegação de browsers compatíveis protegida pelo preload `.dev`, conforme retificação |
 | Cabeçalhos estáticos | Sem CSP, X-Frame-Options, nosniff, política de referrer ou HSTS nas respostas observadas | Preparação local abaixo; remoto ainda inalterado |
 | Cache do bundle com hash | Revalidação a cada uso (`max-age=0`) | Oportunidade de desempenho, não vazamento confirmado |
 

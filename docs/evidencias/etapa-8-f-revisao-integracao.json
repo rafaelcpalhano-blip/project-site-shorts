@@ -209,11 +209,19 @@
   "stage8Complete": false,
   "launchApproved": false,
   "pending": [
-    "HTTP first-visit redirection strategy preserving the agreed static/API free-tier separation",
+    "Preserve static-first and .dev browser HSTS preload; explicit approval pending for tested static headers/cache deployment",
     "Deploy local headers only under applicable remote approval; then verify actual auth and players",
     "API HSTS/header coverage remains separate from static _headers",
     "Valid business-write CPU, repeated initialization investigation and administrative collection gaps",
     "TikTok 429, ranking/recovery and regression review",
     "PWA 8.5 then complete PC/mobile/Lighthouse 9-A; future 9-B and 9-B.5"
-  ]
+  ],
+  "httpsAssessmentCorrection": {
+    "reference": "etapa-8-f-https-hsts.json",
+    "devTldPreloaded": true,
+    "browserNavigationEndedHttps": true,
+    "serverHttp200DoesNotProveBrowserDowngrade": true,
+    "routingChangeRequiredForSupportedBrowsers": false,
+    "explicitStaticHeadersDeployApprovalPending": true
+  }
 }

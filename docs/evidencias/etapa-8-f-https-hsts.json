@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-26T07:46:34.236Z",
+  "stage": "8-F in progress; HTTPS assessment corrected",
+  "browser": {
+    "checkedAt": "2026-10-26T07:46:34.236Z",
+    "requestedUrl": "http://www.clipzone.workers.dev/",
+    "observedUrl": "https://www.clipzone.workers.dev/",
+    "feedVisible": true,
+    "profile": "Existing in-app browser profile; not claimed to be fresh",
+    "firstVisitProtectionEvidence": "Google Registry confirms .dev TLD HSTS preload; actual redirect cause not instrumented"
+  },
+  "sources": [
+    {
+      "title": "Google Registry .dev",
+      "url": "https://www.registry.google/domains/dev/",
+      "finding": "TLD included on HSTS preload list; HTTPS required by compatible browsers without per-site enrollment"
+    },
+    {
+      "title": "Cloudflare asset routing",
+      "url": "https://developers.cloudflare.com/workers/static-assets/binding/",
+      "finding": "run_worker_first selects path patterns or all requests; current path patterns preserved"
+    },
+    {
+      "title": "Cloudflare redirects",
+      "url": "https://developers.cloudflare.com/workers/static-assets/redirects/",
+      "finding": "Domain-level redirects unsupported by _redirects; no scheme-based global rule introduced"
+    }
+  ],
+  "rawHttpObservationRetained": {
+    "status": 200,
+    "client": "Node fetch and curl without enabled browser preload enforcement",
+    "meaning": "Server-side redirect absent; not proof that compatible .dev browsers send cleartext HTTP"
+  },
+  "recommendedRouting": "Preserve current static-first/API-worker separation; rely on TLD preload in supported browsers; clients without preload must explicitly use HTTPS",
+  "candidate": {
+    "existingAssets": 35,
+    "allExistingAssetsByteIdentical": true,
+    "onlyAssetAddition": "_headers",
+    "apiSourceUnchanged": true,
+    "eightSecretValuesPreserved": true,
+    "routingUnchanged": true,
+    "jobsEnabled": false,
+    "privateValuesAbsentFromAssets": true,
+    "localRuntimeChecksPassed": 5
+  },
+  "deployment": {
+    "attemptRejectedBeforeExecution": true,
+    "newDeployPerformed": false,
+    "automaticReviewReason": "Specific deployment of public headers/cache requires explicit user approval",
+    "siteStillOnPreviousVersion": true,
+    "pendingApproval": "Deploy only tested static _headers to controlled homologation; no launch, plan change, credentials change or routing change"
+  },
+  "launchApproved": false,
+  "stage8Complete": false
+}
