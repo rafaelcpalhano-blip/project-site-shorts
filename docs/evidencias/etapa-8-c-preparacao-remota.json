@@ -1,0 +1,1027 @@
+{
+  "observedAt": "2026-10-26T03:47:54.859Z",
+  "timezone": "America/Sao_Paulo",
+  "target": {
+    "projectId": "clipzone-db02a",
+    "projectNumber": "818748049569",
+    "displayName": "Clipzone",
+    "billingEnabled": false,
+    "billingAccountLinked": false,
+    "billingVerification": "Console UI",
+    "databaseName": "projects/clipzone-db02a/databases/(default)",
+    "locationId": "southamerica-east1",
+    "type": "FIRESTORE_NATIVE",
+    "edition": "STANDARD"
+  },
+  "sourceFile": "firestore/firestore.indexes.json",
+  "sourceSha256": "644d824beca0a7a375f4aade3cd74f75cbb57fee4631e0844124a5620a7b2eec",
+  "planVerification": {
+    "billingEnabled": false,
+    "observedAt": "2026-10-26T03:37:30.2573088Z",
+    "plan": "SPARK",
+    "firebaseUrl": "https://console.firebase.google.com/project/clipzone-db02a/firestore/databases/-default-/indexes",
+    "billingText": "Este projeto não está vinculado a uma conta de faturamento.",
+    "method": "Authenticated console UI",
+    "billingAccountLinked": false,
+    "projectId": "clipzone-db02a",
+    "apiBillingStatus": 500,
+    "billingUrl": "https://console.cloud.google.com/billing/linkedaccount?project=clipzone-db02a"
+  },
+  "compositeIndexes": [
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgJim18AI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "content",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgOjXh8EI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgJj7z8EI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "shortId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "publicationNumber",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reportSummaries/indexes/CICAgJjF9sII",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "title",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/moderationLogs/indexes/CICAgJiUpsMI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "notificationKind",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reportSummaries/indexes/CICAgJjmnMgI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "firstReportedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reportSummaries/indexes/CICAgJjmiNEI",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "title",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJim14AJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gameId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "likeCount",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reports/indexes/CICAgOjXh4EJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "shortId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgJj7z4EJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJjF9oIJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "likeCount",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/moderationLogs/indexes/CICAgJiUpoMJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "contentId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingItems/indexes/CICAgNi47oMJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "generationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gameId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJjmnIgJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gameId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJjmiJEJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJiUsZIJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "officialName",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJjm-pkJ",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "title",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJim14AK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "officialName",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgOjXh4EK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reportSummaries/indexes/CICAgJj7z4EK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastReportedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgJjF9oIK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "shortId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJiUpoMK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "gameId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingItems/indexes/CICAgNi47oMK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "generationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJjmnIgK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/gameRequests/indexes/CICAgJjmiJEK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJiUsZIK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "reviewStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJjm-pkK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "reviewStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "officialName",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/comments/indexes/CICAgJim18AK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "content",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/reportSummaries/indexes/CICAgOjXh8EK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "firstReportedAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/moderationLogs/indexes/CICAgJj7z8EK",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "notificationChannel",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJim14AL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgOjXh4EL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "reviewStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/gameRequests/indexes/CICAgJj7z4EL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/gameRequests/indexes/CICAgJjF9oIL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/games/indexes/CICAgJiUpoML",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "reviewStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "officialName",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/gameRequests/indexes/CICAgJjmnIgL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/indexes/CICAgJjmiJEL",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderationStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "title",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "state": "READY",
+      "density": "SPARSE_ALL"
+    }
+  ],
+  "fieldConfigurations": [
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/likeAttempts/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/networkAbuse/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/networkAbuse/fields/expiresAt",
+      "indexConfig": {
+        "indexes": [
+          {
+            "queryScope": "COLLECTION",
+            "fields": [
+              {
+                "fieldPath": "expiresAt",
+                "order": "ASCENDING"
+              }
+            ],
+            "state": "READY"
+          }
+        ],
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/networkAbuse/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingBudgets/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingDays/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingHours/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingMetrics/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingRuns/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingSignals/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/rankingState/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shortLikes/fields/*",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/fields/administrativeBlock",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/fields/searchFragments",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/fields/thumbnail",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    },
+    {
+      "name": "projects/clipzone-db02a/databases/(default)/collectionGroups/shorts/fields/titleSearchVersion",
+      "indexConfig": {
+        "ancestorField": "projects/clipzone-db02a/databases/(default)/collectionGroups/__default__/fields/*"
+      }
+    }
+  ],
+  "application": {
+    "startedAt": "2026-10-26T03:38:28.522Z",
+    "finishedAt": "2026-10-26T03:38:33.595Z",
+    "acceptedMutations": 52,
+    "compositesReady": 37,
+    "compositesBuilding": 0,
+    "fieldConfigurationsMatched": 15,
+    "extraDefinitions": 0
+  },
+  "iam": {
+    "serviceAccountEmail": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
+    "roleName": "projects/clipzone-db02a/roles/clipzoneRuntimeDatastore",
+    "permissions": [
+      "datastore.databases.get",
+      "datastore.entities.create",
+      "datastore.entities.delete",
+      "datastore.entities.get",
+      "datastore.entities.list",
+      "datastore.entities.update"
+    ],
+    "verified": {
+      "serviceAccountExists": true,
+      "rolePermissionsExact": true,
+      "bindingExact": true,
+      "otherBindingsPreserved": true,
+      "keyCreated": false
+    },
+    "policyBeforeSha256": "99373c667474cf1f73419fbf7ec904e51a11b87c2d91772166a765e031324a6d",
+    "policyAfterSha256": "1bc88ab61727e1cf769881f6c57417855c993b2e26a47e742854df07d5848693",
+    "finishedAt": "2026-10-26T03:44:17.231Z"
+  },
+  "initialization": {
+    "before": {
+      "rootCollectionIds": []
+    },
+    "mutations": [
+      "gameNameState/v1",
+      "adminQueueState/reportTitles",
+      "rankingState/metrics"
+    ],
+    "importedContent": false,
+    "initializedAt": "2026-10-26T03:46:57.021Z",
+    "verified": {
+      "markers": [
+        {
+          "path": "gameNameState/v1",
+          "data": {
+            "version": 1,
+            "ready": true
+          }
+        },
+        {
+          "path": "adminQueueState/reportTitles",
+          "data": {
+            "version": 1,
+            "ready": true
+          }
+        },
+        {
+          "path": "rankingState/metrics",
+          "data": {
+            "version": 1,
+            "epoch": "fc31ba8a0781b75f8978801d6d43bcd2",
+            "ready": true,
+            "initializedAt": "2026-10-26T03:46:57.021Z",
+            "shorts": 0,
+            "signals": 0,
+            "unverifiedComments": 0
+          }
+        }
+      ],
+      "rootCollectionIds": [
+        "adminQueueState",
+        "gameNameState",
+        "rankingState"
+      ],
+      "allFieldsMatch": true,
+      "createOnly": true,
+      "operatorCredential": true,
+      "runtimeCredentialTested": false
+    },
+    "finishedAt": "2026-10-26T03:46:57.749Z"
+  },
+  "runtimePrivateKeyCreated": false,
+  "runtimeCredentialTested": false,
+  "rulesPublished": false,
+  "apisEnabled": false,
+  "billingChanged": false,
+  "siteOrApiDeployed": false,
+  "localDataMigrated": false,
+  "limitations": [
+    "CPU/TOTP/HTTPS/providers not validated in this round",
+    "Initialization used authenticated operator, not runtime identity",
+    "No app tests or Lighthouse repeated for remote metadata-only setup"
+  ]
+}
