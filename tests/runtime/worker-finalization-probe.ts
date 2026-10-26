@@ -1,0 +1,2 @@
+import {finalizationCases,finalizationMetrics} from '../helpers/worker-finalization-cases.ts'
+export default {async fetch(){let externalFetchAttempts=0;globalThis.fetch=async()=>{externalFetchAttempts++;throw Error('External network forbidden in local proof')};const passed:string[]=[];for(const proof of finalizationCases){try{await proof.run();passed.push(proof.name)}catch{return Response.json({passed,failed:proof.name,externalFetchAttempts},{status:500})}}return Response.json({passed,externalFetchAttempts,metrics:finalizationMetrics})}}

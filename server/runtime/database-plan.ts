@@ -15,6 +15,7 @@ export function planEmptyMetadata(epoch:string,at:Date){
  if(!/^[a-f0-9]{32}$/.test(epoch)||!Number.isSafeInteger(at.getTime())||at.getTime()<0)throw Error('invalid-initialization-plan')
  return {mode:'preview-only',requireEmptyBusinessCollections:true,requireOfflineWriters:true,precondition:'exists=false',importLocalData:false,documents:[
   {path:'gameNameState/v1',data:{version:1,ready:true}},
+  {path:'adminQueueState/reportTitles',data:{version:1,ready:true}},
   {path:'rankingState/metrics',data:{version:1,epoch,ready:true,initializedAt:new Date(at),shorts:0,signals:0,unverifiedComments:0}},
  ]} as const
 }

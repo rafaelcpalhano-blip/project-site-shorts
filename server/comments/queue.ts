@@ -1,3 +1,4 @@
+import {readTransactionRecords} from '../firestore/read-many.ts'
 import {loadAdminList,filteredListCursor,filteredListNext} from '../admin/list-page.ts'
 import type { AtomicStore } from '../firestore/atomic-store.ts'
 import { parseQuery } from '../moderation/queue.ts'
@@ -20,7 +21,8 @@ export async function loadCommentQueue(input:unknown, store:AtomicStore) {
     if(!['date-desc','date-asc','text-asc','text-desc'].includes(String(sort)))throw new ReviewError('invalid-input',400)
     const base=filteredListCursor(data.cursor,'comments',String(data.status),sort as import('../../src/features/admin/types/list-order.ts').AdminSort,String(flag))
     const result=await loadAdminList('comments',String(data.status),sort,base,store)
-    const selected=await Promise.all(result.rows.map(async row=>({row,receipt:await store.transact(tx=>tx.get('commentRequests/'+row.id))})))
+    const receipts=await store.transact(tx=>readTransactionRecords(tx,result.rows.map(row=>'commentRequests/'+row.id)))
+    const selected=result.rows.map(row=>({row,receipt:receipts.get('commentRequests/'+row.id)}))
     return {items:selected.filter(({receipt})=>Array.isArray(receipt?.flags)&&receipt.flags.includes(flag)).map(({row})=>mapComment(row.id,row.data)),next:filteredListNext(result.next,String(flag)),filteredWindow:true}
   }
   if(data.sort!==undefined){const result=await loadAdminList('comments',String(data.status),data.sort,data.cursor,store);return {items:result.rows.map(row=>mapComment(row.id,row.data)),next:result.next}}

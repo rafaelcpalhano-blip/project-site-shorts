@@ -1,3 +1,4 @@
+import {resolveSharedVideoUrl} from '../videos/resolve-shared-url.ts'
 import {handlePlaybackFailure} from './playback-failure.ts'
 import {createVideoPreviewVerifier} from '../videos/preview.ts'
 import {createNetworkProtection} from '../security/network-abuse.ts'
@@ -102,7 +103,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })
     if (path === '/api/shorts/preview' || path === '/api/shorts/resolve') return handleVideoPreview(request, {
-      origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: previewVerifier,
+      origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: previewVerifier, resolveUrl:url=>resolveSharedVideoUrl(url,options.previewFetch),
     })
     if (path === '/api/games/confirm') return handleGameConfirmation(request, options.gameSearch?.get && searchLimit ? {
       origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor,

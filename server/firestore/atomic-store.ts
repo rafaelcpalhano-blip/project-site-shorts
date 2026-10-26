@@ -1,6 +1,7 @@
 import type {AdminSort,AdminListCursor} from '../../src/features/admin/types/list-order.ts'
 export type RecordData = Record<string, unknown>
 export interface AtomicTransaction {
+  getMany?: (paths:string[])=>Promise<Array<RecordData|null>>
   hasPublishedComment?(shortId: string): Promise<boolean>
   publishedCommentHistory?(shortId:string): Promise<Array<{id:string;data:RecordData}>>
   get(path: string): Promise<RecordData | null>
@@ -23,6 +24,7 @@ export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?
 export interface AdminListQuery {kind:'games'|'gameRequests'|'comments'|'shorts'|'reportSummaries';filter:string;sort:AdminSort;cursor?:AdminListCursor;limit:21}
 export interface PublicGameCursor {id:string;name:string}
 export interface AtomicStore {
+  rankingRunsPage?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   publicGamesPage?: (cursor?:PublicGameCursor)=>Promise<Array<{id:string;data:RecordData}>>
   expiredNetworkRecords?: (now:Date)=>Promise<Array<{id:string;data:RecordData}>>
   adminListPage?: (query:AdminListQuery)=>Promise<Array<{id:string;data:RecordData}>>

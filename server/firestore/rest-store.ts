@@ -57,6 +57,20 @@ export function createRestStore(options: Options): AtomicStore {
     return result
   }
   const decodeDocument = (document: {name:string;fields?:Record<string,Value>}) => ({ id:document.name.split('/').at(-1)!, data:Object.fromEntries(Object.entries(document.fields || {}).map(([key,value]) => [key,decode(value)])) })
+  const readMany=async(paths:string[],transaction?:string)=>{
+      if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
+      const documents=paths.map(name),expected=new Set(documents),records=new Map<string,RecordData|null>()
+      const result=await request('batchGet',{documents,...(transaction?{transaction}:{})})
+      for(const row of Array.isArray(result)?result:[result]){
+        // Firestore may send a metadata-only row; found/missing rows are unordered.
+        if(row&&typeof row==='object'&&!('found' in row)&&!('missing' in row)&&('readTime' in row||'transaction' in row))continue
+        const found=row?.found,missing=row?.missing,key=found?.name??missing
+        if(!row||typeof row!=='object'||('found' in row)===('missing' in row)||typeof key!=='string'||!expected.has(key)||records.has(key)||found&&(typeof found!=='object'||Array.isArray(found)||found.fields!==undefined&&(!found.fields||typeof found.fields!=='object'||Array.isArray(found.fields))))throw new Error('Resposta de lote inválida')
+        records.set(key,found?decodeDocument(found).data:null)
+      }
+      if(records.size!==documents.length)throw new Error('Resposta de lote incompleta')
+      return documents.map(key=>records.get(key)!)
+    }
   return {
     async expiredNetworkRecords(now) {
       if(!Number.isSafeInteger(now.getTime()))throw Error('Prazo inválido')
@@ -75,6 +89,11 @@ export function createRestStore(options: Options): AtomicStore {
       const rows=Array.isArray(result)?result:[result],point=readTime??rows.find(item=>item.readTime)?.readTime
       if(!point)throw new Error('Snapshot ausente')
       return {items:rows.filter(item=>item.document).map(item=>decodeDocument(item.document)),readTime:point}
+    },
+    async rankingRunsPage(after) {
+      if(after!==undefined&&!/^[a-f0-9]{32}$/.test(after))throw Error('ranking-invalid-cleanup-cursor')
+      const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'rankingRuns'}],orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:30,...(after?{startAt:{before:false,values:[{referenceValue:name('rankingRuns/'+after)}]}}:{})}})
+      return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
     async rankingItemsPage(generationId) {
       if(!/^[a-f0-9]{32}$/.test(generationId))throw new Error('Geração inválida')
@@ -103,20 +122,7 @@ export function createRestStore(options: Options): AtomicStore {
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'games'}],select:{fields:['officialName','status'].map(fieldPath=>({fieldPath}))},where:{fieldFilter:{field:{fieldPath:'status'},op:'EQUAL',value:encode('active')}},orderBy:[{field:{fieldPath:'officialName'},direction:'ASCENDING'},{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:51,...(cursor?{startAt:{before:false,values:[encode(cursor.name),{referenceValue:name('games/'+cursor.id)}]}}:{})}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
     },
-    async getMany(paths) {
-      if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
-      const documents=paths.map(name),expected=new Set(documents),records=new Map<string,RecordData|null>()
-      const result=await request('batchGet',{documents})
-      for(const row of Array.isArray(result)?result:[result]){
-        // Firestore may send a metadata-only row; found/missing rows are unordered.
-        if(row&&typeof row==='object'&&!('found' in row)&&!('missing' in row)&&('readTime' in row||'transaction' in row))continue
-        const found=row?.found,missing=row?.missing,key=found?.name??missing
-        if(!row||typeof row!=='object'||('found' in row)===('missing' in row)||typeof key!=='string'||!expected.has(key)||records.has(key)||found&&(typeof found!=='object'||Array.isArray(found)||found.fields!==undefined&&(!found.fields||typeof found.fields!=='object'||Array.isArray(found.fields))))throw new Error('Resposta de lote inválida')
-        records.set(key,found?decodeDocument(found).data:null)
-      }
-      if(records.size!==documents.length)throw new Error('Resposta de lote incompleta')
-      return documents.map(key=>records.get(key)!)
-    },
+    getMany:paths=>readMany(paths),
     async get(path) {
       const result = await request('batchGet', {documents:[name(path)]})
       const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
@@ -220,6 +226,7 @@ export function createRestStore(options: Options): AtomicStore {
         const { transaction } = await request('beginTransaction', { options: { readWrite: previous ? { retryTransaction: previous } : {} } })
         const writes: unknown[] = []
         const port: AtomicTransaction = {
+          async getMany(paths){if(writes.length)throw Error('Reads must precede writes');return readMany(paths,transaction)},
           async publishedCommentHistory(shortId) {
             if(writes.length)throw Error('Reads must precede writes')
             if(!/^[\w-]{1,128}$/.test(shortId))throw Error('Invalid short')

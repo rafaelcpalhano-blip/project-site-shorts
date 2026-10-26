@@ -10,9 +10,17 @@ interface Options {
 }
 const encode=(value:unknown)=>Buffer.from(JSON.stringify(value)).toString('base64url')
 export function createServiceTokenSupplier(options:Options){
- if(/[\s\p{C}]/u.test(options.projectId+options.clientEmail)||!/^[a-z][a-z0-9-]{4,28}[a-z0-9]$/.test(options.projectId)||!new RegExp('^[a-z][a-z0-9-]{4,28}[a-z0-9]@'+options.projectId.replaceAll('-','\\-')+'\\.iam\\.gserviceaccount\\.com$').test(options.clientEmail)||typeof options.sign!=='function'||typeof options.exchange!=='function'||typeof options.now!=='function')throw unavailable()
+ if(typeof options.exchange!=='function')throw unavailable()
+ return createServiceTokenProvider(options)(options.exchange)
+}
+// Cached token/key identity may span invocations; transport is selected per call.
+// A coalesced exchange is charged to the invocation that actually dispatches it.
+export function createServiceTokenProvider(options:Omit<Options,'exchange'>){
+ if(/[\s\p{C}]/u.test(options.projectId+options.clientEmail)||!/^[a-z][a-z0-9-]{4,28}[a-z0-9]$/.test(options.projectId)||!new RegExp('^[a-z][a-z0-9-]{4,28}[a-z0-9]@'+options.projectId.replaceAll('-','\\-')+'\\.iam\\.gserviceaccount\\.com$').test(options.clientEmail)||typeof options.sign!=='function'||typeof options.now!=='function')throw unavailable()
  let cached:{token:string;issuedAt:number;expiresAt:number}|undefined,pending:Promise<string>|undefined
  const clock=()=>{const value=options.now().getTime();if(!Number.isSafeInteger(value)||value<0)throw unavailable();return value}
+ return (exchange:typeof fetch)=>{
+ if(typeof exchange!=='function')throw unavailable()
  return async():Promise<string>=>{
   const started=clock()
   if(cached&&started<cached.issuedAt){cached=undefined;throw unavailable()}
@@ -25,7 +33,7 @@ export function createServiceTokenSupplier(options:Options){
     const signature=await options.sign(new TextEncoder().encode(content))
     if(!(signature instanceof Uint8Array)||signature.byteLength<256||signature.byteLength>1024)throw unavailable()
     const assertion=content+'.'+Buffer.from(signature).toString('base64url')
-    const response=await options.exchange(endpoint,{method:'POST',redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion}).toString()})
+    const response=await exchange(endpoint,{method:'POST',redirect:'error',signal:AbortSignal.timeout(10000),headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion}).toString()})
     if(!response.ok){await response.body?.cancel();throw unavailable()}
     const reader=response.body?.getReader();if(!reader)throw unavailable()
     const chunks:Uint8Array[]=[];let bytes=0
@@ -38,4 +46,5 @@ export function createServiceTokenSupplier(options:Options){
   })()
   try{return await pending}finally{pending=undefined}
  }
+}
 }
