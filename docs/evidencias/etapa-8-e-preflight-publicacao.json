@@ -1,0 +1,226 @@
+{
+  "observedAt": "2026-10-26T04:40:36.093Z",
+  "projectId": "clipzone-db02a",
+  "origin": "https://www.clipzone.workers.dev",
+  "publicationAuthorized": true,
+  "wranglerOperatorLoginConfirmed": true,
+  "expectedCloudflareAccountMatched": true,
+  "temporaryAccountUsed": false,
+  "providerChecks": {
+    "observedAt": "2026-10-26T04:40:36.093Z",
+    "method": "Google API Keys metadata GET only; no key strings recorded",
+    "keys": {
+      "FIREBASE_AUTH_API_KEY": {
+        "confirmed": true,
+        "projectNumber": "818748049569",
+        "browserRestrictions": true,
+        "allowedReferrerCount": 0,
+        "serverIpRestrictions": false,
+        "allowedIpCount": 0,
+        "androidRestrictions": false,
+        "iosRestrictions": false,
+        "apiTargets": [
+          {
+            "service": "firebasedatabase.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebasehosting.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaserules.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "sqladmin.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "cloudconfig.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "datastore.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "fcmregistrations.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebase.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseappcheck.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseappdistribution.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseapphosting.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseapptesters.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebasedataconnect.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseinappmessaging.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseinstallations.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseml.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseremoteconfig.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebaseremoteconfigrealtime.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebasestorage.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firebasevertexai.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "firestore.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "identitytoolkit.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "logging.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "mlkit.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "play.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "securetoken.googleapis.com",
+            "methodCount": 0
+          },
+          {
+            "service": "fpnv.googleapis.com",
+            "methodCount": 0
+          }
+        ],
+        "restrictionChanges": false,
+        "allowsAllIpRange": false
+      },
+      "YOUTUBE_API_KEY": {
+        "confirmed": true,
+        "projectNumber": "818748049569",
+        "browserRestrictions": false,
+        "allowedReferrerCount": 0,
+        "serverIpRestrictions": true,
+        "allowedIpCount": 7,
+        "androidRestrictions": false,
+        "iosRestrictions": false,
+        "apiTargets": [
+          {
+            "service": "youtube.googleapis.com",
+            "methodCount": 0
+          }
+        ],
+        "restrictionChanges": false,
+        "allowsAllIpRange": false
+      }
+    },
+    "authPublicConfig": [
+      {
+        "withProposedReferrer": false,
+        "httpStatus": 200,
+        "configurationReturned": true,
+        "proposedDomainAlreadyAuthorized": false,
+        "errorReasons": []
+      },
+      {
+        "withProposedReferrer": true,
+        "httpStatus": 200,
+        "configurationReturned": true,
+        "proposedDomainAlreadyAuthorized": false,
+        "errorReasons": []
+      }
+    ]
+  },
+  "privatePreparation": {
+    "preparedAt": "2026-10-26T04:42:46.323Z",
+    "projectId": "clipzone-db02a",
+    "bindingNames": [
+      "FIREBASE_SERVICE_PRIVATE_KEY",
+      "CLIPZONE_VISITOR_SECRET",
+      "CLIPZONE_NETWORK_SECRET",
+      "FIREBASE_AUTH_API_KEY",
+      "CLIPZONE_ADMIN_UIDS",
+      "TWITCH_CLIENT_ID",
+      "TWITCH_CLIENT_SECRET"
+    ],
+    "readyBindings": 7,
+    "requiredBindings": 8,
+    "youtubeBindingReady": false,
+    "localYouTubeKeyCopied": false,
+    "privateFileWritten": true,
+    "secretValuesIncluded": false,
+    "remoteUpload": false,
+    "deploymentAllowed": false
+  },
+  "privateFileAclUserAndSystemOnly": true,
+  "publicationHold": "Owner generation/private storage and metadata verification of authorized separate YouTube key pending",
+  "separateYouTubeKeyAuthorized": true,
+  "separateYouTubeKeyCreated": false,
+  "existingKeyRestrictionsChanged": false,
+  "authDomainAdded": false,
+  "workerCreated": false,
+  "deploymentPerformed": false,
+  "secretUploadPerformed": false,
+  "contentWritten": false,
+  "limits": [
+    "Metadata restrictions and public Auth configuration checked; no Worker egress or real YouTube failure measured",
+    "Real Google/TOTP/backend token validation and Workers CPU remain pending"
+  ],
+  "youtubeOwnerHandoff": {
+    "privateEmptyDestinationPrepared": true,
+    "aclUserAndSystemOnly": true,
+    "existingFileOverwritten": false,
+    "keyGeneratedByAgent": false,
+    "credentialReceived": false
+  },
+  "existingIpReview": {
+    "count": 7,
+    "individualHistoryConfirmed": false,
+    "entriesChanged": false,
+    "localTestingMayDependOnAllowedOrigin": true,
+    "inboundMachineAccessGrantedByList": false
+  },
+  "otherProvidersReview": {
+    "method": "Source inspection; no runtime changes",
+    "twitch": "Server client credentials; embed parent derived from current origin hostname",
+    "tiktok": "oEmbed metadata, official player/v1 and validated short-link resolver; no TikTok key configured",
+    "realHttpsValidationPending": true
+  }
+}
