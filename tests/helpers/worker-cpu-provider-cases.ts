@@ -1,3 +1,4 @@
+import {createCloudflareApplication} from '../../server/runtime/cloudflare-application.ts'
 import workerMain from '../../server/runtime/cloudflare-main.ts'
 import {createRestStore} from '../../server/firestore/rest-store.ts'
 import {restFixture} from './portable-rest-fixture.ts'
@@ -111,4 +112,27 @@ add('opt-in homologation observations distinguish application and route initiali
 add('homologation observation route values are fixed and never record arbitrary URL paths or queries',async()=>{
  // Application setup below is deliberately invalid; default failure never reflects a private URL.
  const result=await workerMain.fetch(new Request('https://preview.clipzone.example/api/private-user-id?token=private-value'),{} as Parameters<typeof workerMain.fetch>[1]);const text=await result.text();check(result.status===503&&!text.includes('private-user-id')&&!text.includes('private-value'))
+})
+
+add('Workers shares TikTok negative availability across preview and submission without caching a transport or publishing unverified content',async()=>{
+ const pair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify'])
+ const pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(await crypto.subtle.exportKey('pkcs8',pair.privateKey)).toString('base64')+'\n-----END PRIVATE KEY-----'
+ let upstream=0;const now=()=>new Date(1900000000000),fixture=restFixture(new Map(),now),origin='https://preview.clipzone.example'
+ const fetcher:typeof fetch=async(input,init)=>{
+  if(new URL(String(input)).origin==='https://www.tiktok.com'){upstream++;return new Response(null,{status:429,headers:{'Retry-After':'120'}})}
+  return fixture.fetcher(input,init)
+ }
+ const app=createCloudflareApplication({origin,projectId:'clipzone-db02a',authProjectId:'clipzone-db02a',serviceEmail:'clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com',servicePrivateKey:pem,visitorSecret:secret(231),networkSecret:secret(232),authApiKey:'fixture-public',authAppId:'1:818748049569:web:c73f2f86ab6e589f6a88e0',adminUids:['fixture-admin'],twitchClientId:'fixture',twitchClientSecret:'fixture',youtubeApiKey:'fixture'},{assets:async()=>new Response('asset'),fetcher,now})
+ let cookie=''
+ const post=async(path:string,body:unknown)=>{
+  const request=new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':'8.8.8.8',...(cookie?{Cookie:cookie}:{})},body:JSON.stringify(body)})
+  Object.defineProperty(request,'cf',{value:{colo:'GRU',httpProtocol:'HTTP/2'}})
+  const response=await app(request);cookie=response.headers.get('set-cookie')?.split(';')[0]??cookie;return response
+ }
+ check((await post('/api/session',{})).status===204)
+ const url='https://www.tiktok.com/@fixture/video/123456789'
+ const preview=await post('/api/shorts/preview',{url});check(preview.status===503&&preview.headers.get('retry-after')==='120'&&(await preview.json() as {error:string}).error==='source-rate-limited')
+ const submission=await post('/api/shorts',{url,gameId:'fixture',title:'Fixture title',channelName:'Fixture'})
+ check(submission.status===503&&submission.headers.get('retry-after')==='120'&&(await submission.json() as {error:string}).error==='source-rate-limited'&&upstream===1)
+ check(![...fixture.docs.keys()].some(path=>/^(shorts|videoIdentities|submissionLimits|submissionOwners|moderationLogs)\//.test(path)))
 })

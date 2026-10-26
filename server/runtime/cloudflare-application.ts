@@ -1,3 +1,4 @@
+import {createTikTokBackoff} from '../videos/tiktok-availability.ts'
 import type {TikTokDiagnostic} from '../videos/tiktok.ts'
 import {isIP} from 'node:net'
 import {runWorkerMaintenance} from './worker-maintenance.ts'
@@ -32,15 +33,17 @@ export function createCloudflareApplication(config:CloudflareApplicationConfigur
    typeof ports.fetcher!=='function'||typeof ports.assets!=='function'||typeof ports.now!=='function')throw Error('invalid')
   const configSnapshot={...config,adminUids:[...config.adminUids]}
   const credentials=createServiceTokenProvider({projectId:configSnapshot.projectId,clientEmail:configSnapshot.serviceEmail,sign:createServiceKeySigner(configSnapshot.servicePrivateKey),now:ports.now})
+  // One bounded negative availability timer per application/isolate, never a captured request transport.
+  const tiktokBackoff=createTikTokBackoff(()=>ports.now().getTime())
   const entry=createWorkerEntry({origin:configSnapshot.origin,assets:ports.assets,trustedTransport:cloudflareDirectTransport,fetcher:ports.fetcher,
    createApi:async({origin,budget})=>{
     // Nothing here captures a previous request's budget in shared state.
     const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
     const catalog=createIgdbCatalog({clientId:configSnapshot.twitchClientId,clientSecret:configSnapshot.twitchClientSecret},budget.fetch)
     const twitch=createTwitchClipVerifier({clientId:configSnapshot.twitchClientId,accessToken:catalog.accessToken,fetcher:budget.fetch})
-    const verify=createConfiguredVideoVerifier({twitch,youtubeApiKey:configSnapshot.youtubeApiKey,fetcher:budget.fetch,observeTikTok:ports.observeTikTok})
+    const verify=createConfiguredVideoVerifier({twitch,youtubeApiKey:configSnapshot.youtubeApiKey,fetcher:budget.fetch,observeTikTok:ports.observeTikTok,tiktokBackoff})
     return createPublicApi({origin,store,visitorSecret:configSnapshot.visitorSecret,network:{secret:configSnapshot.networkSecret},now:ports.now,
-     verify,previewFetch:budget.fetch,maximumAttempts:20,attemptWindowMs:60000,
+     verify,previewFetch:budget.fetch,tiktokBackoff,maximumAttempts:20,attemptWindowMs:60000,
      // Persistent network session admission is mandatory above; no isolate-local substitute.
      allowSessionIssuance:async()=>true,
      gameSearch:{...catalog,maximumAttempts:20,windowMs:60000},

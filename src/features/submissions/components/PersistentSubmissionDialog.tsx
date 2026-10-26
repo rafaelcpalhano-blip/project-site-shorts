@@ -2,7 +2,7 @@ import {extractSharedVideoUrl,sharedVideoInput} from '../../../lib/validation/sh
 import {createVideoLinkClient} from '../services/video-link-api'
 import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '../../games/services/catalog-cache'
 import { GameCombobox } from '../../games/components/GameCombobox'
-import { createVideoPreviewClient } from '../services/video-preview-api'
+import { createVideoPreviewClient,SourceRateLimitError } from '../services/video-preview-api'
 import { validateSubmissionInput } from '../../../lib/validation/public-input'
 import { OfficialGamePicker } from '../../games/components/OfficialGamePicker'
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
@@ -102,8 +102,8 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         }
         if (!titleEdited.current) setTitle(original.title)
         setTitleNotice('Título original carregado. Você pode editar o título.')
-      }).catch(() => {
-        if(active){setPreviewFailed(true);latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice(sharedVideoInput(url).short?'Não foi possível resolver o link curto do TikTok. Tente novamente ou copie o link completo do vídeo.':'Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
+      }).catch(reason => {
+        if(active){setPreviewFailed(true);latestPreview.current={url,status:'failed'};advanceUrl.current=null;setTitleNotice(reason instanceof SourceRateLimitError?reason.message:sharedVideoInput(url).short?'Não foi possível resolver o link curto do TikTok. Tente novamente ou copie o link completo do vídeo.':'Título original indisponível. Você pode informar um título; o vídeo será validado no envio.')}
       })
     }, 600)
     return () => { active = false; clearTimeout(timer); controller.abort() }

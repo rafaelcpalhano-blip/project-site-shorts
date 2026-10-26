@@ -1,3 +1,4 @@
+import type {TikTokBackoff} from './tiktok-availability.ts'
 import type {TikTokDiagnostic} from './tiktok.ts'
 import { createMetadataVerifier } from './verify.ts'
 import { createTikTokVerifier } from './tiktok.ts'
@@ -8,6 +9,7 @@ export function createConfiguredVideoVerifier(options: {
   youtubeApiKey?: string
   fetcher?: typeof fetch
   observeTikTok?: (event: TikTokDiagnostic) => void
+  tiktokBackoff?: TikTokBackoff
 }) {
   const fetcher = options.fetcher ?? fetch
   const key = options.youtubeApiKey?.trim()
@@ -15,6 +17,6 @@ export function createConfiguredVideoVerifier(options: {
     ...(options.twitch ? { Twitch: options.twitch } : {}),
     // oEmbed supplies optional public metadata: unknown shortFormat cannot authorize publication.
     YouTube: key ? createYouTubeVerifier({ apiKey: key, fetcher }) : createYouTubeOEmbedVerifier(fetcher),
-    TikTok: createTikTokVerifier(fetcher, options.observeTikTok),
+    TikTok: createTikTokVerifier(fetcher, options.observeTikTok, options.tiktokBackoff),
   })
 }

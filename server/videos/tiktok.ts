@@ -1,3 +1,5 @@
+import {createTikTokBackoff} from './tiktok-availability.ts'
+import type {TikTokBackoff} from './tiktok-availability.ts'
 import { validateChannelName } from '../../src/lib/validation/public-input.ts'
 import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
@@ -10,17 +12,24 @@ export interface TikTokDiagnostic {
   identityMatches?: boolean
   reason?: 'timeout' | 'transport-error' | 'unavailable'
 }
-export function createTikTokVerifier(fetcher: typeof fetch = fetch, observe?: (event: TikTokDiagnostic) => void) {
+export function createTikTokVerifier(fetcher: typeof fetch = fetch, observe?: (event: TikTokDiagnostic) => void, backoff:TikTokBackoff=createTikTokBackoff()) {
   const report = (event: TikTokDiagnostic) => { try { observe?.(event) } catch { /* Diagnostics never alter verification. */ } }
   return async (submission: { url: string }): Promise<VideoEvidence> => {
     const evidence: VideoEvidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] }
     try {
       const video = parseVideoUrl(submission.url)
       if (video.platform !== 'TikTok') return evidence
+      const waiting=backoff.remainingSeconds()
+      if(waiting>0)return {...evidence,unavailableReason:'provider-rate-limited',retryAfterSeconds:waiting}
       const endpoint = new URL('https://www.tiktok.com/oembed')
       endpoint.searchParams.set('url', video.url)
       const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
       report({stage: 'response', status: response.status})
+      if(response.status===429){
+        const waiting=backoff.defer(response.headers.get('retry-after'))
+        await response.body?.cancel()
+        return {...evidence,unavailableReason:'provider-rate-limited',retryAfterSeconds:waiting}
+      }
       if (!response.ok) { await response.body?.cancel(); return evidence }
       const result = await response.json()
       const validProvider = !!result && result.type === 'video' && result.version === '1.0' && result.provider_name === 'TikTok' && ['https://www.tiktok.com', 'https://www.tiktok.com/'].includes(result.provider_url)

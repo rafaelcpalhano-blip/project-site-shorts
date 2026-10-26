@@ -1,3 +1,4 @@
+import type {TikTokBackoff} from '../videos/tiktok-availability.ts'
 import {resolveSharedVideoUrl} from '../videos/resolve-shared-url.ts'
 import {handlePlaybackFailure} from './playback-failure.ts'
 import {createVideoPreviewVerifier} from '../videos/preview.ts'
@@ -24,6 +25,8 @@ import { handleSession } from './session.ts'
 import { handleSubmission } from './submissions.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
 export interface PublicApiOptions {
+  // Server-only negative availability shared with the configured TikTok verifier.
+  tiktokBackoff?: TikTokBackoff
   // Trusted transport context is supplied as the second argument, never parsed from HTTP.
   network?: {secret:string}
   // Server-only opt-in for isolated tests/future approved reactivation; never read from HTTP.
@@ -43,7 +46,7 @@ export interface PublicApiOptions {
 }
 // Server composition only. No Cloudflare binding or browser endpoint is enabled here.
 export async function createPublicApi(options: PublicApiOptions) {
-  const previewVerifier=createVideoPreviewVerifier(options.verify,options.previewFetch)
+  const previewVerifier=createVideoPreviewVerifier(options.verify,options.previewFetch,options.tiktokBackoff)
   const origin = new URL(options.origin)
   if (origin.protocol !== 'https:' || origin.origin !== options.origin) throw new Error('Expected canonical HTTPS origin')
   const network=options.network?await createNetworkProtection({secret:options.network.secret,store:options.store,now:options.now}):undefined

@@ -1,15 +1,16 @@
+import type {TikTokBackoff} from './tiktok-availability.ts'
 import {tikTokProfileChannel} from './tiktok-profile.ts'
 import {parseVideoUrl} from '../../src/lib/validation/video-url.ts'
 import {createYouTubeOEmbedVerifier} from './youtube.ts'
 import type {SubmissionDependencies} from '../submissions/submit-short.ts'
 /** Metadata-only recovery. Never used by publication or moderation verification. */
-export function createVideoPreviewVerifier(verify:SubmissionDependencies['verify'],fetcher:typeof fetch=fetch):SubmissionDependencies['verify'] {
+export function createVideoPreviewVerifier(verify:SubmissionDependencies['verify'],fetcher:typeof fetch=fetch,tiktokBackoff?:TikTokBackoff):SubmissionDependencies['verify'] {
  const fallback=createYouTubeOEmbedVerifier((url,options)=>fetcher(url,{...options,signal:AbortSignal.any([...(options?.signal?[options.signal]:[]),AbortSignal.timeout(4000)])}))
  return async submission=>{
   const evidence=await verify(submission)
   const platform=parseVideoUrl(submission.url).platform
   if(platform==='TikTok'&&evidence.existence==='confirmed'&&!evidence.channelName){
-   const channelName=await tikTokProfileChannel(submission.url,fetcher)
+   const channelName=await tikTokProfileChannel(submission.url,fetcher,tiktokBackoff)
    return channelName?{...evidence,channelName}:evidence
   }
   if(platform!=='YouTube'||evidence.existence==='missing'||evidence.title&&evidence.channelName)return evidence

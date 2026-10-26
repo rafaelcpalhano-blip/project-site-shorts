@@ -21,7 +21,8 @@ export interface SubmissionDependencies {
 export class SubmissionError extends Error {
   readonly code: string
   readonly publicShortId?: string
-  constructor(code: string, publicShortId?: string) { super(code); this.code = code; this.publicShortId = publicShortId }
+  readonly retryAfterSeconds?: number
+  constructor(code: string, publicShortId?: string, retryAfterSeconds?:number) { super(code); this.code = code; this.publicShortId = publicShortId;this.retryAfterSeconds=retryAfterSeconds }
 }
 async function hash(value: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
@@ -37,7 +38,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
   catch { evidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] } }
   const decision = decidePublication(evidence, submission.platform)
   // Unverified attempts never reserve an identity, create a pending item or spend quota.
-  if (decision.status === 'rejected' || decision.status === 'retry') throw new SubmissionError(decision.reason)
+  if (decision.status === 'rejected' || decision.status === 'retry') throw new SubmissionError(decision.reason,undefined,decision.reason==='source-rate-limited'?evidence.retryAfterSeconds:undefined)
   const identityId = await hash(submission.identity)
   return dependencies.store.transact(async transaction => {
     const now = dependencies.now()

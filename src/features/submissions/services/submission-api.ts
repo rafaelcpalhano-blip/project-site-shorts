@@ -7,6 +7,7 @@ const messages: Record<string, string> = {
   'abuse-limit': 'Muitas tentativas. Aguarde antes de tentar novamente.',
   'invalid-game': 'Selecione um jogo disponível no catálogo.',
   'video-not-found': 'O vídeo não foi encontrado.',
+  'source-rate-limited': 'O TikTok limitou temporariamente as consultas de validação. Aguarde e tente novamente; o vídeo não foi publicado nem consumiu sua cota de publicações.',
   'verification-incomplete': 'Não foi possível confirmar os requisitos técnicos do vídeo. Tente novamente mais tarde; a tentativa não consumiu sua cota.',
   'embedding-disabled': 'A fonte não permite incorporar este vídeo. Escolha outro vídeo.',
   'not-a-short': 'O vídeo não possui um formato curto aceito.',

@@ -1,3 +1,4 @@
+import {retryAfterSeconds} from '../videos/tiktok-availability.ts'
 import { validateSubmissionInput } from '../../src/lib/validation/public-input.ts'
 import { submitShort, SubmissionError } from '../submissions/submit-short.ts'
 import type { SubmissionDependencies } from '../submissions/submit-short.ts'
@@ -48,6 +49,7 @@ const publicErrors: Record<string, { status: number; message: string }> = {
   'daily-limit': { status: 429, message: 'Você atingiu o limite de cinco publicações hoje.' },
   'invalid-game': { status: 422, message: 'Selecione um jogo disponível no catálogo.' },
   'video-not-found': { status: 422, message: 'O vídeo não foi encontrado.' },
+  'source-rate-limited': { status: 503, message: 'O TikTok limitou temporariamente as consultas de validação. Aguarde e tente novamente; o vídeo não foi publicado nem consumiu sua cota de publicações.' },
   'verification-incomplete': { status: 503, message: 'Não foi possível confirmar os requisitos técnicos do vídeo. Tente novamente mais tarde; a tentativa não consumiu sua cota.' },
   'embedding-disabled': { status: 422, message: 'A fonte não permite incorporar este vídeo. Escolha outro vídeo.' },
   'not-a-short': { status: 422, message: 'O vídeo não possui um formato curto aceito.' },
@@ -79,9 +81,10 @@ export async function handleSubmission(request: Request, dependencies?: Submissi
     if (error instanceof BodyError) return response(error.status, { error: 'invalid-body' })
     if (error instanceof SubmissionError && publicErrors[error.code]) {
       const detail = publicErrors[error.code]
+      const waiting=error.code==='source-rate-limited'?retryAfterSeconds(error.retryAfterSeconds):undefined
       return response(detail.status, { error: error.code, message: detail.message,
         ...(error.code === 'duplicate-video' && error.publicShortId ? { publicShortId: error.publicShortId } : {}),
-      })
+      },waiting?{'Retry-After':String(waiting)}:{})
     }
     // Never expose tokens, provider responses, stack traces or private document paths.
     return response(503, { error: 'unavailable', message: 'Não foi possível concluir o envio. Tente novamente mais tarde.' })

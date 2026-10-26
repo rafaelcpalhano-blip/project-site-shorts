@@ -1,3 +1,4 @@
+import {retryAfterSeconds} from '../videos/tiktok-availability.ts'
 import {resolveSharedVideoUrl} from '../videos/resolve-shared-url.ts'
 import {sharedVideoInput} from '../../src/lib/validation/shared-video-url.ts'
 import { BodyError, readInput } from './submissions.ts'
@@ -11,8 +12,8 @@ interface Dependencies {
   verify: SubmissionDependencies['verify']
   resolveUrl?: (url:string)=>Promise<string>
 }
-const reply = (status: number, body: unknown) => Response.json(body, { status,
-  headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...(status === 405 ? { Allow: 'POST' } : {}) } })
+const reply = (status: number, body: unknown,extra:Record<string,string>={}) => Response.json(body, { status,
+  headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...(status === 405 ? { Allow: 'POST' } : {}),...extra } })
 export async function handleVideoPreview(request: Request, dependencies?: Dependencies) {
   if (request.method !== 'POST') return reply(405, { error: 'method-not-allowed' })
   if (!dependencies) return reply(503, { error: 'unavailable' })
@@ -36,7 +37,10 @@ export async function handleVideoPreview(request: Request, dependencies?: Depend
     // Preview has no chosen game and never authorizes publication or reserves a video.
     const evidence = await dependencies.verify(submission)
     if (evidence.existence === 'missing') return reply(404, { error: 'video-not-found' })
-    if (evidence.existence !== 'confirmed') return reply(503, { error: 'metadata-unavailable' })
+    if (evidence.existence !== 'confirmed') {
+      const limited=submission.platform==='TikTok'&&evidence.unavailableReason==='provider-rate-limited',waiting=limited?retryAfterSeconds(evidence.retryAfterSeconds):undefined
+      return reply(503, { error: limited?'source-rate-limited':'metadata-unavailable' },waiting?{'Retry-After':String(waiting)}:{})
+    }
     let channelName = ''
     try { channelName = validateChannelName(evidence.channelName) } catch { /* Ignore unusable optional names. */ }
     const channel = channelName ? { channelName } : {}

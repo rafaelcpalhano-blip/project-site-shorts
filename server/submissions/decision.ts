@@ -1,5 +1,8 @@
 export interface VideoEvidence {
   existence: 'confirmed' | 'missing' | 'unknown'
+  // Trusted server availability signal only; never technical eligibility.
+  unavailableReason?: 'provider-rate-limited'
+  retryAfterSeconds?: number
   shortFormat: 'confirmed' | 'invalid' | 'unknown'
   // Server-only policy exception; does not assert a measured duration.
   formatPolicy?: 'tiktok-platform-exception'
@@ -23,7 +26,7 @@ export function decidePublication(evidence: VideoEvidence, platform?: string): P
   if (evidence.existence === 'missing') return { status: 'rejected', reason: 'video-not-found' }
   if (evidence.shortFormat === 'invalid') return { status: 'rejected', reason: 'not-a-short' }
   if (evidence.embedding === 'blocked') return { status: 'rejected', reason: 'embedding-disabled' }
-  if (!hasTechnicalEligibility(evidence, platform)) return { status: 'retry', reason: 'verification-incomplete' }
+  if (!hasTechnicalEligibility(evidence, platform)) return { status: 'retry', reason: platform === 'TikTok' && evidence.existence === 'unknown' && evidence.unavailableReason === 'provider-rate-limited' ? 'source-rate-limited' : 'verification-incomplete' }
   if (evidence.flags.some(flag => flag !== 'gameplay-violence') || evidence.moderation === 'flagged') {
     return { status: 'pending', reason: 'content-review' }
   }
