@@ -1,0 +1,34 @@
+# Etapa 8-F — entrada explícita de credencial para backup
+
+26/10/2026. Preparação local validada com chave RSA gerada exclusivamente para fixtures. **Nenhuma chave real foi aberta, nenhuma consulta OAuth/Firestore real ocorreu e nenhum backup remoto foi executado.** TikTok permanece pendente.
+
+## Implementação
+
+`scripts/recovery/load-snapshot-signer.ts` recebe caminho absoluto explícito, raiz do repositório e sinal de cancelamento. Não descobre arquivo por ambiente, não abre cache de CLI e não registra valores. Recusa arquivo dentro do repositório, caminho relativo/UNC/simbólico, múltiplos hard links, arquivo não regular, alvo não canônico e tamanho fora de 1–24576 bytes. Exige callback de verificação privada antes e depois de carregar/validar a chave.
+
+Abre um handle somente de leitura, verifica identidade/tamanho e limita a leitura a tamanho esperado mais um byte antes de JSON.parse. Recusa alteração detectada no tamanho/mtime, UTF8 inválido, JSON malformado e identidade incompatível: service_account, projeto clipzone-db02a, e-mail clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com e token_uri OAuth oficial. Nenhuma URL arbitrária do JSON é utilizada como destino. Campos não utilizados não são encaminhados para a rede nem incluídos no snapshot.
+
+Reutiliza o assinador RS256 existente, validando importação/algoritmo/tamanho por assinatura local de uma frase fixa sem envio externo. Retorna apenas função de assinatura, sem objeto de credencial, PEM ou ID de chave. O buffer de leitura é zerado ao encerrar; isso **não garante apagamento de strings JavaScript ou CryptoKey da memória**. Cancelamentos e falhas são sanitizados. A assinatura em andamento não pode ser arbitrariamente interrompida, mas seu resultado não é entregue depois do cancelamento.
+
+`scripts/recovery/windows-snapshot-credential.ts` e `verify-private-snapshot-credential.ps1` inspecionam somente metadados/ACL: pasta pai com a política restrita anterior e arquivo pertencente ao usuário atual, com exatamente duas entradas Allow/FullControl para usuário e SYSTEM, sem permissões de propagação. O arquivo pode herdar essas entradas do pai privado. A saída do subprocesso é somente schema/booleano. Não há alteração automática de ACL. A política conservadora pode recusar uma configuração diferente que também seja segura; essa recusa não autoriza modificá-la.
+
+`scripts/recovery/backup-from-credential.ts` fornece a entrada operacional como biblioteca, com destino/identidade/tetos explícitos e transportes HTTP injetados. Confere parâmetros e destino antes de carregar a chave; usa os verificadores Windows reais, conecta a captura integrada e encerra o sinal de vida em sucesso ou falha. Não há CLI, execução automática, fetch padrão, import pela aplicação, agendamento, alteração de IAM ou restauração. A leitura de um arquivo real e o uso de transportes reais exigem autorização específica da execução.
+
+## Testes
+
+64 testes relacionados passaram: 57 anteriores e sete novos. Os novos usam chave RSA2048 criada em memória pelo teste, nunca uma chave existente do Clipzone; o PEM gerado não foi versionado ou impresso. Cobrem assinatura verificável; tipo/projeto/e-mail/endpoint/chave incompatíveis; tamanho/UTF8/JSON inválidos; hard link/caminho relativo/arquivo dentro do repositório; callback ACL ausente/negado/revogado e operação cancelada; assinatura depois de cancelar; fluxo completo Windows com assinatura criptográfica efetiva, troca OAuth e Firestore fictícios, arquivo verificado e recusa de repetição sem outra consulta.
+
+No último cenário, o teste também acrescenta Everyone/Read **somente ao arquivo sintético** e comprova que o verificador e a entrada recusam nova captura antes de OAuth/Firestore, embora a pasta pai permaneça privada. ACLs modificadas apenas em diretórios/arquivo temporários novos e descartáveis. O ramo de symlink de arquivo do teste é condicional e não foi executado no Windows; a recusa está na implementação, enquanto junctions de diretório foram exercitados nas provas anteriores. Não anunciar teste de symlink de arquivo Windows como realizado.
+
+Rede global real bloqueada e somente transportes fictícios injetados. Integração Windows: snapshot vazio explícito simulado; dados de negócio tipados foram exercitados na rodada integrada anterior. TypeScript estrito e lint dos arquivos novos passaram. A suíte global histórica 704/0 não foi repetida, nem workerd/CPU/Lighthouse; runtime/frontend não mudaram. Sem instalação, serviço pago ou deploy.
+
+## Pacote proposto para aprovação da primeira cópia real
+
+1. Conferir por leitura o destino exato clipzone-db02a/(default), plano Spark e margem de quota. Se a margem não puder ser confirmada com ferramentas disponíveis, solicitar conferência no Console antes da captura. Não ativar API ou faturamento para viabilizar a checagem.
+2. Usar somente o arquivo existente em `%LOCALAPPDATA%/Clipzone/credentials/clipzone-runtime.json`; verificar ACL/identidade, sem imprimir conteúdo, criar chave ou ampliar permissões. Se falhar, parar e relatar, sem alterar a credencial.
+3. Criar apenas se necessário uma pasta nova `%LOCALAPPDATA%/Clipzone/backups`, fora do Git e separada das credenciais, com ACL usuário/SYSTEM. A criação e a configuração dessa nova pasta precisam constar da aprovação. Não alterar ACL de pasta existente; se já existir com política incompatível, parar e informar.
+4. Capturar uma única visão consistente de todas as coleções/subcoleções descobertas, incluindo documentos operacionais privados, com até 500 caminhos de documentos enumerados, 250 requisições Firestore, 5 MiB de JSON contabilizado pelo núcleo, 1 MiB por resposta no transporte e arquivo de até 8 MiB. Sinal de cancelamento global em 120 segundos, sem promessa de matar I/O local. Esses são tetos técnicos, **não equivalência com leituras debitadas nem certificação de quota disponível**.
+5. Reutilizar a biblioteca testada em runner privado explícito de uma execução, sem colocar chave em argumentos/console. Sem retry ou aumento automático de teto; usar nome novo com data UTC, criação exclusiva e releitura integral. Não inserir credencial no arquivo de backup.
+6. Informar somente status, contagem, instante e integridade. O backup e qualquer recibo com caminho/conteúdo privado ficam fora do Git; documentação versionada recebe apenas evidência sanitizada. Falha não vira backup declarado completo e não autoriza apagar arquivos.
+
+Esse pacote ainda não está autorizado pela preparação local. Não inclui restauração, escrita/exclusão no Firestore, migração, cron, jobs, upload/armazenamento adicional, upgrade ou deploy. Snapshot de documentos não inclui Auth/TOTP/IAM/segredos, e cópia no mesmo computador não protege contra perda física desse computador/disco. Uma custódia adicional pode ser definida depois, sem contratação automática de serviço.
