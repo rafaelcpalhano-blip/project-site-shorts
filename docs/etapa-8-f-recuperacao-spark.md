@@ -99,3 +99,7 @@ Continua pendente ferramenta autenticada de captura real, escritor privado/ACL/d
 ## Escritor de arquivo preparado localmente
 
 26/10/2026: biblioteca scripts/recovery/private-snapshot-writer.ts e nove casos de arquivo preparados. Resultado final: 39/0 testes relacionados, tipos/lint aprovados. Recusa sobrescrita, verifica bytes/checksum, exige callback de diretório privado e mantém falhas sem retry ou exclusão automática. Detalhes e limites em [etapa-8-f-escritor-snapshot.md](etapa-8-f-escritor-snapshot.md). Ainda faltam adaptador Windows real de ACL, autenticação integrada e aprovação específica de escopo/destino/orçamento antes de qualquer captura real. Nenhuma credencial ou dado remoto foi lido; nenhum deploy foi realizado. Não considerar este escritor isolado como backup operacional pronto.
+
+## Verificador Windows e autenticacao local preparados
+
+26/10/2026: verificador ACL somente de leitura e composicao do provedor OAuth existente preparados; 50 testes relacionados aprovados e seis integracoes ACL repetidas com a verificacao do arquivo criado. Sem leitura de chave privada, OAuth real, consulta remota ou deploy. Detalhes e limites em [etapa-8-f-backup-acl-autenticacao.md](etapa-8-f-backup-acl-autenticacao.md). Ainda falta composicao operacional, carga explicita de credencial e aprovacao especifica de escopo/destino/orcamento antes da copia real. Nao considerar esta etapa como backup remoto concluido.
