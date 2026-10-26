@@ -104,3 +104,43 @@ Não é necessário repetir o primeiro cadastro nem o login apenas para provar q
 
 
 Evidência: [etapa-8-e-homologacao-controlada.json](evidencias/etapa-8-e-homologacao-controlada.json). [LimitesCPU/medição/tolerância do Workers](https://developers.cloudflare.com/workers/platform/limits/), [Firestore batchGet/readWrite](https://docs.cloud.google.com/firestore/docs/reference/rest/v1/projects.databases.documents/batchGet). Os limites externos não foram alterados pelo aceite da homologação.
+
+
+## Continuação supervisionada — curtidas e painel
+
+O proprietário confirmou que, sem fazer login, curtiu e retirou a curtida do clipe existente. As duas chamadas de alteração retornaram HTTP 200, com **8 e 6 ms de CPU**. O agente não fez chamadas de gravação, não inseriu conteúdo fictício e não alterou o clipe.
+
+O proprietário confirmou a conclusão do acesso e das consultas solicitadas. Foi observada a sessão administrativa autorizada HTTP 200, em 9 ms. Isso mede a validação do token pelo backend; não permite afirmar que houve um novo desafio Google/TOTP, nem mede a interface do provedor de login. Não chegaram eventos individuais das abas de catálogo e comentários nesta janela: não atribuir CPU a elas nem afirmar se a ausência se deve a cache, tempo da ação ou perda no stream.
+
+| Coleta | Caminho observado | HTTP | CPU (ms) |
+| --- | --- | --- | --- |
+| Curtida sem login | `/api/session` | 204 | 4, 0, 0, 0, 1, 0 |
+| Curtida sem login | `/api/games/list` | 200 | 6 |
+| Curtida sem login | `/api/feed/ordered` | 200 | 6 |
+| Curtida sem login | `/api/comments/list` | 200 | 4 |
+| Curtida sem login | `/api/likes/state` | 200 | 5 |
+| Curtida sem login | `/api/likes/set` | 200 | 8, 6 |
+| Painel administrativo | `/api/admin/config` | 200 | 3 |
+| Painel administrativo | `/api/session` | 204 | 1 |
+| Painel administrativo | `/api/admin/session` | 200 | 9 |
+
+Os registros são eventos recebidos ao vivo, não um inventário independente de todas as requisições do navegador. O coletor descartou corpos, cabeçalhos, URLs com parâmetros, cookies, tokens e dados de usuários; os marcadores de isolate foram substituídos por aliases. O caminho `other`, se presente, não identifica uma rota individual e não certifica seu primeiro uso. Não transformar duas alterações válidas de curtida em três amostras de reuso: o critério ampliado ainda não está concluído.
+
+A sessão inicial de 4 ms desta rodada criou a composição da aplicação, mas pode ter reaproveitado um cookie existente. Não equivale à emissão de uma nova identidade, e não invalida os picos anteriores de 12 e 15 ms.
+
+### Investigação local da inicialização
+
+Contagem de operações no workerd local, com chave RSA efêmera e respostas de banco/OAuth simuladas; nenhuma credencial de produção lida e nenhuma chamada externa:
+
+| Fase | Importações criptográficas | Assinaturas | Chamadas externas simuladas |
+| --- | --- | --- | --- |
+| Construção da aplicação | Nenhuma | Nenhuma | Nenhuma |
+| Primeira emissão de sessão | 2 HMAC e 1 RSA | 2 HMAC e 1 RSA | OAuth, leitura transacional e commit |
+| Sessão existente | Nenhuma | 1 HMAC | Nenhuma |
+| Feed, primeiro uso e reuso | Nenhuma | 1 HMAC por chamada | Leitura transacional, commit e consulta por chamada |
+
+Isso identifica trabalho adicional na primeira emissão e confirma o aproveitamento das chaves já importadas. Não é medição de CPU do edge nem atribuição percentual dos picos. O cache HMAC limitado e o cache de chave/token do serviço já evitam repetir parte desse trabalho. Não antecipar chamadas artificiais de aquecimento, compartilhar decisões de autorização ou enfraquecer assinatura, revogação, UID/TOTP, quotas ou transações para reduzir o número.
+
+O feed ordenado também respondeu HTTP 200 nesta coleta. Pelo código, as ordens `latest`, `oldest` e `likes` não exigem a geração materializada usada por `relevant`. Como o corpo das ações do proprietário não foi coletado, esse evento não comprova que o ranking de relevância foi inicializado. Jobs continuam desligados; nenhuma geração foi executada pelo agente.
+
+Próximas verificações: concluir cobertura administrativa conforme os eventos, medir publicação/comentário/moderação durante uso legítimo com conteúdo escolhido pelo proprietário, resolver a decisão de ranking e a limitação TikTok, e então fechar checklist PC/mobile e Lighthouse representativo. Não há novo deploy nem aprovação de lançamento nesta continuação. O código de produção ficou inalterado; as provas locais de contagem são diagnósticas, não substituem os 650 testes Node e 30 provas workerd já aprovados. Não repetir a suíte ou o Lighthouse apenas por uma atualização documental.

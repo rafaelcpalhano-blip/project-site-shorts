@@ -2104,7 +2104,7 @@
   },
   "monitoringScope": "Bounded controlled collections only; no unattended 24/7 monitor or paid log service created",
   "pending": [
-    "CPU of successful Google/TOTP login and publication; independent unauthorized UID/revoked-token checks",
+    "Authorized backend admin session measured at 9ms; fresh Google/TOTP challenge and independent unauthorized UID/revoked-token remote checks remain unmeasured",
     "Successful likes/comments/reports/moderation CPU and behavior without fictional remote content",
     "Repeated initialization spikes investigated; 12ms and 15ms observed without runtime limit errors",
     "Ranking initialization/generation; jobs remain disabled pending separate decision",
@@ -2391,5 +2391,330 @@
     "completedAt": "2026-10-26T07:07:43.727Z"
   },
   "totalHttpRequestsIncludingOwnerContentProbe": 86,
-  "totalCpuRecordsIncludingOwnerContentProbe": 56
+  "totalCpuRecordsIncludingOwnerContentProbe": 56,
+  "ownerManualCollections": {
+    "anonymousLikeUnlike": {
+      "startedAt": "2026-10-26T07:20:28.167Z",
+      "scope": "Owner manual actions; sanitized observations only; no HTTP or business writes by agent",
+      "events": [
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 4,
+          "wallMs": 4,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 1,
+            "applicationCreated": true,
+            "firstApiInIsolate": true,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/games/list",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 6,
+          "wallMs": 473,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 2,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 0,
+          "wallMs": 0,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 3,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        },
+        {
+          "path": "/api/feed/ordered",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 6,
+          "wallMs": 151,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 4,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 0,
+          "wallMs": 1,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 5,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        },
+        {
+          "path": "/api/comments/list",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 4,
+          "wallMs": 107,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 6,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 0,
+          "wallMs": 0,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 7,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        },
+        {
+          "path": "/api/likes/state",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 5,
+          "wallMs": 155,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 8,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 1,
+          "wallMs": 1,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 9,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        },
+        {
+          "path": "/api/likes/set",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 8,
+          "wallMs": 193,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 10,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 0,
+          "wallMs": 0,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 11,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        },
+        {
+          "path": "/api/likes/set",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 6,
+          "wallMs": 171,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 12,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": false
+          }
+        }
+      ],
+      "exceptionsObserved": 0,
+      "error1102Observed": 0,
+      "exceededCpuObserved": 0,
+      "launchApproved": false,
+      "completedAt": "2026-10-26T07:23:28.192Z",
+      "finalState": "controlled-homologation-open-not-launch-approved",
+      "collectionCoverage": "Live stream only; request count must be corroborated with owner actions; no retrospective CPU attribution"
+    },
+    "adminReadOnly": {
+      "startedAt": "2026-10-26T07:23:53.075Z",
+      "scope": "Owner manual actions; sanitized observations only; no HTTP or business writes by agent",
+      "events": [
+        {
+          "path": "/api/admin/config",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 3,
+          "wallMs": 3,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 1,
+            "applicationCreated": true,
+            "firstApiInIsolate": true,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuMs": 1,
+          "wallMs": 1,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 2,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        },
+        {
+          "path": "/api/admin/session",
+          "status": 200,
+          "outcome": "ok",
+          "cpuMs": 9,
+          "wallMs": 979,
+          "exceptionCount": 0,
+          "observation": {
+            "isolate": "isolate-1",
+            "sequence": 3,
+            "applicationCreated": false,
+            "firstApiInIsolate": false,
+            "firstRouteInIsolate": true
+          }
+        }
+      ],
+      "exceptionsObserved": 0,
+      "error1102Observed": 0,
+      "exceededCpuObserved": 0,
+      "launchApproved": false,
+      "completedAt": "2026-10-26T07:26:53.098Z",
+      "finalState": "controlled-homologation-open-not-launch-approved",
+      "collectionCoverage": "Live stream only; request count must be corroborated with owner actions; no retrospective CPU attribution"
+    }
+  },
+  "localInitializationOperationCounting": {
+    "observedAt": "2026-10-26T07:23:46.519Z",
+    "method": "Local workerd operation counting with fixture transport and ephemeral RSA key; not edge CPU timing or cold-start attribution",
+    "productionSecretsRead": false,
+    "externalNetworkCalls": 0,
+    "phases": [
+      {
+        "name": "application-composition",
+        "imports": [],
+        "signs": [],
+        "outbound": []
+      },
+      {
+        "name": "first-new-session",
+        "status": 204,
+        "imports": [
+          "HMAC",
+          "HMAC",
+          "RSASSA-PKCS1-v1_5"
+        ],
+        "signs": [
+          "HMAC",
+          "RSASSA-PKCS1-v1_5",
+          "HMAC"
+        ],
+        "outbound": [
+          "oauth",
+          "batchGet",
+          "commit"
+        ]
+      },
+      {
+        "name": "existing-session",
+        "status": 204,
+        "imports": [],
+        "signs": [
+          "HMAC"
+        ],
+        "outbound": []
+      },
+      {
+        "name": "first-feed",
+        "status": 200,
+        "imports": [],
+        "signs": [
+          "HMAC"
+        ],
+        "outbound": [
+          "batchGet",
+          "commit",
+          "runQuery"
+        ]
+      },
+      {
+        "name": "reused-feed",
+        "status": 200,
+        "imports": [],
+        "signs": [
+          "HMAC"
+        ],
+        "outbound": [
+          "batchGet",
+          "commit",
+          "runQuery"
+        ]
+      }
+    ]
+  },
+  "ownerConfirmedAnonymousLikeUnlikeSucceeded": true,
+  "ownerConfirmedAdminPanelAndRequestedTabsOpened": true,
+  "totalCpuRecordsIncludingManualCollections": 71,
+  "manualCoverageLimit": "Live observed events only; no browser request log or tokens collected; successful backend admin requests do not prove a fresh Google/TOTP challenge"
 }
