@@ -11,7 +11,11 @@ interface Environment {
  TWITCH_CLIENT_ID:string;TWITCH_CLIENT_SECRET:string;YOUTUBE_API_KEY:string
  CLIPZONE_JOBS_ENABLED?:string
  CLIPZONE_PROVIDER_DIAGNOSTICS?:string
+ CLIPZONE_HOMOLOGATION_OBSERVABILITY?:string
 }
+const observedRoutes=new Set(['/api/admin/config','/api/admin/session','/api/admin/games/catalog','/api/admin/queue','/api/admin/comments/queue','/api/session','/api/feed','/api/feed/ordered','/api/games/list','/api/games/search','/api/games/manual','/api/games/confirm','/api/shorts','/api/shorts/detail','/api/shorts/preview','/api/comments','/api/comments/list','/api/likes/state','/api/likes/set','/api/reports','/api/playback/failure'])
+let observationId:string|undefined,observationSequence=0
+const seenObservationRoutes=new Set<string>()
 const applications=new WeakMap<Environment,{signature:string;app:ReturnType<typeof createCloudflareApplication>}>()
 function application(env:Environment){
  const config:CloudflareApplicationConfiguration={origin:env.CLIPZONE_ORIGIN,projectId:env.FIREBASE_PROJECT_ID,authProjectId:env.FIREBASE_AUTH_PROJECT_ID,
@@ -31,7 +35,14 @@ export default {
   try{
    const url=new URL(request.url),api=url.pathname==='/api'||url.pathname.startsWith('/api/')
    if(!api){if(url.origin!==env.CLIPZONE_ORIGIN)return Response.json({error:'invalid-origin'},{status:403});return url.pathname.startsWith('/images/games/')?serveStaticGameCover(request,r=>env.ASSETS.fetch(r)):env.ASSETS.fetch(request)}
-   return await application(env)(request)
+   const observe=env.CLIPZONE_HOMOLOGATION_OBSERVABILITY==='true'
+   const previous=observe?applications.get(env)?.app:undefined,app=application(env)
+   const route=observedRoutes.has(url.pathname)?url.pathname:'other'
+   const observation=observe?{isolate:observationId??=(crypto.randomUUID()),sequence:++observationSequence,firstApiInIsolate:observationSequence===1,applicationCreated:previous!==app,firstRouteInIsolate:!seenObservationRoutes.has(route),route,method:['GET','POST','HEAD','OPTIONS'].includes(request.method)?request.method:'other'}:undefined
+   if(observe)seenObservationRoutes.add(route)
+   const response=await app(request)
+   if(observation)try{console.info('clipzone-homologation',JSON.stringify({...observation,status:response.status}))}catch{ /* Observation must not change the response. */ }
+   return response
   }catch{return Response.json({error:'service-unavailable'},{status:503,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})}
  },
  async scheduled(_event:unknown,env:Environment){

@@ -1,4 +1,4 @@
-// Public deployment configuration. Secrets are supplied privately by the operator.
+// Controlled HTTPS homologation only. Not approved for public launch.
 {
   "name": "www",
   "main": "./server/runtime/cloudflare-main.ts",
@@ -6,7 +6,7 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "workers_dev": false,
+  "workers_dev": true,
   "minify": true,
   "preview_urls": false,
   "send_metrics": false,
@@ -26,7 +26,9 @@
     "FIREBASE_AUTH_PROJECT_ID": "clipzone-db02a",
     "FIREBASE_SERVICE_EMAIL": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
     "FIREBASE_AUTH_APP_ID": "1:818748049569:web:c73f2f86ab6e589f6a88e0",
-    "CLIPZONE_JOBS_ENABLED": "false"
+    "CLIPZONE_JOBS_ENABLED": "false",
+    "CLIPZONE_HOMOLOGATION_OBSERVABILITY": "true",
+    "CLIPZONE_PROVIDER_DIAGNOSTICS": "false"
   },
   "upload_source_maps": false
 }

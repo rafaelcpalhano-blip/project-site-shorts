@@ -1,3 +1,4 @@
+import workerMain from '../../server/runtime/cloudflare-main.ts'
 import {createRestStore} from '../../server/firestore/rest-store.ts'
 import {restFixture} from './portable-rest-fixture.ts'
 import {importHmacKey} from '../../server/security/hmac-key.ts'
@@ -91,4 +92,23 @@ add('lazy create-only transactions and first-query transactions retain explicit 
  const store=createRestStore({projectId:'clipzone-db02a',accessToken:async()=>'fixture',fetcher,lazyTransactions:true})
  await store.transact(async tx=>{tx.create('games/a',{value:1})});check(operations.join(',')==='beginTransaction,commit')
  operations.length=0;await store.transact(async tx=>{check(await tx.hasPublishedComment!('fixture-short')===false)});check(operations.join(',')==='beginTransaction,runQuery,commit')
+})
+
+add('opt-in homologation observations distinguish application and route initialization without exposing private request data',async()=>{
+ const pair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']),pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(await crypto.subtle.exportKey('pkcs8',pair.privateKey)).toString('base64')+'\n-----END PRIVATE KEY-----'
+ const env={ASSETS:{fetch:async()=>new Response('asset')},CLIPZONE_ORIGIN:'https://preview.clipzone.example',FIREBASE_PROJECT_ID:'clipzone-db02a',FIREBASE_AUTH_PROJECT_ID:'clipzone-db02a',FIREBASE_SERVICE_EMAIL:'clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com',FIREBASE_SERVICE_PRIVATE_KEY:pem,CLIPZONE_VISITOR_SECRET:secret(221),CLIPZONE_NETWORK_SECRET:secret(222),FIREBASE_AUTH_API_KEY:'fixture-public',FIREBASE_AUTH_APP_ID:'1:818748049569:web:c73f2f86ab6e589f6a88e0',CLIPZONE_ADMIN_UIDS:'fixture-private-uid',TWITCH_CLIENT_ID:'fixture-client',TWITCH_CLIENT_SECRET:'fixture-private-secret',YOUTUBE_API_KEY:'fixture-private-youtube',CLIPZONE_HOMOLOGATION_OBSERVABILITY:'true'}
+ const log=console.info,events:Array<Record<string,unknown>>=[];console.info=(...args:unknown[])=>{if(args[0]==='clipzone-homologation')events.push(JSON.parse(String(args[1])))}
+ const request=()=>{const r=new Request(env.CLIPZONE_ORIGIN+'/api/admin/config',{headers:{'CF-Connecting-IP':'8.8.8.8','Cookie':'private-cookie','Authorization':'Bearer private-token'}});Object.defineProperty(r,'cf',{value:{colo:'GRU',httpProtocol:'HTTP/2'}});return r}
+ try{
+  for(let n=0;n<2;n++){const r=await workerMain.fetch(request(),env);check(r.status===200&&!r.headers.has('x-clipzone-isolate'));await r.body?.cancel()}
+  check(events.length===2&&events[0].applicationCreated===true&&events[1].applicationCreated===false&&events[0].firstRouteInIsolate===true&&events[1].firstRouteInIsolate===false&&events[0].isolate===events[1].isolate)
+  const privateRequest=new Request(env.CLIPZONE_ORIGIN+'/api/private-user-id?token=private-value',{headers:{'CF-Connecting-IP':'8.8.8.8'}});Object.defineProperty(privateRequest,'cf',{value:{colo:'GRU',httpProtocol:'HTTP/2'}});check((await workerMain.fetch(privateRequest,env)).status===404&&events[2].route==='other')
+  const encoded=JSON.stringify(events);for(const sensitive of ['private-user-id','private-value','private-cookie','private-token','8.8.8.8','fixture-private',pem])check(!encoded.includes(sensitive))
+  console.info=()=>{throw Error('logger-unavailable')};check((await workerMain.fetch(request(),env)).status===200)
+  env.CLIPZONE_HOMOLOGATION_OBSERVABILITY='false';check((await workerMain.fetch(request(),env)).status===200&&events.length===3)
+ }finally{console.info=log}
+})
+add('homologation observation route values are fixed and never record arbitrary URL paths or queries',async()=>{
+ // Application setup below is deliberately invalid; default failure never reflects a private URL.
+ const result=await workerMain.fetch(new Request('https://preview.clipzone.example/api/private-user-id?token=private-value'),{} as Parameters<typeof workerMain.fetch>[1]);const text=await result.text();check(result.status===503&&!text.includes('private-user-id')&&!text.includes('private-value'))
 })
