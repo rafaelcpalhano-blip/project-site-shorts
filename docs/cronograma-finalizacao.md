@@ -66,3 +66,7 @@ Em26/10/2026 o proprietário escolheu “Preparar a PWA localmente em paralelo�
 -8-F em andamento: catálogo administrativo medido em12/5/4/4ms, três reusos≤10ms; primeiro uso12ms ainda requer investigação. Comentários funcionais conforme proprietário, semCPU capturada nas duas janelas. Não repetir catálogo para suprir essa lacuna.
 - Suporte técnicoTikTok/Embed enviado e confirmado pelo proprietário; aguardando possível resposta. Validação backend e bloqueio de lançamento mantidos.
 - Permanecem CPU de ações legítimas/escritas/moderação e demais lacunas, ranking/jobs, recuperação real sob aprovação, matriz9-A e auditorias9-B/9-B.5 antes do lançamento9-C autorizado. Não marcar toda a8-F concluída por entregas parciais.
+
+## 26/10/2026 — autorizacao de avanco independente para9-A
+
+Apos manter explicitamente TikTok em standby e concluir primeiro backup privado real verificado, o proprietario autorizou continuar nos fluxos independentes.9-A parcial iniciada sem encerrar8-F:12contratos HTTP e navegacao controlada registrados em etapa-9-a-homologacao.md/json. Matriz humana em checklist-homologacao-9-a.md, separando PC/celular/PWA/Lighthouse e acoes de escrita coordenadas. A ordem de trabalhos independentes nao dispensa pendencias deCPU/ranking/recuperacaoAuth/TOTP, TikTok ou auditorias9-B/9-B.5. Lancamento9-C continua dependendo de autorizacao explicita.

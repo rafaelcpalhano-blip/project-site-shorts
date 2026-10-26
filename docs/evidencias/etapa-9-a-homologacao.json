@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-26",
+  "scope": "partial-independent-9-A",
+  "http": {
+    "startedAt": "2026-10-26T23:31:42.205Z",
+    "origin": "https://www.clipzone.workers.dev",
+    "method": "GET-only",
+    "checks": [
+      {
+        "path": "/",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": false
+      },
+      {
+        "path": "/admin",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": false
+      },
+      {
+        "path": "/assets/index-B-pmZ_Br.js",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": false
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/icons/clipper-gamer-180.png",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/icons/clipper-gamer-192.png",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/icons/clipper-gamer-512.png",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/icons/clipper-gamer-maskable-512.png",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/icons/clipper-gamer-64.webp",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": true
+      },
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "passed": true,
+        "exactPublicFileCompared": false
+      },
+      {
+        "path": "/api/nonexistent-stage9a-check",
+        "status": 404,
+        "passed": true,
+        "exactPublicFileCompared": false
+      },
+      {
+        "path": "/api/session",
+        "status": 405,
+        "passed": true,
+        "exactPublicFileCompared": false
+      }
+    ],
+    "providerValidationAttempted": false,
+    "editorialWritesAttempted": false,
+    "sessionIssuedByThisScript": false,
+    "cpuMeasured": false,
+    "lighthouseExecuted": false,
+    "launchApproved": false,
+    "allChecksPassed": true,
+    "finishedAt": "2026-10-26T23:31:44.373Z",
+    "passed": 12
+  },
+  "activeVersion": {
+    "checkedAt": "2026-10-26T23:33:48.597Z",
+    "matchesApprovedVersion": true,
+    "versions": [
+      {
+        "id": "a0d58723-b19c-4439-a2d2-85a402571691",
+        "percentage": 100
+      }
+    ],
+    "readOnly": true
+  },
+  "controlledBrowser": {
+    "homeCards": 6,
+    "catalogOptions": 8,
+    "gameFilterPassed": true,
+    "shareCatalogSearchAndSelectionPassed": true,
+    "shareCancelledWithoutSubmission": true,
+    "gameDetailsLoaded": true,
+    "browserBackRestoredFilter": true,
+    "transientCatalogueLoadingPlaceholderObserved": true,
+    "finalFilterRestoredToAll": true,
+    "exactScrollPositionValidated": false,
+    "onlyOnePageAvailable": true,
+    "physicalMobileTested": false,
+    "playersPlayed": false,
+    "adminLoginTested": false,
+    "editorialContentChangedByAgent": false,
+    "ordinaryAppOperationalStateNotAudited": true
+  },
+  "lighthouseExecuted": false,
+  "cpuMeasured": false,
+  "newAutomatedTestsExecuted": false,
+  "tiktokStillBlocked": true,
+  "stage8FComplete": false,
+  "stage9AComplete": false,
+  "launchApproved": false
+}
