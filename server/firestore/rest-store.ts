@@ -34,6 +34,8 @@ interface Options {
   accessToken?: () => Promise<string>
   fetcher?: typeof fetch
   cleanupFetcher?: typeof fetch
+  // Workers opt-in: start the read/write transaction with its first document read.
+  lazyTransactions?: boolean
 }
 export function createRestStore(options: Options): AtomicStore {
   if (!/^[a-z][a-z0-9-]{2,99}$/.test(options.projectId)) throw new Error('Projeto inválido')
@@ -57,10 +59,11 @@ export function createRestStore(options: Options): AtomicStore {
     return result
   }
   const decodeDocument = (document: {name:string;fields?:Record<string,Value>}) => ({ id:document.name.split('/').at(-1)!, data:Object.fromEntries(Object.entries(document.fields || {}).map(([key,value]) => [key,decode(value)])) })
-  const readMany=async(paths:string[],transaction?:string)=>{
+  const readMany=async(paths:string[],transaction?:string,start?:{previous?:string;started:(id:string)=>void})=>{
       if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
       const documents=paths.map(name),expected=new Set(documents),records=new Map<string,RecordData|null>()
-      const result=await request('batchGet',{documents,...(transaction?{transaction}:{})})
+      const result=await request('batchGet',{documents,...(transaction?{transaction}:start?{newTransaction:{readWrite:start.previous?{retryTransaction:start.previous}:{}}}:{})})
+      if(start){const id=(Array.isArray(result)?result[0]:result)?.transaction;if(typeof id!=='string'||!id||id.length>4096||/[\s\p{C}]/u.test(id))throw Error('Identificador de transação inválido');start.started(id)}
       for(const row of Array.isArray(result)?result:[result]){
         // Firestore may send a metadata-only row; found/missing rows are unordered.
         if(row&&typeof row==='object'&&!('found' in row)&&!('missing' in row)&&('readTime' in row||'transaction' in row))continue
@@ -223,19 +226,38 @@ export function createRestStore(options: Options): AtomicStore {
     async transact<T>(work: (transaction: AtomicTransaction) => Promise<T>): Promise<T> {
       let previous: string | undefined
       for (let attempt = 0; attempt < 8; attempt++) {
-        const { transaction } = await request('beginTransaction', { options: { readWrite: previous ? { retryTransaction: previous } : {} } })
+        let transaction:string|undefined,starting:Promise<unknown>|undefined
+        const begin=async()=>{
+          if(starting)await starting
+          if(!transaction){
+            const pending=(async()=>{const result=await request('beginTransaction',{options:{readWrite:previous?{retryTransaction:previous}:{}}});if(typeof result.transaction!=='string'||!result.transaction||result.transaction.length>4096||/[\s\p{C}]/u.test(result.transaction))throw Error('Identificador de transação inválido');transaction=result.transaction})()
+            starting=pending
+            try{await pending}finally{if(starting===pending)starting=undefined}
+          }
+          return transaction
+        }
+        if(!options.lazyTransactions)await begin()
+        const documents=async(paths:string[])=>{
+          if(starting)await starting
+          if(transaction)return readMany(paths,transaction)
+          const pending=readMany(paths,undefined,{previous,started:id=>{transaction=id}})
+          starting=pending
+          try{return await pending}finally{if(starting===pending)starting=undefined}
+        }
         const writes: unknown[] = []
         const port: AtomicTransaction = {
-          async getMany(paths){if(writes.length)throw Error('Reads must precede writes');return readMany(paths,transaction)},
+          async getMany(paths){if(writes.length)throw Error('Reads must precede writes');return documents(paths)},
           async publishedCommentHistory(shortId) {
             if(writes.length)throw Error('Reads must precede writes')
             if(!/^[\w-]{1,128}$/.test(shortId))throw Error('Invalid short')
+            await begin()
             const result=await request('runQuery',{transaction,structuredQuery:{from:[{collectionId:'comments'}],where:{compositeFilter:{op:'AND',filters:[{fieldFilter:{field:{fieldPath:'shortId'},op:'EQUAL',value:encode(shortId)}},{fieldFilter:{field:{fieldPath:'moderationStatus'},op:'IN',value:encode(['approved','removed'])}}]}},orderBy:[{field:{fieldPath:'createdAt'},direction:'ASCENDING'},{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:201}})
             return (Array.isArray(result)?result:[result]).filter(row=>row.document).map(row=>decodeDocument(row.document))
           },
           async hasPublishedComment(shortId) {
             if (writes.length) throw new Error('Todas as leituras devem preceder as gravações')
             if (!/^[\w-]{1,128}$/.test(shortId)) throw new Error('Vídeo inválido')
+            await begin()
             const result = await request('runQuery', { transaction, structuredQuery: {
               from: [{ collectionId: 'comments' }], limit: 1,
               orderBy: [{field: {fieldPath: 'createdAt'}, direction: 'DESCENDING'}, {field: {fieldPath: '__name__'}, direction: 'DESCENDING'}],
@@ -248,6 +270,7 @@ export function createRestStore(options: Options): AtomicStore {
           },
           async get(path) {
             if (writes.length) throw new Error('Todas as leituras devem preceder as gravações')
+            if(options.lazyTransactions)return (await documents([path]))[0]
             const result = await request('batchGet', { documents: [name(path)], transaction })
             const found = (Array.isArray(result) ? result : [result]).find(item => item.found)?.found
             return found ? Object.fromEntries(Object.entries(found.fields || {}).map(([key, value]) => [key, decode(value as Value)])) : null
@@ -258,11 +281,12 @@ export function createRestStore(options: Options): AtomicStore {
         }
         try {
           const result = await work(port)
+          await begin()
           await request('commit', { writes, transaction })
           return result
         } catch (error) {
           if (!(error instanceof FirestoreError) || error.code !== 'ABORTED' || attempt === 7) {
-            try { await request('rollback', { transaction }) } catch { /* Preserve original failure. */ }
+            try { if(transaction)await request('rollback', { transaction }) } catch { /* Preserve original failure. */ }
             throw error
           }
           previous = transaction

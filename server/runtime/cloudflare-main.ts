@@ -10,6 +10,7 @@ interface Environment {
  FIREBASE_AUTH_API_KEY:string;FIREBASE_AUTH_APP_ID:string;CLIPZONE_ADMIN_UIDS:string
  TWITCH_CLIENT_ID:string;TWITCH_CLIENT_SECRET:string;YOUTUBE_API_KEY:string
  CLIPZONE_JOBS_ENABLED?:string
+ CLIPZONE_PROVIDER_DIAGNOSTICS?:string
 }
 const applications=new WeakMap<Environment,{signature:string;app:ReturnType<typeof createCloudflareApplication>}>()
 function application(env:Environment){
@@ -21,7 +22,7 @@ function application(env:Environment){
  // including when a local host reuses and mutates the same env object.
  const signature=JSON.stringify(config),cached=applications.get(env)
  if(cached?.signature===signature)return cached.app
- const app=createCloudflareApplication(config,{assets:request=>env.ASSETS.fetch(request),fetcher:(input,init)=>fetch(input,init),now:()=>new Date()})
+ const app=createCloudflareApplication(config,{assets:request=>env.ASSETS.fetch(request),fetcher:(input,init)=>fetch(input,init),now:()=>new Date(),observeTikTok:env.CLIPZONE_PROVIDER_DIAGNOSTICS==='true'?event=>console.info('clipzone-tiktok',JSON.stringify(event)):undefined})
  applications.set(env,{signature,app});return app
 }
 /** Prepared entry only. No manifest, bindings, cron, resources or deploy enabled. */

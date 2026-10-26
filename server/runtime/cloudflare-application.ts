@@ -1,3 +1,4 @@
+import type {TikTokDiagnostic} from '../videos/tiktok.ts'
 import {isIP} from 'node:net'
 import {runWorkerMaintenance} from './worker-maintenance.ts'
 import {createWorkerFetch} from './worker-fetch.ts'
@@ -21,7 +22,7 @@ export interface CloudflareApplicationConfiguration {
  twitchClientId:string;twitchClientSecret:string;youtubeApiKey:string
 }
 /** Opt-in server composition. No bindings, default target, environment loading or deployment. */
-export function createCloudflareApplication(config:CloudflareApplicationConfiguration,ports:{assets:(request:Request)=>Promise<Response>;fetcher:typeof fetch;now:()=>Date}){
+export function createCloudflareApplication(config:CloudflareApplicationConfiguration,ports:{assets:(request:Request)=>Promise<Response>;fetcher:typeof fetch;now:()=>Date;observeTikTok?:(event:TikTokDiagnostic)=>void}){
  try{
   const origin=new URL(config.origin)
   if(origin.protocol!=='https:'||origin.origin!==config.origin||!origin.hostname.includes('.')||!!isIP(origin.hostname.replace(/^\[|\]$/g,''))||origin.hostname.endsWith('.localhost')||origin.hostname.endsWith('.test')||/^(?:localhost|127\.|\[|0\.)/.test(origin.hostname)||
@@ -34,10 +35,10 @@ export function createCloudflareApplication(config:CloudflareApplicationConfigur
   const entry=createWorkerEntry({origin:configSnapshot.origin,assets:ports.assets,trustedTransport:cloudflareDirectTransport,fetcher:ports.fetcher,
    createApi:async({origin,budget})=>{
     // Nothing here captures a previous request's budget in shared state.
-    const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch})
+    const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
     const catalog=createIgdbCatalog({clientId:configSnapshot.twitchClientId,clientSecret:configSnapshot.twitchClientSecret},budget.fetch)
     const twitch=createTwitchClipVerifier({clientId:configSnapshot.twitchClientId,accessToken:catalog.accessToken,fetcher:budget.fetch})
-    const verify=createConfiguredVideoVerifier({twitch,youtubeApiKey:configSnapshot.youtubeApiKey,fetcher:budget.fetch})
+    const verify=createConfiguredVideoVerifier({twitch,youtubeApiKey:configSnapshot.youtubeApiKey,fetcher:budget.fetch,observeTikTok:ports.observeTikTok})
     return createPublicApi({origin,store,visitorSecret:configSnapshot.visitorSecret,network:{secret:configSnapshot.networkSecret},now:ports.now,
      verify,previewFetch:budget.fetch,maximumAttempts:20,attemptWindowMs:60000,
      // Persistent network session admission is mandatory above; no isolate-local substitute.
@@ -50,7 +51,7 @@ export function createCloudflareApplication(config:CloudflareApplicationConfigur
   })
   return Object.assign(entry,{maintenance:async()=>{
    const budget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:createWorkerFetch(ports.fetcher)})
-   const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch})
+   const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
    try{return {...await runWorkerMaintenance({store,now:ports.now}),outbound:budget.usage().dispatched}}
    catch(error){const message=error instanceof Error?error.message:'';const reason=['outbound-budget-exhausted','ranking-budget-exhausted','ranking-build-busy','ranking-metrics-not-ready','ranking-generation-protected','ranking-build-expired'].includes(message)?message:'service-unavailable';return {task:'maintenance',status:'deferred',reason,outbound:budget.usage().dispatched}}
   }})

@@ -1,3 +1,4 @@
+import type {TikTokDiagnostic} from './tiktok.ts'
 import { createMetadataVerifier } from './verify.ts'
 import { createTikTokVerifier } from './tiktok.ts'
 import { createYouTubeVerifier, createYouTubeOEmbedVerifier } from './youtube.ts'
@@ -6,6 +7,7 @@ export function createConfiguredVideoVerifier(options: {
   twitch?: (submission: { url: string; gameId: string }) => Promise<VideoEvidence>
   youtubeApiKey?: string
   fetcher?: typeof fetch
+  observeTikTok?: (event: TikTokDiagnostic) => void
 }) {
   const fetcher = options.fetcher ?? fetch
   const key = options.youtubeApiKey?.trim()
@@ -13,6 +15,6 @@ export function createConfiguredVideoVerifier(options: {
     ...(options.twitch ? { Twitch: options.twitch } : {}),
     // oEmbed supplies optional public metadata: unknown shortFormat cannot authorize publication.
     YouTube: key ? createYouTubeVerifier({ apiKey: key, fetcher }) : createYouTubeOEmbedVerifier(fetcher),
-    TikTok: createTikTokVerifier(fetcher),
+    TikTok: createTikTokVerifier(fetcher, options.observeTikTok),
   })
 }

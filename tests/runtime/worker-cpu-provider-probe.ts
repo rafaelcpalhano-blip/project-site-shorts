@@ -1,0 +1,2 @@
+import {cpuProviderCases} from '../helpers/worker-cpu-provider-cases.ts'
+export default {async fetch(){let externalFetchAttempts=0;globalThis.fetch=async()=>{externalFetchAttempts++;throw Error('External network forbidden')};const passed:string[]=[];for(const proof of cpuProviderCases){try{await proof.run();passed.push(proof.name)}catch{return Response.json({passed,failed:proof.name,externalFetchAttempts},{status:500})}}return Response.json({passed,externalFetchAttempts})}}

@@ -3,7 +3,15 @@ import { validateVideoTitle } from '../../src/lib/validation/public-input.ts'
 import { thumbnailUrl } from '../../src/lib/validation/thumbnail.ts'
 import { parseVideoUrl } from '../../src/lib/validation/video-url.ts'
 import type { VideoEvidence } from '../submissions/decision.ts'
-export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
+export interface TikTokDiagnostic {
+  stage: 'response' | 'shape' | 'failure'
+  status?: number
+  validProvider?: boolean
+  identityMatches?: boolean
+  reason?: 'timeout' | 'transport-error' | 'unavailable'
+}
+export function createTikTokVerifier(fetcher: typeof fetch = fetch, observe?: (event: TikTokDiagnostic) => void) {
+  const report = (event: TikTokDiagnostic) => { try { observe?.(event) } catch { /* Diagnostics never alter verification. */ } }
   return async (submission: { url: string }): Promise<VideoEvidence> => {
     const evidence: VideoEvidence = { existence: 'unknown', shortFormat: 'unknown', gameMatch: 'unknown', moderation: 'unavailable', flags: [] }
     try {
@@ -12,8 +20,11 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       const endpoint = new URL('https://www.tiktok.com/oembed')
       endpoint.searchParams.set('url', video.url)
       const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
-      if (!response.ok) return evidence
+      report({stage: 'response', status: response.status})
+      if (!response.ok) { await response.body?.cancel(); return evidence }
       const result = await response.json()
+      const validProvider = !!result && result.type === 'video' && result.version === '1.0' && result.provider_name === 'TikTok' && ['https://www.tiktok.com', 'https://www.tiktok.com/'].includes(result.provider_url)
+      report({stage: 'shape', validProvider, identityMatches: result?.embed_product_id === undefined || result.embed_product_id === video.identity.slice('TikTok:'.length)})
       if (!result || result.type !== 'video' || result.version !== '1.0' || result.provider_name !== 'TikTok' ||
           !['https://www.tiktok.com', 'https://www.tiktok.com/'].includes(result.provider_url)) return evidence
       // Optional identity returned by TikTok must match the requested canonical video ID.
@@ -37,6 +48,9 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch) {
       // The approved platform exception permits unknown duration, not invented confirmation.
       // oEmbed does not prove short duration, game identity or content safety.
       return evidence
-    } catch { return evidence }
+    } catch (error) {
+      report({stage: 'failure', reason: error instanceof Error && ['TimeoutError','AbortError'].includes(error.name) ? 'timeout' : error instanceof TypeError ? 'transport-error' : 'unavailable'})
+      return evidence
+    }
   }
 }

@@ -1,3 +1,4 @@
+import {importHmacKey} from './hmac-key.ts'
 import type {AtomicStore,AtomicTransaction,RecordData} from '../firestore/atomic-store.ts'
 import {SubmissionError} from '../submissions/submit-short.ts'
 import {saoPauloDayKey} from '../../src/lib/validation/day-key.ts'
@@ -11,7 +12,7 @@ function record(value:RecordData|null,scope:NetworkScope,day:string,now:Date){
 }
 export async function createNetworkProtection(options:{secret:string;store:AtomicStore;now:()=>Date}){
  if(!/^[a-f0-9]{64}$/i.test(options.secret))throw Error('invalid-network-secret')
- const key=await crypto.subtle.importKey('raw',Uint8Array.from(options.secret.match(/../g)!,part=>parseInt(part,16)),{name:'HMAC',hash:'SHA-256'},false,['sign'])
+ const key=await importHmacKey(options.secret,'sign')
  const budget=async(address:unknown,scope:NetworkScope)=>{
   const normalized=networkAddress(address),now=options.now()
   if(!Number.isSafeInteger(now.getTime())||now.getTime()<0)throw Error('invalid-clock')

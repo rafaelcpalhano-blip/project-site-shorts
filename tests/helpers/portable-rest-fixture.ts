@@ -15,8 +15,11 @@ export function restFixture(initial:Map<string,RecordData>,now:()=>Date){
   if(operation==='beginTransaction'){const id=String(++clock);transactions.set(id,new Map());return Response.json({transaction:id})}
   if(operation==='rollback'){transactions.delete(body.transaction);return Response.json({})}
   if(operation==='batchGet'){
+   const started=body.newTransaction?String(++clock):undefined
+   if(started){transactions.set(started,new Map());body.transaction=started}
    const source=body.readTime?snapshots.get(body.readTime)!:docs
-   return Response.json(body.documents.map((name:string)=>{const path=name.slice(root.length),data=source.get(path);if(body.transaction)transactions.get(body.transaction)!.set(path,fingerprint(docs.get(path)));return data?{found:{name,fields:fields(data)}}:{missing:name}}))
+   const rows=body.documents.map((name:string)=>{const path=name.slice(root.length),data=source.get(path);if(body.transaction)transactions.get(body.transaction)!.set(path,fingerprint(docs.get(path)));return data?{found:{name,fields:fields(data)}}:{missing:name}})
+   return Response.json([...(started?[{transaction:started}]:[]),...rows])
   }
   if(operation==='commit'){
    const reads=transactions.get(body.transaction)

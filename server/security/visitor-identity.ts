@@ -1,3 +1,4 @@
+import {importHmacKey} from './hmac-key.ts'
 const cookieName = '__Host-clipzone-visitor'
 const lifetime = 30 * 24 * 60 * 60
 const encoder = new TextEncoder()
@@ -14,7 +15,7 @@ export interface VisitorIdentity {
 // Secret must be generated randomly and stored only in the server secret store.
 export async function createVisitorIdentity(secret: string, now: () => Date = () => new Date()): Promise<VisitorIdentity> {
   if (!/^[a-f0-9]{64}$/i.test(secret)) throw new Error('Invalid visitor signing secret')
-  const key = await crypto.subtle.importKey('raw', unhex(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify'])
+  const key = await importHmacKey(secret, 'sign-verify')
   const seconds = () => {
     const value = Math.floor(now().getTime() / 1000)
     if (!Number.isSafeInteger(value) || value < 0) throw new Error('Invalid server clock')
