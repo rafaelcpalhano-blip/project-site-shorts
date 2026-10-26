@@ -15,7 +15,7 @@ export function FirestoreGamePage({ gameId }: { gameId: string }) {
     let active = true
     createPublicRepository(database).getGame(gameId).then(result => {
       if (active) { setGame(result); setLoading(false) }
-    }).catch(() => { if (active) { setError('Jogo indisponível ou emulador desconectado.'); setLoading(false) } })
+    }).catch(() => { if (active) { setError('Não foi possível carregar o jogo. Aguarde e tente novamente.'); setLoading(false) } })
     return () => { active = false }
   }, [gameId])
   if (loading) return <p role="status">Carregando jogo...</p>

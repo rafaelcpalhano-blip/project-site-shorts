@@ -8,6 +8,10 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import {createOrderedFeedClient,feedOrderLabels} from '../src/features/shorts/services/ordered-feed-api.ts'
 import * as catalogCache from '../src/features/games/services/catalog-cache.ts'
+import * as deferredModule from '../src/components/ui/deferred-module.ts'
+import * as cursorPages from '../src/features/shorts/services/cursor-pages.ts'
+import * as feedReturn from '../src/features/shorts/services/feed-return.ts'
+import * as pagination from '../src/features/shorts/services/pagination-window.ts'
 import { TITLE_SEARCH_ENABLED } from '../src/lib/features/title-search.ts'
 import { createPublicApi } from '../server/http/public-api.ts'
 
@@ -25,11 +29,25 @@ function renderFeed(file, props = {}) {
     if (name.includes('catalog-cache')) return catalogCache
     if (name.includes('public-repository')) return { createPublicRepository: () => ({}) }
     if (name.includes('firebase/client')) return { database: {} }
-    if (name === 'react-router-dom') return { Link: ({ to, children }) => React.createElement('a', { href: to }, children) }
+    if (name.includes('deferred-module')) return deferredModule
+    if (name.includes('cursor-pages')) return cursorPages
+    if (name.includes('feed-return')) return feedReturn
+    if (name.includes('pagination-window')) return pagination
+    if (name.includes('use-feed-page-scroll')) return { useFeedPageScroll: () => ({ heading: { current: null }, requestScroll: () => {} }) }
+    if (name.includes('FeedPagination')) return { FeedPagination: loadComponent('FeedPagination') }
+    if (name.includes('GamePageNavigation')) return { GamePageNavigation: () => React.createElement('a', { href: '/' }, 'Voltar ao início') }
+    if (name === 'react-router-dom') return { useLocation: () => ({ key: 'fixture', state: null }), Link: ({ to, children }) => React.createElement('a', { href: to }, children) }
     if (name.includes('demo-context')) return { useDemo: () => ({ state: { shorts: [], comments: [] } }) }
     if (name.includes('fixtures')) return { games: [{ id: 'portal', name: 'Portal' }] }
     if (name.endsWith('.css')) return { default: {} }
     return {}
+  }
+  function loadComponent(name) {
+    const source = readFileSync(new URL('../src/features/shorts/components/' + name + '.tsx', import.meta.url), 'utf8')
+    const output = ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.CommonJS } }).outputText
+    const nested = {}
+    vm.runInNewContext(output, { exports: nested, require: componentRequire })
+    return nested[name]
   }
   vm.runInNewContext(compiled, { exports, require: componentRequire })
   const Component = exports[file.replace('.tsx', '')]
