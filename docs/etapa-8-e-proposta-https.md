@@ -1,5 +1,7 @@
 # Etapa 8-E — proposta concreta de homologação HTTPS
 
+Estado posterior: pacote autorizado aplicado, chave nova conferida e site abriu; workers.dev está agora suspenso preventivamente pelo gateCPU11/15ms,preview/jobsfalse. Veja [publicação controlada](etapa-8-e-publicacao-controlada.md). Texto abaixo preserva o planejamento histórico, não o estado atual.
+
 Atualização de execução: publicação/envio dos8bindings no endereço novo autorizados pelo proprietário. Wrangler autenticado; preflight encontrou chaveYouTube restrita a7IPs. Chave servidor separada autorizada; publicação aguarda geração/armazenamento privado pelo proprietário e conferência, sem alterar chave local; ver etapa-8-e-preflight-publicacao.md. A autorização geral já recebida permanece válida.
 
 26/10/2026. **Preparada, não publicada.** Autorização desta rodada cobre planejamento/verificações locais e leitura de configurações. Nenhuma aplicação criada, domínio adicionado ao Auth, segredo transmitido ou deploy efetuado. Atualização autorizada pelo proprietário: somente o subdomínio da conta Cloudflare foi trocado para clipzone.workers.dev; o nome www do Worker foi escolhido para produzir o endereço abaixo. A autorização anterior da8-C não é autorização de publicação.

@@ -1,5 +1,7 @@
 # Etapa 8-E — preflight da publicação autorizada
 
+Atualização posterior: chave separada verificada,8bindings enviados,hostnameAuth adicionado e primeira publicação executada. Acesso público suspenso preventivamente após amostrasCPU11/15ms; estado atual em [etapa-8-e-publicacao-controlada.md](etapa-8-e-publicacao-controlada.md). O restante registra o preflight anterior.
+
 26/10/2026. Proprietário autorizou prosseguir após o pacote de publicação/envio dos8bindings no endereço https://www.clipzone.workers.dev. Essa aprovação permanece válida; não solicitar novamente a mesma publicação por mudança de turno. A chave YouTube separada também foi autorizada. A publicação aguarda geração e armazenamento privado pelo proprietário, seguida da conferência de restrições; nenhum deploy executado.
 
 ## Confirmado

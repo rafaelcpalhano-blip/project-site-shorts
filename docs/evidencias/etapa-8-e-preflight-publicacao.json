@@ -222,5 +222,7 @@
     "twitch": "Server client credentials; embed parent derived from current origin hostname",
     "tiktok": "oEmbed metadata, official player/v1 and validated short-link resolver; no TikTok key configured",
     "realHttpsValidationPending": true
-  }
+  },
+  "historicalPreflightSnapshot": true,
+  "supersededBy": "etapa-8-e-publicacao-controlada.json"
 }

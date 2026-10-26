@@ -1,0 +1,346 @@
+{
+  "observedAt": "2026-10-26T05:06:20.902Z",
+  "projectId": "clipzone-db02a",
+  "origin": "https://www.clipzone.workers.dev",
+  "baseCommit": "1624f3a",
+  "firstVersion": "8b6a9fa6-cb30-49de-9875-67c5fb1d6d9c",
+  "suspendedVersion": "d6a92e2b-b15b-401b-a2c9-2dff62960c84",
+  "newYouTubeKey": {
+    "observedAt": "2026-10-26T04:57:47.200Z",
+    "projectId": "clipzone-db02a",
+    "projectNumber": "818748049569",
+    "separateFromLocalKey": true,
+    "apiRestriction": "youtube.googleapis.com only",
+    "applicationRestrictions": "none as approved",
+    "privatePackageBindings": 8,
+    "existingBindingsPreserved": true,
+    "localKeyAndIpsUnchanged": true,
+    "secretValuesIncluded": false,
+    "remoteUpload": false
+  },
+  "authDomain": {
+    "observedAt": "2026-10-26T05:00:33.926Z",
+    "projectId": "clipzone-db02a",
+    "method": "PATCH updateMask=authorizedDomains only; subsequent GET",
+    "domain": "www.clipzone.workers.dev",
+    "changed": true,
+    "domainVerified": true,
+    "previousDomainsPreserved": true,
+    "mfaAndSignInUnchanged": true,
+    "totpEnabled": true,
+    "billingChanged": false,
+    "rulesChanged": false,
+    "usersOrFactorsChanged": false
+  },
+  "smoke": {
+    "observedAt": "2026-10-26T05:01:30.809Z",
+    "origin": "https://www.clipzone.workers.dev",
+    "method": "Limited real HTTPS smoke; technical session/quota writes only; no content publication",
+    "cpuMeasured": false,
+    "results": [
+      {
+        "name": "home",
+        "path": "/",
+        "status": 200,
+        "wallMs": 350,
+        "json": false,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "nosniff": false,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": true
+      },
+      {
+        "name": "admin-public-config",
+        "path": "/api/admin/config",
+        "status": 200,
+        "wallMs": 82,
+        "json": true,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "cross-origin-session-denied",
+        "path": "/api/session",
+        "status": 403,
+        "wallMs": 50,
+        "json": true,
+        "error": "invalid-origin",
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "session",
+        "path": "/api/session",
+        "status": 204,
+        "wallMs": 671,
+        "json": false,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": true,
+        "cookieSecure": true,
+        "cookieHostPrefix": true
+      },
+      {
+        "name": "games-empty",
+        "path": "/api/games/list",
+        "status": 200,
+        "wallMs": 492,
+        "json": true,
+        "items": 0,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": true,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "feed-empty",
+        "path": "/api/feed",
+        "status": 200,
+        "wallMs": 179,
+        "json": true,
+        "items": 0,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": true,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "admin-without-token-denied",
+        "path": "/api/admin/session",
+        "status": 401,
+        "wallMs": 144,
+        "json": true,
+        "error": "invalid-token",
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "igdb-search",
+        "path": "/api/games/search?q=Tibia",
+        "status": 200,
+        "wallMs": 875,
+        "json": true,
+        "games": 5,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "youtube-preview",
+        "path": "/api/shorts/preview",
+        "status": 200,
+        "wallMs": 285,
+        "json": true,
+        "titlePresent": true,
+        "channelPresent": true,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "twitch-preview",
+        "path": "/api/shorts/preview",
+        "status": 200,
+        "wallMs": 677,
+        "json": true,
+        "titlePresent": true,
+        "channelPresent": true,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "tiktok-short-resolve",
+        "path": "/api/shorts/resolve",
+        "status": 200,
+        "wallMs": 1033,
+        "json": true,
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      },
+      {
+        "name": "tiktok-preview",
+        "path": "/api/shorts/preview",
+        "status": 503,
+        "wallMs": 543,
+        "json": true,
+        "error": "metadata-unavailable",
+        "titlePresent": false,
+        "channelPresent": false,
+        "emptyFeed": false,
+        "cacheControl": "no-store",
+        "nosniff": true,
+        "wildcardCors": false,
+        "cookieIssued": false,
+        "html": false
+      }
+    ]
+  },
+  "controlledTrace": {
+    "observedAt": "2026-10-26T05:04:39.201Z",
+    "connected": true,
+    "filteredToControlledRequests": true,
+    "rawHeadersSaved": false,
+    "requests": [
+      {
+        "path": "/api/admin/config",
+        "status": 200
+      },
+      {
+        "path": "/api/session",
+        "status": 204
+      },
+      {
+        "path": "/api/feed",
+        "status": 200
+      },
+      {
+        "path": "/api/shorts/preview",
+        "status": 503
+      }
+    ],
+    "traces": [
+      {
+        "path": "/api/admin/config",
+        "outcome": "ok",
+        "status": 200,
+        "cpuTime": 3,
+        "wallTime": 4,
+        "exceptionCount": 0
+      },
+      {
+        "path": "/api/session",
+        "outcome": "ok",
+        "status": 204,
+        "cpuTime": 3,
+        "wallTime": 188,
+        "exceptionCount": 0
+      },
+      {
+        "path": "/api/feed",
+        "outcome": "ok",
+        "status": 200,
+        "cpuTime": 11,
+        "wallTime": 435,
+        "exceptionCount": 0
+      },
+      {
+        "path": "/api/shorts/preview",
+        "outcome": "ok",
+        "status": 503,
+        "cpuTime": 15,
+        "wallTime": 1509,
+        "exceptionCount": 0
+      }
+    ],
+    "cpuAvailable": true
+  },
+  "localTikTokComparison": {
+    "observedAt": "2026-10-26T05:04:56.538Z",
+    "method": "Official TikTok resolver/oEmbed GET from local Node; does not establish Workers egress behavior",
+    "metadataOnly": true,
+    "resolvedToVideo": true,
+    "httpStatus": 200,
+    "json": true,
+    "videoType": true,
+    "version10": true,
+    "providerTikTok": true,
+    "providerUrlExpected": true,
+    "authorPresent": false,
+    "titlePresent": false,
+    "productIdentityPresent": true,
+    "productIdentityMatchesCanonical": true
+  },
+  "suspension": {
+    "observedAt": "2026-10-26T05:06:20.902Z",
+    "origin": "https://www.clipzone.workers.dev",
+    "results": [
+      {
+        "path": "/",
+        "status": 404,
+        "publicApplicationAvailable": false
+      },
+      {
+        "path": "/api/admin/config",
+        "status": 404,
+        "publicApplicationAvailable": false
+      }
+    ],
+    "publicAccessBlocked": true
+  },
+  "workerRetained": true,
+  "workersDevEnabled": false,
+  "previewUrlsEnabled": false,
+  "jobsEnabled": false,
+  "paidPlanOrBillingChanged": false,
+  "rulesIamIndexesChanged": false,
+  "businessContentWritten": false,
+  "technicalSessionAndQuotaWrites": true,
+  "localDataPreserved": true,
+  "sourceCodeChanged": false,
+  "stage8Complete": false,
+  "pending": [
+    "CPU target exceeded on two controlled samples; cause not isolated, no exceededCpu outcome",
+    "TikTok metadata unavailable in Workers sample; canonical short-link resolution works",
+    "Real Google/TOTP login and unauthorized UID check",
+    "Content publication/likes/comments/moderation/ranking CPU and functional checks",
+    "Jobs remain disabled; optional remote AI not activated",
+    "PC/mobile/provider playback and Lighthouse after stabilization"
+  ],
+  "consoleVerified": {
+    "productionWorkerUrlEnabled": false,
+    "previewUrlsEnabled": false,
+    "customDomainsOrRoutes": false
+  }
+}
