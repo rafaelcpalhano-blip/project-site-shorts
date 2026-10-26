@@ -30,11 +30,11 @@ test('enrichment only for confirmed TikTok with missing author; failures preserv
  assert.equal(evidence.channelName,undefined)
 })
 
-test('video without title/author flows through profile, HTTP and client without inventing a title or changing publication verifier',async()=>{
+test('automatic HTTP preview uses URL handle without network, while strict publication verifier still checks the video',async()=>{
  const endpoints=[],fetcher=async endpoint=>{endpoints.push(endpoint.searchParams.get('url'));return Response.json(endpoint.searchParams.get('url').includes('/video/')?{version:'1.0',type:'video',provider_name:'TikTok',provider_url:'https://www.tiktok.com',embed_product_id:'123456789'}:profile)}
  const strict=createTikTokVerifier(fetcher),verify=createVideoPreviewVerifier(strict,fetcher),origin='https://clipzone.test'
  const load=createVideoPreviewClient(async(path,options)=>path==='/api/session'?new Response(null,{status:204}):handleVideoPreview(new Request(origin+path,{...options,headers:{...options.headers,origin}}),{origin,resolveVisitor:async()=>'a'.repeat(64),checkAbuse:async()=>{},verify}))
- assert.deepEqual(await load(url,new AbortController().signal),{title:null,channelName:profile.author_name})
- assert.deepEqual(endpoints,['https://www.tiktok.com/@gamer/video/123456789','https://www.tiktok.com/@gamer'])
+ assert.deepEqual(await load(url,new AbortController().signal),{title:null,channelName:'@gamer'})
+ assert.deepEqual(endpoints,[]) // Profile and video validation are not needed to extract a URL handle.
  endpoints.length=0;assert.equal((await strict({url})).channelName,undefined);assert.equal(endpoints.length,1)
 })

@@ -21,7 +21,7 @@ test('canal ausente ou incompatível com limite não impede verificação do ví
 test('prévia TikTok fornece canal mesmo sem título e nunca retorna HTML ou dados internos',async()=>{
  const provider=setup('TikTok','Canal teste'),origin='https://clipzone.test'
  const response=await handleVideoPreview(new Request(origin+'/api/shorts/preview',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({url:tiktok})}),{origin,resolveVisitor:async()=>'a'.repeat(64),checkAbuse:async()=>{},verify:provider.verify})
- assert.equal(response.status,200);assert.deepEqual(await response.json(),{title:null,channelName:'Canal teste'});assert.equal(provider.calls(),1)
+ assert.equal(response.status,200);assert.deepEqual(await response.json(),{title:null,channelName:'@gamer'});assert.equal(provider.calls(),0)
 })
 test('cliente valida título e canal juntos e rejeita canal malformado sem repetir chamadas',async()=>{
  for(const platform of ['YouTube','Twitch','TikTok']){const url=platform==='YouTube'?youtube:platform==='Twitch'?twitch:tiktok;let calls=0;const load=createVideoPreviewClient(async path=>{calls++;return path==='/api/session'?new Response(null,{status:204}):Response.json({title:'Jogada',channelName:'Canal Ação'})});assert.deepEqual(await load(url,new AbortController().signal),{title:'Jogada',channelName:'Canal Ação'});assert.equal(calls,2)}

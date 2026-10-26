@@ -50,13 +50,13 @@ test('shared Workers backoff does not retain the previous request transport or a
  assert.deepEqual(calls,['first','third','fourth'])
 })
 
-test('a TikTok rate limit is not a successful preview, publication, reservation or quota spend',async()=>{
+test('a TikTok rate limit blocks publication and quota spend, while URL-only preview remains available',async()=>{
  let attempts=0;const dependencies={...deps,checkAbuse:async()=>{attempts++}}
  const sent=await handleSubmission(request('/api/shorts',input),dependencies)
  assert.equal(sent.status,503);assert.equal(sent.headers.get('retry-after'),'120');assert.equal(sent.headers.get('cache-control'),'no-store')
  const body=await sent.json();assert.equal(body.error,'source-rate-limited');assert.match(body.message,/cota de publicações/);assert.equal(body.id,undefined)
  const preview=await handleVideoPreview(request('/api/shorts/preview',{url}),dependencies)
- assert.equal(preview.status,503);assert.equal(preview.headers.get('retry-after'),'120');assert.deepEqual(await preview.json(),{error:'source-rate-limited'});assert.equal(attempts,2)
+ assert.equal(preview.status,200);assert.equal(preview.headers.get('retry-after'),null);assert.deepEqual(await preview.json(),{title:null,channelName:'@fixture'});assert.equal(attempts,2)
 })
 
 test('client cannot inject a trusted source verdict or retry delay, and rejected origins still bypass no checks',async()=>{

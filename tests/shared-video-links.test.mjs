@@ -52,7 +52,7 @@ test('resolve endpoint shares preview protections and does not fetch metadata or
 
 test('short preview resolves first and fills channel; failed/malicious resolution never reaches preview or submission',async()=>{
  const calls=[],fetcher=async(path,options)=>{calls.push(path);return path==='/api/session'?new Response(null,{status:204}):handleVideoPreview(new Request(origin+path,{...options,headers:{...options.headers,origin}}),deps)}
- assert.deepEqual(await createVideoPreviewClient(fetcher)(short,signal()),{title:null,channelName:'SedaKing'});assert.deepEqual(calls,['/api/session','/api/shorts/resolve','/api/session','/api/shorts/preview'])
+ assert.deepEqual(await createVideoPreviewClient(fetcher)(short,signal()),{title:null,channelName:'@seda_king'});assert.deepEqual(calls,['/api/session','/api/shorts/resolve','/api/session','/api/shorts/preview'])
  for(const body of [{url:'https://evil.test'},{url:'https://clips.twitch.tv/Test'},{}])await assert.rejects(createVideoLinkClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json(body))(short,signal()))
  let count=0;await assert.rejects(createSubmissionClient(async path=>{count++;return path==='/api/session'?new Response(null,{status:204}):new Response(null,{status:503})})({url:short,gameId:'game',title:'Meu título',channelName:'Manual'}));assert.equal(count,2)
  const abort=new AbortController();abort.abort();await assert.rejects(createVideoLinkClient(async(_,options)=>{options.signal.throwIfAborted()})(short,abort.signal))

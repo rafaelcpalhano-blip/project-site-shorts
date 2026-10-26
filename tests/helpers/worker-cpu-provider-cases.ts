@@ -114,7 +114,7 @@ add('homologation observation route values are fixed and never record arbitrary 
  const result=await workerMain.fetch(new Request('https://preview.clipzone.example/api/private-user-id?token=private-value'),{} as Parameters<typeof workerMain.fetch>[1]);const text=await result.text();check(result.status===503&&!text.includes('private-user-id')&&!text.includes('private-value'))
 })
 
-add('Workers shares TikTok negative availability across preview and submission without caching a transport or publishing unverified content',async()=>{
+add('Workers URL preview does not touch TikTok backoff; submission respects actual video 429 without publishing unverified content',async()=>{
  const pair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify'])
  const pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(await crypto.subtle.exportKey('pkcs8',pair.privateKey)).toString('base64')+'\n-----END PRIVATE KEY-----'
  let upstream=0;const now=()=>new Date(1900000000000),fixture=restFixture(new Map(),now),origin='https://preview.clipzone.example'
@@ -131,8 +131,39 @@ add('Workers shares TikTok negative availability across preview and submission w
  }
  check((await post('/api/session',{})).status===204)
  const url='https://www.tiktok.com/@fixture/video/123456789'
- const preview=await post('/api/shorts/preview',{url});check(preview.status===503&&preview.headers.get('retry-after')==='120'&&(await preview.json() as {error:string}).error==='source-rate-limited')
+ const preview=await post('/api/shorts/preview',{url});check(preview.status===200&&(await preview.json() as {channelName:string}).channelName==='@fixture'&&upstream===0)
  const submission=await post('/api/shorts',{url,gameId:'fixture',title:'Fixture title',channelName:'Fixture'})
  check(submission.status===503&&submission.headers.get('retry-after')==='120'&&(await submission.json() as {error:string}).error==='source-rate-limited'&&upstream===1)
+ const second=await post('/api/shorts',{url,gameId:'fixture',title:'Fixture title',channelName:'@fixture'});check(second.status===503&&upstream===1)
+ check((await post('/api/shorts/preview',{url})).status===200&&upstream===1)
  check(![...fixture.docs.keys()].some(path=>/^(shorts|videoIdentities|submissionLimits|submissionOwners|moderationLogs)\//.test(path)))
+})
+
+add('automatic full and short TikTok URLs share canonical identity and publish with exactly one fresh video lookup in Workers',async()=>{
+ const pair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify'])
+ const pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(await crypto.subtle.exportKey('pkcs8',pair.privateKey)).toString('base64')+'\n-----END PRIVATE KEY-----'
+ const now=()=>new Date(1900000000000),fixture=restFixture(new Map([['games/fixture',{status:'active',officialName:'Fixture game'}]]),now),origin='https://preview.clipzone.example',upstream:string[]=[]
+ const fetcher:typeof fetch=async(input,init)=>{
+  const target=new URL(String(input))
+  if(target.origin==='https://vt.tiktok.com')return new Response(null,{status:302,headers:{Location:'https://www.tiktok.com/@fixture/video/123456789?tracking=x'}})
+  if(target.origin==='https://www.tiktok.com'){
+   const headers=new Headers(init?.headers);check(headers.get('accept')==='application/json'&&headers.get('user-agent')==='Clipzone/1.0 (+https://www.clipzone.workers.dev)');check(init?.cache==='no-store')
+   const subject=target.searchParams.get('url')!;upstream.push(subject)
+   check(subject.includes('/video/'));return Response.json({type:'video',version:'1.0',provider_name:'TikTok',provider_url:'https://www.tiktok.com',embed_product_id:'123456789'})
+  }
+  return fixture.fetcher(input,init)
+ }
+ const app=createCloudflareApplication({origin,projectId:'clipzone-db02a',authProjectId:'clipzone-db02a',serviceEmail:'clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com',servicePrivateKey:pem,visitorSecret:secret(233),networkSecret:secret(234),authApiKey:'fixture-public',authAppId:'1:818748049569:web:c73f2f86ab6e589f6a88e0',adminUids:['fixture-admin'],twitchClientId:'fixture',twitchClientSecret:'fixture',youtubeApiKey:'fixture'},{assets:async()=>new Response('asset'),fetcher,now})
+ let cookie=''
+ const post=async(path:string,body:unknown)=>{const request=new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':'8.8.8.8',...(cookie?{Cookie:cookie}:{})},body:JSON.stringify(body)});Object.defineProperty(request,'cf',{value:{colo:'GRU',httpProtocol:'HTTP/2'}});const r=await app(request);cookie=r.headers.get('set-cookie')?.split(';')[0]??cookie;return r}
+ check((await post('/api/session',{})).status===204)
+ const url='https://www.tiktok.com/@fixture/video/123456789'
+ const short='https://vt.tiktok.com/Fixture/'
+ const resolved=await post('/api/shorts/resolve',{url:short});check(resolved.status===200&&(await resolved.json() as {url:string}).url===url)
+ for(const input of [url,short]){const preview=await post('/api/shorts/preview',{url:input}),metadata=await preview.json() as {title:null;channelName:string};check(preview.status===200&&metadata.title===null&&metadata.channelName==='@fixture')}
+ check(upstream.length===0&&![...fixture.docs.keys()].some(key=>key.startsWith('shorts/')))
+ const negative=await post('/api/shorts',{url,gameId:'missing-preflight-proof',title:'Fixture title',channelName:'@fixture'});check(negative.status===422&&(await negative.json() as {error:string}).error==='invalid-game'&&upstream.length===1&&!([...fixture.docs.keys()].some(key=>/^(shorts|videoIdentities|submissionLimits|submissionOwners|moderationLogs)\//.test(key))))
+ const response=await post('/api/shorts',{url,gameId:'fixture',title:'Fixture title',channelName:'Fixture creator'}),result=await response.json() as {status:string;remaining:number;id:string}
+ check(response.status===201&&result.status==='published'&&result.remaining===4&&upstream.length===2&&upstream.every(value=>value===url))
+ check(fixture.docs.get('shorts/'+result.id)?.moderationStatus==='published'&&[...fixture.docs.keys()].filter(key=>key.startsWith('shorts/')).length===1)
 })

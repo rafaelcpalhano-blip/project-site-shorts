@@ -60,8 +60,8 @@ test('edited title is stored independently of fresh trusted original; forged ori
 test('prévia TikTok confirmada sem título retorna ausência explícita, sem confundir com falha temporária',async()=>{
  const url='https://www.tiktok.com/@gamer/video/123456789',verify=async()=>({...evidence,title:undefined,shortFormat:'unknown',formatPolicy:'tiktok-platform-exception'})
  const result=await handleVideoPreview(request({url}),{...deps,verify})
- assert.equal(result.status,200);assert.deepEqual(await result.json(),{title:null});assert.equal(result.headers.get('cache-control'),'no-store')
- for(const existence of ['unknown','missing'])assert.equal((await handleVideoPreview(request({url}),{...deps,verify:async()=>({...await verify(),existence})})).status,existence==='missing'?404:503)
+ assert.equal(result.status,200);assert.deepEqual(await result.json(),{title:null,channelName:'@gamer'});assert.equal(result.headers.get('cache-control'),'no-store')
+ for(const existence of ['unknown','missing'])assert.equal((await handleVideoPreview(request({url}),{...deps,verify:async()=>({...await verify(),existence})})).status,200) // URL metadata never asserts a video verdict.
  assert.equal((await handleVideoPreview(request(),{...deps,verify})).status,503)
  assert.equal((await handleVideoPreview(request({url:'https://www.youtube.com/shorts/abcdefghijk'}),{...deps,verify})).status,503)
 })

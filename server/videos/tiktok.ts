@@ -23,7 +23,10 @@ export function createTikTokVerifier(fetcher: typeof fetch = fetch, observe?: (e
       if(waiting>0)return {...evidence,unavailableReason:'provider-rate-limited',retryAfterSeconds:waiting}
       const endpoint = new URL('https://www.tiktok.com/oembed')
       endpoint.searchParams.set('url', video.url)
-      const response = await fetcher(endpoint, { redirect: 'error', signal: AbortSignal.timeout(10000) })
+      // Explicit, honest application identity; never impersonate a browser or forward visitor headers.
+      const response = await fetcher(endpoint, { redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(10000),
+        headers: { Accept: 'application/json', 'User-Agent': 'Clipzone/1.0 (+https://www.clipzone.workers.dev)' },
+      })
       report({stage: 'response', status: response.status})
       if(response.status===429){
         const waiting=backoff.defer(response.headers.get('retry-after'))

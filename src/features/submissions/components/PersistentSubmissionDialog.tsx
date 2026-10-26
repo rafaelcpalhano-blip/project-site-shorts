@@ -97,7 +97,7 @@ export function PersistentSubmissionDialog({ onClose, onSubmitted, services=defa
         if(advanceUrl.current===url&&document.activeElement===urlField.current){advanceUrl.current=null;titleField.current?.focus()}
         if (!channelEdited.current) setChannelName(original.channelName)
         if (original.title === null) {
-          setTitleNotice('O TikTok não forneceu um título utilizável. Informe-o manualmente; o vídeo será validado no envio.')
+          setTitleNotice('O identificador do canal vem do link; não é o nome de exibição verificado. Título opcional. O vídeo será validado ao confirmar o envio.')
           return
         }
         if (!titleEdited.current) setTitle(original.title)

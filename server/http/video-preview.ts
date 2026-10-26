@@ -34,6 +34,13 @@ export async function handleVideoPreview(request: Request, dependencies?: Depend
     const resolved=await (dependencies.resolveUrl??resolveSharedVideoUrl)(link)
     const submission=validateSubmissionInput({url:resolved,gameId:'preview'})
     if(new URL(request.url).pathname==='/api/shorts/resolve')return reply(200,{url:submission.url})
+    // The handle is user-supplied URL metadata, not a verified display name or video verdict.
+    // Avoid optional profile/video calls here: only submission verifies the video with TikTok.
+    if(submission.platform==='TikTok'){
+      let channelName=''
+      try{channelName=validateChannelName(new URL(submission.url).pathname.split('/')[1])}catch{ /* Invalid optional handle stays empty. */ }
+      return reply(200,{title:null,channelName})
+    }
     // Preview has no chosen game and never authorizes publication or reserves a video.
     const evidence = await dependencies.verify(submission)
     if (evidence.existence === 'missing') return reply(404, { error: 'video-not-found' })
