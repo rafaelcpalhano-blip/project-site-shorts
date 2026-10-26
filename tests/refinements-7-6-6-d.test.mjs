@@ -12,7 +12,7 @@ test('título integral fica após player/fonte, cabeçalho é estável e encerra
  for(const title of ['Jogada curta','Título longo '.repeat(30)]){
  const short={id:'short',identity:'YouTube:abcdefghijk',url:'https://www.youtube.com/shorts/abcdefghijk',platform:'YouTube',title,gameId:'game',createdAt:1}
  const output=render(h(Context.Provider,{value:{user:null,authorized:false}},h(Dialog,{short,items:[short],onNavigate(){},onClose(){},onLikeCount(){},onModerated(){}})))
- assert.ok(output.includes('Visualizador de short'));assert.ok(output.indexOf('Assistir na plataforma')<output.indexOf(title));assert.ok(output.indexOf(title)<output.indexOf('Comentários publicados'));assert.ok(output.includes('A sequência usa somente'))
+ assert.ok(output.includes('Visualizador de short'));assert.ok(output.indexOf('Assistir na plataforma')<output.indexOf(title));assert.ok(output.indexOf(title)<output.indexOf('Comentários publicados'));assert.ok(!output.includes('A sequência usa somente'));assert.ok(output.includes('aria-label="Navegação entre vídeos"'));assert.ok(output.includes('aria-label="Vídeo anterior"'));assert.ok(output.includes('aria-label="Próximo vídeo"'))
  assert.ok(!output.includes('Encerrar player'));assert.ok(!output.includes('Se o vídeo não iniciar'));assert.ok(!output.includes('<iframe'))
  }
 })

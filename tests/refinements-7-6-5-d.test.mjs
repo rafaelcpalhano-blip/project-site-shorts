@@ -13,7 +13,7 @@ before(async()=>{
 })
 after(async()=>server?.close())
 test('quatro seções conservam ordenações, refresh, seleção e descrições associadas a cada filtro',()=>{
- const sizes=[5,3,4,3]
+ const sizes=[5,3,4,6]
  panels.forEach((Panel,index)=>{
   const html=render(h(MemoryRouter,null,h(Panel,{user:{uid:'admin'},onUnauthorized:()=>{}})))
   assert.equal((html.match(/aria-describedby=/g)||[]).length,sizes[index])
