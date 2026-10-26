@@ -1,0 +1,513 @@
+{
+  "observedAt": "2026-10-26T06:29:40.982Z",
+  "baseCommit": "9c53dda",
+  "projectId": "clipzone-db02a",
+  "origin": "https://www.clipzone.workers.dev",
+  "localProfile": {
+    "method": "Local workerd CDP CPU sampling; fixture-only; no edge CPU certification",
+    "before": {
+      "requests": 150,
+      "cryptoImports": 450,
+      "restCalls": 602
+    },
+    "after": {
+      "requests": 150,
+      "cryptoImports": 0,
+      "restCalls": 452
+    },
+    "notEdgeCpuCertification": true
+  },
+  "validation": {
+    "nodePassed": 648,
+    "nodeFailed": 0,
+    "workerd": [
+      {
+        "name": "worker-cpu-provider-probe",
+        "passed": 12,
+        "externalFetchAttempts": 0
+      },
+      {
+        "name": "worker-finalization-probe",
+        "passed": 16,
+        "externalFetchAttempts": 0
+      }
+    ],
+    "isolatedFirestore8081Passed": 1,
+    "typescriptPassed": true,
+    "lintPassed": true,
+    "diffCheckPassed": true,
+    "previousTestFailures": {
+      "reproducedOnBaseCommit": true,
+      "count": 4,
+      "updatedTestsOnly": true
+    }
+  },
+  "rounds": [
+    {
+      "observedAt": "2026-10-26T05:22:25.516Z",
+      "origin": "https://www.clipzone.workers.dev",
+      "providerDiagnosticsOnly": true,
+      "rawRequestsSaved": false,
+      "secretsChanged": false,
+      "contentPublished": false,
+      "requests": [
+        {
+          "name": "config",
+          "path": "/api/admin/config",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "session",
+          "path": "/api/session",
+          "status": 204,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "feed",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "tiktok",
+          "path": "/api/shorts/preview",
+          "status": 503,
+          "error": "metadata-unavailable",
+          "titlePresent": false,
+          "channelPresent": false
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/admin/config",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 6,
+          "wallTime": 6,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuTime": 6,
+          "wallTime": 426,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 13,
+          "wallTime": 422,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 503,
+          "outcome": "ok",
+          "cpuTime": 5,
+          "wallTime": 1217,
+          "exceptions": 0,
+          "tiktokDiagnostics": [
+            {
+              "stage": "response",
+              "status": 429
+            }
+          ]
+        }
+      ],
+      "finalReachability": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/config",
+          "status": 404
+        }
+      ],
+      "publicAccessSuspended": false,
+      "operationFailed": true,
+      "deployments": [
+        {
+          "phase": "dry-run",
+          "exitCode": 0
+        },
+        {
+          "phase": "temporary-active",
+          "exitCode": 0,
+          "version": "0e58ea77-3327-429a-a5a1-e2af7612109c"
+        },
+        {
+          "phase": "suspended",
+          "exitCode": 0,
+          "version": "0970bcf7-1f3f-4bab-aaa4-e7a8c6bbc10a"
+        }
+      ]
+    },
+    {
+      "observedAt": "2026-10-26T05:28:33.448Z",
+      "origin": "https://www.clipzone.workers.dev",
+      "providerDiagnosticsOnly": false,
+      "tiktokRetried": false,
+      "rawRequestsSaved": false,
+      "secretsChanged": false,
+      "contentPublished": false,
+      "requests": [
+        {
+          "name": "config",
+          "path": "/api/admin/config",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "session",
+          "path": "/api/session",
+          "status": 204,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "feed-first",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "feed-second",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "feed-third",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "youtube",
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "titlePresent": true,
+          "channelPresent": true
+        },
+        {
+          "name": "twitch",
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "titlePresent": true,
+          "channelPresent": true
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/admin/config",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 3,
+          "wallTime": 4,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuTime": 5,
+          "wallTime": 390,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 15,
+          "wallTime": 438,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 4,
+          "wallTime": 101,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 2,
+          "wallTime": 64,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 4,
+          "wallTime": 200,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 3,
+          "wallTime": 640,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        }
+      ],
+      "finalReachability": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/config",
+          "status": 404
+        }
+      ],
+      "publicAccessSuspended": true,
+      "propagationRecheck": [
+        {
+          "path": "/",
+          "status": 404
+        },
+        {
+          "path": "/api/admin/config",
+          "status": 404
+        }
+      ],
+      "deployments": [
+        {
+          "phase": "dry-run",
+          "exitCode": 0
+        },
+        {
+          "phase": "temporary-active",
+          "exitCode": 0,
+          "version": "530e1afc-039f-48b5-b192-1cbd447b7eff"
+        },
+        {
+          "phase": "suspended",
+          "exitCode": 0,
+          "version": "ac411695-f358-4c9c-9356-8fff970bd15c"
+        }
+      ]
+    },
+    {
+      "observedAt": "2026-10-26T06:29:40.982Z",
+      "origin": "https://www.clipzone.workers.dev",
+      "providerDiagnosticsOnly": false,
+      "tiktokRetried": false,
+      "rawRequestsSaved": false,
+      "secretsChanged": false,
+      "contentPublished": false,
+      "requests": [
+        {
+          "name": "config",
+          "path": "/api/admin/config",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "session",
+          "path": "/api/session",
+          "status": 204,
+          "titlePresent": false,
+          "channelPresent": false
+        },
+        {
+          "name": "feed-first",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "feed-second",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "feed-third",
+          "path": "/api/feed",
+          "status": 200,
+          "titlePresent": false,
+          "channelPresent": false,
+          "items": 0
+        },
+        {
+          "name": "youtube",
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "titlePresent": true,
+          "channelPresent": true
+        },
+        {
+          "name": "twitch",
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "titlePresent": true,
+          "channelPresent": true
+        }
+      ],
+      "traces": [
+        {
+          "path": "/api/admin/config",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 9,
+          "wallTime": 9,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/session",
+          "status": 204,
+          "outcome": "ok",
+          "cpuTime": 9,
+          "wallTime": 408,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 12,
+          "wallTime": 495,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 6,
+          "wallTime": 110,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/feed",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 4,
+          "wallTime": 102,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 6,
+          "wallTime": 184,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        },
+        {
+          "path": "/api/shorts/preview",
+          "status": 200,
+          "outcome": "ok",
+          "cpuTime": 5,
+          "wallTime": 657,
+          "exceptions": 0,
+          "tiktokDiagnostics": []
+        }
+      ],
+      "finalReachability": [
+        {
+          "path": "/",
+          "status": 404
+        },
+        {
+          "path": "/api/admin/config",
+          "status": 404
+        }
+      ],
+      "publicAccessSuspended": true,
+      "deployments": [
+        {
+          "phase": "dry-run",
+          "exitCode": 0
+        },
+        {
+          "phase": "temporary-active",
+          "exitCode": 0,
+          "version": "10bad873-38c3-4cda-a4dc-c8d00ebbb537"
+        },
+        {
+          "phase": "suspended",
+          "exitCode": 0,
+          "version": "e310298a-d45e-4a07-b97a-fee12a5ccbb3"
+        }
+      ]
+    }
+  ],
+  "tiktok": {
+    "httpStatusObservedAtOfficialOembed": 429,
+    "diagnosticContainedOnlyStatusAndShape": true,
+    "causeOfProviderRateLimitNotConfirmed": true,
+    "keyOrIpRestrictionsChanged": false,
+    "retriedAfter429": false,
+    "bypassOrNewIntegration": false
+  },
+  "final": {
+    "version": "e310298a-d45e-4a07-b97a-fee12a5ccbb3",
+    "workersDevEnabled": false,
+    "previewUrlsEnabled": false,
+    "jobsEnabled": false,
+    "providerDiagnosticsEnabled": false,
+    "publicAccessSuspended": true,
+    "contentPublished": false,
+    "billingOrPermissionsChanged": false,
+    "strictCpu10msGatePassed": false,
+    "stage8Complete": false
+  },
+  "package": {
+    "workerKiB": 181.13,
+    "workerGzipKiB": 49.97,
+    "frontendChanged": false,
+    "assetsCount": 35,
+    "secretsInArtifacts": false
+  },
+  "pendingDecision": {
+    "requiredBeforeReopening": true,
+    "reason": "Approved controlled suspension at CPU target exceeded; latest first feed sample 12ms, no exceededCpu events",
+    "options": [
+      "Continue controlled Free homologation accepting isolated spikes and temporary provider unavailability; no production-readiness claim",
+      "Keep suspended under strict all-samples <=10ms gate"
+    ]
+  }
+}
