@@ -87,3 +87,11 @@ Não há comando executável de backup, fonte real de token, escritor privado ou
 Três provas em `tests/snapshot-transport-integration.test.mjs` exercitam a composição real dos dois módulos com HTTP/token fictícios: preservação de fields wire/inteiros64/timestamps e checksum; HTTP429 interrompe a travessia sem retry ou resultado parcial; resposta maior que o teto é recusada antes do parse. A rede global real fica bloqueada nesses testes.
 
 Os20 testes de recuperação passaram e o lint do arquivo novo passou. Nenhuma implementação da aplicação mudou nesta rodada: não foi repetida a suíte geral, cujo último resultado continua685/0 e não deve ser apresentado como uma execução de688 casos. Esses testes não comprovam backup remoto, restauração, validade de credenciais ou cotas reais.
+
+## Ensaio do novo formato concluído somente com fixtures
+
+26/10/2026: [relatório do ensaio isolado](etapa-8-f-recuperacao-ensaio.md). Foram aprovados30testes Node relacionados e5integrações em demo-clipzone-tests:8081, com destino vazio, creates atômicos, campos brutos verificados, conflito sem lote parcial e confirmação perdida sem retry/exclusão. O novo harness vive somente em tests/helpers; não é ferramenta de produção e não foi importado pelo runtime. Snapshot sintético foi construído com transporte injetado; nenhuma captura remota foi realizada.
+
+O primeiro ensaio recusou2casos de verificação. A revisão confirmou a precisão de microssegundos dos campos timestampValue; o ensaio passou a recusar precisão submicrossegundo antes de I/O, sem arredondar. O núcleo de captura continua preservando o JSON recebido e metadados com nanossegundos; metadados de saída não são restaurados como tais. Estado final:30/0 testes relacionados,5/0 integrações, tipos/lint aprovados. Suíte completa anterior704/0 não foi repetida por mudança exclusiva de testes. Fontes/limites e evidência em etapa-8-f-recuperacao-ensaio.md/json.
+
+Continua pendente ferramenta autenticada de captura real, escritor privado/ACL/destino e orçamento aprovados, cópia real verificada e plano operacional de recuperação com aprovação específica. Não considerar fixtures ou essa nova prova como backup remoto pronto.

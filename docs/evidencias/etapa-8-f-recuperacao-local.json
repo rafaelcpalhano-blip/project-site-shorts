@@ -54,6 +54,18 @@
       "streamLimitStopsTraversalBeforeParsing": true,
       "lintPassed": true,
       "fullSuiteRerunThisRound": false
+    },
+    "isolatedSnapshotRehearsal": {
+      "evidence": "etapa-8-f-recuperacao-ensaio.json",
+      "relatedNodeCasesPassed": 30,
+      "newUnitCases": 10,
+      "realEmulatorCasesPassed": 5,
+      "testHarnessOnly": true,
+      "liveBackupOrRestorePerformed": false,
+      "runtimeChanged": false,
+      "fullSuiteRerun": false,
+      "submicrosecondFieldsRefused": true,
+      "metadataNotRewritten": true
     }
   },
   "tiktokSupport": {
