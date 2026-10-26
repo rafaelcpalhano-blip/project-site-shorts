@@ -30,7 +30,7 @@ export function SiteLayout() {
       <main id="main-content" className={styles.main} ref={mainRef} tabIndex={-1}>
         <Outlet />
       </main>
-      {pathname!=='/admin'&&!pathname.startsWith('/admin/')&&<SiteFooter />}
+      {pathname!=='/admin'&&!pathname.startsWith('/admin/')&&<SiteFooter allowInstall={pathname === '/'} />}
     </div>
   )
 }

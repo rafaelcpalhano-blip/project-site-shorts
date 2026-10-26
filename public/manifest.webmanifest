@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Clipzone",
+  "short_name": "Clipzone",
+  "lang": "pt-BR",
+  "description": "Descubra e compartilhe shorts de games na comunidade Clipzone.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101115",
+  "theme_color": "#1b1c23",
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "/icons/clipper-gamer-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/clipper-gamer-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/clipper-gamer-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

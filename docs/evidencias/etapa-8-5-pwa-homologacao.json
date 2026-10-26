@@ -1,0 +1,131 @@
+{
+  "deployment": {
+    "deployedAt": "2026-10-26T20:35:41.045Z",
+    "explicitOwnerAuthorization": true,
+    "scope": "PWA controlled homologation only",
+    "exitCode": 0,
+    "version": "5b2a243b-9c90-4fd0-94e0-592772f91b1d",
+    "priorVersion": "8ced364c-e1c5-4542-9618-5cba2b260f40",
+    "approvedBundleSha256": "248443254c57cc6f9c6926ac2dbcb02d5ed30e712f26d55c051dbce5e95a15cc",
+    "uploadedFrozenDryRunBundle": true,
+    "assetFiles": 43,
+    "secretFileUnchanged": true,
+    "sameEightSecretValuesSupplied": true,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "serviceWorkerAdded": false,
+    "routingUnchanged": true,
+    "publicLaunchApproved": false
+  },
+  "remoteVerification": {
+    "observedAt": "2026-10-26T20:36:03.817Z",
+    "readOnly": true,
+    "checks": [
+      {
+        "path": "/",
+        "status": 200,
+        "htmlManifestAndAppleIconLinked": true,
+        "passed": true
+      },
+      {
+        "path": "/assets/index-B-pmZ_Br.js",
+        "status": 200,
+        "hashedBundleImmutable": true,
+        "passed": true
+      },
+      {
+        "path": "/admin",
+        "status": 200,
+        "htmlManifestAndAppleIconLinked": true,
+        "passed": true
+      },
+      {
+        "path": "/games/pwa-route-read-check",
+        "status": 200,
+        "htmlManifestAndAppleIconLinked": true,
+        "passed": true
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "status": 200,
+        "mimeAndCacheAndExactContent": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-180.png",
+        "status": 200,
+        "bytes": 37957,
+        "sha256": "e710c5092a0228f86d7172923f5d56fa7a3de1d19f7498be85c559af925f0022",
+        "matchesApprovedPackage": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-192.png",
+        "status": 200,
+        "bytes": 42731,
+        "sha256": "c848ec216e8df9acbd239bfa8ddc8feb67808677727faf620a0420b98824e04e",
+        "matchesApprovedPackage": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-512.png",
+        "status": 200,
+        "bytes": 267008,
+        "sha256": "da97e69d5e70381d9e7e1cb4f702c91be12c763ab21d822b9240010c37b8998b",
+        "matchesApprovedPackage": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-64.webp",
+        "status": 200,
+        "bytes": 1324,
+        "sha256": "78afff6c54468a2206d3f3234cba43a5f24a8913cb6aabd8ed978102a7a06568",
+        "matchesApprovedPackage": true,
+        "passed": true
+      },
+      {
+        "path": "/icons/clipper-gamer-maskable-512.png",
+        "status": 200,
+        "bytes": 149820,
+        "sha256": "5c148201ca27c469496144e7fd9247ff41a9d5ae3ca2448d5820e4ae84d17fb8",
+        "matchesApprovedPackage": true,
+        "passed": true
+      },
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "jsonAndNoStore": true,
+        "passed": true
+      },
+      {
+        "path": "/api/nonexistent-pwa-read-check",
+        "status": 404,
+        "jsonAndNoStore": true,
+        "passed": true
+      }
+    ],
+    "cpuMeasured": false,
+    "providerValidationAttempted": false,
+    "realDeviceInstallationConfirmed": false,
+    "launchApproved": false,
+    "passed": 12,
+    "allChecksPassed": true,
+    "completedAt": "2026-10-26T20:36:06.751Z"
+  },
+  "realDeviceValidationPending": true,
+  "tiktokResolved": false,
+  "publicLaunchApproved": false,
+  "ownerMobileConfirmation": {
+    "reportedOn": "2026-10-26",
+    "source": "Owner response to requested real-device installation and navigation check",
+    "answer": "Instalou e abriu corretamente; navegação funcionou",
+    "installationPassed": true,
+    "launchPassed": true,
+    "basicNavigationPassed": true,
+    "platformAndBrowserExplicitlySpecified": false,
+    "independentlyObservedByAgent": false,
+    "allDevicesOrProvidersValidated": false
+  },
+  "basicRealDeviceInstallationAndNavigationConfirmed": true,
+  "extendedDeviceValidationPending": true
+}

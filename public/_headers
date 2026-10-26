@@ -10,3 +10,11 @@
 # Vite-generated files under /assets/ carry content hashes. Do not apply this to HTML or /clipper/.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Fixed PWA names must revalidate; they never enter /assets immutable caching.
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=0, must-revalidate
+
+/icons/*
+  Cache-Control: public, max-age=0, must-revalidate

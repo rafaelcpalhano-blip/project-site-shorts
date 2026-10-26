@@ -39,3 +39,7 @@ input::placeholder { color: #9b98a9; }
 .inset { padding: 16px; border: 1px solid var(--color-border); border-radius: 10px; margin: 12px 0; }
 .text-button { justify-self: start; padding: 4px 0; border: 0; background: none; color: var(--color-accent); }
 .result-button { display: block; margin-top: 10px; }
+/* Standalone only: leave ordinary browser layout and existing viewer rules intact. */
+@media (display-mode: standalone) {
+  body { padding-top: env(safe-area-inset-top); padding-right: env(safe-area-inset-right); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); }
+}

@@ -1,0 +1,8 @@
+.slot { display: none; }
+@media (any-pointer: coarse) and (max-width: 900px) {
+  .slot { display: flex; justify-content: center; min-height: 64px; margin: 20px auto; }
+  .action { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; max-width: 100%; text-align: left; background: transparent; font-size: .85rem; }
+  .action img { flex-shrink: 0; border-radius: 8px; }
+}
+body:has(dialog[open]) .slot { visibility: hidden; pointer-events: none; }
+@media (display-mode: standalone) { .slot { display: none; } }

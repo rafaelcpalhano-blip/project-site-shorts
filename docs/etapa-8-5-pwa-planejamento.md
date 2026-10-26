@@ -1,3 +1,5 @@
+> Atualização de26/10/2026: o proprietário autorizou expressamente **preparar a PWA localmente em paralelo**, sem deploy e sem dispensar os bloqueios da8-F. Isso supera somente a ordem de execução local do pedido original preservado abaixo; não declara a Etapa8 concluída. Preparação/testes e pendências em [etapa-8-5-pwa-local.md](etapa-8-5-pwa-local.md).
+
 # Etapa 8.5 — PWA: escopo registrado para execução futura
 
 Registrado em 25/10/2026. Status: aguardando conclusão da Etapa 8; implementação não iniciada.
