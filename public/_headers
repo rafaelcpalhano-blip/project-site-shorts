@@ -1,0 +1,12 @@
+# Static responses only. Worker API responses retain their own no-store policy.
+# Avoid COOP/COEP and restrictive script/frame allowlists until Google and players are validated.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'
+  Strict-Transport-Security: max-age=86400
+
+# Vite-generated files under /assets/ carry content hashes. Do not apply this to HTML or /clipper/.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
