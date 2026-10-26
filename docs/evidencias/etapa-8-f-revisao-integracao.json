@@ -1,0 +1,219 @@
+{
+  "observedAt": "2026-10-26T07:35:13.508Z",
+  "stage": "8-F initiated; 8-E web configuration findings remain open",
+  "remoteReadOnly": {
+    "observedAt": "2026-10-26T07:35:13.508Z",
+    "method": "Read-only HTTP checks; no authentication, cookie issuance, request mutations or deploy",
+    "checks": [
+      {
+        "label": "http-upgrade",
+        "path": "/",
+        "protocol": "http:",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": null,
+          "referrer-policy": null,
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "html"
+      },
+      {
+        "label": "homepage",
+        "path": "/",
+        "protocol": "https:",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": null,
+          "referrer-policy": null,
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "html"
+      },
+      {
+        "label": "admin-direct-navigation",
+        "path": "/admin",
+        "protocol": "https:",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": null,
+          "referrer-policy": null,
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "html"
+      },
+      {
+        "label": "public-api-configuration",
+        "path": "/api/admin/config",
+        "protocol": "https:",
+        "status": 200,
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "no-referrer",
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "json"
+      },
+      {
+        "label": "unknown-api-not-spa",
+        "path": "/api/nonexistent-stage8-read-check",
+        "protocol": "https:",
+        "status": 404,
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "no-referrer",
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "json"
+      },
+      {
+        "label": "hashed-javascript",
+        "path": "/assets/index-CPHeQuK3.js",
+        "protocol": "https:",
+        "status": 200,
+        "headers": {
+          "content-type": "text/javascript",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": null,
+          "referrer-policy": null,
+          "x-frame-options": null,
+          "permissions-policy": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "bodyKind": "other"
+      }
+    ]
+  },
+  "localStaticHeadersProof": {
+    "observedAt": "2026-10-26T07:38:43.537Z",
+    "wrangler": "4.152.0",
+    "passed": 5,
+    "checks": [
+      {
+        "path": "/",
+        "status": 200,
+        "passed": true,
+        "headers": {
+          "cache-control": "public, max-age=0, must-revalidate",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-frame-options": "DENY",
+          "x-content-type-options": "nosniff"
+        }
+      },
+      {
+        "path": "/admin",
+        "status": 200,
+        "passed": true,
+        "headers": {
+          "cache-control": "public, max-age=0, must-revalidate",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-frame-options": "DENY",
+          "x-content-type-options": "nosniff"
+        }
+      },
+      {
+        "path": "/assets/index-fixturehash.js",
+        "status": 200,
+        "passed": true,
+        "headers": {
+          "cache-control": "public, max-age=31536000, immutable",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-frame-options": "DENY",
+          "x-content-type-options": "nosniff"
+        }
+      },
+      {
+        "path": "/clipper/welcome.webp",
+        "status": 200,
+        "passed": true,
+        "headers": {
+          "cache-control": "public, max-age=0, must-revalidate",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-frame-options": "DENY",
+          "x-content-type-options": "nosniff"
+        }
+      },
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "passed": true,
+        "headers": {
+          "cache-control": "no-store",
+          "referrer-policy": "no-referrer",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-frame-options": null,
+          "x-content-type-options": "nosniff"
+        }
+      }
+    ],
+    "limits": [
+      "Local static routing fixture only; no real Google or provider playback assertion",
+      "No remote resources, credentials, data, deploy or plan changes",
+      "HSTS does not redirect the first HTTP request; HTTPS routing remains pending"
+    ]
+  },
+  "sourceOnlyChanges": [
+    "public/_headers",
+    "tests/runtime/run-static-headers.mjs"
+  ],
+  "newDeployPerformed": false,
+  "githubAuditPerformed": false,
+  "githubVisibilityChanged": false,
+  "paidResourcesOrPlansChanged": false,
+  "stage8Complete": false,
+  "launchApproved": false,
+  "pending": [
+    "HTTP first-visit redirection strategy preserving the agreed static/API free-tier separation",
+    "Deploy local headers only under applicable remote approval; then verify actual auth and players",
+    "API HSTS/header coverage remains separate from static _headers",
+    "Valid business-write CPU, repeated initialization investigation and administrative collection gaps",
+    "TikTok 429, ranking/recovery and regression review",
+    "PWA 8.5 then complete PC/mobile/Lighthouse 9-A; future 9-B and 9-B.5"
+  ]
+}

@@ -1,5 +1,8 @@
 # Etapa 8 — plano de integração
 
+> Atualização de 26/10/2026: a distribuição vigente está em [cronograma-finalizacao.md](cronograma-finalizacao.md). 8-F passou a ser revisão de segurança, regressões e limites; a homologação completa PC/mobile/players/Lighthouse fica na 9-A, depois da PWA 8.5. Auditoria de publicação do GitHub acrescentada como 9-B.5. O texto abaixo mantém o histórico do plano anterior e não substitui o estado atual: homologação controlada já aberta, configuração 8-E com pendências e revisão 8-F iniciada, sem lançamento aprovado.
+
+
 Iniciada em25/10/2026 por autorização do proprietário.8-A concluída;8-B validada localmente com limites registrados;8-C/D preparadas no pacote local agrupado e entrada8-E preparada para homologação. Setup remoto8-C, publicação8-E e validação real8-F permanecem pendentes de aprovação/execução. Nada publicado.
 
 Decisões: homologação primeiro em endereço gratuito (a escolher); banco remoto sem conteúdo de teste; locais preservados; não habilitar serviços pagos ou infraestrutura sem aprovação específica. Diagnóstico do repositório e fontes: [8-A](etapa-8-a-inventario-integracao.md).
