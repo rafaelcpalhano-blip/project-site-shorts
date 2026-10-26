@@ -1,0 +1,162 @@
+{
+  "observedAt": "2026-10-26T07:52:23.898Z",
+  "approval": {
+    "received": true,
+    "scope": "Only tested static headers/cache to controlled homologation; preserve 35 existing assets, API code, routing, eight credentials, data, disabled jobs and free plans",
+    "priorAutomaticRejectionRetainedInHistory": true
+  },
+  "deployment": {
+    "preparedAt": "2026-10-26T07:51:18.237Z",
+    "origin": "https://www.clipzone.workers.dev",
+    "scope": "Controlled homologation only; unchanged API code, bindings, routing, jobs and existing assets; static _headers added",
+    "existingAssetFiles": 35,
+    "allExistingAssetsByteIdentical": true,
+    "privateValuesAbsentFromAssets": true,
+    "eightSecretsUnchanged": true,
+    "routingUnchanged": true,
+    "publicLaunchApproved": false,
+    "assetsOnlyWorkerQuotaUnaffected": true,
+    "deployExitCode": 0,
+    "version": "ffdc71b7-8f38-4d02-90a5-f375b1c6b461",
+    "completedAt": "2026-10-26T07:51:36.008Z"
+  },
+  "remoteChecks": {
+    "observedAt": "2026-10-26T07:52:22.960Z",
+    "scope": "Read-only checks of explicitly approved static-header deployment",
+    "checks": [
+      {
+        "label": "homepage",
+        "path": "/",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "x-frame-options": "DENY",
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      },
+      {
+        "label": "admin-direct-navigation",
+        "path": "/admin",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "x-frame-options": "DENY",
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      },
+      {
+        "label": "stable-clipper-image",
+        "path": "/clipper/welcome.webp",
+        "status": 200,
+        "headers": {
+          "content-type": "image/webp",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "x-frame-options": "DENY",
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      },
+      {
+        "label": "hashed-javascript",
+        "path": "/assets/index-CPHeQuK3.js",
+        "status": 200,
+        "headers": {
+          "content-type": "text/javascript",
+          "cache-control": "public, max-age=31536000, immutable",
+          "strict-transport-security": "max-age=86400",
+          "content-security-policy": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "x-frame-options": "DENY",
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      },
+      {
+        "label": "conditional-hashed-asset",
+        "path": "/assets/index-CPHeQuK3.js",
+        "status": 304,
+        "passed": true
+      },
+      {
+        "label": "public-api-configuration",
+        "path": "/api/admin/config",
+        "status": 200,
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "no-referrer",
+          "x-frame-options": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      },
+      {
+        "label": "unknown-api-not-spa",
+        "path": "/api/nonexistent-stage8-read-check",
+        "status": 404,
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          "strict-transport-security": null,
+          "content-security-policy": null,
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "no-referrer",
+          "x-frame-options": null,
+          "access-control-allow-origin": null
+        },
+        "setsCookie": false,
+        "passed": true
+      }
+    ],
+    "launchApproved": false,
+    "passed": 7,
+    "allChecksPassed": true,
+    "completedAt": "2026-10-26T07:52:23.898Z"
+  },
+  "browserChecks": {
+    "feedLoaded": true,
+    "existingClipVisible": true,
+    "commentsListLoaded": true,
+    "twitchOfficialIframeLoaded": true,
+    "twitchPlaybackObserved": true,
+    "twitchTimeRemainingSecondsObserved": [
+      46,
+      41
+    ],
+    "twitchPausedAfterCheck": true,
+    "ownerConfirmedAdminPanelOpenedAfterUpdate": true,
+    "freshGoogleTotpChallengeNotIndependentlyObserved": true,
+    "contentOrInteractionsWrittenByAgent": false,
+    "youtubeAndTiktokPlaybackNotTestedThisRound": true
+  },
+  "cpuMeasuredThisRound": false,
+  "scopeLimit": "Seven HTTP assertions, browser Twitch check and owner admin confirmation do not close all integration gates",
+  "stage8FComplete": false,
+  "publicLaunchApproved": false,
+  "githubVisibilityChanged": false
+}

@@ -202,15 +202,14 @@
     "public/_headers",
     "tests/runtime/run-static-headers.mjs"
   ],
-  "newDeployPerformed": false,
+  "newDeployPerformed": true,
   "githubAuditPerformed": false,
   "githubVisibilityChanged": false,
   "paidResourcesOrPlansChanged": false,
   "stage8Complete": false,
   "launchApproved": false,
   "pending": [
-    "Preserve static-first and .dev browser HSTS preload; explicit approval pending for tested static headers/cache deployment",
-    "Deploy local headers only under applicable remote approval; then verify actual auth and players",
+    "Broader provider/device validation remains for 9-A; Twitch playback and owner admin confirmation passed after this deployment",
     "API HSTS/header coverage remains separate from static _headers",
     "Valid business-write CPU, repeated initialization investigation and administrative collection gaps",
     "TikTok 429, ranking/recovery and regression review",
@@ -222,6 +221,15 @@
     "browserNavigationEndedHttps": true,
     "serverHttp200DoesNotProveBrowserDowngrade": true,
     "routingChangeRequiredForSupportedBrowsers": false,
-    "explicitStaticHeadersDeployApprovalPending": true
+    "explicitStaticHeadersDeployApprovalPending": false
+  },
+  "currentStaticHeadersDeployment": {
+    "explicitOwnerApprovalReceived": true,
+    "deployed": true,
+    "version": "ffdc71b7-8f38-4d02-90a5-f375b1c6b461",
+    "remoteChecksPassed": 7,
+    "ownerAdminConfirmation": true,
+    "evidence": "etapa-8-f-headers-publicados.json",
+    "launchApproved": false
   }
 }

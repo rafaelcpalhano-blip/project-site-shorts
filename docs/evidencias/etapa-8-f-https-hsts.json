@@ -45,11 +45,21 @@
   },
   "deployment": {
     "attemptRejectedBeforeExecution": true,
-    "newDeployPerformed": false,
+    "newDeployPerformed": true,
     "automaticReviewReason": "Specific deployment of public headers/cache requires explicit user approval",
-    "siteStillOnPreviousVersion": true,
-    "pendingApproval": "Deploy only tested static _headers to controlled homologation; no launch, plan change, credentials change or routing change"
+    "siteStillOnPreviousVersion": false,
+    "pendingApproval": null,
+    "specificApprovalReceived": true
   },
   "launchApproved": false,
-  "stage8Complete": false
+  "stage8Complete": false,
+  "currentStaticHeadersDeployment": {
+    "explicitOwnerApprovalReceived": true,
+    "deployed": true,
+    "version": "ffdc71b7-8f38-4d02-90a5-f375b1c6b461",
+    "remoteChecksPassed": 7,
+    "ownerAdminConfirmation": true,
+    "evidence": "etapa-8-f-headers-publicados.json",
+    "launchApproved": false
+  }
 }

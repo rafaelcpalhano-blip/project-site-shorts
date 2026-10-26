@@ -1,5 +1,8 @@
 # Etapa 8-F — HTTPS no domínio .dev e pacote estático preparado
 
+> Estado atual em 26/10/2026: deploy específico posteriormente autorizado e concluído, versão `ffdc71b7-8f38-4d02-90a5-f375b1c6b461`. Sete verificações HTTP, reprodução Twitch e confirmação do painel administrativo aprovadas; detalhes ao final. As menções anteriores de bloqueio/aprovação pendente registram a sequência histórica e não representam o estado atual.
+
+
 26/10/2026. **Retificação da interpretação anterior:** HTTP 200 no curl confirmou ausência de redirecionamento no servidor, mas não demonstra tráfego HTTP desprotegido em navegadores que aplicam o preload HSTS do TLD `.dev`. Não é necessário encaminhar todos os assets ao Worker para resolver essa hipótese no navegador compatível.
 
 ## Evidências e limites
@@ -37,3 +40,29 @@ Solicitação concreta para o proprietário: autorizar exclusivamente o deploy d
 A hipótese de que seria necessário mudar a arquitetura para proteger a primeira navegação dos browsers compatíveis foi encerrada com evidência. A publicação dos cabeçalhos está pendente de aprovação específica; as outras pendências de CPU, ações válidas, provider TikTok, ranking e recuperação continuam na 8-F. Etapa 8, PWA 8.5 e lançamento não foram marcados como concluídos. Auditoria GitHub 9-B.5 permanece futura.
 
 Fontes: [Google Registry — segurança de .dev](https://www.registry.google/domains/dev/), [roteamento de assets Workers](https://developers.cloudflare.com/workers/static-assets/binding/) e [limitações de redirects](https://developers.cloudflare.com/workers/static-assets/redirects/). [Evidência sanitizada](evidencias/etapa-8-f-https-hsts.json).
+
+
+## 26/10/2026 — aplicação específica autorizada e verificada
+
+Após a rejeição anterior, o proprietário autorizou expressamente **somente o deploy do pacote de cabeçalhos/cache na homologação**. A autorização foi recebida antes da nova execução; não houve contorno da revisão automática.
+
+Deploy concluído, versão `ffdc71b7-8f38-4d02-90a5-f375b1c6b461`, endereço `https://www.clipzone.workers.dev`. Os 35 arquivos existentes foram preservados byte a byte no pacote; somente `_headers` foi adicionado. Código da API, roteamento static-first, oito valores de credenciais, dados, jobs desligados e configuração de plano gratuito preservados. Não houve lançamento público, alteração do GitHub, permissões, regras, índices ou ativação de serviços.
+
+| Verificação no destino | Resultado |
+| --- | --- |
+| Página inicial e `/admin` direto | HTML 200 com os cabeçalhos previstos; cache revalidado |
+| Imagem de nome fixo do Clipper | 200; revalidação, sem immutable |
+| Bundle JavaScript com hash | 200; cache público de 1 ano e immutable |
+| Mesmo bundle com If-None-Match | 304 |
+| Configuração pública da API | JSON 200, no-store, referrer no-referrer, sem cookie novo |
+| Rota API inexistente | JSON 404 e no-store; não retorna HTML da SPA |
+
+Sete verificações HTTP passaram. Elas não constituem medição de CPU; não atribuir novos tempos nem cobertura de tail a esta rodada. `_headers` continua limitado às respostas estáticas; a API conserva a política própria, sem CSP/HSTS estáticos adicionados automaticamente. A proteção do navegador em `.dev` permanece fundamentada no preload do TLD.
+
+Na verificação visual, o feed e o clipe definitivo permaneceram visíveis, os comentários carregaram e o iframe oficial Twitch reproduziu o vídeo: controle indicou Pausar e tempo restante mudou de 46 para 41 segundos; o player foi pausado ao terminar. Nenhum short, comentário, curtida ou denúncia foi criado pelo agente. Isso valida este clipe/provedor neste navegador, não os três providers nem todos os aparelhos.
+
+O proprietário confirmou, após atualizar o site, que o painel administrativo abriu normalmente. Não foram coletados códigos, chaves ou tokens; a confirmação não é uma medição individual do desafio Google/TOTP ou de CPU administrativa.
+
+**Pacote de cabeçalhos/cache aplicado e verificado nesse escopo.** Permanecem abertas as demais pendências da 8-F: CPU das ações válidas e investigação de inicializações, lacunas de consultas administrativas, TikTok 429, relevância/jobs e recuperação. Checklist completo PC/mobile/players e Lighthouse permanece na 9-A do cronograma atualizado. PWA 8.5, auditoria GitHub 9-B.5 e lançamento não foram antecipados.
+
+Evidência: [etapa-8-f-headers-publicados.json](evidencias/etapa-8-f-headers-publicados.json).
