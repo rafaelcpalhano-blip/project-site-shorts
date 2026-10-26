@@ -231,5 +231,13 @@
     "ownerAdminConfirmation": true,
     "evidence": "etapa-8-f-headers-publicados.json",
     "launchApproved": false
+  },
+  "currentRuntime": {
+    "version": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
+    "diagnosticsEnabled": false,
+    "jobsEnabled": false,
+    "source": "etapa-8-f-tiktok-disponibilidade.json",
+    "tiktokBlockResolved": false,
+    "tiktokPublicationConfirmed": false
   }
 }

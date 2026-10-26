@@ -1,0 +1,190 @@
+{
+  "observedAt": "2026-10-26T08:38:15.593Z",
+  "ownerAuthorization": "Investigate/fix TikTok and continue planned safe work while owner away; manual tests and risky decisions remain owner tasks",
+  "before": {
+    "startedAt": "2026-10-26T08:13:57.190Z",
+    "contentWrites": 0,
+    "requests": [
+      {
+        "path": "/api/session",
+        "status": 204
+      },
+      {
+        "path": "/api/shorts/preview",
+        "status": 503,
+        "error": "metadata-unavailable",
+        "hasTitle": false,
+        "hasChannel": false
+      }
+    ],
+    "traces": [
+      {
+        "path": "/api/session",
+        "status": 204,
+        "cpuMs": 11,
+        "outcome": "ok",
+        "exceptionCount": 0
+      },
+      {
+        "path": "/api/shorts/preview",
+        "status": 503,
+        "cpuMs": 17,
+        "outcome": "ok",
+        "exceptionCount": 0
+      }
+    ],
+    "diagnostics": [
+      {
+        "stage": "response",
+        "status": 429
+      }
+    ],
+    "providerRetries": 0,
+    "complete": true,
+    "finishedAt": "2026-10-26T08:14:05.481Z"
+  },
+  "afterFirstFix": {
+    "startedAt": "2026-10-26T08:28:06.718Z",
+    "contentWrites": 0,
+    "requests": [
+      {
+        "path": "/api/session",
+        "status": 204
+      },
+      {
+        "path": "/api/shorts/preview",
+        "status": 200,
+        "retryAfter": null,
+        "hasTitle": false,
+        "hasChannel": true
+      }
+    ],
+    "traces": [
+      {
+        "path": "/api/session",
+        "status": 204,
+        "cpuMs": 13,
+        "outcome": "ok",
+        "exceptionCount": 0
+      },
+      {
+        "path": "/api/shorts/preview",
+        "status": 200,
+        "cpuMs": 11,
+        "outcome": "ok",
+        "exceptionCount": 0
+      }
+    ],
+    "diagnostics": [],
+    "providerRetries": 0,
+    "complete": true,
+    "finishedAt": "2026-10-26T08:28:15.562Z"
+  },
+  "interfaceAfterFirstFix": {
+    "rateLimitNoticeVisible": true,
+    "noSubmissionPerformed": true,
+    "sameFrontendBundleAsFinalDeployment": true
+  },
+  "deploymentHistory": [
+    {
+      "observedAt": "2026-10-26T08:13:25.196Z",
+      "mode": "enable",
+      "exitCode": 0,
+      "version": "6e4ffcad-dc86-4cdb-9d7a-4d852858ddd8",
+      "secretsUnchanged": true,
+      "sourceAndRoutingUnchanged": true,
+      "staticHeadersPreserved": true,
+      "diagnosticFields": "Only upstream HTTP status, shape booleans and fixed failure reason; no URL/body/headers/user data",
+      "launchApproved": false
+    },
+    {
+      "observedAt": "2026-10-26T08:14:39.983Z",
+      "mode": "disable",
+      "exitCode": 0,
+      "version": "04862db7-20a2-49db-ba0f-dfad52207133",
+      "secretsUnchanged": true,
+      "sourceAndRoutingUnchanged": true,
+      "staticHeadersPreserved": true,
+      "diagnosticFields": "Only upstream HTTP status, shape booleans and fixed failure reason; no URL/body/headers/user data",
+      "launchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T08:27:06.570Z",
+      "exitCode": 0,
+      "version": "a0dacd73-74e6-4947-bc12-4b9412fa69da",
+      "priorKnownVersion": "04862db7-20a2-49db-ba0f-dfad52207133",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
+    },
+    {
+      "deployedAt": "2026-10-26T08:36:55.966Z",
+      "exitCode": 0,
+      "version": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
+      "priorKnownVersion": "04862db7-20a2-49db-ba0f-dfad52207133",
+      "secretsUnchanged": true,
+      "headersPreserved": true,
+      "routingUnchanged": true,
+      "diagnosticsEnabled": false,
+      "jobsEnabled": false,
+      "publicLaunchApproved": false
+    }
+  ],
+  "currentDeployment": {
+    "deployedAt": "2026-10-26T08:36:55.966Z",
+    "exitCode": 0,
+    "version": "3f80231a-e6ef-45e2-8880-e85ba0d596be",
+    "priorKnownVersion": "04862db7-20a2-49db-ba0f-dfad52207133",
+    "secretsUnchanged": true,
+    "headersPreserved": true,
+    "routingUnchanged": true,
+    "diagnosticsEnabled": false,
+    "jobsEnabled": false,
+    "publicLaunchApproved": false
+  },
+  "validation": {
+    "node": {
+      "exitCode": 0,
+      "passed": 660,
+      "failed": 0,
+      "failures": []
+    },
+    "workerd": [
+      {
+        "name": "worker-cpu-provider-probe",
+        "passed": 15,
+        "externalFetchAttempts": 0
+      },
+      {
+        "name": "worker-finalization-probe",
+        "passed": 16,
+        "externalFetchAttempts": 0
+      }
+    ],
+    "typesFrontendAndServerPassed": true,
+    "lintPassed": true,
+    "postDeploymentHeaderChecks": 7,
+    "privateValuesAbsentFromBuild": true
+  },
+  "behavior": {
+    "negativeBackoffOnly": true,
+    "sharedPerApplicationIsolate": true,
+    "distributedOrPersistentBackoff": false,
+    "retryAfterHonoredWhenValid": true,
+    "defaultWaitSeconds": 60,
+    "videoAndOptionalProfileRequestsCovered": true,
+    "positiveEvidenceCached": false,
+    "verificationEligibilityRelaxed": false,
+    "publicationQuotaSpentOnUnverifiedAttempts": false,
+    "contentWrittenByAgent": false
+  },
+  "cpuLimitations": "Observed 11/17ms before and 13/11ms after; no exceededCpu/exceptions in these four events. Cold/reuse markers not retained by this collector; cannot classify conclusively. Not a successful publication CPU measurement or proof of Free-tier headroom.",
+  "providerState": "Intermittent: official endpoint returned 429 in Workers, later preview 200 with channel, then UI showed rate limiting again. No provider bypass or repeated automatic requests.",
+  "tiktokPublicationConfirmed": false,
+  "providerBlockResolved": false,
+  "stage8FComplete": false,
+  "publicLaunchApproved": false
+}

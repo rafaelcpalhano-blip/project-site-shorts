@@ -1,5 +1,8 @@
 # Etapa 8-F — revisão da integração iniciada
 
+> Continuação de 26/10/2026: TikTok 429 confirmado; tratamento de espera/erro publicado na versão `3f80231a-e6ef-45e2-8880-e85ba0d596be`, sem liberar vídeos não verificados. 660 testes Node e 31 provas workerd aprovados. A fonte permanece intermitente e envio real não foi confirmado. Ver [TikTok](etapa-8-f-tiktok-disponibilidade.md) e [recuperação Spark](etapa-8-f-recuperacao-spark.md). Não considerar os gates de lançamento concluídos.
+
+
 > Estado atual em 26/10/2026: deploy específico posteriormente autorizado e concluído, versão `ffdc71b7-8f38-4d02-90a5-f375b1c6b461`. Sete verificações HTTP, reprodução Twitch e confirmação do painel administrativo aprovadas; detalhes ao final. As menções anteriores de bloqueio/aprovação pendente registram a sequência histórica e não representam o estado atual.
 
 
