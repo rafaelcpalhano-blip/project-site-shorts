@@ -107,3 +107,11 @@ Continua pendente ferramenta autenticada de captura real, escritor privado/ACL/d
 ## Composicao local integrada
 
 26/10/2026: captura, transporte, token e escritor conectados em biblioteca opt-in, sem CLI ou carga de chave real. 57 testes relacionados aprovados; apos ajuste final do preflight, 16 diretamente afetados repetidos sem falhas. Tipos/lint aprovados. Proposta de escopo/destino/tetos e limites em [etapa-8-f-backup-integrado.md](etapa-8-f-backup-integrado.md). Ainda falta entrada operacional com credencial explicita, prova com chave sintetica e autorizacao especifica antes da primeira copia real. Nenhuma operacao remota ou deploy.
+
+## Entrada explicita de credencial validada com chave sintetica
+
+26/10/2026: carregador limitado e entrada operacional em biblioteca preparados; 64 testes relacionados aprovados, tipos/lint sem falhas. A chave usada foi RSA gerada apenas para fixture, com assinatura verificada e ACL real Windows; nenhuma credencial existente ou fonte remota acessada. Proposta concreta da primeira captura e limites em [etapa-8-f-backup-credencial.md](etapa-8-f-backup-credencial.md). Biblioteca nao tem CLI, transporte HTTP padrao ou execucao automatica. Copia real continua exigindo aprovacao especifica de leitura da credencial, destino/pasta nova, escopo e orcamento. Nao e backup real concluido; TikTok permanece pendente.
+
+## Primeira copia privada real concluida com autorizacao especifica
+
+26/10/2026: plano Spark, banco e margem exibida no Console conferidos; primeira captura real verificada com 148 documentos, 178 requisicoes Firestore, uma troca OAuth e arquivo de 71.607 bytes. ACL configurada somente na pasta nova de backups; credencial existente e ACLs anteriores preservadas. Releitura e verificacao independente offline de integridade/recibo/ACL aprovadas, sem arquivos parciais. Dados e recibo privados fora do Git. Relatorio atual: [etapa-8-f-primeiro-backup.md](etapa-8-f-primeiro-backup.md). Nao houve escrita no banco, restauracao, agendamento, billing ou deploy. Frequencia/custodia adicional e recuperacao Auth/TOTP continuam separadas; 8-F e TikTok permanecem abertos. As secoes anteriores documentam a preparacao historica, nao ausencia atual desta primeira copia.
