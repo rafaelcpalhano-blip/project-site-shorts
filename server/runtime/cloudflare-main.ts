@@ -1,3 +1,4 @@
+import {workerApiHeaders} from './worker-api-headers.ts'
 import {createCloudflareApplication} from './cloudflare-application.ts'
 import type {CloudflareApplicationConfiguration} from './cloudflare-application.ts'
 import {serveStaticGameCover} from './static-game-cover.ts'
@@ -34,7 +35,7 @@ export default {
  async fetch(request:Request,env:Environment):Promise<Response>{
   try{
    const url=new URL(request.url),api=url.pathname==='/api'||url.pathname.startsWith('/api/')
-   if(!api){if(url.origin!==env.CLIPZONE_ORIGIN)return Response.json({error:'invalid-origin'},{status:403});return url.pathname.startsWith('/images/games/')?serveStaticGameCover(request,r=>env.ASSETS.fetch(r)):env.ASSETS.fetch(request)}
+   if(!api){if(url.origin!==env.CLIPZONE_ORIGIN)return Response.json({error:'invalid-origin'},{status:403,headers:workerApiHeaders(request)});return url.pathname.startsWith('/images/games/')?serveStaticGameCover(request,r=>env.ASSETS.fetch(r)):env.ASSETS.fetch(request)}
    const observe=env.CLIPZONE_HOMOLOGATION_OBSERVABILITY==='true'
    const previous=observe?applications.get(env)?.app:undefined,app=application(env)
    const route=observedRoutes.has(url.pathname)?url.pathname:'other'
@@ -43,7 +44,7 @@ export default {
    const response=await app(request)
    if(observation)try{console.info('clipzone-homologation',JSON.stringify({...observation,status:response.status}))}catch{ /* Observation must not change the response. */ }
    return response
-  }catch{return Response.json({error:'service-unavailable'},{status:503,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})}
+  }catch{return Response.json({error:'service-unavailable'},{status:503,headers:workerApiHeaders(request)})}
  },
  async scheduled(_event:unknown,env:Environment){
   if(env.CLIPZONE_JOBS_ENABLED!=='true')return {status:'disabled'}
