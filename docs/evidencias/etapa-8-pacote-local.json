@@ -1,0 +1,91 @@
+{
+  "created": "2026-10-26T00:56:59.504Z",
+  "versions": {
+    "wrangler": "4.152.0",
+    "workerd": "1.20261019.1"
+  },
+  "result": {
+    "passed": [
+      "PKCS8 signer verifies real RSA and rejects malformed or weak keys without exposing secret",
+      "shared credential cache refresh dispatches using current invocation transport",
+      "empty initialization refuses content or active writers; three creates are atomic and never reset markers",
+      "Workers composition refuses wrong projects and incomplete config before external I/O",
+      "100 distinct-game sources resume across invocations and publish only after all staging, within modeled call ceiling",
+      "snapshot is stable even if live sources change between ranking steps",
+      "concurrent ranking steps do not double stage; lost stage response resumes from committed checkpoint",
+      "bad metrics, oversize generation, expired lease and budget never replace valid pointer",
+      "bounded network and like retention preserve records beyond slice and continue with exact cursor",
+      "ranking retention slice never deletes run while unprocessed staging items remain",
+      "real REST adapter dispatches each 100-game ranking step under the per-invocation budget",
+      "scheduled network slice including not-due ranking and OAuth stays bounded with real REST adapter",
+      "prepared main separates assets, refuses incomplete API configuration and keeps scheduling disabled",
+      "300-source worst case remains bounded and next hourly run follows snapshot time, not delayed publication",
+      "full admin inbox and flagged comment windows fit REST budget without changing filtering or read state",
+      "transaction batch read refuses after write and never falls back to unscoped batch"
+    ],
+    "externalFetchAttempts": 0,
+    "metrics": {
+      "rankingRest": {
+        "items": 100,
+        "steps": 14,
+        "maxCalls": 38,
+        "oauthExcluded": true
+      },
+      "networkRetention": {
+        "deleted": 8,
+        "calls": 34,
+        "oauthIncluded": true
+      },
+      "worstSource": {
+        "sourceDocuments": 300,
+        "items": 100,
+        "steps": 28,
+        "snapshotAgeAtPublicationMs": 1560000
+      },
+      "adminWindows": {
+        "events": 20,
+        "inboxCalls": 18,
+        "flaggedCommentCalls": 8,
+        "authAndOAuthExcluded": true
+      }
+    }
+  },
+  "limits": [
+    "Local runtime only; no billed edge CPU certification",
+    "Ephemeral generated keys and fake OAuth/REST/providers; no real credentials",
+    "No resources, scheduling, remote data, billing or deploy; readiness pending remote approval"
+  ],
+  "scope": "Local grouped preparation; no remote setup or deployment performed",
+  "nodeRelatedTests": {
+    "total": 116,
+    "passed": 116,
+    "failed": 0
+  },
+  "isolatedFirestore": {
+    "projectId": "demo-clipzone-tests",
+    "port": 8081,
+    "tests": 4,
+    "passed": 4,
+    "rankingItems": 37,
+    "rankingMaxCallsPerStep": 38,
+    "restoredFixtureDocuments": 157,
+    "createOnlyRestoreVerified": true,
+    "checksumCorruptionDetected": true,
+    "adminInboxCalls": 18,
+    "flaggedCommentsCalls": 8
+  },
+  "frontEnd": {
+    "mode": "api",
+    "legacyModePreserved": "firestore-emulator",
+    "browserFirestoreInitializationRemoved": true,
+    "initialEntryAndFeedBytes": 378675,
+    "sizeMethod": "Vite chunks counted by existing deferred-viewer test; not Lighthouse"
+  },
+  "localServersRestarted": false,
+  "local8080DataModified": false,
+  "remoteIndicesApplied": false,
+  "remoteCredentialsCreated": false,
+  "remoteRulesPublished": false,
+  "billingEnabled": false,
+  "deployExecuted": false
+}
