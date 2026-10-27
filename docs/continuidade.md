@@ -2188,3 +2188,10 @@ Validação final: 798 testes Node e 141 testes Firestore aprovados, sem falhas 
 Conferidos 15 assets atuais e 18 caminhos gráficos históricos; sete artes/poses-base revisadas visualmente e origem cruzada com prompts e registros de geração. Nenhuma referência externa de pose foi identificada como arquivo de arte versionado; nenhum impedimento de licença de asset copiado foi confirmado, sem certificação de exclusividade ou direitos de terceiros. Arquivos atuais sem chunks textuais/EXIF/XMP detectados. Metadados do lockfile registram licença nos 95 pacotes de produção; isso não substitui revisão integral de notices. Ver docs/etapa-9-b5-assets.md e evidência correspondente. Nenhuma imagem foi modificada.
 
 Objetivo permanece avaliação profissional do código, sem adicionar licença ampla automaticamente. Preparação de comandos de commit/revisão fora do Git; nenhum commit, push, mudança de visibilidade/configuração GitHub ou deploy executado. Próxima validação remota requer enviar o workflow ao repositório privado e conferir a franquia gratuita de Actions, mediante autorização.
+
+
+## 27/10/2026 — workflow de segurança validado no GitHub privado
+
+Proprietário criou e enviou 606fb7b/a1d10fc/c1c1fbd. HEAD local e origin/main conciliados; nenhum commit/push pelo agente. Run 40563000933, disparada por push, Success em 1min29s; job verify 1min25s. Instalação, varreduras, auditoria (zero vulnerabilidades), testes Node, build/tipos/lint aprovados em Ubuntu24.04. Firestore permanece suíte local separada; PR não exercitado. Nova varredura pós-commit:737 arquivos/1.668 blobs, zero achados pelos padrões.
+
+Conta GitHub Free e franquia conferidas por leitura:2.000min/0,5GB; contadores exibidos zero, faturável Actions US$0, orçamento Actions US$0 com Usage blocked. Indicadores podem atrasar. Nenhum orçamento, configuração, segredo ou visibilidade alterado; nenhum rerun, deploy ou plano pago. Evidência: docs/evidencias/etapa-9-b5-github-actions.json. Ainda não é autorização de tornar público; controles nativos e aceite informado de dados pessoais históricos seguem para a conferência final.

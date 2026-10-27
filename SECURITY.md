@@ -46,10 +46,15 @@ Não as copie para o runtime Workers ou remova sem nova análise.
 O workflow de segurança usa permissões de leitura, ações oficiais fixadas por SHA,
 Node24 e instalação com scripts desabilitados. Não recebe credenciais dos provedores,
 não publica artefatos, não faz deploy e não usa `pull_request_target`.
-Só passa a executar no GitHub quando o proprietário enviar esse arquivo por push.
+O proprietário enviou o arquivo por push; a primeira execução foi aprovada.
 O limite de tempo reduz consumo, mas não substitui a conferência da franquia de
 Actions da conta. Não ativar faturamento ou recursos pagos para executar verificações.
 
 Secret scanning, push protection, Dependabot e proteção de branches dependem de
 configuração e disponibilidade do GitHub; este documento/workflow não os habilita.
 Alterar visibilidade ou planos não faz parte de uma execução de testes.
+
+Primeira execução GitHub verificada em 27/10/2026 no commit c1c1fbd: aprovada.
+Ver o relatório e a evidência em docs/etapa-9-b5-ajustes-seguranca.md e
+docs/evidencias/etapa-9-b5-github-actions.json. Este registro atualiza o estado
+anterior de preparação local; não habilita controles nativos de segurança.

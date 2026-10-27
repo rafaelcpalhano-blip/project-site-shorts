@@ -38,3 +38,12 @@ Validações finais e contagens estão em `evidencias/etapa-9-b5-ajustes-seguran
 
 TikTok, tradução, CPU e renovação automática do ranking continuam em suas trilhas próprias. Estes ajustes não constituem solução ou aprovação dessas funcionalidades.
 
+
+
+## Validação remota do workflow — 27/10/2026
+
+O proprietário criou os três commits preparados e enviou ao GitHub; HEAD local e origin/main foram conciliados em c1c1fbdcaef620e605c9d378f54ce004135ee250. O agente não executou commit ou push. A execução automática [#1](https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40563000933) terminou Success em 1min29s (job verify: 1min25s), com instalação, varreduras, npm audit, testes Node, build/tipos e lint aprovados. npm audit informou found 0 vulnerabilities. Nenhum artefato foi publicado pelo workflow. A suíte Firestore continua separada e o evento pull_request não foi exercitado nessa execução.
+
+Painel somente leitura confirmou GitHub Free, franquia de 2.000min/0,5GB, contadores exibidos de zero e Actions faturável US$0; orçamento da conta para Actions US$0 com Usage blocked. Contadores podem atrasar. Não elevar orçamento, alterar plano ou remover bloqueio para executar verificações. O agente não alterou configuração remota nem repetiu jobs. Repositório permanece privado. Ver evidência etapa-9-b5-github-actions.json.
+
+Este registro posterior supera as referências anteriores a workflow apenas preparado: agora há uma execução Linux real aprovada. Isso não habilita automaticamente controles nativos, comprova ausência de toda vulnerabilidade ou autoriza mudar visibilidade.

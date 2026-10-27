@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-27",
+  "timezone": "America/Sao_Paulo",
+  "repository": "rafaelcpalhano-blip/project-site-shorts",
+  "visibility": "private; not changed",
+  "commit": "c1c1fbdcaef620e605c9d378f54ce004135ee250",
+  "run": {
+    "id": "40563000933",
+    "url": "https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40563000933",
+    "event": "push",
+    "actor": "repository owner",
+    "status": "success",
+    "totalDurationSeconds": 89,
+    "jobDurationSeconds": 85,
+    "jobId": "122396742150",
+    "artifacts": 0
+  },
+  "steps": {
+    "installation": "passed; scripts disabled",
+    "workingTreeSecretCheck": "passed",
+    "historySecretCheck": "passed",
+    "dependencyAudit": "found 0 vulnerabilities",
+    "nodeTests": "passed",
+    "buildAndTypes": "passed",
+    "lint": "passed"
+  },
+  "coverage": {
+    "linuxRunner": "ubuntu-24.04",
+    "firestoreEmulator": "not executed by this workflow; separate local suite previously passed 141 tests",
+    "prEvent": "not tested in this run",
+    "scanner": "heuristic patterns; success is not a guarantee"
+  },
+  "billingObserved": {
+    "plan": "GitHub Free",
+    "includedMinutes": 2000,
+    "displayedUsedMinutes": 0,
+    "includedStorageGB": 0.5,
+    "displayedUsedStorageGB": 0,
+    "actionsBillableUSD": 0,
+    "accountActionsBudgetUSD": 0,
+    "actionsBudgetStatus": "Usage blocked",
+    "settingsChanged": false,
+    "measurement": "UI snapshot at verification; counters can lag; not a permanent guarantee"
+  },
+  "localPostCommitScan": {
+    "workingFiles": 737,
+    "historicalBlobs": 1668,
+    "findings": 0
+  },
+  "agentActions": {
+    "commits": 0,
+    "pushes": 0,
+    "workflowReruns": 0,
+    "githubSettingsChanges": 0,
+    "deploys": 0,
+    "billingChanges": 0
+  },
+  "pending": [
+    "native secret scanning/push protection/Dependabot and branch policy remain separate configuration decisions",
+    "informed final acceptance of personal data in history and exact visibility approval",
+    "repeat snapshot review if files or history change"
+  ],
+  "billingReferences": [
+    "https://docs.github.com/en/billing/reference/product-usage-included",
+    "https://docs.github.com/en/billing/concepts/budgets-and-alerts"
+  ]
+}

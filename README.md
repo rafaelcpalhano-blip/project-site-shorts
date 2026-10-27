@@ -82,11 +82,15 @@ Credenciais, arquivos de configuração privados, backups e logs não pertencem 
 A chave da conta de serviço, os segredos HMAC e os tokens dos provedores ficam no
 servidor, fora do frontend e do versionamento.
 
-O workflow preparado em `.github/workflows/security.yml` executa verificações em
-push/PR quando for enviado ao GitHub. Usa permissões de leitura, ações oficiais
-fixadas por SHA e nenhum segredo de provedor; não contém deploy. Sua preparação
-local não habilita Dependabot, proteção de branch ou altera visibilidade do projeto.
-O proprietário deve conferir a franquia de Actions antes de executá-lo.
+O workflow em `.github/workflows/security.yml` foi enviado ao GitHub e está
+configurado para verificar push/PR. Usa permissões de leitura, ações oficiais
+fixadas por SHA e nenhum segredo de provedor; não contém deploy. O workflow
+não habilita Dependabot, proteção de branch ou altera visibilidade do projeto.
+A franquia e o bloqueio de gastos foram conferidos; acompanhar o consumo futuro.
+
+A primeira execução do workflow no GitHub foi aprovada em 27/10/2026;
+[resultado e limites](docs/etapa-9-b5-ajustes-seguranca.md). O repositório continua
+privado, com os controles nativos e a decisão de divulgação tratados separadamente.
 
 ## Documentação e direitos
 
