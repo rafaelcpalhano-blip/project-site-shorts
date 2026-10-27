@@ -10,7 +10,7 @@ import {prepareGameNames,diagnoseGameNames} from '../../server/games/prepare-nam
 import {confirmGame} from '../../server/games/confirm-game.ts'
 import {requestGame,reviewGameRequest} from '../../server/games/requests.ts'
 import {submitShort} from '../../server/submissions/submit-short.ts'
-import {createPublicRepository} from '../../src/lib/firebase/public-repository.ts'
+import {readEmulatorPublicGame} from '../helpers/emulator-public-game.mjs'
 const projectId='demo-clipzone-tests',visitor='a'.repeat(64),other='b'.repeat(64),now=()=>new Date('2026-10-21T12:00:00Z'),store=createRestStore({projectId,emulatorPort:8081}),options={store,now}
 let env
 before(async()=>{if(process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8081')throw Error('Somente emulador isolado');env=await initializeTestEnvironment({projectId,firestore:{host:'127.0.0.1',port:8081,rules:await readFile(new URL('../../firestore/firestore.rules',import.meta.url),'utf8')}})})
@@ -21,7 +21,7 @@ async function size(name){let count;await env.withSecurityRulesDisabled(async co
 test('REST concorrente reserva um jogo e uma cota, inclusive entre visitantes, sem expor dados privados',async()=>{
  const db=await seed();const results=await Promise.all([create('Jogo do Bairro'),create('JÓGO DO BAIRRO'),create('Jogo do Bairro',other)])
  assert.equal(new Set(results.map(r=>r.game.id)).size,1);assert.equal(results.filter(r=>r.created).length,1);assert.equal(await size('games'),1);assert.equal(await size('gameNameKeys'),2);assert.equal(await size('gameCreationLimits'),1);assert.equal(await size('moderationLogs'),1)
- const game=await createPublicRepository(db).getGame(results[0].game.id);assert.equal(game.provisional,true);assert.equal(game.description,'');assert.equal(game.imageUrl,null)
+ const game=await readEmulatorPublicGame(db,results[0].game.id,{store,now});assert.equal(game.provisional,true);assert.equal(game.description,'');assert.equal(game.imageUrl,null)
  const identity=await nameIdentity('Jogo do Bairro');for(const path of [nameStatePath,'gameNameKeys/'+identity.exact,'gameCreationLimits/'+visitor+'-2026-10-21']){await assertFails(getDoc(doc(db,path)));await assertFails(setDoc(doc(db,path),{ready:true,count:0}));await assertFails(setDoc(doc(env.authenticatedContext('owner',{admin:true}).firestore(),path),{ready:true,count:0}))}
  await assertSucceeds(getDoc(doc(db,'games',results[0].game.id)));await assertFails(setDoc(doc(db,'games',results[0].game.id),{status:'active'}))
 })

@@ -5,7 +5,7 @@ import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/ru
 import {doc,getDoc,setDoc} from 'firebase/firestore'
 import {createRestStore} from '../../server/firestore/rest-store.ts'
 import {createGameTranslation} from '../../server/games/translation-store.ts'
-import {createPublicRepository} from '../../src/lib/firebase/public-repository.ts'
+import {readEmulatorPublicGame} from '../helpers/emulator-public-game.mjs'
 const projectId='demo-clipzone-tests',now=()=>new Date('2026-10-21T15:00:00Z')
 const store=createRestStore({projectId,emulatorPort:8081}),game={externalId:'1',officialName:'Portal',source:'IGDB',description:'Portal is a game.',aliases:[],status:'active'}
 let env
@@ -17,7 +17,7 @@ test('REST reserva uma chamada concorrente, persiste pt-BR/original e protege ta
  const db=await seed();let calls=0
  const translate=createGameTranslation({store,now,maximumPerDay:20,translate:async()=>{calls++;return 'Portal é um jogo.'}})
  await Promise.all([translate('igdb-1'),translate('igdb-1'),translate('igdb-1')]);await translate('igdb-1');assert.equal(calls,1)
- const result=await createPublicRepository(db).getGame('igdb-1');assert.equal(result.description,game.description);assert.equal(result.descriptionPtBr,'Portal é um jogo.')
+ const result=await readEmulatorPublicGame(db,'igdb-1',{store,now});assert.equal(result.description,game.description);assert.equal(result.descriptionPtBr,'Portal é um jogo.')
  await assertSucceeds(getDoc(doc(db,'games','igdb-1')))
  for(const path of ['gameTranslations/igdb-1','translationUsage/2026-10-21']){
   await assertFails(getDoc(doc(db,path)));await assertFails(getDoc(doc(env.authenticatedContext('owner',{admin:true}).firestore(),path)))
@@ -34,7 +34,7 @@ test('REST descarta resultado obsoleto e falha mantém o jogo público sem grava
  await translate('igdb-1');assert.equal((await read('games/igdb-1')).translation,undefined);assert.equal((await read('gameTranslations/igdb-1')).status,'stale')
  const fail=createGameTranslation({store,now,maximumPerDay:20,translate:async()=>{throw new Error('private provider failure')}})
  await fail('igdb-1');assert.equal((await read('gameTranslations/igdb-1')).status,'failed')
- assert.equal((await createPublicRepository(db).getGame('igdb-1')).description,'New source text.')
+ assert.equal((await readEmulatorPublicGame(db,'igdb-1',{store,now})).description,'New source text.')
 })
 test('REST aplica orçamento diário transacional a jogos concorrentes',async()=>{
  await seed();await store.transact(async tx=>tx.set('games/igdb-2',{...game,externalId:'2'}));let calls=0

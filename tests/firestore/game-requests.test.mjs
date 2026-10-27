@@ -7,7 +7,7 @@ import {doc,getDoc,setDoc,collection,getDocs,query,where,limit} from 'firebase/f
 import {createRestStore} from '../../server/firestore/rest-store.ts'
 import {requestGame,reviewGameRequest,loadGameRequests} from '../../server/games/requests.ts'
 import {confirmGame} from '../../server/games/confirm-game.ts'
-import {createPublicRepository} from '../../src/lib/firebase/public-repository.ts'
+import {readEmulatorPublicGame,createEmulatorPublicRepository} from '../helpers/emulator-public-game.mjs'
 const projectId='demo-clipzone-tests',visitor='b'.repeat(64),now=()=>new Date('2026-10-21T15:00:00Z')
 const store=createRestStore({projectId,emulatorPort:8081}),options={store,now}
 const official={externalId:'1',officialName:'Portal',description:'Puzzle de portais',aliases:['Portal game'],genres:['Puzzle'],gameModes:['Single player'],platforms:['PC'],releaseDate:'2007-10-10',imageUrl:'https://images.igdb.com/igdb/image/upload/t_thumb/a.jpg',sourceUrl:'https://www.igdb.com/games/portal'}
@@ -31,7 +31,7 @@ test('REST cria uma solicitação nas tentativas concorrentes, protegendo identi
 test('confirmação IGDB persiste a ficha pública e revisão concorrente vincula uma vez sem publicar vídeo',async()=>{
  const db=await seed(),{id}=await requestGame({name:'Portal'},visitor,options)
  await confirmGame({externalId:'1'},{...options,get:async()=>official})
- const game=await createPublicRepository(db).getGame('igdb-1')
+ const game=await readEmulatorPublicGame(db,'igdb-1',{store,now})
  assert.equal(game.description,official.description);assert.deepEqual(game.aliases,official.aliases);assert.equal(game.sourceUrl,official.sourceUrl)
  const input={id,action:'link',gameId:'igdb-1',reason:'Correspondência IGDB conferida',revision:0}
  const result=await Promise.allSettled([reviewGameRequest(input,'owner',options),reviewGameRequest(input,'owner',options)])
@@ -69,8 +69,9 @@ test('REST aprova manualmente de forma concorrente, gera uma ficha pública e pr
  const outcomes=await Promise.allSettled([reviewGameRequest(input(first.id),'owner',options),reviewGameRequest(input(first.id),'owner',options),reviewGameRequest(input(second.id),'owner',options)])
  assert.equal(outcomes.filter(v=>v.status==='fulfilled').length,2)
  const gameId=(await read('gameRequests/'+first.id)).gameId;assert.equal((await read('gameRequests/'+second.id)).gameId,gameId)
- const game=await createPublicRepository(db).getGame(gameId);assert.equal(game.source,'manual');assert.equal(game.description,'');assert.equal(game.imageUrl,null)
- assert.ok((await createPublicRepository(db).listGames()).items.some(item=>item.id===gameId))
+ const publicRepository=await createEmulatorPublicRepository(db,{store,now})
+ const game=await publicRepository.getGame(gameId);assert.equal(game.source,'manual');assert.equal(game.description,'');assert.equal(game.imageUrl,null)
+ assert.ok((await publicRepository.listGames()).items.some(item=>item.id===gameId))
  await assertFails(setDoc(doc(db,'games',gameId),{status:'active',source:'IGDB'}))
  assert.equal(await read('submissionLimits/'+visitor+'-2026-10-21'),null)
  const deps={...options,checkAbuse:async()=>{},verify:async()=>({existence:'confirmed',shortFormat:'confirmed',gameMatch:'unknown',moderation:'unavailable',flags:[],title:'Jogada válida'})}
