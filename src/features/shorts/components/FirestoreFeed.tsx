@@ -159,7 +159,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
     </div>
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
     {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
-    {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima geração horária.</p>}
+    {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima atualização do ranking.</p>}
     <FeedPagination current={index} available={Math.max(index+1,cursors.length)} busy={loading} canNext={!error&&!!page.next} nextLabel={TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'} onChange={changePage}/>
     {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={closeViewer} dialogProps={{short:selected, items:page.items, hasPreviousPage:index>0, hasNextPage:!!page.next, onBoundary:boundary, onNavigate:setSelected, onLikeCount:updateLikeCount, onCommentCount:updateCommentCount, onModerated:()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}, onClose:closeViewer}} />}
   </div>

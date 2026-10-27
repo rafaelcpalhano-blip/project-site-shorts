@@ -29,7 +29,7 @@ test('preparação não aplica prefixo incompleto quando ultrapassa limite ou en
  const deps=memory(2);delete deps.docs.get('shorts/s000').likeCount;await assert.rejects(prepareRanking({...deps,apply:true,maximum:1}),/preparation-limit/);assert.equal(deps.stats.writes,0)
  deps.docs.get('shorts/s001').likeCount=-1;await assert.rejects(prepareRanking({...deps,apply:true}),/invalid-like-count/);assert.equal(deps.stats.writes,0)
 })
-test('geração só promove depois de completa, mantém metadados e não publica novamente antes de 1h',async()=>{
+test('geração só promove depois de completa, mantém metadados e não publica novamente antes do intervalo configurado',async()=>{
  const deps=memory(37),before=structuredClone(deps.docs.get('shorts/s000')),result=await buildRankingGeneration(deps)
  assert.equal(result.status,'ready');assert.equal(result.itemCount,37);assert.equal(current(deps).generationId,result.generationId);assert.equal(deps.docs.get('rankingRuns/'+result.generationId).status,'ready');assert.deepEqual(deps.docs.get('shorts/s000'),before)
  assert.equal([...deps.docs.keys()].filter(p=>p.startsWith('rankingItems/')).length,37);assert.equal((await buildRankingGeneration(deps)).status,'not-due')

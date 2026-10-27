@@ -7,9 +7,9 @@ import {cleanupLikes} from '../likes/retention.ts'
  * One ranking step OR one bounded retention slice, with durable cursors.
  * No cron, timer, external queue or infrastructure is created here.
  */
-export async function runWorkerMaintenance(options:{store:AtomicStore;now:()=>Date}){
+export async function runWorkerMaintenance(options:{store:AtomicStore;now:()=>Date;mode?:'ranking-only'}){
  const ranking=await stepRankingGeneration(options)
- if(ranking.status!=='not-due')return {task:'ranking',...ranking}
+ if(ranking.status!=='not-due'||options.mode==='ranking-only')return {task:'ranking',...ranking}
  const slot=options.now().getUTCMinutes()%4
  if(slot===0)return {task:'network-retention',...await cleanupNetworkAbuse({...options,maximumRecords:8})}
  if(slot===3){

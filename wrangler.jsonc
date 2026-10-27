@@ -27,6 +27,8 @@
     "FIREBASE_SERVICE_EMAIL": "clipzone-runtime@clipzone-db02a.iam.gserviceaccount.com",
     "FIREBASE_AUTH_APP_ID": "1:818748049569:web:c73f2f86ab6e589f6a88e0",
     "CLIPZONE_JOBS_ENABLED": "false",
+    "CLIPZONE_RANKING_ENABLED": "false",
+    "CLIPZONE_TRANSLATION_ENABLED": "false",
     "CLIPZONE_HOMOLOGATION_OBSERVABILITY": "true",
     "CLIPZONE_PROVIDER_DIAGNOSTICS": "false"
   },

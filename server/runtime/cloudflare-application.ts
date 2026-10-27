@@ -59,10 +59,10 @@ export function createCloudflareApplication(config:CloudflareApplicationConfigur
     })
    },
   })
-  return Object.assign(entry,{maintenance:async()=>{
+  return Object.assign(entry,{maintenance:async(mode?:'ranking-only')=>{
    const budget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:createWorkerFetch(ports.fetcher)})
    const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
-   try{return {...await runWorkerMaintenance({store,now:ports.now}),outbound:budget.usage().dispatched}}
+   try{return {...await runWorkerMaintenance({store,now:ports.now,mode}),outbound:budget.usage().dispatched}}
    catch(error){const message=error instanceof Error?error.message:'';const reason=['outbound-budget-exhausted','ranking-budget-exhausted','ranking-build-busy','ranking-metrics-not-ready','ranking-generation-protected','ranking-build-expired'].includes(message)?message:'service-unavailable';return {task:'maintenance',status:'deferred',reason,outbound:budget.usage().dispatched}}
   }})
  }catch{throw Error('worker-configuration-unavailable')}

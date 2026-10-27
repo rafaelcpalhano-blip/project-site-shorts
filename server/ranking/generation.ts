@@ -1,6 +1,6 @@
 import type {AtomicStore,RecordData} from '../firestore/atomic-store.ts'
 import {rankingScore,timestamp} from './metrics.ts'
-export const generationLimits=Object.freeze({videos:100,sourceDocuments:300,readsPerRun:762,writesPerRun:124,dailyReads:20000,dailyWrites:4000,leaseMs:300000,intervalMs:3600000,maxBuildMs:1200000})
+export const generationLimits=Object.freeze({videos:100,sourceDocuments:300,readsPerRun:762,writesPerRun:124,dailyReads:20000,dailyWrites:4000,leaseMs:300000,intervalMs:1800000,maxBuildMs:1200000})
 const amount=(record:RecordData|null,key:string)=>{if(!record)return 0;const value=record[key];if(!Number.isSafeInteger(value)||Number(value)<0)throw Error('ranking-invalid-budget');return Number(value)}
 function assertLease(lease:RecordData|null,id:string,now:Date){if(lease?.id!==id||timestamp(lease.expiresAt)<=timestamp(now))throw Error('ranking-lease-lost')}
 export async function buildRankingGeneration(options:{store:AtomicStore;now:()=>Date}){
