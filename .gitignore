@@ -32,3 +32,20 @@ dist-ssr
 .tools/
 .firebase/
 .emulator-data/
+
+# Server credentials, Wrangler local secrets and private exports
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.pfx
+*service-account*.json
+*service_account*.json
+/credentials.json
+/clipzone-runtime.json
+/credentials/
+/backups/
+/private-backups/
+/firebase-export-*/
+/.wrangler/
