@@ -1,0 +1,103 @@
+{
+  "stage": "9-B.5",
+  "date": "2026-10-27",
+  "timezone": "America/Sao_Paulo",
+  "repository": "rafaelcpalhano-blip/project-site-shorts",
+  "codeCommit": "736485e9f56ff11bfb0aab5ab6047c5f8936dd26",
+  "authorization": "owner explicitly approved native controls and exactly one validation; resumed after review usage-limit interruption",
+  "reviewInterruption": {
+    "reason": "approval review usage limit",
+    "actionExecutedBeforeInterruption": false,
+    "bypassed": false
+  },
+  "applied": {
+    "dependencyGraph": true,
+    "dependabotAlerts": true,
+    "requireFullCommitSha": true,
+    "selectedActionsOnly": true,
+    "allowedExternalActions": [
+      "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    ],
+    "persistedAfterReload": true
+  },
+  "preserved": {
+    "visibility": "private",
+    "plan": "GitHub Free",
+    "automaticDependencySubmission": false,
+    "dependabotSecurityUpdates": false,
+    "groupedSecurityUpdates": false,
+    "dependabotVersionUpdatesConfigAdded": false,
+    "malwareAlerts": false,
+    "allowAllGithubActions": false,
+    "allowVerifiedMarketplaceActions": false,
+    "defaultWorkflowPermissions": "read",
+    "workflowContentsPermission": "read",
+    "actionsMayCreateOrApprovePullRequests": false,
+    "forkPullRequestWorkflows": false,
+    "crossRepositoryWorkflowAccess": false,
+    "retentionDays": 90,
+    "credentialsChanged": false,
+    "providerConfigurationsChanged": false
+  },
+  "alerts": {
+    "dependencyFilesCheckedLocalTime": "19:12",
+    "open": 0,
+    "closed": 0,
+    "dismissedByAgent": 0,
+    "limits": "momentary result for recognized dependencies and known advisories"
+  },
+  "validation": {
+    "runId": "40593132908",
+    "number": 3,
+    "url": "https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40593132908",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "commit": "736485e9f56ff11bfb0aab5ab6047c5f8936dd26",
+    "manualSubmissionsByAgent": 1,
+    "retries": 0,
+    "result": "success",
+    "totalDurationSeconds": 85,
+    "jobDurationSeconds": 80,
+    "jobId": "122502191983",
+    "installation": "passed",
+    "secretChecks": "passed",
+    "dependencyAudit": "found 0 vulnerabilities",
+    "nodeTests": "passed",
+    "buildAndTypes": "passed",
+    "lint": "passed",
+    "artifacts": 0,
+    "runner": "ubuntu-24.04 standard",
+    "timeoutMinutes": 10,
+    "providerSecretsUsed": false
+  },
+  "quotaBeforeValidation": {
+    "plan": "GitHub Free",
+    "displayedUsedMinutes": 4,
+    "includedMinutes": 2000,
+    "displayedStorageGB": 0,
+    "includedStorageGB": 0.5,
+    "billableActionsUSD": 0,
+    "actionsBudgetUSD": 0,
+    "budgetStatus": "Usage blocked",
+    "budgetModified": false,
+    "countersMayLag": true
+  },
+  "scope": {
+    "agentCommits": 0,
+    "agentPushes": 0,
+    "deploys": 0,
+    "merges": 0,
+    "historyRewrites": 0,
+    "applicationCodeChanges": 0,
+    "remoteDataWrites": 0,
+    "oneManualWorkflowExecuted": true
+  },
+  "limits": [
+    "native policy allows owner/local actions; external allowlist is not a sandbox for all job code",
+    "current positive workflow compatibility verified; intentionally invalid workflow not created",
+    "PR event not exercised; prior 141 Firestore tests are local and separate",
+    "branch enforcement and native secret scanning/push protection not enabled in private Free context",
+    "publication requires separate final authorization; prior site homologation blockers remain"
+  ]
+}
