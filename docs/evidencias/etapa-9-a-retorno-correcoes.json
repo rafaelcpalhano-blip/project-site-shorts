@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-27",
+  "sourceWorkerVersion": "a0d58723-b19c-4439-a2d2-85a402571691",
+  "lighthouse": {
+    "reports": [
+      {
+        "file": "www.clipzone.workers.dev-20261027T000755.json",
+        "fetchTime": "2026-10-27T03:07:55.585Z",
+        "formFactor": "desktop",
+        "lighthouseVersion": "13.4.1",
+        "scores": {
+          "performance": 99,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 92
+        },
+        "metrics": {
+          "first-contentful-paint": 749.7086,
+          "largest-contentful-paint": 749.7086,
+          "total-blocking-time": 0,
+          "cumulative-layout-shift": 0.01989257124705748,
+          "speed-index": 749.7086
+        },
+        "runWarnings": [],
+        "runtimeError": null,
+        "screenEmulationDisabled": true,
+        "disableStorageReset": false,
+        "throttlingMethod": "simulate",
+        "robotsInvalid": true,
+        "labelMismatchFound": true
+      },
+      {
+        "file": "www.clipzone.workers.dev-20261027T000835.json",
+        "fetchTime": "2026-10-27T03:08:35.552Z",
+        "formFactor": "mobile",
+        "lighthouseVersion": "13.4.1",
+        "scores": {
+          "performance": 94,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 92
+        },
+        "metrics": {
+          "first-contentful-paint": 2374.542125,
+          "largest-contentful-paint": 2652.65055,
+          "total-blocking-time": 7.5,
+          "cumulative-layout-shift": 0.03219921295257025,
+          "speed-index": 2374.542125
+        },
+        "runWarnings": [],
+        "runtimeError": null,
+        "screenEmulationDisabled": true,
+        "disableStorageReset": false,
+        "throttlingMethod": "simulate",
+        "robotsInvalid": true,
+        "labelMismatchFound": true
+      }
+    ]
+  },
+  "ranking": {
+    "checkedAt": "2026-10-27T03:24:49.518Z",
+    "projectId": "clipzone-db02a",
+    "databaseId": "(default)",
+    "managementReadOnly": true,
+    "documentGets": 2,
+    "states": {
+      "current": {
+        "exists": false
+      },
+      "metrics": {
+        "exists": true,
+        "version": "1",
+        "ready": true,
+        "computedAt": null
+      }
+    },
+    "mutations": false
+  },
+  "userReported": {
+    "pc": "Windows 11",
+    "mobile": "Moto g53 5G; Android",
+    "iPhoneTestPending": true,
+    "googleTotpNewChallengeNotSpecified": true,
+    "writesCpuNotMeasured": true,
+    "gameNavigationReopenedByExplicitIssue": true
+  },
+  "localChanges": {
+    "gameEntryLayoutScroll": true,
+    "feedReturnPreserved": true,
+    "cardAccessibleNamesAligned": true,
+    "workersTranslationOptInWired": true,
+    "translationDefaultDisabled": true
+  },
+  "validation": {
+    "fullNodePassed": 757,
+    "fullNodeFailed": 0,
+    "frontendTypesPassed": true,
+    "serverTypesPassed": true,
+    "globalLintPassed": true,
+    "workerdEntryHeaderCases": 20,
+    "frontendBuildApiModePassed": true,
+    "workerDryRunPassed": true,
+    "dryRunReportedEntries": 46,
+    "frozenPhysicalAssetFiles": 43
+  },
+  "remoteEffects": {
+    "rankingStateDocumentReads": 2,
+    "documentWrites": 0,
+    "translationProviderCalls": 0,
+    "tiktokValidationCalls": 0,
+    "credentialsModified": false,
+    "jobsEnabled": false,
+    "deployment": true
+  },
+  "unresolved": {
+    "publishedFixesPending": false,
+    "translationActivationPending": true,
+    "rankingGenerationAndRecurringSchedulePending": true,
+    "robotsIndexingDecisionPending": true,
+    "physicalRetestAndNewLighthousePending": true,
+    "tiktokPending": true,
+    "launchApproved": false
+  },
+  "publicationPreparation": {
+    "packageFrozen": true,
+    "fixedPublicAssetsByteIdentical": true,
+    "physicalAssetFiles": 43,
+    "configurationContainsSecretValues": false,
+    "automaticReviewRejectedRemoteCommand": true,
+    "deploymentAttempted": true,
+    "explicitPackageApprovalRequested": true,
+    "priorWorkerVersion": "a0d58723-b19c-4439-a2d2-85a402571691",
+    "translationEnabled": false,
+    "jobsEnabled": false,
+    "explicitPackageApprovalReceived": true,
+    "deploymentPerformed": true,
+    "deployedVersion": "42c847fa-f9c8-4497-9e9c-c4d0f16e6de9"
+  },
+  "deploymentVerification": {
+    "observedAt": "2026-10-27T03:52:40.245Z",
+    "version": "42c847fa-f9c8-4497-9e9c-c4d0f16e6de9",
+    "priorVersion": "a0d58723-b19c-4439-a2d2-85a402571691",
+    "frozenBundleSha256": "739bd045d5756927e51666df4b5c6ebe68062ed5ff72a1651fc74197176b29e0",
+    "activeAt100Percent": true,
+    "uploadedFiles": 43,
+    "publicAssetHashesMatched": 42,
+    "apiAndStaticContractChecks": 13,
+    "secretFileUnchanged": true,
+    "sameEightSecretsSupplied": true,
+    "translationEnabled": false,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "cpuMeasured": false,
+    "physicalRetestPending": false,
+    "publicLaunchApproved": false
+  },
+  "ownerRetest": {
+    "recordedAt": "2026-10-27T04:19:22.857Z",
+    "source": "Owner reply to combined PC/mobile game detail, feed return and habitual admin session retest: esta parte funcionou certinho",
+    "pcAndMobileGameEntryTopPassed": true,
+    "feedReturnPositionPassed": true,
+    "habitualAdminSessionPassed": true,
+    "freshGoogleTotpChallengeConfirmed": false,
+    "newLighthousePerformed": false
+  }
+}

@@ -2065,3 +2065,27 @@ Sem mutacao remota, restauracao, cron, servico pago, troca de plano ou deploy. T
 ## 26/10/2026 — 9-A parcial iniciada, TikTok em standby
 
 Proprietario autorizou seguir nas tarefas independentes. Versao remota a0d58723-b19c-4439-a2d2-85a402571691 confirmada100%; 12 contratos HTTP com GETs aprovados. Navegador controlado: seis cards, oito jogos, filtro Tibia/dois cards, pesquisa/selecao/cancelamento do formulario e ficha/historico preservando filtro aprovados no escopo observado, sem postagem ou reproducao. Uma pagina disponivel: paginacao ampliada nao exercitada. Checklist Obsidian PC/mobile/PWA/Lighthouse preparado em checklist-homologacao-9-a.md. Sem Lighthouse, CPU, login administrativo, teste fisico ou novo teste automatizado nesta rodada. Relatorio etapa-9-a-homologacao.md/json. TikTok, demais gates8-F e lancamento seguem pendentes; proxima prova humana e a matriz preenchida e quatro arquivos Lighthouse.
+
+## 27/10/2026 — retorno9-A, Lighthouse e correcoes locais
+
+Recebidos HTML/JSON desktop/mobile e checklist: desempenho99/94, Accessibility100/100, Best Practices100/100, SEO92/92; sem runWarnings/runtimeError. Ambos screenEmulation.disabled=true, manter ressalva de configuracao. Android Moto g53 5G relatado funcional; iPhone pendente. Relato explicito de rolagem reabre F03 apesar do checkbox. Preparados localmente: topo da ficha na fase layout sem quebrar retorno ao feed; nomes acessiveis dos cards alinhados ao texto visivel; ligacao opcional da traducao existente ao Workers, desligada por padrao e sem ler token AI.757testes Node passaram, tipos/lint,20contratos workerd e build/dry-run isolados aprovados.
+
+Duas leituras remotas: rankingState/current ausente; metrics version1/ready=true. Nao rebootstrapar por suposicao. Falta primeira geracao e renovacao periodica (validade90min), sem ativar scheduled atual/retencoes automaticamente. Sem escrita remota, deploy, cron, mudanca de plano ou chamada TikTok/AI. Relatorio etapa-9-a-retorno-correcoes.md/json; proximo preparar deploy especifico e homologacoes operacionais separadas de traducao/ranking. Robots.txt ausente retorna HTML no Lighthouse; politica de indexacao pendente, nao liberar busca publica por inferencia.
+
+## 27/10/2026 — pacote9-A congelado, deploy aguarda aprovacao especifica
+
+Preparado pacote de rolagem/acessibilidade com43arquivos fisicos e hashes; itens fixos iguais ao pacote anterior, traducao/jobs/diagnosticos false, configuracao sem valores de segredos. Log Wrangler dizia46entradas; guard de contagem local corrigido apos enumeracao real, sem deploy. Implementacao inalterada desde757/0 testes e20contratos workerd; nao repetir testes sem motivo. Revisao automatica bloqueou o comando remoto: prosseguir foi interpretado como preparacao, exigindo aprovacao explicita para este deploy com os oito segredos existentes. Nenhuma tentativa de deploy executada; pedido especifico enviado e ainda sem resposta. Relatorio etapa-9-a-pacote-homologacao.md. Continuam separados ativacao AI, geracao/rotina de ranking, retencoes, TikTok e lancamento.
+
+
+## Atualização — deploy específico autorizado e verificado
+
+Em 27/10/2026, após aprovação explícita do proprietário, publicado uma única vez na homologação o pacote congelado. Worker ativo em 100%: `42c847fa-f9c8-4497-9e9c-c4d0f16e6de9`; referência anterior para eventual rollback: `a0d58723-b19c-4439-a2d2-85a402571691`. Bundle SHA256: `739bd045d5756927e51666df4b5c6ebe68062ed5ff72a1651fc74197176b29e0`.
+
+Conferidos os hashes dos 42 arquivos públicos; o 43º arquivo, `_headers`, é configuração. Treze contratos remotos de assets/API passaram, incluindo no-store/HSTS/nosniff/no-referrer da API, rejeição de origem inválida e ausência de emissão de cookie nesses testes. A conferência usa `/` para o HTML, pois `/index.html` tem redirecionamento canônico; a primeira checagem interrompeu nesse redirecionamento e foi ajustada, sem novo deploy. Oito valores de segredo enviados foram preservados e o arquivo privado permaneceu idêntico. Tradução, jobs e diagnósticos seguem desligados. Sem escrita editorial, ativação de serviço, mudança de plano ou lançamento público.
+
+Reteste Ver jogo/Voltar no PC e Android e continuidade da sessão administrativa solicitado, aguardando proprietário. CPU real e pontuação Lighthouse não foram medidas nesta publicação. TikTok, tradução operacional, ranking recorrente, iPhone e demais gates continuam pendentes; publicação deste pacote não encerra 8-F/9-A.
+
+
+### Reteste do proprietário confirmado
+
+Após o deploy `42c847fa-f9c8-4497-9e9c-c4d0f16e6de9`, o proprietário respondeu “esta parte funcionou certinho” ao roteiro conjunto PC/celular: ficha Ver jogo no topo, retorno à posição anterior do feed e painel na sessão habitual. Reteste funcional deste pacote concluído. Isso não comprova novo desafio Google/TOTP, nova medição CPU ou novo Lighthouse. TikTok, tradução, ranking e demais gates continuam pendentes.
