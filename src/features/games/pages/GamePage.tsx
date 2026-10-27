@@ -1,13 +1,17 @@
 import {GamePageNavigation} from '../components/GamePageNavigation'
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useLayoutEffect } from 'react'
 import { usesFirestore } from '../../../lib/firebase/mode'
 const FirestoreGamePage = lazy(() => import('./FirestoreGamePage').then(module => ({ default: module.FirestoreGamePage })))
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { PageIntro } from '../../../components/ui/PageIntro'
 import { games } from '../../shorts/data/fixtures'
 import { ShortFeed } from '../../shorts/components/ShortFeed'
 export function GamePage() {
   const { gameId } = useParams()
+  const { key } = useLocation()
+  // After the outgoing feed saves its position, reset before painting the lazy
+  // fallback. Do not scroll on data arrival or change home history restoration.
+  useLayoutEffect(() => { window.scrollTo({top:0,behavior:'instant'}) }, [gameId,key])
   if (usesFirestore) return <Suspense fallback={<p role='status'>Carregando jogo...</p>}><FirestoreGamePage key={gameId} gameId={gameId || ''} /></Suspense>
   const game = games.find(item => item.id === gameId)
   if (!game) return <><PageIntro title="Jogo não encontrado" description="Este jogo não está no catálogo demonstrativo." /><GamePageNavigation/></>
