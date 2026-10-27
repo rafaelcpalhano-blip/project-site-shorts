@@ -1,0 +1,72 @@
+{
+  "projectId": "clipzone-db02a",
+  "database": "(default)",
+  "scope": "One explicitly authorized derived ranking generation; no cron/deploy",
+  "workerVersion": "6910fddf-8d39-4129-a289-f60ce08be37c",
+  "startedAt": "2026-10-27T16:13:23.37Z",
+  "completedAt": "2026-10-27T16:13:29.244Z",
+  "status": "ready",
+  "eligibleVideos": 9,
+  "steps": 4,
+  "attemptedWrites": 22,
+  "firestoreRequests": 78,
+  "oauthRequests": 1,
+  "responseBytes": 136247,
+  "clockOffsetMs": 1342,
+  "primaryWrites": 0,
+  "inferenceCalls": 0,
+  "firstPreflight": "Stopped before writes: local clock 1.35 seconds behind Firestore snapshot",
+  "ui": {
+    "generalCards": 9,
+    "TibiaCards": 2,
+    "errorShown": false
+  },
+  "readerSamples": [
+    {
+      "outcome": "ok",
+      "status": 200,
+      "applicationCreated": false,
+      "wallMs": 661,
+      "cpuMs": 21,
+      "firstRouteInIsolate": true
+    },
+    {
+      "outcome": "ok",
+      "status": 200,
+      "applicationCreated": false,
+      "wallMs": 181,
+      "cpuMs": 12,
+      "firstRouteInIsolate": false
+    },
+    {
+      "outcome": "ok",
+      "status": 200,
+      "applicationCreated": false,
+      "wallMs": 117,
+      "cpuMs": 6,
+      "firstRouteInIsolate": false
+    },
+    {
+      "outcome": "ok",
+      "status": 200,
+      "applicationCreated": false,
+      "wallMs": 193,
+      "cpuMs": 10,
+      "firstRouteInIsolate": false
+    }
+  ],
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102BodyInspection": false,
+  "automaticRenewalEnabled": false,
+  "launchApproved": false,
+  "expiry": "90 minutes from generation snapshot, approximately 14:43 Brasilia 2026-10-27",
+  "spark": {
+    "sevenDayReadPeak": 5000,
+    "note": "Dashboard may lag; not a precise remaining-quota guarantee",
+    "confirmed": true,
+    "dashboardWriteCount": 0,
+    "dashboardReadCount": 0,
+    "sevenDayWritePeak": 936
+  }
+}

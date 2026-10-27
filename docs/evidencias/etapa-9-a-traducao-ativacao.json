@@ -1,0 +1,347 @@
+{
+  "recordedAt": "2026-10-27T04:56:19.435Z",
+  "ownerAuthorization": "Explicit translation activation on homologation; selected game Tibia",
+  "preflight": {
+    "workersFreeConfirmed": true,
+    "aiUsedTodayObserved": 0,
+    "aiAllocationObserved": 10000,
+    "tokenActive": true,
+    "accountMatched": true,
+    "observedAt": "2026-10-27T04:51:06.498Z",
+    "aiPermissionsConfirmedByInference": false
+  },
+  "deployment": {
+    "deployedAt": "2026-10-27T04:53:27.561Z",
+    "explicitOwnerAuthorization": true,
+    "exitCode": 0,
+    "version": "8c3d7514-851f-4e76-bebc-782387a5c339",
+    "priorVersion": "42c847fa-f9c8-4497-9e9c-c4d0f16e6de9",
+    "bundleSha256": "03905504aa3505c11e91482951b49a06cbedb17ee8351a9f70749d0333735291",
+    "staticFiles": 43,
+    "staticAssetsUnchanged": true,
+    "existingEightSecretValuesPreserved": true,
+    "secretCountSupplied": 9,
+    "additionalSecretName": "CLOUDFLARE_AI_TOKEN",
+    "newSecretFileAclUserSystemOnly": true,
+    "secretFileUnchanged": true,
+    "oldSecretFileUnchanged": true,
+    "localEnvUnchanged": true,
+    "translationEnabled": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "triggersAdded": false,
+    "editorialWritesAttempted": false,
+    "inferenceAttempted": false,
+    "selectedGame": "Tibia",
+    "publicLaunchApproved": false
+  },
+  "verification": {
+    "activeAt100Percent": true,
+    "publicAssetHashesMatched": 42,
+    "apiAndStaticChecks": 13,
+    "expectedSecretNamesMatched": true,
+    "secretCount": 9
+  },
+  "tibiaTranslation": {
+    "manualConfirmationPending": false,
+    "ownerReportedTranslationAbsent": true,
+    "initialOwnerObservationHadConfirmEvents": false,
+    "preAttemptRead": {
+      "gameExists": true,
+      "name": "Tibia",
+      "source": "IGDB",
+      "descriptionLength": 340,
+      "task": null,
+      "attemptsToday": 0
+    },
+    "singleAuthorizedControlledConfirmationPerformed": true,
+    "postAttemptState": {
+      "checkedAt": "2026-10-27T05:01:16.300Z",
+      "projectId": "clipzone-db02a",
+      "database": "(default)",
+      "documentReads": 3,
+      "documentWrites": 0,
+      "game": {
+        "exists": true,
+        "name": "Tibia",
+        "source": "IGDB",
+        "status": "active",
+        "descriptionLength": 340,
+        "translationPresent": false,
+        "translationLength": 0,
+        "translationSourceMatches": null
+      },
+      "task": {
+        "status": "failed",
+        "attempts": 1,
+        "updatedAt": "2026-10-27T05:00:43.188Z",
+        "retryAt": "2026-10-27T06:00:43.188Z"
+      },
+      "translationAttemptsToday": 1
+    },
+    "successfulInferenceConfirmed": false,
+    "descriptionRemainsOriginal": true,
+    "originalToggleVisible": false,
+    "cooldownPreserved": true,
+    "nextAttemptNotBefore": "2026-10-27T06:00:43.188Z",
+    "aiDashboardTotalNeuronsObservedAfterAttempt": 7.67,
+    "aiDashboardSingleCallCostAttributionConfirmed": false
+  },
+  "ranking": {
+    "enabled": false,
+    "firstGenerationPending": true,
+    "cronConfigured": false
+  },
+  "tiktokPending": true,
+  "launchApproved": false,
+  "translationCpuObservation": {
+    "startedAt": "2026-10-27T05:00:10.859Z",
+    "completedAt": "2026-10-27T05:03:10.882Z",
+    "routes": {
+      "/api/admin/config": {
+        "cpuMs": [
+          1
+        ],
+        "statuses": [
+          200
+        ]
+      },
+      "/api/session": {
+        "cpuMs": [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "statuses": [
+          204
+        ]
+      },
+      "/api/games/search": {
+        "cpuMs": [
+          7
+        ],
+        "statuses": [
+          200
+        ]
+      },
+      "/api/games/confirm": {
+        "cpuMs": [
+          19
+        ],
+        "statuses": [
+          200
+        ]
+      },
+      "/api/games/list": {
+        "cpuMs": [
+          3
+        ],
+        "statuses": [
+          200
+        ]
+      },
+      "/api/games/detail": {
+        "cpuMs": [
+          4
+        ],
+        "statuses": [
+          200
+        ]
+      },
+      "/api/feed/ordered": {
+        "cpuMs": [
+          7
+        ],
+        "statuses": [
+          200
+        ]
+      }
+    },
+    "exceptions": 0,
+    "exceededCpu": 0,
+    "error1102BodyInspection": false,
+    "coldTranslationSampleConfirmed": false,
+    "confirmationAbove10ms": true,
+    "productionCpuGatePassed": false,
+    "automaticSuspensionPerformed": false
+  },
+  "protocolDiagnosis": {
+    "currentProviderSchema": "result.choices[].message.content with object chat.completion",
+    "deployedAdapterExpected": "result.response only",
+    "incompatibilityConfirmed": true,
+    "exactDiscardedResponseNotRetained": true,
+    "causalAttribution": "Protocol incompatibility was real but correction did not resolve Tibia failure; exact rejection reason remains unknown because old failures are generic",
+    "schemaReadOnlyVerifiedAt": "2026-10-27T05:04:41.677Z",
+    "modelCatalogAccessible": true,
+    "tokenManagementDetails403": true,
+    "tokenInferencePermissionAbsenceNotInferred": true,
+    "correctedRealInferencePassed": false
+  },
+  "localProtocolFix": {
+    "nodePassed": 767,
+    "nodeFailed": 0,
+    "newTests": 3,
+    "targetedPassed": 15,
+    "typesPassed": true,
+    "lintPassed": true,
+    "dryRunPassed": true,
+    "bundleSha256": "1131ea10d188c56de63f8165945b791c7775d9c2b415c2e609cf847175fc47a8",
+    "staticAssetsUnchanged": 43,
+    "nineSecretsPreserved": true,
+    "cooldownUnchanged": true,
+    "deploymentPerformed": true,
+    "explicitDeployApprovalPending": false
+  },
+  "protocolDeployment": {
+    "deployedAt": "2026-10-27T05:11:28.938Z",
+    "explicitOwnerAuthorization": true,
+    "exitCode": 0,
+    "version": "d26c55de-ff11-47ef-8fca-1841a6a6e526",
+    "priorVersion": "8c3d7514-851f-4e76-bebc-782387a5c339",
+    "bundleSha256": "1131ea10d188c56de63f8165945b791c7775d9c2b415c2e609cf847175fc47a8",
+    "staticFiles": 43,
+    "staticAssetsUnchanged": true,
+    "sameNineSecretValuesSupplied": true,
+    "secretFileUnchanged": true,
+    "secretFileAclVerified": true,
+    "translationEnabled": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "triggersAdded": false,
+    "inferenceAttempted": false,
+    "cooldownUnchanged": true,
+    "authorizedRetryNotBefore": "2026-10-27T06:01:00.000Z",
+    "maximumAdditionalAttempts": 1,
+    "publicLaunchApproved": false,
+    "publicAssetHashesMatched": 42,
+    "apiAndStaticContractChecksPassed": 13,
+    "activeAt100Percent": true
+  },
+  "authorizedRetry": {
+    "game": "Tibia",
+    "maximumAdditionalAttempts": 1,
+    "notBefore": "2026-10-27T06:01:00.000Z",
+    "localTime": "27/10/2026 03:01 America/Sao_Paulo",
+    "serverRetryAt": "2026-10-27T06:00:43.188Z",
+    "attemptPerformed": true,
+    "waitPreserved": true,
+    "automaticResumptionCreated": false,
+    "automaticApprovalReviewRejected": true,
+    "automaticApprovalReviewReason": "Authorization for a single manual attempt did not explicitly cover a future automatic resumption with remote Firestore writes",
+    "specificAutomationApprovalRequested": true,
+    "completed": true,
+    "maximumAdditionalAttemptsConsumed": true,
+    "executionMode": "User returned and authorized immediate test after cooldown; no scheduled run used",
+    "receipt": {
+      "startedAt": "2026-10-27T06:06:01.490Z",
+      "attemptInitiated": true,
+      "gameId": "igdb-9596",
+      "workerVersion": "d26c55de-ff11-47ef-8fca-1841a6a6e526",
+      "maximumAdditionalAttempts": 1,
+      "cooldownConfirmedExpired": true,
+      "priorAttempts": 1,
+      "ownerAuthorizationConfirmed": true,
+      "resultPending": false,
+      "completedAt": "2026-10-27T06:10:14.635Z",
+      "result": "failed-original-preserved",
+      "attemptsAfter": 2,
+      "nextRetryAt": "2026-10-27T07:06:08.812Z",
+      "maximumAdditionalAttemptsConsumed": true,
+      "doNotRepeat": true,
+      "confirmationEvents": [
+        {
+          "status": 200,
+          "cpuMs": 16,
+          "outcome": "ok",
+          "applicationCreated": false,
+          "firstRouteInIsolate": true
+        }
+      ]
+    },
+    "remoteStateAfter": {
+      "checkedAt": "2026-10-27T06:06:54.115Z",
+      "projectId": "clipzone-db02a",
+      "database": "(default)",
+      "documentReads": 3,
+      "documentWrites": 0,
+      "game": {
+        "exists": true,
+        "name": "Tibia",
+        "source": "IGDB",
+        "status": "active",
+        "descriptionLength": 340,
+        "translationPresent": false,
+        "translationLength": 0,
+        "translationSourceMatches": null
+      },
+      "task": {
+        "status": "failed",
+        "attempts": 2,
+        "updatedAt": "2026-10-27T06:06:08.812Z",
+        "retryAt": "2026-10-27T07:06:08.812Z"
+      },
+      "translationAttemptsToday": 2
+    },
+    "cpuEventCount": 15,
+    "exceptionCount": 0,
+    "exceededCpu": 0,
+    "originalPreservedVisually": true,
+    "portugueseVisible": false,
+    "originalToggleVisible": false,
+    "noThirdInference": true
+  },
+  "safeFailurePreparation": {
+    "nodePassed": 769,
+    "nodeFailed": 0,
+    "newTests": 2,
+    "targetedTestsPassed": 17,
+    "typesPassed": true,
+    "lintPassed": true,
+    "dryRunPassed": true,
+    "bundleSha256": "cfa407fe09e0d6e371131d6aebc68b072addf0a6db1b099a316cd1a39c52411b",
+    "staticAssetsUnchanged": 43,
+    "nineSecretsPreserved": true,
+    "privateCategoryOnly": true,
+    "providerHttpStatusOnly": true,
+    "noRawResponseStored": true,
+    "noPromptOrCredentialStored": true,
+    "cooldownUnchanged": true,
+    "deployed": true,
+    "explicitDeployApprovalPending": false,
+    "additionalInferenceNotAuthorized": true
+  },
+  "safeFailureDeployment": {
+    "deployedAt": "2026-10-27T06:15:42.369Z",
+    "explicitOwnerAuthorization": true,
+    "exitCode": 0,
+    "version": "6910fddf-8d39-4129-a289-f60ce08be37c",
+    "priorVersion": "d26c55de-ff11-47ef-8fca-1841a6a6e526",
+    "bundleSha256": "cfa407fe09e0d6e371131d6aebc68b072addf0a6db1b099a316cd1a39c52411b",
+    "staticFiles": 43,
+    "staticAssetsUnchanged": true,
+    "sameNineSecretValuesSupplied": true,
+    "secretFileUnchanged": true,
+    "secretFileAclVerified": true,
+    "translationEnabled": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "diagnosticsEnabled": false,
+    "triggersAdded": false,
+    "inferenceAttempted": false,
+    "cooldownUnchanged": true,
+    "privateFailureCategoryEnabled": true,
+    "additionalInferenceAuthorized": false,
+    "maximumAdditionalAttempts": 0,
+    "publicLaunchApproved": false,
+    "publicAssetHashesMatched": 42,
+    "apiAndStaticContractChecksPassed": 13,
+    "activeAt100Percent": true,
+    "oldFailureReasonsRecovered": false,
+    "realFutureFailureCategoryNotYetObserved": true,
+    "cpuMeasuredInThisDeployment": false
+  }
+}

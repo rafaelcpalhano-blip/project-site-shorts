@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-27T16:27:30.8471051Z",
+  "scope": "Local preparation only: ranking cadence 60 to 30 minutes",
+  "intervalMs": 1800000,
+  "algorithmChanged": false,
+  "engagementWeightsChanged": false,
+  "dailyBudgetsChanged": false,
+  "retentionChanged": false,
+  "remoteWrites": 0,
+  "deployPerformed": false,
+  "schedulerEnabled": false,
+  "nodeTests": {
+    "passed": 789,
+    "failed": 0,
+    "skipped": 0
+  },
+  "workerdCasesPassed": 16,
+  "workerdExternalFetchAttempts": 0,
+  "build": "passed",
+  "lint": "passed",
+  "boundaries": [
+    "29m59.999s: not due and zero writes",
+    "30m00s: due, previous pointer preserved until complete",
+    "Snapshot age controls segmented cadence even with delayed publication",
+    "Daily budget exhausted: no writes or pointer replacement"
+  ],
+  "dailyModel": {
+    "videos": 9,
+    "generationWrites": 1056,
+    "billedReadEstimate": false,
+    "includesVisitorOperations": false,
+    "includesCleanup": false,
+    "writesPerSuccessfulGeneration": 22,
+    "maximumCycles": 48
+  },
+  "caveats": [
+    "Interval is eligibility since source snapshot; generation takes additional bounded steps",
+    "100-video capacity may exhaust unchanged internal daily write budget at 48 cycles; stop rather than increase budget",
+    "Local workerd dispatch bounds do not certify billed edge CPU",
+    "Remote activation and maintenance schedule still require separate review"
+  ]
+}
