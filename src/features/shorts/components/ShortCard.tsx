@@ -22,7 +22,7 @@ export function ShortCard({ short, count, gameName, onOpen, gameLinkState }: { g
   const published=new Date(short.createdAt)
   const dateTime=Number.isSafeInteger(short.createdAt)&&short.createdAt>=0&&Number.isFinite(published.getTime())?published.toISOString():undefined
   return <article className={styles.card} data-short-id={short.id}>
-    <button type="button" className={styles.preview} onClick={onOpen} aria-label={'Abrir vídeo: ' + short.title}>
+    <button type="button" className={styles.preview} onClick={onOpen} aria-label={'Abrir vídeo: ' + short.title + '. ' + short.platform + ' ' + game.name + (artwork.kind==='clipper'?' Miniatura indisponível':'')}>
       <span className={styles.platform}>{short.platform}</span>
       <span className={styles.artwork}>
         {artwork.kind==='clipper'&&<span className={styles.caption}>Miniatura indisponível</span>}
@@ -36,7 +36,7 @@ export function ShortCard({ short, count, gameName, onOpen, gameLinkState }: { g
       <p className={styles.time}><time dateTime={dateTime}>{relativeTime(short.createdAt,now)}</time></p>
       <div className={styles.engagement}>
         {short.likeCount!==undefined&&<span aria-label={short.likeCount+' curtidas no Clipzone'}>♡ {short.likeCount}</span>}
-        <button className={styles.comments} type="button" onClick={onOpen} aria-label={(count ?? short.commentCount) === undefined ? 'Abrir comentários; total indisponível' : (count ?? short.commentCount)+' comentários publicados'}>Comentários <span>{count ?? short.commentCount ?? '—'}</span></button>
+        <button className={styles.comments} type="button" onClick={onOpen} aria-label={(count ?? short.commentCount) === undefined ? 'Comentários —; total indisponível' : 'Comentários '+(count ?? short.commentCount)+' publicados'}>Comentários <span>{count ?? short.commentCount ?? '—'}</span></button>
       </div>
       <Link className={styles.gameLink} to={'/jogos/' + game.id} state={gameLinkState}>Ver jogo</Link>
     </div>

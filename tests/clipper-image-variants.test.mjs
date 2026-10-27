@@ -43,5 +43,5 @@ test('srcset do Clipper só entra no fallback, não modifica miniaturas oficiais
  const fallback=render(short);assert.match(fallback,/image-unavailable-160.webp 160w/);assert.match(fallback,/sizes="144px"/);assert.match(fallback,/Miniatura indisponível/)
  const complete={...short,thumbnail:{url:'https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg',obtainedAt:now,expiresAt:now+60000}},copy=structuredClone(complete),official=render(complete)
  assert.doesNotMatch(official,/srcset=|image-unavailable-/i);assert.match(official,/src="https:\/\/i.ytimg.com\/vi\/abcdefghijk\/hqdefault.jpg"/);assert.deepEqual(complete,copy)
- for(const html of [fallback,official]){assert.match(html,/Jogada original/);assert.match(html,/Canal original/);assert.match(html,/Jogo original/);assert.match(html,/3 comentários publicados/);assert.match(html,/href="\/jogos\/g1"/);assert.doesNotMatch(html,/<iframe/)}
+ for(const html of [fallback,official]){assert.match(html,/Jogada original/);assert.match(html,/Canal original/);assert.match(html,/Jogo original/);assert.match(html,/Comentários 3 publicados/);assert.match(html,/href="\/jogos\/g1"/);assert.doesNotMatch(html,/<iframe/)}
 })
