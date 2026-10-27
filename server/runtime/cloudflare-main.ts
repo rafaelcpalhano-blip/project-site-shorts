@@ -10,6 +10,8 @@ interface Environment {
  CLIPZONE_VISITOR_SECRET:string;CLIPZONE_NETWORK_SECRET:string
  FIREBASE_AUTH_API_KEY:string;FIREBASE_AUTH_APP_ID:string;CLIPZONE_ADMIN_UIDS:string
  TWITCH_CLIENT_ID:string;TWITCH_CLIENT_SECRET:string;YOUTUBE_API_KEY:string
+ CLIPZONE_TRANSLATION_ENABLED?:string
+ CLOUDFLARE_ACCOUNT_ID?:string;CLOUDFLARE_AI_TOKEN?:string
  CLIPZONE_JOBS_ENABLED?:string
  CLIPZONE_PROVIDER_DIAGNOSTICS?:string
  CLIPZONE_HOMOLOGATION_OBSERVABILITY?:string
@@ -22,7 +24,8 @@ function application(env:Environment){
  const config:CloudflareApplicationConfiguration={origin:env.CLIPZONE_ORIGIN,projectId:env.FIREBASE_PROJECT_ID,authProjectId:env.FIREBASE_AUTH_PROJECT_ID,
   serviceEmail:env.FIREBASE_SERVICE_EMAIL,servicePrivateKey:env.FIREBASE_SERVICE_PRIVATE_KEY,visitorSecret:env.CLIPZONE_VISITOR_SECRET,networkSecret:env.CLIPZONE_NETWORK_SECRET,
   authApiKey:env.FIREBASE_AUTH_API_KEY,authAppId:env.FIREBASE_AUTH_APP_ID,adminUids:env.CLIPZONE_ADMIN_UIDS.split(',').map(value=>value.trim()).filter(Boolean),
-  twitchClientId:env.TWITCH_CLIENT_ID,twitchClientSecret:env.TWITCH_CLIENT_SECRET,youtubeApiKey:env.YOUTUBE_API_KEY}
+  twitchClientId:env.TWITCH_CLIENT_ID,twitchClientSecret:env.TWITCH_CLIENT_SECRET,youtubeApiKey:env.YOUTUBE_API_KEY,
+  ...(env.CLIPZONE_TRANSLATION_ENABLED==='true'?{translation:{accountId:env.CLOUDFLARE_ACCOUNT_ID??'',token:env.CLOUDFLARE_AI_TOKEN??''}}:{})}
  // Private memory only. Compare bindings to invalidate caches on secret rotation,
  // including when a local host reuses and mutates the same env object.
  const signature=JSON.stringify(config),cached=applications.get(env)
