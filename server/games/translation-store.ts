@@ -1,6 +1,6 @@
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import type { DescriptionInput } from './translate-description.ts'
-import { TRANSLATION_MODEL } from './translate-description.ts'
+import { TRANSLATION_MODEL, translationFailureDetails } from './translate-description.ts'
 async function hash(game:RecordData) {
  const source=JSON.stringify([game.description,game.officialName,game.aliases??[],TRANSLATION_MODEL,'pt-BR',2])
  const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source))
@@ -45,11 +45,11 @@ export function createGameTranslation(options:{store:AtomicStore;now:()=>Date;tr
     tx.set('games/'+id,{...game,translation:{text,locale:'pt-BR',model:TRANSLATION_MODEL,sourceHash:claimed.sourceHash,sourceDescription:game.description,sourceName:game.officialName,translatedAt:now}})
     tx.set('gameTranslations/'+id,{...task,status:'ready',updatedAt:now})
    })
-  }catch{
+  }catch(reason){
    // Failure is private, generic and cannot undo the game or consume video quota.
    await options.store.transact(async tx=>{
     const task=await tx.get('gameTranslations/'+id)
-    if(task?.leaseId===leaseId){const now=clock(options.now);tx.set('gameTranslations/'+id,{...task,status:'failed',retryAt:new Date(now.getTime()+3600000),updatedAt:now})}
+    if(task?.leaseId===leaseId){const now=clock(options.now);tx.set('gameTranslations/'+id,{...task,status:'failed',retryAt:new Date(now.getTime()+3600000),updatedAt:now,failure:translationFailureDetails(reason)})}
    })
   }
  }

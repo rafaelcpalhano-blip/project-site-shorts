@@ -1,5 +1,16 @@
 export const TRANSLATION_MODEL='@cf/qwen/qwen3-30b-a3b-fp8'
 export interface DescriptionInput {description:string;officialName:string;aliases:string[]}
+class TranslationProviderError extends Error {
+ readonly status:number
+ constructor(status:number){super('translation-unavailable');this.status=status}
+}
+const safeFailureCodes=new Set(['invalid-translation-config','invalid-translation-input','translation-input-too-complex','translation-unavailable','invalid-translation-response','invalid-translation-response-json','invalid-translation-response-shape','invalid-translation-response-completion','invalid-translation-response-field','translation-response-too-large','invalid-translation-text','translation-name-mismatch','translation-unchanged','invalid-translation'])
+/** Private task metadata only. Never persist arbitrary messages, content or headers. */
+export function translationFailureDetails(reason:unknown):{code:string;providerStatus?:number}{
+ const code=reason instanceof Error&&safeFailureCodes.has(reason.message)?reason.message:reason instanceof Error&&reason.name==='TimeoutError'?'translation-timeout':reason instanceof Error&&reason.name==='AbortError'?'translation-aborted':'translation-unavailable'
+ return {code,...(reason instanceof TranslationProviderError&&Number.isInteger(reason.status)&&reason.status>=100&&reason.status<=599?{providerStatus:reason.status}:{})}
+}
+
 // The endpoint and model are fixed; input can never select a host or paid model.
 export function createDescriptionTranslator(config:{accountId:string;token:string},fetcher:typeof fetch=fetch) {
  if(!/^[a-f0-9]{32}$/.test(config.accountId)||!config.token.trim()||/[\r\n]/.test(config.token))throw new Error('invalid-translation-config')
@@ -21,15 +32,25 @@ export function createDescriptionTranslator(config:{accountId:string;token:strin
     {role:'user',content:JSON.stringify({description:protectedText})},
    ]}),
   })
-  if(!response.ok)throw new Error('translation-unavailable')
+  if(!response.ok){await response.body?.cancel().catch(()=>{});throw new TranslationProviderError(response.status)}
   // Bound the entire response before parsing; provider errors never leave this adapter.
   const reader=response.body?.getReader();if(!reader)throw new Error('invalid-translation-response')
   const chunks:Uint8Array[]=[];let size=0
   try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>100000)throw new Error('translation-response-too-large');chunks.push(value)}}finally{await reader.cancel().catch(()=>{})}
   const joined=new Uint8Array(size);let offset=0;for(const chunk of chunks){joined.set(chunk,offset);offset+=chunk.length}
-  const data=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(joined))
-  const output:unknown=data?.success===true?data.result?.response:undefined
-  if(typeof output!=='string')throw new Error('invalid-translation-response')
+  let data
+  try{data=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(joined))}catch{throw new Error('invalid-translation-response-json')}
+  const payload=data?.success===true?data.result:undefined
+  let output:unknown=payload?.response
+  // Current Qwen schema returns a chat completion. Keep the legacy plain
+  // response compatible, but never accept mixed, partial or tool completions.
+  if(payload&&Object.hasOwn(payload,'choices')){
+   if(Object.hasOwn(payload,'response')||payload.object!=='chat.completion'||!Array.isArray(payload.choices)||payload.choices.length!==1)throw new Error('invalid-translation-response-shape')
+   const choice=payload.choices[0],message=choice?.message
+   if(choice?.index!==0||choice.finish_reason!=='stop'||message?.role!=='assistant'||message.tool_calls!==undefined&&(!Array.isArray(message.tool_calls)||message.tool_calls.length>0)||message.refusal!==undefined&&message.refusal!==null&&message.refusal!=='')throw new Error('invalid-translation-response-completion')
+   output=message.content
+  }
+  if(typeof output!=='string')throw new Error('invalid-translation-response-field')
   let result=output.trim()
   if(!result||result.length>24000||result.length<input.description.length/4||/<[^>]*>|[`]{3}/u.test(result)||[...result].some(c=>c.charCodeAt(0)<32&&c!=='\n'&&c!=='\r'&&c!=='\t'))throw new Error('invalid-translation-text')
   for(const {marker,name} of matches){if(result.split(marker).length!==2)throw new Error('translation-name-mismatch');result=result.replace(marker,name)}
