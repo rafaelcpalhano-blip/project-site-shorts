@@ -44,16 +44,29 @@ test('cookies apagados não apagam o orçamento de novas sessões; cabeçalhos d
  assert.ok(!JSON.stringify([...records]).includes(ip))
 })
 
-test('rede compartilhada aceita pessoas distintas, limita novas curtidas e preserva desfazer/recurtir',async()=>{
- const {records,store}=memory(),time=clock(),guard=await createNetworkProtection({store,secret,now:time.now}),options={store,now:time.now,prepareNetworkLike:(tx,id)=>guard.prepareContribution(tx,ip,'like',id)}
- const identities=Array.from({length:21},(_,i)=>(i+1).toString(16).padStart(64,'0'))
- const results=await Promise.all(identities.map(id=>shortLike({shortId,liked:true,revision:0},id,options,true).then(()=>true,()=>false)))
- assert.equal(results.filter(Boolean).length,networkLimits.newLikesPerVideoPerDay);assert.equal(records.get('shorts/'+shortId).likeCount,20)
- const path=await likePath(shortId,identities[0]);assert.equal(records.get(path).liked,true)
- await shortLike({shortId,liked:true,revision:0},identities[0],options,true);assert.equal(contribution(records).likes,20)
- await shortLike({shortId,liked:false,revision:1},identities[0],options,true);assert.equal(records.get('shorts/'+shortId).likeCount,19)
- await shortLike({shortId,liked:true,revision:2},identities[0],options,true);assert.equal(records.get('shorts/'+shortId).likeCount,20);assert.equal(contribution(records).likes,20)
- await shortLike({shortId,liked:true,revision:0},identities[20],{...options,prepareNetworkLike:(tx,id)=>guard.prepareContribution(tx,'203.0.113.11','like',id)},true);assert.equal(records.get('shorts/'+shortId).likeCount,21)
+test('rede compartilhada aceita pessoas distintas, limita novas curtidas e preserva desfazer/recurtir',async t=>{
+ for(const preadmitLast of [false,true])await t.test(preadmitLast?'última identidade admitida antes do lote concorrente':'todas as identidades tentam em paralelo',async()=>{
+  const {records,store}=memory(),time=clock(),guard=await createNetworkProtection({store,secret,now:time.now}),options={store,now:time.now,prepareNetworkLike:(tx,id)=>guard.prepareContribution(tx,ip,'like',id)}
+  const identities=Array.from({length:21},(_,i)=>(i+1).toString(16).padStart(64,'0'))
+  // SHA-256 completion order is not the input order. The last identity may
+  // already be admitted, so use the actual rejected identity for the new IP.
+  const last=identities.at(-1)
+  if(preadmitLast)await shortLike({shortId,liked:true,revision:0},last,options,true)
+  const results=await Promise.allSettled(identities.map(id=>preadmitLast&&id===last?Promise.resolve():shortLike({shortId,liked:true,revision:0},id,options,true)))
+  const admitted=identities.filter((_,index)=>results[index].status==='fulfilled'),blocked=identities.filter((_,index)=>results[index].status==='rejected')
+  assert.equal(admitted.length,networkLimits.newLikesPerVideoPerDay);assert.equal(blocked.length,1)
+  for(const result of results)if(result.status==='rejected')assert.equal(result.reason.message,'abuse-limit')
+  if(preadmitLast)assert.ok(admitted.includes(last))
+  assert.equal(records.get('shorts/'+shortId).likeCount,20)
+  const admittedVisitor=admitted[0],blockedVisitor=blocked[0],path=await likePath(shortId,admittedVisitor)
+  assert.equal(records.get(path).liked,true);assert.equal(records.has(await likePath(shortId,blockedVisitor)),false)
+  await shortLike({shortId,liked:true,revision:0},admittedVisitor,options,true);assert.equal(contribution(records).likes,20)
+  await shortLike({shortId,liked:false,revision:1},admittedVisitor,options,true);assert.equal(records.get('shorts/'+shortId).likeCount,19)
+  await shortLike({shortId,liked:true,revision:2},admittedVisitor,options,true);assert.equal(records.get('shorts/'+shortId).likeCount,20);assert.equal(contribution(records).likes,20)
+  await assert.rejects(shortLike({shortId,liked:true,revision:0},blockedVisitor,options,true),/abuse-limit/)
+  assert.equal(records.get('shorts/'+shortId).likeCount,20)
+  await shortLike({shortId,liked:true,revision:0},blockedVisitor,{...options,prepareNetworkLike:(tx,id)=>guard.prepareContribution(tx,'203.0.113.11','like',id)},true);assert.equal(records.get('shorts/'+shortId).likeCount,21)
+ })
 })
 
 test('cinco publicações por identidade e limite adicional de rede sobrevivem a novas identidades sem consumir recusas',async()=>{

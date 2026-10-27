@@ -1,0 +1,98 @@
+{
+  "stage": "9-B.5",
+  "date": "2026-10-27",
+  "baselineCommit": "27a9dc098f29c2f0c4b70a361b07f6bc56da9e4f",
+  "baselineClean": true,
+  "baselineScan": {
+    "workingFiles": 740,
+    "historicalBlobs": 1676,
+    "findings": 0
+  },
+  "dependencyAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0
+  },
+  "assetComparison": {
+    "reviewed": 15,
+    "changed": 0,
+    "newMedia": 0
+  },
+  "github": {
+    "failedRun": "https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40599198340",
+    "event": "owner push",
+    "commit": "27a9dc098f29c2f0c4b70a361b07f6bc56da9e4f",
+    "failure": {
+      "test": "tests/network-security.test.mjs",
+      "expected": 21,
+      "actual": 20,
+      "cause": "test assumed input-order admission despite asynchronous digests"
+    },
+    "nativeActionsPolicyRechecked": true,
+    "dependabotOpen": 0,
+    "dependabotClosed": 0,
+    "visibility": "private"
+  },
+  "proof": {
+    "oldTestDeterministicReproducer": "failed with 20 != 21",
+    "changedTestHasAllParallelCase": true,
+    "changedTestHasPreadmittedLastIdentityCase": true,
+    "assertionsPreservedAndStrengthened": true,
+    "targetedFile": {
+      "passed": 12,
+      "failed": 0
+    },
+    "scenarioRepetitions": {
+      "runs": 20,
+      "passed": 20,
+      "failed": 0
+    }
+  },
+  "localCapacity": {
+    "availableParallelism": 12,
+    "fullDefaultRuns": 2,
+    "fullDefaultFailure": "Firebase CLI smoke timeout at 15000ms",
+    "isolatedToolchainTests": 5,
+    "isolatedToolchainPassed": 5,
+    "isolatedCliVersionTimeMs": 1345,
+    "smokeTimeoutChanged": false,
+    "newFileConcurrency": 2,
+    "withinTestConcurrencyPreserved": true
+  },
+  "validation": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "sameAsPreparedNpmTest": true,
+    "tests": 800,
+    "passed": 800,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 33918.0254,
+    "lint": "passed before orchestration/documentation-only changes",
+    "buildRerun": false,
+    "firestoreRerun": false,
+    "applicationCodeChanged": false,
+    "securityLimitsChanged": false
+  },
+  "agentOperations": {
+    "commits": 0,
+    "pushes": 0,
+    "remoteReruns": 0,
+    "githubSettingsChanges": 0,
+    "deploys": 0,
+    "credentialChanges": 0,
+    "historyRewrites": 0
+  },
+  "decision": "not approved for public visibility; corrected commit must pass CI and final informed publication authorization remains separate",
+  "pending": [
+    "owner reviews/commits/pushes prepared test and runner correction",
+    "verify new SHA and automatic CI result without redundant manual execution",
+    "final informed personal-data/visibility decision"
+  ],
+  "limits": [
+    "heuristic secret scan, not proof of absence",
+    "native private-Free branch/secret protections remain limited",
+    "no new server code, production data or provider requests involved"
+  ]
+}
