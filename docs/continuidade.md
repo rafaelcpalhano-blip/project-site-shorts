@@ -2172,3 +2172,19 @@ Nenhum deploy, cron, escrita remota ou nova geração executado nesta alteraçã
 Proprietário solicitou manter a alteração local de30min aguardando o próximo deploy necessário e publicá-la junto, sem deploy isolado agora. Isso não autoriza ativação de cron/jobs ou mudança de orçamento. Trouxe hipótese de bloqueio TikTok pelo IP doméstico; caminho do backend confirmado em server/videos/tiktok.ts: consulta oEmbed sai do runtime da API. Em homologação, sai do Cloudflare Workers; no teste local, da conexão local. Não atribuir429 ao IP pessoal sem evidência. Não houve nova consulta a vídeo TikTok nesta análise.
 
 Documentação oficial consultada em27/10: https://developers.tiktok.com/docs/en/embed-player descreve limites de player por domínio, sem prazo universal24–48h. https://developers.tiktok.com/docs/en/embed-videos documenta oEmbed; não usar limites da API v2 como limite comprovado desse endpoint. Manter diagnóstico específico pendente, sem prometer que trocarIP/limparcache resolve a validação remota, sem reduzir proteções ou disparar repetição de consultas. Site homologado remoto não depende de manter os servidores locais ligados; encerrar computador afeta somente ambiente local.
+
+
+## 27/10/2026 — ajustes locais de segurança para futura divulgação do GitHub
+
+Preparação local autorizada após auditoria 9-B.5. Dependências da ferramenta Firebase corrigidas, gitignore reforçado, verificador local/histórico e testes de segurança adicionados; README/SECURITY atualizados e workflow de leitura preparado, sem push ou execução no GitHub. Nenhuma alteração de aplicação, regras, credenciais, histórico, visibilidade, infraestrutura ou deploy.
+
+Base ef997d319995405bbc33b0be96f5a10852114b77. Resultado, limites e decisões pendentes em docs/etapa-9-b5-ajustes-seguranca.md e docs/evidencias/etapa-9-b5-ajustes-seguranca.json. Decisão sobre e-mails no histórico e licença/proveniência ainda necessária; não inferir autorização de publicação a partir desta preparação. Auditoria externa anterior preservada como evidência do estado inicial.
+
+Validação final: 798 testes Node e 141 testes Firestore aprovados, sem falhas ou skips; build/tipos/lint e npm ls aprovados, audit completo sem alertas. Emulador de testes encerrado normalmente; banco remoto e servidores de desenvolvimento preservados. Proprietário esclareceu objetivo de portfólio para avaliação profissional e pediu explicação sobre exposição de e-mail/cópia do código; nenhuma licença escolhida ou dado pessoal removido automaticamente.
+
+
+## 27/10/2026 — conferência de assets para portfólio
+
+Conferidos 15 assets atuais e 18 caminhos gráficos históricos; sete artes/poses-base revisadas visualmente e origem cruzada com prompts e registros de geração. Nenhuma referência externa de pose foi identificada como arquivo de arte versionado; nenhum impedimento de licença de asset copiado foi confirmado, sem certificação de exclusividade ou direitos de terceiros. Arquivos atuais sem chunks textuais/EXIF/XMP detectados. Metadados do lockfile registram licença nos 95 pacotes de produção; isso não substitui revisão integral de notices. Ver docs/etapa-9-b5-assets.md e evidência correspondente. Nenhuma imagem foi modificada.
+
+Objetivo permanece avaliação profissional do código, sem adicionar licença ampla automaticamente. Preparação de comandos de commit/revisão fora do Git; nenhum commit, push, mudança de visibilidade/configuração GitHub ou deploy executado. Próxima validação remota requer enviar o workflow ao repositório privado e conferir a franquia gratuita de Actions, mediante autorização.

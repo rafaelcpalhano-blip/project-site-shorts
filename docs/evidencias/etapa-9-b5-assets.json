@@ -1,0 +1,212 @@
+{
+  "date": "2026-10-27",
+  "currentAssets": [
+    {
+      "file": "public/clipper/image-unavailable-160.webp",
+      "bytes": 34182,
+      "sha256": "0894af6cc7118de366c9f4ac168bae7a439d1ce89653c61f96e1a8581d721fc2",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/image-unavailable-320.webp",
+      "bytes": 104666,
+      "sha256": "dbc49915ef112af5f40c461afb3fc07bc11986d6b42f642de12fd57fdd82c6d1",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/image-unavailable.webp",
+      "bytes": 230978,
+      "sha256": "d1c9454e0059bab644df9be80bb06e190f645b2db2ab6dbd2b33168952f6a5c6",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/load-failure.webp",
+      "bytes": 180746,
+      "sha256": "ce614decd657a652336620d56a96f4ae50b34e8bfd7190b770744da0fe1ef9f8",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/tickle-1.webp",
+      "bytes": 23918,
+      "sha256": "e24a6d04b6cdc9bccf4e33a763b3bcafc0098338b59032eb3694f2f2274501a5",
+      "chunks": [
+        "VP8X",
+        "ALPH",
+        "VP8 "
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/tickle-2.webp",
+      "bytes": 23210,
+      "sha256": "4448f5d398516337828b36ed2bbba2b7c605b2e796c302f83c14e7385aa2a95f",
+      "chunks": [
+        "VP8X",
+        "ALPH",
+        "VP8 "
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/tickle-3.webp",
+      "bytes": 23270,
+      "sha256": "9eb3849ad6593d5e38063e79a14c8d0dd0476fd238785c9f9742468dfa1e0505",
+      "chunks": [
+        "VP8X",
+        "ALPH",
+        "VP8 "
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/welcome-160.webp",
+      "bytes": 30224,
+      "sha256": "6a6a7af8e4f34f8d3894a6960eabe5fe3e4136049ce8c82e27189658d1ab1203",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/welcome-320.webp",
+      "bytes": 91122,
+      "sha256": "e41ca4098bc639da9bd04b210dde72b94aaeefafd4cdd023d7b58c0c1d2515d6",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/clipper/welcome.webp",
+      "bytes": 198180,
+      "sha256": "aeb36c24b4e8fbf7d1ec35d66b40b4732aacc05b98f3e4f660db8bfc048334b4",
+      "chunks": [
+        "VP8L"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/icons/clipper-gamer-180.png",
+      "bytes": 37957,
+      "sha256": "e710c5092a0228f86d7172923f5d56fa7a3de1d19f7498be85c559af925f0022",
+      "chunks": [
+        "IHDR",
+        "IDAT",
+        "IEND"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/icons/clipper-gamer-192.png",
+      "bytes": 42731,
+      "sha256": "c848ec216e8df9acbd239bfa8ddc8feb67808677727faf620a0420b98824e04e",
+      "chunks": [
+        "IHDR",
+        "IDAT",
+        "IEND"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/icons/clipper-gamer-512.png",
+      "bytes": 267008,
+      "sha256": "da97e69d5e70381d9e7e1cb4f702c91be12c763ab21d822b9240010c37b8998b",
+      "chunks": [
+        "IHDR",
+        "IDAT",
+        "IDAT",
+        "IDAT",
+        "IDAT",
+        "IDAT",
+        "IEND"
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/icons/clipper-gamer-64.webp",
+      "bytes": 1324,
+      "sha256": "78afff6c54468a2206d3f3234cba43a5f24a8913cb6aabd8ed978102a7a06568",
+      "chunks": [
+        "VP8 "
+      ],
+      "embeddedMetadata": []
+    },
+    {
+      "file": "public/icons/clipper-gamer-maskable-512.png",
+      "bytes": 149820,
+      "sha256": "5c148201ca27c469496144e7fd9247ff41a9d5ae3ca2448d5820e4ae84d17fb8",
+      "chunks": [
+        "IHDR",
+        "IDAT",
+        "IDAT",
+        "IDAT",
+        "IEND"
+      ],
+      "embeddedMetadata": []
+    }
+  ],
+  "historicalAssetPaths": [
+    "public/clipper/image-unavailable-160.webp",
+    "public/clipper/image-unavailable-320.webp",
+    "public/clipper/image-unavailable.png",
+    "public/clipper/image-unavailable.webp",
+    "public/clipper/load-failure.png",
+    "public/clipper/load-failure.webp",
+    "public/clipper/tickle-1.webp",
+    "public/clipper/tickle-2.webp",
+    "public/clipper/tickle-3.webp",
+    "public/clipper/welcome-160.webp",
+    "public/clipper/welcome-320.webp",
+    "public/clipper/welcome.png",
+    "public/clipper/welcome.webp",
+    "public/icons/clipper-gamer-180.png",
+    "public/icons/clipper-gamer-192.png",
+    "public/icons/clipper-gamer-512.png",
+    "public/icons/clipper-gamer-64.webp",
+    "public/icons/clipper-gamer-maskable-512.png"
+  ],
+  "productionPackageLicenseMetadata": {
+    "packages": 95,
+    "counts": {
+      "Apache-2.0": 53,
+      "MIT": 26,
+      "BSD-3-Clause": 10,
+      "ISC": 5,
+      "0BSD": 1
+    },
+    "missing": []
+  },
+  "limits": [
+    "metadata chunk inspection only, not forensic steganography/OCR or ownership certification",
+    "package license metadata does not replace complete dependency notices review"
+  ],
+  "provenance": {
+    "sources": [
+      "docs/clipper-prompts.md",
+      "docs/clipper.md",
+      "docs/mobile-clipper-interatividade.md",
+      "docs/etapa-8-5-pwa-local.md"
+    ],
+    "originalPoseFamiliesVisuallyReviewed": 7,
+    "externalReferenceImagesFoundInTrackedArtwork": false,
+    "newAssetsAdded": false,
+    "thirdPartyAssetLicenseBlockingPublicationConfirmed": false,
+    "ownershipExclusivityCertified": false
+  },
+  "sources": [
+    "https://openai.com/policies/row-terms-of-use/",
+    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository"
+  ]
+}

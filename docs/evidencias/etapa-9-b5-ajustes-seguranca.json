@@ -1,0 +1,103 @@
+{
+  "stage": "9-B.5",
+  "date": "2026-10-27",
+  "baselineHead": "ef997d319995405bbc33b0be96f5a10852114b77",
+  "scope": "authorized local remediation; repository remains private",
+  "dependencies": {
+    "firebaseTools": "15.34.1",
+    "auditBefore": {
+      "affectedPackages": 7,
+      "high": 1,
+      "moderate": 6
+    },
+    "auditAfter": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "lockfileReproducibility": "isolated npm ci succeeded; installed checkout JSON identical; raw difference only CRLF/LF",
+    "scopedMajorOverrides": [
+      "firebase-tools > @google-cloud/pubsub > @opentelemetry/core@2.8.0",
+      "firebase-tools > gaxios > uuid@11.1.1"
+    ]
+  },
+  "verification": {
+    "node": {
+      "tests": 798,
+      "passed": 798,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": "passed in isolated checkout",
+    "types": "passed as part of build",
+    "lint": "passed",
+    "firestore": {
+      "status": "passed",
+      "tests": 141,
+      "passed": 141,
+      "failed": 0,
+      "skipped": 0,
+      "project": "demo-clipzone-tests",
+      "port": 8081,
+      "remoteDataUsed": false
+    },
+    "history": {
+      "historicalBlobs": 1650,
+      "findings": 0,
+      "scope": "reachable blobs and commit messages; heuristic, not a guarantee"
+    },
+    "secretCheck": "final documentation scan recorded separately",
+    "assetReview": {
+      "currentAssets": 15,
+      "historicalPaths": 18,
+      "blockingCopiedAssetLicenseConfirmed": false,
+      "exclusiveOwnershipCertified": false
+    }
+  },
+  "testMaintenance": {
+    "baselineFailure": "ERR_INVALID_URL /api/session reproduced with original dependencies",
+    "change": "test-only HTTP client/API transport over emulator REST store; assertions preserved",
+    "applicationAndRulesChanged": false
+  },
+  "ci": {
+    "preparedLocally": true,
+    "pushed": false,
+    "executedOnGitHub": false,
+    "token": "contents:read",
+    "providerSecrets": false,
+    "deploy": false,
+    "nativeGitHubSettingsChanged": false,
+    "actionsFreeAllowanceVerified": false,
+    "firestoreSuite": "separate local verification; not part of the initial workflow"
+  },
+  "pending": [
+    "owner decision on historical personal and author email",
+    "recheck any new assets; provenance review completed within documented limits in etapa-9-b5-assets.md; no broad license granted",
+    "authorized push and successful GitHub workflow run with free allowance checked",
+    "review available native GitHub protections without plan upgrade",
+    "repeat audit on exact public snapshot and obtain visibility authorization"
+  ],
+  "operations": {
+    "commits": 0,
+    "pushes": 0,
+    "deploys": 0,
+    "historyRewrites": 0,
+    "credentialChanges": 0,
+    "remoteDataWrites": 0,
+    "providerProbes": 0,
+    "billingChanges": 0
+  },
+  "limits": [
+    "heuristic scanner does not cover visual binary content, ignored files, deleted/inaccessible objects or external attachments",
+    "no absolute assurance of absence of secrets or vulnerabilities",
+    "TikTok, translation, CPU and ranking activation remain independent pending work"
+  ],
+  "ownerClarification": {
+    "goal": "public portfolio for professional evaluation; no license chosen automatically",
+    "email": "owner requested explanation of risk; not treated as a leaked credential; history preserved pending informed final publication decision",
+    "sensitiveData": "no keys, tokens, private backups or user data may be included in public snapshot"
+  }
+}

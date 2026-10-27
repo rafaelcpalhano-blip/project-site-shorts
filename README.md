@@ -1,159 +1,104 @@
-# Site Autônomo Shorts
+# Clipzone
 
-### Plataforma comunitária de divulgação de shorts de games
+Plataforma comunitária para descobrir e compartilhar vídeos curtos de games, com
+React, TypeScript, Firestore e uma API em Cloudflare Workers.
 
-O **Site Autônomo Shorts** é um projeto de plataforma web voltada ao compartilhamento e à descoberta de vídeos curtos sobre jogos eletrônicos.
+**Estado atual:** homologação controlada. O lançamento público e a divulgação deste
+repositório ainda dependem da conclusão das revisões de segurança e funcionamento.
+Não use configurações de homologação como receita automática de produção.
 
-A proposta é criar um ambiente colaborativo, onde criadores de conteúdo e jogadores possam divulgar shorts, clipes e recortes publicados em diferentes plataformas, reunindo tudo em um único espaço organizado por jogos.
+## Funcionalidades
 
-O principal objetivo é incentivar a descoberta de novos criadores, ampliar a visibilidade dos conteúdos e permitir que a própria comunidade mantenha a plataforma ativa, sem a necessidade de cadastro ou autenticação para visitantes.
+- Feed paginado, catálogo e fichas de jogos, filtros e ordenações.
+- Compartilhamento de links e reprodução pelos players oficiais de origem.
+- Curtidas, comentários, denúncias e moderação administrativa.
+- Autenticação administrativa com Google, TOTP e UID autorizado no backend.
+- Clipper e instalação mobile como PWA, sem cache offline de dados privados.
+- Ranking por gerações consistentes, com preservação da última geração completa.
 
-> **Status do projeto:** Em desenvolvimento — fase inicial de estruturação e planejamento.
+TikTok, tradução automática, consumo de CPU e renovação do ranking continuam com
+validações pendentes. O intervalo de ranking de30 minutos está preparado no código;
+isso não significa que a rotina remota esteja ativada. Os vídeos permanecem nas
+plataformas de origem; a disponibilidade depende delas.
 
----
+## Arquitetura
 
-## Objetivo
+| Camada | Tecnologia |
+| --- | --- |
+| Interface | React, TypeScript e Vite |
+| API e arquivos estáticos | Cloudflare Workers e Workers Assets |
+| Banco | Firestore, com acesso controlado pela API e regras de cliente |
+| Autenticação administrativa | Firebase Authentication: Google + TOTP |
+| Metadados e players | YouTube, Twitch, TikTok e IGDB, conforme disponibilidade |
+| Testes | Node.js, emulador Firestore e contratos locais de Workers |
 
-Desenvolver uma aplicação web responsiva, intuitiva e de funcionamento autônomo, na qual os usuários possam compartilhar links de vídeos relacionados a games, explorar conteúdos de outros criadores e interagir por meio de comentários.
+A premissa de infraestrutura é Workers Free + Firebase Spark, com limites e
+interrupção controlada, sem ativação automática de planos pagos. O código público
+não substitui nem concede as credenciais e permissões necessárias para um servidor.
 
-A plataforma funcionará como um agregador de conteúdos, preservando a hospedagem original dos vídeos e direcionando os visitantes às plataformas dos respectivos criadores.
+## Executar a demonstração
 
-## Funcionalidades planejadas
+Requisito: Node.js24 e npm. O modo padrão funciona com dados demonstrativos, sem
+credenciais, banco remoto ou conta administrativa.
 
-### Compartilhamento de vídeos
+```sh
+npm ci --ignore-scripts
+npm run dev
+```
 
-- Publicação de shorts por meio de links externos.
-- Compatibilidade planejada com YouTube Shorts, TikTok, Twitch Clips e outras plataformas que permitam integração.
-- Formulário simplificado, sem exigência de cadastro.
-- Seleção obrigatória do jogo relacionado ao vídeo.
-- Campo opcional para identificação do canal.
-- Limite de cinco publicações diárias por visitante, com mecanismos de prevenção contra abusos.
-- Bloqueio de links duplicados.
+Use o endereço exibido pelo Vite. `.env.example` documenta o modo demonstrativo.
+Não coloque chaves em variáveis `VITE_*`: elas são destinadas ao código do navegador.
 
-### Feed e navegação
+## Verificações
 
-- Página inicial com publicações organizadas cronologicamente, das mais recentes às mais antigas.
-- Exibição de até 15 vídeos por página.
-- Paginação dinâmica conforme o crescimento da comunidade.
-- Pesquisa de vídeos pelos títulos disponíveis.
-- Filtros por jogos.
-- Cards padronizados, independentemente da plataforma de origem.
-- Reprodução incorporada quando permitida e redirecionamento para a publicação original.
+```sh
+npm run security:check
+npm run security:history
+npm run security:audit
+npm test
+npm run build
+npm run lint
+```
 
-### Catálogo de jogos
+O scanner de arquivos/histórico não envia dados para provedores e não imprime
+valores suspeitos. O audit consulta o registro npm para avisos das dependências.
+Nenhuma dessas verificações faz deploy ou publica dados.
 
-Cada jogo contará com uma página própria, reunindo informações básicas e os vídeos compartilhados pela comunidade.
+Para os testes de regras, consultas e transações, é necessário Java21 e o emulador
+Firestore. `npm run test:firestore` usa o projeto demonstrativo de testes e a porta
+8081; confira que esteja livre. O ambiente de desenvolvimento usa8080.
 
-O catálogo deverá apresentar, conforme a disponibilidade das fontes consultadas:
+```sh
+npm run test:firestore
+```
 
-- Nome oficial e descrição.
-- Gêneros e características.
-- Modos de jogo.
-- Plataformas disponíveis.
-- Informações de lançamento e desenvolvimento.
-- Lista de shorts relacionados.
+Configuração do emulador e seed fictício: [Firestore local](docs/firestore-local.md).
+Não importar backups reais ou reutilizar credenciais de produção nesses testes.
 
-O cadastro de jogos será integrado a fontes externas de informações, com mecanismos de identificação, normalização de nomes e prevenção contra duplicidades.
+## Segurança e contribuição
 
-Jogos não identificados de maneira confiável serão encaminhados para revisão administrativa.
+Leia [SECURITY.md](SECURITY.md) antes de reportar falhas ou enviar alterações.
+Credenciais, arquivos de configuração privados, backups e logs não pertencem ao Git.
+A chave da conta de serviço, os segredos HMAC e os tokens dos provedores ficam no
+servidor, fora do frontend e do versionamento.
 
-### Comentários e interação
+O workflow preparado em `.github/workflows/security.yml` executa verificações em
+push/PR quando for enviado ao GitHub. Usa permissões de leitura, ações oficiais
+fixadas por SHA e nenhum segredo de provedor; não contém deploy. Sua preparação
+local não habilita Dependabot, proteção de branch ou altera visibilidade do projeto.
+O proprietário deve conferir a franquia de Actions antes de executá-lo.
 
-- Comentários anônimos vinculados aos vídeos.
-- Interface simples e organizada.
-- Moderação preventiva de linguagem ofensiva e conteúdos inadequados.
-- Comentários suspeitos ocultos até revisão administrativa.
-- Proteção contra spam e comportamentos abusivos.
+## Documentação e direitos
 
-### Administração e segurança
+- [Estrutura](docs/estrutura.md)
+- [Autenticação administrativa](docs/autenticacao-admin.md)
+- [Players oficiais](docs/players-oficiais.md)
+- [Proveniência do Clipper](docs/clipper-prompts.md)
+- [Inventário dos assets e direitos para o portfólio](docs/etapa-9-b5-assets.md)
+- [Continuidade e decisões históricas](docs/continuidade.md)
 
-A plataforma terá um ambiente administrativo de acesso restrito, destinado ao gerenciamento e à moderação dos conteúdos publicados.
-
-Entre os recursos planejados estão:
-
-- Autenticação administrativa segura.
-- Remoção de shorts e comentários mediante confirmação.
-- Revisão de conteúdos sinalizados.
-- Validação de links e dados recebidos.
-- Proteção contra publicações automatizadas e tentativas de abuso.
-- Controle de permissões e acesso ao banco de dados.
-
-A moderação será implementada em camadas, considerando diferentes idiomas e formas de linguagem ofensiva, reconhecendo as limitações dos mecanismos automáticos.
-
----
-
-## Tecnologias
-
-O projeto será desenvolvido inicialmente com as seguintes tecnologias:
-
-| Tecnologia | Aplicação |
-|---|---|
-| React | Construção da interface e dos componentes |
-| TypeScript | Tipagem e organização do código |
-| Vite | Ambiente de desenvolvimento |
-| CSS | Estilização e responsividade |
-| React Router | Navegação entre páginas |
-| Firebase Firestore | Armazenamento persistente |
-| Firebase Authentication | Autenticação administrativa |
-| Cloudflare Pages | Hospedagem da aplicação |
-| Cloudflare Functions / Workers | Processamento e validações no backend |
-| Git e GitHub | Versionamento e gerenciamento do projeto |
-
-A arquitetura será desenvolvida de maneira modular, com separação de responsabilidades entre componentes, serviços, funcionalidades e integrações externas.
-
-As tecnologias e integrações poderão ser avaliadas e ajustadas conforme as necessidades técnicas identificadas durante o desenvolvimento.
-
-## Infraestrutura e funcionamento
-
-O sistema foi planejado para operar inicialmente utilizando serviços com planos gratuitos, respeitando seus limites de utilização.
-
-Os vídeos permanecerão hospedados nas plataformas originais. O banco de dados armazenará principalmente links, metadados, informações dos jogos, comentários e registros necessários ao funcionamento da aplicação.
-
-Essa abordagem busca reduzir o consumo de armazenamento, simplificar a manutenção e permitir o crescimento gradual da comunidade.
-
-## Interface e experiência do usuário
-
-O projeto prioriza:
-
-- Design limpo e responsivo.
-- Compatibilidade com computadores, tablets e celulares.
-- Navegação dinâmica, sem recarregamentos desnecessários.
-- Componentes reutilizáveis.
-- HTML semântico e acessibilidade.
-- Carregamento eficiente de conteúdos.
-- Organização visual consistente entre diferentes plataformas de vídeo.
-
-
-## Proposta de evolução
-
-O Site Autônomo Shorts pretende evoluir gradualmente, acompanhando a participação da comunidade e a disponibilidade de novas integrações.
-
-A prioridade será preservar a simplicidade da experiência, a organização dos conteúdos e a segurança da plataforma, mantendo a divulgação colaborativa de vídeos como sua principal finalidade.
-
----
-
-**Projeto em desenvolvimento.** Este README documenta a proposta e as funcionalidades planejadas. Sua implementação, arquitetura e documentação serão atualizadas ao longo das etapas de desenvolvimento.
-
-## Implementação local disponível
-
-As etapas 2 e 3 entregaram a estrutura modular e o protótipo interativo. A etapa 4
-adiciona leitura paginada no emulador Firestore, regras e testes de acesso.
-As funcionalidades de produção descritas acima continuam planejadas.
-
-- `npm ci`: instalar dependências (Node 24).
-- `npm run dev`: executar o protótipo com dados em memória.
-- `npm run emulators`: iniciar Firestore local (requer Java 21).
-- `npm run seed:firestore`: carregar registros fictícios no emulador.
-- `npm run dev:firestore`: abrir o modo local de leitura em localhost:5174.
-- `npm run lint`, `npm run build` e `npm test`: verificações da aplicação.
-- `npm run test:firestore`: testes isolados das regras e consultas na porta 8081, sem interromper o emulador de desenvolvimento.
-
-Configuração, modelos, índices, limites e pendências estão em
-[Firestore local](docs/firestore-local.md). Este estágio não exige projeto Firebase
-real e não configura autenticação, publicação, serviços pagos ou deploy.
-A busca por título permanece disponível no protótipo; sua integração persistente
-aguarda definição. Escritas no modo Firestore estão bloqueadas.
-
-O [checkpoint de continuidade](docs/continuidade.md) registra as decisões de
-publicação automática, o núcleo transacional testado e as integrações ainda
-necessárias. A aplicação completa de produção ainda não está disponível.
+A documentação de continuidade preserva etapas anteriores e pode descrever estados
+já superados. Para publicação como portfólio, a revisão de dados pessoais e a decisão
+sobre licença do código e dos assets ainda precisam de confirmação do proprietário.
+Não há licença aberta concedida implicitamente por este README. Marcas, jogos,
+vídeos e conteúdo externo permanecem sujeitos aos direitos de seus titulares.
