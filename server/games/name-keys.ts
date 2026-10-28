@@ -1,3 +1,4 @@
+import {readTransactionPair} from '../firestore/transaction-reads.ts'
 import type { AtomicTransaction, RecordData } from '../firestore/atomic-store.ts'
 import { normalizedGameName } from '../../src/lib/validation/game-name.ts'
 export const nameStatePath='gameNameState/v1'
@@ -13,8 +14,8 @@ export function keyIds(data:RecordData|null):string[] {
  if(data.version!==1||!Array.isArray(data.gameIds)||data.gameIds.length<1||data.gameIds.length>10||data.gameIds.some(id=>typeof id!=='string'||!/^[\w-]{1,128}$/.test(id))||new Set(data.gameIds).size!==data.gameIds.length)throw new Error('invalid-name-key')
  return data.gameIds as string[]
 }
-export async function readNameKeys(tx:Pick<AtomicTransaction,'get'>,identity:Awaited<ReturnType<typeof nameIdentity>>) {
- const exact=await tx.get('gameNameKeys/'+identity.exact),similar=await tx.get('gameNameKeys/'+identity.similar)
+export async function readNameKeys(tx:Pick<AtomicTransaction,'get'|'getMany'>,identity:Awaited<ReturnType<typeof nameIdentity>>) {
+ const [exact,similar]=await readTransactionPair(tx,'gameNameKeys/'+identity.exact,'gameNameKeys/'+identity.similar)
  return {exact,similar,exactIds:keyIds(exact),ids:[...new Set([...keyIds(exact),...keyIds(similar)])]}
 }
 export function validateNameReference(identity:Awaited<ReturnType<typeof nameIdentity>>,records:Awaited<ReturnType<typeof readNameKeys>>,id:string,game:RecordData) {

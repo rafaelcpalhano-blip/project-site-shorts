@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-28",
+  "stage": "3-local-transaction-batching",
+  "status": "local-ready-remote-approval-pending",
+  "baselineWorker": "d6782c6c-7323-44a2-98fb-1aa39d85741a",
+  "candidateSha256": "ed90acb58acfa3a0ed3cb18df4d6d198ad8e7451703956e294d2346ad9d91c37",
+  "sourceFilesHashed": 102,
+  "staticFiles": 43,
+  "staticAssetsUnchanged": true,
+  "frontendMode": "api",
+  "localComparison": {
+    "newConfirmationWithStubTranslation": {"restBefore":12,"restAfter":9,"documentReadsBefore":9,"documentReadsAfter":9},
+    "cachedReconfirmation": {"restBefore":7,"restAfter":6,"documentReadsBefore":5,"documentReadsAfter":5},
+    "cpuMeasured": false,
+    "billingSavingsClaimed": false
+  },
+  "verification": {
+    "focusedPassed":34,"nodePassed":820,"nodeFailed":0,"nodeSkipped":0,
+    "firestoreEmulatorPassed":141,"firestoreEmulatorFailed":0,"firestoreEmulatorSkipped":0,
+    "workerdComparisonContracts":2,"externalFetchAttemptsInContracts":0,
+    "typesPassed":true,"lintPassed":true,"dryRunPassed":true,
+    "fixtureDocumentSnapshotCorrected":true,"fixtureQuerySimulationStillSimplified":true
+  },
+  "preserved": {"model":true,"authentication":true,"validation":true,"quotas":true,"cooldown":true,"translationCache":true,"secretCount":9},
+  "remoteDeploy":false,"remoteDocumentAccess":false,"realInference":false,
+  "rankingEnabled":false,"jobsEnabled":false,"cronAdded":false,
+  "planChanged":false,"publicLaunchApproved":false,"commitOrPushPerformed":false,
+  "remaining": ["authorized comparable remote CPU sampling", "other critical endpoints and cold starts", "ranking automation", "TikTok validation", "final release gates"]
+}

@@ -1,3 +1,4 @@
+import {readTransactionPair} from '../firestore/transaction-reads.ts'
 import type { AtomicStore, RecordData } from '../firestore/atomic-store.ts'
 import type { DescriptionInput } from './translate-description.ts'
 import { TRANSLATION_MODEL, translationFailureDetails } from './translate-description.ts'
@@ -18,9 +19,8 @@ export function createGameTranslation(options:{store:AtomicStore;now:()=>Date;tr
    const sourceHash=await hash(game)
    const translated=game.translation as RecordData|undefined
    if(translated?.sourceHash===sourceHash&&translated.locale==='pt-BR'&&typeof translated.text==='string'&&translated.text.trim())return null
-   const task=await tx.get('gameTranslations/'+id)
    const now=clock(options.now),day=now.toISOString().slice(0,10)
-   const budget=await tx.get('translationUsage/'+day)
+   const [task,budget]=await readTransactionPair(tx,'gameTranslations/'+id,'translationUsage/'+day)
    if(task){
     if(!(task.retryAt instanceof Date)||!Number.isFinite(task.retryAt.getTime())||!Number.isSafeInteger(task.attempts)||Number(task.attempts)<0)throw new Error('invalid-translation-task')
     if(task.retryAt>now&&(task.status==='running'||task.status==='failed'&&task.sourceHash===sourceHash))return null
@@ -38,7 +38,7 @@ export function createGameTranslation(options:{store:AtomicStore;now:()=>Date;tr
    const text=await options.translate(claimed.input)
    if(!text.trim()||text.length>24000)throw new Error('invalid-translation')
    await options.store.transact(async tx=>{
-    const task=await tx.get('gameTranslations/'+id),game=await tx.get('games/'+id)
+    const [task,game]=await readTransactionPair(tx,'gameTranslations/'+id,'games/'+id)
     if(!task||task.leaseId!==leaseId||!game)return
     const now=clock(options.now)
     if(game.status!=='active'||await hash(game)!==claimed.sourceHash){tx.set('gameTranslations/'+id,{...task,status:'stale',retryAt:now,updatedAt:now});return}

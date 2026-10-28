@@ -1,0 +1,747 @@
+{
+  "recordedAt": "2026-10-28T06:52:42.946Z",
+  "scope": "Owner-authorized stage3 homologation only",
+  "version": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+  "priorVersion": "d6782c6c-7323-44a2-98fb-1aa39d85741a",
+  "bundleSha256": "ed90acb58acfa3a0ed3cb18df4d6d198ad8e7451703956e294d2346ad9d91c37",
+  "staticFiles": 43,
+  "staticAssetsUnchanged": true,
+  "publicAssetHashesVerified": 42,
+  "securityAndHeaderChecks": 13,
+  "existingNineSecretsPreserved": true,
+  "privateSecretFileUnchanged": true,
+  "privateSecretFileAclVerified": true,
+  "preflight": {
+    "firebasePlan": "Spark",
+    "firestoreReadsDisplayed": "1.2k / 50k daily",
+    "firestoreWritesDisplayed": "178 / 20k daily",
+    "workersRequestsDisplayed": "130 / 100000 daily",
+    "aiNeuronsDisplayed": "41.76 / 10000 daily",
+    "source": "Authenticated dashboard UI; counters may lag"
+  },
+  "before": {
+    "phase": "before",
+    "maximumOwnerConfirmations": 2,
+    "startedAt": "2026-10-28T06:44:42.552Z",
+    "scope": "Bounded observation of at most two owner-authorized cached Doom reconfirmations via UI; no planned inference; collector does not mutate business data or configuration",
+    "workerVersion": "d6782c6c-7323-44a2-98fb-1aa39d85741a",
+    "events": [
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 2,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-1",
+          "sequence": 5,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 11,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 2,
+        "wallMs": 205,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 12,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 13,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/feed/ordered",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 6,
+        "wallMs": 237,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 14,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 15,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/search",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 1190,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 16,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 17,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/confirm",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 7,
+        "wallMs": 1176,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 18,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 19,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 2,
+        "wallMs": 98,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 20,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 21,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/search",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 1190,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 22,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 23,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/confirm",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 8,
+        "wallMs": 922,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 24,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 25,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 2,
+        "wallMs": 96,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 26,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      }
+    ],
+    "exceptionsObserved": 0,
+    "exceededCpuObserved": 0,
+    "error1102Observed": null,
+    "error1102BodyInspection": false,
+    "remoteSuspensionPerformed": false,
+    "launchApproved": false,
+    "publicConfigurationProbe": {
+      "status": 200,
+      "noCookie": true
+    },
+    "completedAt": "2026-10-28T06:47:42.566Z",
+    "stopReason": null,
+    "completeWindow": true,
+    "finalState": "controlled-homologation-open-not-launch-approved",
+    "collectionCoverage": "Received live events only; cannot independently prove every request was the owner or recover missed events. No bodies/headers/tokens/query strings/IPs are retained."
+  },
+  "after": {
+    "phase": "after",
+    "maximumOwnerConfirmations": 2,
+    "startedAt": "2026-10-28T06:48:35.171Z",
+    "scope": "Bounded observation of at most two owner-authorized cached Doom reconfirmations via UI; no planned inference; collector does not mutate business data or configuration",
+    "workerVersion": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+    "events": [
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 4,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-1",
+          "sequence": 1,
+          "applicationCreated": true,
+          "firstApiInIsolate": true,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "other",
+        "status": 404,
+        "outcome": "ok",
+        "cpuMs": 7,
+        "wallMs": 7,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 1,
+          "applicationCreated": true,
+          "firstApiInIsolate": true,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 405,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-1",
+          "sequence": 2,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "other",
+        "status": 403,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-2",
+          "sequence": 2,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/admin/config",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 5,
+        "wallMs": 5,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-3",
+          "sequence": 1,
+          "applicationCreated": true,
+          "firstApiInIsolate": true,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 4,
+        "wallMs": 4,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 1,
+          "applicationCreated": true,
+          "firstApiInIsolate": true,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 7,
+        "wallMs": 379,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 2,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 3,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/feed/ordered",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 9,
+        "wallMs": 257,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 4,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 5,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/search",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 5,
+        "wallMs": 832,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 6,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 7,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/confirm",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 7,
+        "wallMs": 847,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 8,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 9,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 2,
+        "wallMs": 71,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 10,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 1,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 11,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/search",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 1063,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-4",
+          "sequence": 12,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 4,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 1,
+          "applicationCreated": true,
+          "firstApiInIsolate": true,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/games/confirm",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 12,
+        "wallMs": 1495,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 2,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 1,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 3,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/list",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 88,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 4,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 5,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/games/detail",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 3,
+        "wallMs": 128,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 6,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      },
+      {
+        "path": "/api/session",
+        "status": 204,
+        "outcome": "ok",
+        "cpuMs": 0,
+        "wallMs": 0,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 7,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": false
+        }
+      },
+      {
+        "path": "/api/feed/ordered",
+        "status": 200,
+        "outcome": "ok",
+        "cpuMs": 4,
+        "wallMs": 185,
+        "exceptionCount": 0,
+        "observation": {
+          "isolate": "isolate-5",
+          "sequence": 8,
+          "applicationCreated": false,
+          "firstApiInIsolate": false,
+          "firstRouteInIsolate": true
+        }
+      }
+    ],
+    "exceptionsObserved": 0,
+    "exceededCpuObserved": 0,
+    "error1102Observed": null,
+    "error1102BodyInspection": false,
+    "remoteSuspensionPerformed": false,
+    "launchApproved": false,
+    "publicConfigurationProbe": {
+      "status": 200,
+      "noCookie": true
+    },
+    "completedAt": "2026-10-28T06:51:35.183Z",
+    "stopReason": null,
+    "completeWindow": true,
+    "finalState": "controlled-homologation-open-not-launch-approved",
+    "collectionCoverage": "Received live events only; cannot independently prove every request was the owner or recover missed events. No bodies/headers/tokens/query strings/IPs are retained."
+  },
+  "finalDoomState": {
+    "checkedAt": "2026-10-28T06:50:46.250Z",
+    "projectId": "clipzone-db02a",
+    "database": "(default)",
+    "documentReads": 3,
+    "documentWrites": 0,
+    "game": {
+      "exists": true,
+      "name": "Doom",
+      "source": "IGDB",
+      "status": "active",
+      "descriptionLength": 617,
+      "translationPresent": true,
+      "translationLocale": "pt-BR",
+      "translationLength": 633,
+      "translationCacheHashMatches": true,
+      "translationSourceMatches": true
+    },
+    "task": {
+      "status": "ready",
+      "attempts": 2,
+      "updatedAt": "2026-10-28T05:51:21.540Z",
+      "retryAt": "2026-10-28T05:53:19.518Z"
+    },
+    "translationAttemptsToday": 5
+  },
+  "cachedConfirmationsPerformed": 4,
+  "additionalInferenceObserved": false,
+  "additionalInferenceAuthorized": false,
+  "cacheBudgetAndTaskUnchanged": true,
+  "uiTranslationAndOriginalVerified": true,
+  "cpuReductionDemonstrated": false,
+  "coldStartCertified": false,
+  "error1102BodiesInspected": false,
+  "rankingEnabled": false,
+  "jobsEnabled": false,
+  "cronAdded": false,
+  "planChanged": false,
+  "publicLaunchApproved": false,
+  "commitOrPushPerformed": false,
+  "remaining": [
+    "CPU for new games and inference path",
+    "Other critical endpoints and real cold starts",
+    "Ranking automation",
+    "TikTok server validation",
+    "Final release gates"
+  ]
+}
