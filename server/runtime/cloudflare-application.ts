@@ -1,3 +1,5 @@
+import {claimRankingPilotStep} from '../ranking/pilot.ts'
+import type {RankingPilotInput} from '../ranking/pilot.ts'
 import {createDescriptionTranslator} from '../games/translate-description.ts'
 import {createGameTranslation} from '../games/translation-store.ts'
 import {createTikTokBackoff} from '../videos/tiktok-availability.ts'
@@ -59,10 +61,18 @@ export function createCloudflareApplication(config:CloudflareApplicationConfigur
     })
    },
   })
-  return Object.assign(entry,{maintenance:async(mode?:'ranking-only')=>{
+  return Object.assign(entry,{maintenance:async(mode?:'ranking-only'|'ranking-with-retention',pilot?:RankingPilotInput)=>{
    const budget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:createWorkerFetch(ports.fetcher)})
    const store=createRestStore({projectId:configSnapshot.projectId,accessToken:credentials(budget.fetch),fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
-   try{return {...await runWorkerMaintenance({store,now:ports.now,mode}),outbound:budget.usage().dispatched}}
+   try{
+    if(pilot){
+     if(mode!=='ranking-with-retention')return {task:'ranking-pilot',status:'disabled'}
+     const claim=await claimRankingPilotStep({store,now:ports.now,input:pilot})
+     if(!claim.allowed)return {task:'ranking-pilot',status:claim.status,outbound:budget.usage().dispatched}
+     return {...await runWorkerMaintenance({store,now:ports.now,mode}),pilotAttempt:claim.attempt,outbound:budget.usage().dispatched}
+    }
+    return {...await runWorkerMaintenance({store,now:ports.now,mode}),outbound:budget.usage().dispatched}
+   }
    catch(error){const message=error instanceof Error?error.message:'';const reason=['outbound-budget-exhausted','ranking-budget-exhausted','ranking-build-busy','ranking-metrics-not-ready','ranking-generation-protected','ranking-build-expired'].includes(message)?message:'service-unavailable';return {task:'maintenance',status:'deferred',reason,outbound:budget.usage().dispatched}}
   }})
  }catch{throw Error('worker-configuration-unavailable')}

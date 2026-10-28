@@ -1,0 +1,162 @@
+{
+  "recordedAt": "2026-10-28T08:17:57.944Z",
+  "status": "prepared-locally-specific-remote-authorization-pending",
+  "recentWorkPlanStage": "4 - automatic ranking and retention",
+  "overallProjectStatus": "technical homologation pending, not public launch",
+  "bundleSha256": "fff20003ef28e57448d20f5e17d5412aadd61b8c2d1a8b6c609dd6e8bc79398e",
+  "sourceFilesHashed": 105,
+  "staticFiles": 43,
+  "staticAssetsUnchanged": true,
+  "secretCountUnchanged": 9,
+  "validation": {
+    "nodePassed": 849,
+    "emulatorTargetedPassed": 8,
+    "workerdLocalScenariosPassed": 5,
+    "typesPassed": true,
+    "lintPassed": true,
+    "dryRunPassed": true,
+    "activationConfigurationDryRunPassed": true,
+    "realEdgeCpuMeasured": false
+  },
+  "runtime": {
+    "checkedAt": "2026-10-28T08:11:52.918Z",
+    "runtime": "Local workerd minified isolated probe, not deployed scheduled entry",
+    "scenarios": [
+      {
+        "scenario": "fresh-nine",
+        "passed": true,
+        "externalFetchAttempts": 0,
+        "maxCalls": 26,
+        "primaryDataPreserved": true,
+        "results": [
+          {
+            "task": "ranking",
+            "status": "building"
+          },
+          {
+            "task": "ranking",
+            "status": "building"
+          },
+          {
+            "task": "ranking",
+            "status": "building"
+          },
+          {
+            "task": "ranking",
+            "status": "ready",
+            "itemCount": 9
+          }
+        ]
+      },
+      {
+        "scenario": "retention-backlog",
+        "passed": true,
+        "externalFetchAttempts": 0,
+        "maxCalls": 29,
+        "primaryDataPreserved": true,
+        "results": [
+          {
+            "task": "ranking-retention",
+            "status": "pruned",
+            "rankingPaused": "retention-backlog",
+            "deleted": 10
+          }
+        ]
+      },
+      {
+        "scenario": "utc-boundary",
+        "passed": true,
+        "externalFetchAttempts": 0,
+        "maxCalls": 1,
+        "primaryDataPreserved": true,
+        "results": [
+          {
+            "task": "ranking-retention",
+            "status": "not-scheduled",
+            "rankingPaused": "utc-day-boundary"
+          }
+        ]
+      },
+      {
+        "scenario": "pilot-expired",
+        "passed": true,
+        "externalFetchAttempts": 0,
+        "maxCalls": 0,
+        "primaryDataPreserved": true,
+        "results": [
+          {
+            "granted": 0
+          }
+        ]
+      },
+      {
+        "scenario": "pilot-cap",
+        "passed": true,
+        "externalFetchAttempts": 0,
+        "maxCalls": 18,
+        "primaryDataPreserved": true,
+        "results": [
+          {
+            "granted": 8
+          }
+        ]
+      }
+    ],
+    "cpuMeasured": false,
+    "edgeCpuCertified": false,
+    "realCredentialsOpened": false,
+    "realFirestoreAccessed": false,
+    "deployed": false
+  },
+  "pilotProposal": {
+    "worker": "www",
+    "origin": "https://www.clipzone.workers.dev",
+    "project": "clipzone-db02a",
+    "database": "(default)",
+    "maximumClaims": 8,
+    "claimWindowMinutes": 20,
+    "alreadyStartedWorkMayFinishAfterWindow": true,
+    "maximumOutboundPerInvocation": 48,
+    "maximumOutboundAcrossClaims": 384,
+    "allJobsEnabled": false,
+    "rankingEnabledTemporarily": true,
+    "retentionEnabledTemporarily": true,
+    "oneTemporaryMinuteCron": true,
+    "durableDuplicateProtection": true,
+    "expiryBeforeNewWork": true,
+    "primaryContentWrites": false,
+    "rankingAuxiliaryWrites": true,
+    "oldRankingAuxiliaryDeletesPossible": true,
+    "maximumItemsPerPrune": 15,
+    "protectCurrentPreviousAndRecentGenerations": true,
+    "maximumInferenceCalls": 0,
+    "newSecrets": 0,
+    "paidPlans": false,
+    "publicLaunch": false,
+    "stopForActualLimitErrors": true,
+    "stopForTwoConsecutiveCpuAbove10Ms": true,
+    "stopForMissingTelemetry": true,
+    "restoreKnownPriorVersionAtEnd": true,
+    "priorVersion": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+    "removeTemporaryCronAtEnd": true,
+    "doNotRemoveOnlyPilotBinding": true,
+    "repeatOrExtendWindowAutomatically": false
+  },
+  "preflightRequired": [
+    "Fresh authenticated Free/Spark/quota check",
+    "Known Worker version, bindings and empty schedules match",
+    "Ranking metrics ready, no in-progress build, bounded inventory at most 15 sources at preflight",
+    "At least 2000 reads and 400 writes of internal ranking budget margin; verify shared free-tier margin separately",
+    "Observer and stop/rollback procedure ready before enabling trigger",
+    "Inspect candidate old generations; do not manufacture or age data to exercise deletion"
+  ],
+  "remoteChangesPerformed": false,
+  "credentialsOpened": false,
+  "commitOrPushPerformed": false,
+  "sources": [
+    "https://developers.cloudflare.com/workers/configuration/cron-triggers/",
+    "https://developers.cloudflare.com/workers/platform/limits/",
+    "https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/",
+    "https://developers.cloudflare.com/workers/versions-and-deployments/rollbacks/"
+  ]
+}

@@ -29,12 +29,14 @@ function epochMatches(state:RecordData|null,epoch:string){if(state?.version!==1|
  * advance atomically; a lost response is recovered by rereading durable state.
  * No public pointer changes until every source and staged item is complete.
  */
-export async function stepRankingGeneration(options:{store:AtomicStore;now:()=>Date}){
+export async function stepRankingGeneration(options:{store:AtomicStore;now:()=>Date;singleUtcDay?:boolean}){
  const {store}=options
  if(!store.get||!store.rankingSourcePage||!store.snapshotGet)throw Error('ranking-store-unavailable')
  const now=options.now();timestamp(now)
  const raw=await store.get(path),prior=raw?checkpoint(raw):null
  if(!prior||prior.phase==='ready'||prior.phase==='failed')return store.transact(async tx=>{
+  // Opt-in continuous mode leaves enough time for every bounded step before UTC rollover.
+  if(options.singleUtcDay&&86400000-(timestamp(now)%86400000)<=segmentedRankingLimits.maxBuildMs)return {status:'day-boundary'}
   const active=await tx.get(path),lease=await tx.get(leasePath),current=await tx.get('rankingState/current'),budget=await tx.get('rankingBudgets/'+now.toISOString().slice(0,10)),metrics=await tx.get('rankingState/metrics')
   if(active&&['scan','stage'].includes(String(active.phase)))return {status:'busy'}
   if(current&&timestamp(now)-timestamp(current.computedAt??current.publishedAt)<generationLimits.intervalMs)return {status:'not-due'}
@@ -61,6 +63,7 @@ export async function stepRankingGeneration(options:{store:AtomicStore;now:()=>D
   return {status:'building',generationId:prior.id,phase:next.phase,examined:next.examined,staged:next.staged}
  })
  try{
+  if(options.singleUtcDay&&now.toISOString().slice(0,10)!==prior.day)throw Error('ranking-build-crossed-day')
   if(timestamp(now)<timestamp(prior.startedAt)||timestamp(now)-timestamp(prior.startedAt)>segmentedRankingLimits.maxBuildMs)throw Error('ranking-build-expired')
   if(prior.phase==='scan'){
    const next=structuredClone(prior);next.revision++;next.reads+=4
@@ -93,6 +96,7 @@ export async function stepRankingGeneration(options:{store:AtomicStore;now:()=>D
   return await store.transact(async tx=>{
    const saved=await tx.get(path),lease=await tx.get(leasePath),metrics=await tx.get('rankingState/metrics'),current=await tx.get('rankingState/current'),run=await tx.get('rankingRuns/'+prior.id),budget=await tx.get('rankingBudgets/'+prior.day)
    const publishedAt=options.now()
+   if(options.singleUtcDay&&publishedAt.toISOString().slice(0,10)!==prior.day)throw Error('ranking-build-crossed-day')
    if(saved?.id!==prior.id||saved.revision!==expected)throw Error('ranking-step-conflict')
    leaseMatches(lease,prior.id,publishedAt);epochMatches(metrics,prior.epoch)
    if(timestamp(publishedAt)-timestamp(prior.startedAt)>segmentedRankingLimits.maxBuildMs||run?.status!=='building'||(current?.generationId??null)!==prior.baseGeneration||prior.staged!==prior.frames.length||!prior.snapshot)throw Error('ranking-publication-conflict')

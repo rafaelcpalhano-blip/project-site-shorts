@@ -1,0 +1,189 @@
+{
+  "recordedAt": "2026-10-28T07:53:14.689Z",
+  "status": "local-validation-complete-edge-cpu-and-remote-activation-pending",
+  "supersedesStressLimitationIn": "etapa-4-ranking-retencao-local.json",
+  "scope": "Local only; no remote configuration, data, cron, inference, deploy or secret read this turn",
+  "nodePassed": 842,
+  "nodeFailed": 0,
+  "focusedPassed": 21,
+  "firestoreEmulatorTargetedPassed": 6,
+  "typesPassed": true,
+  "lintPassed": true,
+  "dryRunPassed": true,
+  "bundleSha256": "47a1dfcdd20eb4401006a38ca16ec363c3ca56d83d80f7d64b8f096931f28e2a",
+  "sourceFilesHashed": 104,
+  "staticFiles": 43,
+  "staticAssetsUnchanged": true,
+  "retentionAdmission": {
+    "maximumRetainedGenerations": 6,
+    "blockedRecheckMinutes": 15,
+    "readReservation": 36,
+    "writeReservation": 3
+  },
+  "singleUtcDay": {
+    "enabledOnlyInNewOptInMode": true,
+    "newBuildPauseLastMinutesOfUtcDay": 30,
+    "crossDayProgressAbandonedWithoutPromotingPointer": true,
+    "previousDayBudgetUnchanged": true
+  },
+  "cycles": [
+    {
+      "sources": 9,
+      "days": 2,
+      "ready": 92,
+      "deleted": 890,
+      "blocked": 0,
+      "paused": 60,
+      "maxCalls": 31,
+      "maximumRuns": 5,
+      "maximumItems": 45,
+      "retainedItems": 27,
+      "documentReadRequestsByDay": {
+        "2026-10-28": 14392,
+        "2026-10-29": 14469
+      },
+      "writeAndDeleteAttemptsByDay": {
+        "2026-10-28": 1872,
+        "2026-10-29": 1905
+      },
+      "budgets": [
+        {
+          "path": "rankingBudgets/2026-10-28",
+          "version": 1,
+          "readsReserved": 11758,
+          "writesReserved": 1528,
+          "deletesReserved": 430,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-29",
+          "version": 1,
+          "readsReserved": 11968,
+          "writesReserved": 1537,
+          "deletesReserved": 460,
+          "updatedAt": "2026-10-29T23:48:00.000Z"
+        }
+      ]
+    },
+    {
+      "sources": 100,
+      "days": 3,
+      "ready": 40,
+      "deleted": 3550,
+      "blocked": 0,
+      "paused": 3080,
+      "maxCalls": 38,
+      "maximumRuns": 6,
+      "maximumItems": 600,
+      "retainedItems": 485,
+      "documentReadRequestsByDay": {
+        "2026-10-28": 16226,
+        "2026-10-29": 15043,
+        "2026-10-30": 15074
+      },
+      "writeAndDeleteAttemptsByDay": {
+        "2026-10-28": 3844,
+        "2026-10-29": 3477,
+        "2026-10-30": 3482
+      },
+      "budgets": [
+        {
+          "path": "rankingBudgets/2026-10-28",
+          "version": 1,
+          "readsReserved": 17652,
+          "writesReserved": 2830,
+          "deletesReserved": 1100,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-29",
+          "version": 1,
+          "readsReserved": 17042,
+          "writesReserved": 2352,
+          "deletesReserved": 1223,
+          "updatedAt": "2026-10-29T23:48:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-30",
+          "version": 1,
+          "readsReserved": 17042,
+          "writesReserved": 2352,
+          "deletesReserved": 1227,
+          "updatedAt": "2026-10-30T23:48:00.000Z"
+        }
+      ]
+    },
+    {
+      "sources": 9,
+      "growTo": 100,
+      "days": 3,
+      "ready": 74,
+      "deleted": 2783,
+      "blocked": 0,
+      "paused": 2042,
+      "maxCalls": 38,
+      "maximumRuns": 6,
+      "maximumItems": 600,
+      "retainedItems": 500,
+      "documentReadRequestsByDay": {
+        "2026-10-28": 14392,
+        "2026-10-29": 16303,
+        "2026-10-30": 15043
+      },
+      "writeAndDeleteAttemptsByDay": {
+        "2026-10-28": 1872,
+        "2026-10-29": 3877,
+        "2026-10-30": 3477
+      },
+      "budgets": [
+        {
+          "path": "rankingBudgets/2026-10-28",
+          "version": 1,
+          "readsReserved": 11758,
+          "writesReserved": 1528,
+          "deletesReserved": 430,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-29",
+          "version": 1,
+          "readsReserved": 17862,
+          "writesReserved": 2839,
+          "deletesReserved": 1130,
+          "updatedAt": "2026-10-29T23:48:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-30",
+          "version": 1,
+          "readsReserved": 17042,
+          "writesReserved": 2352,
+          "deletesReserved": 1223,
+          "updatedAt": "2026-10-30T23:48:00.000Z"
+        }
+      ]
+    }
+  ],
+  "measurements": {
+    "documentReadRequestsIncludePollingAndSimulatedRetries": true,
+    "writeAttemptsIncludeDeletes": true,
+    "queryMinimumOneResultCounted": true,
+    "realFirestoreBillingMeasured": false,
+    "indexEntriesAndProductionContentionNotModeled": true,
+    "edgeCpuMeasured": false,
+    "externalTrafficNotModeled": true
+  },
+  "deployedWorkerUnchanged": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+  "rankingEnabledRemotely": false,
+  "jobsEnabledRemotely": false,
+  "retentionFlagAddedRemotely": false,
+  "cronAdded": false,
+  "plansChanged": false,
+  "publicLaunchApproved": false,
+  "commitOrPushPerformed": false,
+  "pending": [
+    "Real Workers CPU of generation, admission and cleanup, including first route use",
+    "Controlled remote pilot with separately approved deployment, writes/deletions and trigger scope",
+    "Global free-quota margin with visitor traffic and production contention",
+    "TikTok and final release gates"
+  ]
+}

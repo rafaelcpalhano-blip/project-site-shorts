@@ -137,3 +137,20 @@ test('ranking retention after repeated generation preserves current, previous an
  assert.deepEqual(d.f.docs.get('rankingState/current'),pointer)
  for(const [path,data] of primary)assert.deepEqual(d.f.docs.get(path),data)
 })
+
+
+test('ranking retention requires both ranking opt-in and exact retention flag; all-jobs precedence remains explicit',async()=>{
+ const {entry,modes}=loadMain(),env={CLIPZONE_ADMIN_UIDS:'fixture',CLIPZONE_RANKING_RETENTION_ENABLED:'true'}
+ assert.equal((await entry.scheduled({},env)).status,'disabled');assert.equal(modes.length,0)
+ env.CLIPZONE_RANKING_ENABLED='true'
+ for(const value of [undefined,'false','TRUE','1']){env.CLIPZONE_RANKING_RETENTION_ENABLED=value;await entry.scheduled({},env);assert.equal(modes.at(-1),'ranking-only')}
+ env.CLIPZONE_RANKING_RETENTION_ENABLED='true';await entry.scheduled({},env);assert.equal(modes.at(-1),'ranking-with-retention')
+ env.CLIPZONE_JOBS_ENABLED='true';await entry.scheduled({},env);assert.equal(modes.at(-1),undefined)
+})
+
+
+test('pilot binding alone never enables scheduled maintenance or legacy all-jobs',async()=>{
+ const {entry,modes}=loadMain(),env={CLIPZONE_ADMIN_UIDS:'fixture',CLIPZONE_RANKING_PILOT:'fixture'}
+ assert.equal((await entry.scheduled({},env)).status,'disabled');env.CLIPZONE_RANKING_ENABLED='true';assert.equal((await entry.scheduled({},env)).status,'disabled');assert.equal(modes.length,0)
+ env.CLIPZONE_RANKING_RETENTION_ENABLED='true';await entry.scheduled({},env);assert.deepEqual(modes,['ranking-with-retention']);env.CLIPZONE_JOBS_ENABLED='true';assert.equal((await entry.scheduled({},env)).status,'disabled');assert.equal(modes.length,1)
+})

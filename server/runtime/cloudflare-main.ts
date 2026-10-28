@@ -14,6 +14,8 @@ interface Environment {
  CLOUDFLARE_ACCOUNT_ID?:string;CLOUDFLARE_AI_TOKEN?:string
  CLIPZONE_JOBS_ENABLED?:string
  CLIPZONE_RANKING_ENABLED?:string
+ CLIPZONE_RANKING_RETENTION_ENABLED?:string
+ CLIPZONE_RANKING_PILOT?:string
  CLIPZONE_PROVIDER_DIAGNOSTICS?:string
  CLIPZONE_HOMOLOGATION_OBSERVABILITY?:string
 }
@@ -53,6 +55,7 @@ export default {
  async scheduled(_event:unknown,env:Environment){
   const allJobs=env.CLIPZONE_JOBS_ENABLED==='true'
   if(!allJobs&&env.CLIPZONE_RANKING_ENABLED!=='true')return {status:'disabled'}
-  try{const result=await application(env).maintenance(allJobs?undefined:'ranking-only');console.info('clipzone-maintenance',JSON.stringify(result));return result}catch{console.warn('clipzone-maintenance: configuration-unavailable');return {status:'deferred',reason:'configuration-unavailable'}}
+  if(env.CLIPZONE_RANKING_PILOT!==undefined&&(allJobs||env.CLIPZONE_RANKING_RETENTION_ENABLED!=='true'))return {status:'disabled'}
+  try{const result=await application(env).maintenance(allJobs?undefined:env.CLIPZONE_RANKING_RETENTION_ENABLED==='true'?'ranking-with-retention':'ranking-only',env.CLIPZONE_RANKING_PILOT!==undefined?{configuration:env.CLIPZONE_RANKING_PILOT,event:_event}:undefined);console.info('clipzone-maintenance',JSON.stringify(result));return result}catch{console.warn('clipzone-maintenance: configuration-unavailable');return {status:'deferred',reason:'configuration-unavailable'}}
  },
 }

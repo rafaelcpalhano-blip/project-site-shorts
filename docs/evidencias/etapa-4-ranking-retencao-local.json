@@ -1,0 +1,90 @@
+{
+  "recordedAt": "2026-10-28T07:32:48.226Z",
+  "status": "local-preparation-only-not-ready-for-remote-activation",
+  "scope": "Opt-in isolated ranking retention; no cron, remote deletion, deployment or inference",
+  "nodeTestsPassed": 832,
+  "nodeTestsFailed": 0,
+  "firestoreEmulatorTargetedTestsPassed": 3,
+  "firestoreEmulatorProject": "demo-clipzone-tests",
+  "firestoreEmulatorHost": "127.0.0.1:8081",
+  "typesPassed": true,
+  "lintPassed": true,
+  "workerDryRunPassed": true,
+  "retention": {
+    "maximumRecordsPerSlice": 15,
+    "discoveryQuarterHourMinute": 3,
+    "minimumAgeHours": 2,
+    "protectCurrentAndPrevious": true,
+    "discoveryReadReservation": 40,
+    "discoveryWriteReservation": 3,
+    "pruneReadReservation": 70,
+    "pruneWriteReservation": 3,
+    "discoveryCursor": "maintenanceState/rankingRetention"
+  },
+  "cycles": [
+    {
+      "sources": 9,
+      "days": 2,
+      "ready": 93,
+      "deleted": 890,
+      "blocked": 0,
+      "maxCalls": 29,
+      "maximumItems": 45,
+      "retainedItems": 36,
+      "budgets": [
+        {
+          "path": "rankingBudgets/2026-10-28",
+          "version": 1,
+          "readsReserved": 10074,
+          "writesReserved": 1406,
+          "deletesReserved": 420,
+          "updatedAt": "2026-10-28T23:49:00.000Z"
+        },
+        {
+          "path": "rankingBudgets/2026-10-29",
+          "version": 1,
+          "readsReserved": 10382,
+          "writesReserved": 1402,
+          "deletesReserved": 470,
+          "updatedAt": "2026-10-29T23:48:00.000Z"
+        }
+      ]
+    },
+    {
+      "sources": 100,
+      "days": 1,
+      "ready": 28,
+      "deleted": 393,
+      "blocked": 572,
+      "maxCalls": 37,
+      "maximumItems": 2425,
+      "retainedItems": 2410,
+      "budgets": [
+        {
+          "path": "rankingBudgets/2026-10-28",
+          "version": 1,
+          "readsReserved": 14230,
+          "writesReserved": 3901,
+          "deletesReserved": 393,
+          "updatedAt": "2026-10-28T14:18:00.000Z"
+        }
+      ]
+    }
+  ],
+  "reservationsAreNotBilledOperations": true,
+  "knownLimitations": [
+    "100-source stress scenario cannot maintain bounded long-term accumulation with current cleanup throughput and shared write budget",
+    "Idle ranking checks and retries are not fully represented by internal reservations; total billed operation estimate remains a gate",
+    "CPU for generation and cleanup in real Workers remains unverified",
+    "No remote scheduling or cleanup authorized or performed"
+  ],
+  "deployedWorkerUnchanged": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+  "newFlagDefaultDisabled": true,
+  "rankingEnabledRemotely": false,
+  "jobsEnabledRemotely": false,
+  "cronAdded": false,
+  "remoteDataChangesInThisStage": false,
+  "planChanged": false,
+  "publicLaunchApproved": false,
+  "commitOrPushPerformed": false
+}

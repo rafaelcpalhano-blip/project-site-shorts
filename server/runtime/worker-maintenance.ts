@@ -1,4 +1,5 @@
 import type {AtomicStore} from '../firestore/atomic-store.ts'
+import {runBoundedRankingMaintenance} from '../ranking/continuous-maintenance.ts'
 import {stepRankingGeneration} from '../ranking/segmented-generation.ts'
 import {pruneRankingGeneration} from '../ranking/retention.ts'
 import {cleanupNetworkAbuse} from '../security/network-retention.ts'
@@ -7,7 +8,8 @@ import {cleanupLikes} from '../likes/retention.ts'
  * One ranking step OR one bounded retention slice, with durable cursors.
  * No cron, timer, external queue or infrastructure is created here.
  */
-export async function runWorkerMaintenance(options:{store:AtomicStore;now:()=>Date;mode?:'ranking-only'}){
+export async function runWorkerMaintenance(options:{store:AtomicStore;now:()=>Date;mode?:'ranking-only'|'ranking-with-retention'}){
+ if(options.mode==='ranking-with-retention')return runBoundedRankingMaintenance(options)
  const ranking=await stepRankingGeneration(options)
  if(ranking.status!=='not-due'||options.mode==='ranking-only')return {task:'ranking',...ranking}
  const slot=options.now().getUTCMinutes()%4
