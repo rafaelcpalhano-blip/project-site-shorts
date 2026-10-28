@@ -11,7 +11,7 @@ test('private translation failure records only fixed category and trusted HTTP s
   [async()=>new Response(privateText,{status:429}),{code:'translation-unavailable',providerStatus:429}],
   [async()=>new Response(privateText,{status:403}),{code:'translation-unavailable',providerStatus:403}],
   [async()=>new Response(privateText),{code:'invalid-translation-response-json'}],
-  [async()=>Response.json({success:true,result:{choices:[],object:'chat.completion'}}),{code:'invalid-translation-response-shape'}],
+  [async()=>Response.json({success:true,result:{choices:[],object:'chat.completion'}}),{code:'invalid-translation-response-shape-choices-count'}],
   [async()=>Response.json({success:true,result:{object:'chat.completion',choices:[{index:0,finish_reason:'length',message:{role:'assistant',content:privateText}}]}}),{code:'invalid-translation-response-completion'}],
   [async()=>Response.json({success:true,result:{response:'<b>'+privateText+'</b>'}}),{code:'invalid-translation-text'}],
   [async()=>{throw Object.assign(new Error(privateText),{status:403})},{code:'translation-unavailable'}],
@@ -42,4 +42,22 @@ test('safe failure metadata preserves cooldown and budget and disappears after a
  assert.equal(calls,2);assert.equal(d.rows.get('gameTranslations/igdb-9596').status,'ready')
  assert.equal(d.rows.get('gameTranslations/igdb-9596').failure,undefined)
  assert.equal(d.rows.get('games/igdb-9596').translation.text,'Tibia é um jogo de fantasia.')
+})
+
+
+test('shape diagnostics distinguish fixed branches without persisting response fields or changing rejection',async()=>{
+ const variants=[
+  [{response:privateText,object:'chat.completion',choices:[{index:0,finish_reason:'stop',message:{role:'assistant',content:'Different final text'}}]},'mixed'],
+  [{object:privateText,choices:[]},'object'],
+  [{object:'chat.completion',choices:privateText},'choices-type'],
+  [{object:'chat.completion',choices:[]},'choices-count'],
+ ]
+ for(const [payload,suffix] of variants){
+  const d=memory(),translate=createDescriptionTranslator({accountId:'a'.repeat(32),token:privateText},async()=>Response.json({success:true,result:payload}))
+  await createGameTranslation({...d,translate,maximumPerDay:20})('igdb-9596')
+  assert.deepEqual(d.rows.get('gameTranslations/igdb-9596').failure,{code:'invalid-translation-response-shape-'+suffix})
+  assert.equal(d.rows.get('games/igdb-9596').translation,undefined)
+  assert.equal(d.rows.get('translationUsage/2026-10-27').count,1)
+  assert.ok(!JSON.stringify([...d.rows]).includes(privateText))
+ }
 })

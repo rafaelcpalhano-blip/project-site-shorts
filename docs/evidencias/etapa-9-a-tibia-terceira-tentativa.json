@@ -1,0 +1,58 @@
+{
+  "attempt": "third owner-authorized confirmation overall; first after UTC budget reset",
+  "workerVersion": "6910fddf-8d39-4129-a289-f60ce08be37c",
+  "startedAt": "2026-10-28T00:09:29.796Z",
+  "completedAt": "2026-10-28T00:12:29.812Z",
+  "windowSeconds": 180,
+  "completeWindow": true,
+  "confirmations": [
+    {
+      "path": "/api/games/confirm",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 19,
+      "wallMs": 2666,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-2",
+        "sequence": 6,
+        "applicationCreated": false,
+        "firstApiInIsolate": false,
+        "firstRouteInIsolate": true
+      }
+    }
+  ],
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102BodyInspection": false,
+  "game": {
+    "exists": true,
+    "name": "Tibia",
+    "source": "IGDB",
+    "status": "active",
+    "descriptionLength": 340,
+    "translationPresent": false,
+    "translationLength": 0,
+    "translationSourceMatches": null
+  },
+  "task": {
+    "status": "failed",
+    "attempts": 1,
+    "updatedAt": "2026-10-28T00:10:29.103Z",
+    "retryAt": "2026-10-28T01:10:29.103Z",
+    "failureCode": "invalid-translation-response-shape"
+  },
+  "translationAttemptsToday": 1,
+  "conclusion": "Translation failed at the local response-shape validator. Exact field is not known from the deployed diagnostic. Original description preserved.",
+  "nextEligibleAt": "2026-10-28T01:10:29.103Z",
+  "nextAttemptAuthorized": false,
+  "remoteDeployPerformed": false,
+  "localPreparation": "Split existing shape rejection into four fixed diagnostic codes, without changing acceptance, quotas or storing response text.",
+  "validation": {
+    "nodeTests": 804,
+    "failed": 0,
+    "skipped": 0,
+    "focusedTests": 18
+  },
+  "providerSchemaReference": "https://developers.cloudflare.com/workers-ai/models/qwen3-30b-a3b-fp8/"
+}

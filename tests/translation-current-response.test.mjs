@@ -38,3 +38,15 @@ test('chat completion still refuses HTML and lost protected names instead of loo
  const withEmptyTools=translator(body=>({...body,choices:[{...body.choices[0],message:{...body.choices[0].message,tool_calls:[]}}]}))
  assert.equal(await withEmptyTools(input),'Tibia é um jogo de fantasia.')
 })
+
+
+test('Qwen completion accepts only empty legacy placeholders or identical final text, never a conflicting answer',async()=>{
+ for(const legacy of [null,undefined,'']){
+  const actual=translator(body=>({...body,response:legacy}))
+  assert.equal(await actual(input),'Tibia é um jogo de fantasia.')
+ }
+ assert.equal(await translator(body=>({...body,response:body.choices[0].message.content}))(input),'Tibia é um jogo de fantasia.')
+ for(const legacy of ['Other answer',' ',42,{},[],false])await assert.rejects(translator(body=>({...body,response:legacy}))(input),/invalid-translation-response-shape-mixed/)
+ for(const finish_reason of ['length','tool_calls'])await assert.rejects(translator(body=>({...body,response:null,choices:[{...body.choices[0],finish_reason}]}))(input),/invalid-translation-response-completion/)
+ await assert.rejects(translator(body=>({...body,response:null,choices:[{...body.choices[0],message:{role:'assistant',content:'<b>invalid</b>'}}]}))(input),/invalid-translation-text/)
+})

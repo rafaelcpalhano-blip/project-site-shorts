@@ -4,7 +4,7 @@ class TranslationProviderError extends Error {
  readonly status:number
  constructor(status:number){super('translation-unavailable');this.status=status}
 }
-const safeFailureCodes=new Set(['invalid-translation-config','invalid-translation-input','translation-input-too-complex','translation-unavailable','invalid-translation-response','invalid-translation-response-json','invalid-translation-response-shape','invalid-translation-response-completion','invalid-translation-response-field','translation-response-too-large','invalid-translation-text','translation-name-mismatch','translation-unchanged','invalid-translation'])
+const safeFailureCodes=new Set(['invalid-translation-config','invalid-translation-input','translation-input-too-complex','translation-unavailable','invalid-translation-response','invalid-translation-response-json','invalid-translation-response-shape','invalid-translation-response-shape-mixed','invalid-translation-response-shape-object','invalid-translation-response-shape-choices-type','invalid-translation-response-shape-choices-count','invalid-translation-response-completion','invalid-translation-response-field','translation-response-too-large','invalid-translation-text','translation-name-mismatch','translation-unchanged','invalid-translation'])
 /** Private task metadata only. Never persist arbitrary messages, content or headers. */
 export function translationFailureDetails(reason:unknown):{code:string;providerStatus?:number}{
  const code=reason instanceof Error&&safeFailureCodes.has(reason.message)?reason.message:reason instanceof Error&&reason.name==='TimeoutError'?'translation-timeout':reason instanceof Error&&reason.name==='AbortError'?'translation-aborted':'translation-unavailable'
@@ -43,12 +43,16 @@ export function createDescriptionTranslator(config:{accountId:string;token:strin
   const payload=data?.success===true?data.result:undefined
   let output:unknown=payload?.response
   // Current Qwen schema returns a chat completion. Keep the legacy plain
-  // response compatible, but never accept mixed, partial or tool completions.
+  // response compatible. Empty legacy placeholders or identical duplicate text
+  // are unambiguous; conflicting answers, partial and tool completions are refused.
   if(payload&&Object.hasOwn(payload,'choices')){
-   if(Object.hasOwn(payload,'response')||payload.object!=='chat.completion'||!Array.isArray(payload.choices)||payload.choices.length!==1)throw new Error('invalid-translation-response-shape')
+   if(payload.object!=='chat.completion')throw new Error('invalid-translation-response-shape-object')
+   if(!Array.isArray(payload.choices))throw new Error('invalid-translation-response-shape-choices-type')
+   if(payload.choices.length!==1)throw new Error('invalid-translation-response-shape-choices-count')
    const choice=payload.choices[0],message=choice?.message
    if(choice?.index!==0||choice.finish_reason!=='stop'||message?.role!=='assistant'||message.tool_calls!==undefined&&(!Array.isArray(message.tool_calls)||message.tool_calls.length>0)||message.refusal!==undefined&&message.refusal!==null&&message.refusal!=='')throw new Error('invalid-translation-response-completion')
    output=message.content
+   if(Object.hasOwn(payload,'response')&&payload.response!==null&&payload.response!==undefined&&payload.response!==''&&payload.response!==output)throw new Error('invalid-translation-response-shape-mixed')
   }
   if(typeof output!=='string')throw new Error('invalid-translation-response-field')
   let result=output.trim()

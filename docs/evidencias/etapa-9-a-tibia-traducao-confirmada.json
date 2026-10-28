@@ -1,0 +1,166 @@
+{
+  "observedAt": "2026-10-28T03:44:00.392Z",
+  "workerVersion": "c796854d-aaad-4e84-901e-bd65cbdbb45d",
+  "projectId": "clipzone-db02a",
+  "database": "(default)",
+  "attemptsAuthorized": 1,
+  "confirmationsObserved": 1,
+  "authorizationConsumed": true,
+  "startedAt": "2026-10-28T03:40:06.600Z",
+  "completedAt": "2026-10-28T03:43:06.610Z",
+  "windowSeconds": 180,
+  "completeWindow": true,
+  "events": 15,
+  "endpoints": {
+    "/api/admin/config": {
+      "requests": 1,
+      "cpuMs": [
+        5
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/session": {
+      "requests": 7,
+      "cpuMs": [
+        4,
+        1,
+        2,
+        0,
+        0,
+        5,
+        1
+      ],
+      "statuses": [
+        204,
+        204,
+        204,
+        204,
+        204,
+        204,
+        204
+      ]
+    },
+    "/api/games/search": {
+      "requests": 1,
+      "cpuMs": [
+        14
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/confirm": {
+      "requests": 1,
+      "cpuMs": [
+        17
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/list": {
+      "requests": 1,
+      "cpuMs": [
+        3
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/detail": {
+      "requests": 2,
+      "cpuMs": [
+        3,
+        8
+      ],
+      "statuses": [
+        200,
+        200
+      ]
+    },
+    "/api/feed/ordered": {
+      "requests": 2,
+      "cpuMs": [
+        5,
+        6
+      ],
+      "statuses": [
+        200,
+        200
+      ]
+    }
+  },
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102BodyInspection": false,
+  "confirmation": {
+    "path": "/api/games/confirm",
+    "status": 200,
+    "outcome": "ok",
+    "cpuMs": 17,
+    "wallMs": 2403,
+    "exceptionCount": 0,
+    "observation": {
+      "isolate": "isolate-2",
+      "sequence": 4,
+      "applicationCreated": false,
+      "firstApiInIsolate": false,
+      "firstRouteInIsolate": true
+    }
+  },
+  "state": {
+    "checkedAt": "2026-10-28T03:41:10.959Z",
+    "projectId": "clipzone-db02a",
+    "database": "(default)",
+    "documentReads": 3,
+    "documentWrites": 0,
+    "game": {
+      "exists": true,
+      "name": "Tibia",
+      "source": "IGDB",
+      "status": "active",
+      "descriptionLength": 340,
+      "translationPresent": true,
+      "translationLocale": "pt-BR",
+      "translationLength": 349,
+      "translationSourceMatches": true
+    },
+    "task": {
+      "status": "ready",
+      "attempts": 3,
+      "updatedAt": "2026-10-28T03:40:59.201Z",
+      "retryAt": "2026-10-28T03:42:57.657Z"
+    },
+    "translationAttemptsToday": 3
+  },
+  "uiChecks": {
+    "checkedAt": "2026-10-28T03:43:06.221Z",
+    "game": "igdb-9596",
+    "translatedDescriptionVisible": true,
+    "ptBRNoticeVisible": true,
+    "originalDisclosureOpened": true,
+    "originalEnglishDescriptionVisible": true,
+    "persistedAfterReload": true,
+    "additionalConfirmationAfterSuccess": false,
+    "editorialObservations": [
+      "Grammatical agreement requires refinement",
+      "North America and South America remained in English"
+    ],
+    "rawProviderContentRetained": false
+  },
+  "quotaBefore": {
+    "neuronsObserved": 15.68,
+    "dailyAllowanceObserved": 10000,
+    "countersMayLag": true
+  },
+  "runtimeConfigurationChanged": false,
+  "newDeploymentPerformed": false,
+  "videoPublished": false,
+  "repeatedInference": false,
+  "rankingJobsCronEnabled": false,
+  "productionCpuApproved": false,
+  "editorialQualityApproved": false,
+  "conclusion": "Tibia translation successfully persisted and displayed with original disclosure and persistence after reload. CPU and editorial refinement remain separate pending work."
+}
