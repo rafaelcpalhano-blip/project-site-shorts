@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-10-27T23:38:49.792Z",
+  "scope": "Local REST fixture only; no external network, remote writes, deploy or scheduling",
+  "cadenceMinutes": 30,
+  "assumption": "One bounded generation step per simulated minute; no new interactions during the day",
+  "scenarios": [
+    {
+      "sources": 9,
+      "completed": 47,
+      "budgetBlocked": false,
+      "maxRequestsPerGenerationStep": 25,
+      "readsReserved": 3854,
+      "writesReserved": 1034,
+      "retainedRankingItems": 423
+    },
+    {
+      "sources": 100,
+      "completed": 29,
+      "budgetBlocked": true,
+      "maxRequestsPerGenerationStep": 37,
+      "readsReserved": 11455,
+      "writesReserved": 3857,
+      "retainedRankingItems": 2900
+    }
+  ],
+  "verified": [
+    "Budget exhaustion leaves current ranking and all documents unchanged",
+    "UTC day rollover permits a new bounded claim without changing previous daily accounting or current ranking",
+    "Explicit retention refuses current and previous generations",
+    "Explicit retention removes an old run and nine items, preserving primary records"
+  ],
+  "limitations": [
+    "Reserved budget is not Firestore billed usage",
+    "Local execution is not edge CPU certification",
+    "Ranking-only mode does not schedule or invoke retention",
+    "Remote ranking/jobs remain disabled; no cron added",
+    "Third Tibia inference awaits separate owner approval"
+  ],
+  "validation": {
+    "nodeTestsPassed": 803,
+    "failed": 0,
+    "skipped": 0,
+    "lint": "passed",
+    "diffCheck": "passed"
+  }
+}

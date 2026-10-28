@@ -7,9 +7,11 @@ import {runWorkerMaintenance} from '../server/runtime/worker-maintenance.ts'
 import {restFixture} from './helpers/portable-rest-fixture.ts'
 import {createRestStore} from '../server/firestore/rest-store.ts'
 import {createOutboundBudget} from '../server/runtime/outbound-budget.ts'
+import {generationLimits} from '../server/ranking/generation.ts'
+import {pruneRankingGeneration} from '../server/ranking/retention.ts'
 
-function fixture(count=0){
- let time=Date.parse('2026-10-27T12:00:00Z')
+function fixture(count=0,initialTime='2026-10-27T12:00:00Z'){
+ let time=Date.parse(initialTime)
  const now=()=>new Date(time),epoch='a'.repeat(32),docs=new Map([['rankingState/metrics',{version:1,ready:true,epoch}]])
  for(let n=0;n<count;n++){
   const id='s'+String(n).padStart(3,'0'),gameId='g'+n
@@ -65,4 +67,73 @@ test('scheduled entry uses strict opt-in flags, ranking-only mode and preserves 
  env.CLIPZONE_RANKING_ENABLED='true';await entry.scheduled({},env);assert.deepEqual(modes,['ranking-only'])
  env.CLIPZONE_JOBS_ENABLED='true';await entry.scheduled({},env);assert.deepEqual(modes,['ranking-only',undefined])
  env.CLIPZONE_JOBS_ENABLED='false';env.CLIPZONE_RANKING_ENABLED='false';await entry.scheduled({},env);assert.equal(modes.length,2)
+})
+
+// Accelerated local day: all Firestore/OAuth traffic stays in the REST fixture.
+for(const count of [9,100])test('30-minute ranking day '+count+' sources preserves primary data and stops atomically at budget',async t=>{
+ const d=fixture(count,'2026-10-27T00:00:00Z'),primary=structuredClone([...d.f.docs])
+ const start=d.now().getTime(),day=d.now().toISOString().slice(0,10)
+ let completed=0,blocked=false,maxCalls=0
+ for(let cycle=0;cycle<48;cycle++){
+  // Follow the actual snapshot timestamp, not an assumed wall-clock schedule.
+  const prior=d.f.docs.get('rankingState/current')
+  const due=prior?prior.computedAt.getTime()+generationLimits.intervalMs:start
+  if(due>=start+86400000)break
+  d.advance(due-d.now().getTime())
+  const before=structuredClone([...d.f.docs]),pointer=structuredClone(d.f.docs.get('rankingState/current'))
+  let result
+  try{
+   for(let step=0;step<29;step++){
+    result=await d.step();maxCalls=Math.max(maxCalls,result.calls)
+    if(result.status==='ready')break
+    assert.equal(result.status,'building');d.advance(60000)
+   }
+  }catch(error){
+   assert.match(error.message,/^ranking-budget-exhausted$/)
+   assert.deepEqual([...d.f.docs],before)
+   assert.deepEqual(d.f.docs.get('rankingState/current'),pointer)
+   blocked=true;break
+  }
+  assert.equal(result.status,'ready');assert.equal(result.itemCount,count);completed++
+ }
+ const budget=d.f.docs.get('rankingBudgets/'+day)
+ assert.ok(budget.readsReserved<=generationLimits.dailyReads)
+ assert.ok(budget.writesReserved<=generationLimits.dailyWrites)
+ assert.ok(maxCalls<48)
+ for(const [path,data] of primary)assert.deepEqual(d.f.docs.get(path),data)
+ assert.equal([...d.f.docs.keys()].filter(path=>path.startsWith('rankingItems/')).length,completed*count)
+ if(count===9){assert.ok(completed>=46&&completed<=48);assert.equal(blocked,false)}
+ else{
+  assert.ok(completed>0&&completed<48);assert.equal(blocked,true)
+  const oldBudget=structuredClone(budget),pointer=structuredClone(d.f.docs.get('rankingState/current'))
+  d.advance(start+86400000-d.now().getTime())
+  assert.equal((await d.step()).status,'building')
+  assert.deepEqual(d.f.docs.get('rankingState/current'),pointer)
+  assert.deepEqual(d.f.docs.get('rankingBudgets/'+day),oldBudget)
+  assert.ok(d.f.docs.has('rankingBudgets/'+d.now().toISOString().slice(0,10)))
+ }
+ t.diagnostic(JSON.stringify({sources:count,completed,blocked,maxCalls,readsReserved:budget.readsReserved,writesReserved:budget.writesReserved,retainedItems:completed*count}))
+})
+
+test('ranking retention after repeated generation preserves current, previous and primary records',async()=>{
+ const d=fixture(9),primary=structuredClone([...d.f.docs]),generations=[]
+ for(let cycle=0;cycle<6;cycle++){
+  let result
+  do{result=await d.step();if(result.status!=='ready')d.advance(60000)}while(result.status!=='ready')
+  generations.push(result.generationId);d.advance(30*60000)
+ }
+ d.advance(2*3600000)
+ const budget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:d.f.fetcher})
+ const store=createRestStore({projectId:'clipzone-db02a',accessToken:async()=>'fixture-only',fetcher:budget.fetch,cleanupFetcher:budget.cleanupFetch,lazyTransactions:true})
+ const pointer=structuredClone(d.f.docs.get('rankingState/current'))
+ for(const id of generations.slice(-2))await assert.rejects(pruneRankingGeneration({store,now:d.now,generationId:id,maximumRecords:15}),/ranking-generation-protected/)
+ // A fresh invocation has its own outbound budget; never share a request budget.
+ const cleanBudget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:d.f.fetcher})
+ const cleanStore=createRestStore({projectId:'clipzone-db02a',accessToken:async()=>'fixture-only',fetcher:cleanBudget.fetch,cleanupFetcher:cleanBudget.cleanupFetch,lazyTransactions:true})
+ const result=await pruneRankingGeneration({store:cleanStore,now:d.now,generationId:generations[0],maximumRecords:15})
+ assert.equal(result.complete,true);assert.equal(result.deleted,10);assert.ok(cleanBudget.usage().dispatched<48)
+ assert.equal(d.f.docs.has('rankingRuns/'+generations[0]),false)
+ assert.equal([...d.f.docs.values()].some(data=>data.generationId===generations[0]),false)
+ assert.deepEqual(d.f.docs.get('rankingState/current'),pointer)
+ for(const [path,data] of primary)assert.deepEqual(d.f.docs.get(path),data)
 })
