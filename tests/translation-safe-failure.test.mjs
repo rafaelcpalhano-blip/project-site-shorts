@@ -47,7 +47,6 @@ test('safe failure metadata preserves cooldown and budget and disappears after a
 
 test('shape diagnostics distinguish fixed branches without persisting response fields or changing rejection',async()=>{
  const variants=[
-  [{response:privateText,object:'chat.completion',choices:[{index:0,finish_reason:'stop',message:{role:'assistant',content:'Different final text'}}]},'mixed'],
   [{object:privateText,choices:[]},'object'],
   [{object:'chat.completion',choices:privateText},'choices-type'],
   [{object:'chat.completion',choices:[]},'choices-count'],

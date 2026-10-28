@@ -1,0 +1,97 @@
+{
+  "recordedAt": "2026-10-28T04:31:24.068Z",
+  "deploy": {
+    "version": "533b554a-271a-4d93-ad32-87ed04c9caee",
+    "priorVersion": "c796854d-aaad-4e84-901e-bd65cbdbb45d",
+    "bundleSha256": "dbbbd8b1a600b625049b0f8684c3fc25ca2e3790f375d00db06d37acf5fd6bc1",
+    "staticFiles": 43,
+    "staticAssetsUnchanged": true,
+    "sameNineSecrets": true,
+    "headersChecksPassed": 13,
+    "publicAssetHashesChecked": 42,
+    "activeAt100Percent": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "triggersAdded": false
+  },
+  "sample": {
+    "gameId": "igdb-7351",
+    "authorizedAttempts": 1,
+    "observedConfirmations": 1,
+    "authorizationConsumed": true,
+    "state": {
+      "checkedAt": "2026-10-28T04:25:59.156Z",
+      "projectId": "clipzone-db02a",
+      "database": "(default)",
+      "documentReads": 3,
+      "documentWrites": 0,
+      "game": {
+        "exists": true,
+        "name": "Doom",
+        "source": "IGDB",
+        "status": "active",
+        "descriptionLength": 617,
+        "translationPresent": false,
+        "translationLength": 0,
+        "translationSourceMatches": null
+      },
+      "task": {
+        "status": "failed",
+        "attempts": 1,
+        "updatedAt": "2026-10-28T04:25:50.218Z",
+        "retryAt": "2026-10-28T05:25:50.218Z",
+        "failureCode": "invalid-translation-response-shape-mixed"
+      },
+      "translationAttemptsToday": 4
+    },
+    "quotaBefore": {
+      "neuronsObserved": 23.58,
+      "allowanceObserved": 10000,
+      "countersMayLag": true
+    }
+  },
+  "observation": {
+    "startedAt": "2026-10-28T04:24:37.781Z",
+    "completedAt": "2026-10-28T04:27:37.804Z",
+    "completeWindow": true,
+    "events": 11,
+    "confirmation": {
+      "path": "/api/games/confirm",
+      "status": 200,
+      "outcome": "ok",
+      "cpuMs": 17,
+      "wallMs": 3284,
+      "exceptionCount": 0,
+      "observation": {
+        "isolate": "isolate-3",
+        "sequence": 2,
+        "applicationCreated": false,
+        "firstApiInIsolate": false,
+        "firstRouteInIsolate": true
+      }
+    },
+    "exceptions": 0,
+    "exceededCpu": 0,
+    "error1102BodyInspection": false
+  },
+  "conclusion": "Doom failed at mixed legacy/completion guard; original preserved. No further inference. Existing Tibia translation not refreshed.",
+  "qualityApproved": false,
+  "proposedPolicy": {
+    "canonicalChoicesAuthoritative": true,
+    "legacyOnlyCompatible": true,
+    "noFallbackWhenChoicesInvalid": true,
+    "legacyComparisonRemoved": true,
+    "finalTextAndNameChecksPreserved": true,
+    "source": "https://developers.cloudflare.com/workers-ai/models/qwen3-30b-a3b-fp8/",
+    "testsPassed": 814,
+    "failed": 0,
+    "skipped": 0,
+    "typesPassed": true,
+    "lintPassed": true,
+    "workerDryRunPassed": true,
+    "bundleSha256": "ad41aa5ed428f4094bb6ca9760ff3f6ef99bbcc06ae0720176f40fedcd8457ef",
+    "deployed": false,
+    "additionalInferenceAuthorized": false
+  },
+  "nextEligibleAt": "2026-10-28T05:25:50.218Z"
+}

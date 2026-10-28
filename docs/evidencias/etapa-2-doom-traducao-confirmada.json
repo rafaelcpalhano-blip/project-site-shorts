@@ -1,0 +1,173 @@
+{
+  "recordedAt": "2026-10-28T05:54:16.528Z",
+  "workerVersion": "d6782c6c-7323-44a2-98fb-1aa39d85741a",
+  "authorizedAttempts": 1,
+  "confirmationsObserved": 1,
+  "authorizationConsumed": true,
+  "startedAt": "2026-10-28T05:50:15.681Z",
+  "completedAt": "2026-10-28T05:53:15.697Z",
+  "windowSeconds": 180,
+  "completeWindow": true,
+  "events": 15,
+  "endpoints": {
+    "/api/admin/config": {
+      "requests": 1,
+      "cpuMs": [
+        3
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/session": {
+      "requests": 7,
+      "cpuMs": [
+        5,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "statuses": [
+        204,
+        204,
+        204,
+        204,
+        204,
+        204,
+        204
+      ]
+    },
+    "/api/games/search": {
+      "requests": 1,
+      "cpuMs": [
+        8
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/confirm": {
+      "requests": 1,
+      "cpuMs": [
+        16
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/list": {
+      "requests": 1,
+      "cpuMs": [
+        3
+      ],
+      "statuses": [
+        200
+      ]
+    },
+    "/api/games/detail": {
+      "requests": 2,
+      "cpuMs": [
+        3,
+        8
+      ],
+      "statuses": [
+        200,
+        200
+      ]
+    },
+    "/api/feed/ordered": {
+      "requests": 2,
+      "cpuMs": [
+        6,
+        6
+      ],
+      "statuses": [
+        200,
+        200
+      ]
+    }
+  },
+  "confirmation": {
+    "path": "/api/games/confirm",
+    "status": 200,
+    "outcome": "ok",
+    "cpuMs": 16,
+    "wallMs": 3270,
+    "exceptionCount": 0,
+    "observation": {
+      "isolate": "isolate-2",
+      "sequence": 4,
+      "applicationCreated": false,
+      "firstApiInIsolate": false,
+      "firstRouteInIsolate": true
+    }
+  },
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102BodyInspection": false,
+  "state": {
+    "checkedAt": "2026-10-28T05:51:31.115Z",
+    "projectId": "clipzone-db02a",
+    "database": "(default)",
+    "documentReads": 3,
+    "documentWrites": 0,
+    "game": {
+      "exists": true,
+      "name": "Doom",
+      "source": "IGDB",
+      "status": "active",
+      "descriptionLength": 617,
+      "translationPresent": true,
+      "translationLocale": "pt-BR",
+      "translationLength": 633,
+      "translationSourceMatches": true
+    },
+    "task": {
+      "status": "ready",
+      "attempts": 2,
+      "updatedAt": "2026-10-28T05:51:21.540Z",
+      "retryAt": "2026-10-28T05:53:19.518Z"
+    },
+    "translationAttemptsToday": 5
+  },
+  "uiChecks": {
+    "checkedAt": "2026-10-28T05:53:23.435Z",
+    "gameId": "igdb-7351",
+    "translatedDescriptionVisible": true,
+    "ptBRNoticeVisible": true,
+    "originalDisclosureOpened": true,
+    "originalEnglishDescriptionVisible": true,
+    "persistedAfterReload": true,
+    "additionalConfirmationAfterSuccess": false,
+    "editorialObservations": [
+      "Understandable prose; stylistic preference for foi pioneiro instead of pioneirou",
+      "Original fun nuance is omitted; semantic fidelity is not fully certified"
+    ],
+    "geographyPresentInSource": false,
+    "liveGeographyValidationPerformed": false,
+    "rawProviderContentRetained": false
+  },
+  "quotaBefore": {
+    "neuronsObserved": 32.97,
+    "allowanceObserved": 10000,
+    "countersMayLag": true
+  },
+  "newDeployPerformed": false,
+  "videoPublished": false,
+  "newGameCreated": false,
+  "TibiaRetranslated": false,
+  "repeatedInference": false,
+  "productionCpuApproved": false,
+  "editorialPerfectionApproved": false,
+  "linguisticSampleConclusion": "Readable and functional; style and a missing fun nuance remain for review. No live geographical phrase was exercised in this source.",
+  "localCodeValidationReference": {
+    "nodeTestsPassed": 814,
+    "typesPassed": true,
+    "lintPassed": true,
+    "workerDryRunPassed": true,
+    "applicationCodeChangedDuringThisTest": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "preparedAt": "2026-10-28T04:20:28.390Z",
+  "baseCommits": [
+    "5c90395",
+    "6bb39d9",
+    "a3bbd7f"
+  ],
+  "scope": "Local quality refinement of future game-description translations",
+  "changes": [
+    "Exclude exact conventional geographical labels from heuristic name masking",
+    "Explicit official titles and aliases still override geography localization",
+    "Preserve longer brand and fictional names",
+    "Prompt requests correct agreement, conventional place names and preservation of facts/numeric associations"
+  ],
+  "modifiedApplicationFiles": [
+    "server/games/translate-description.ts"
+  ],
+  "newTests": [
+    "tests/translation-geography.test.mjs"
+  ],
+  "validation": {
+    "nodeTestsPassed": 809,
+    "failed": 0,
+    "skipped": 0,
+    "focusedTestsPassed": 23,
+    "typesPassed": true,
+    "lintPassed": true,
+    "workerDryRunPassed": true,
+    "realModelQualityVerified": false
+  },
+  "candidate": {
+    "bundleSha256": "dbbbd8b1a600b625049b0f8684c3fc25ca2e3790f375d00db06d37acf5fd6bc1",
+    "sourceFilesHashed": 101,
+    "assetFiles": 43,
+    "staticAssetsUnchanged": true,
+    "frontendMode": "api",
+    "modelAndEndpointUnchanged": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "triggersAdded": false
+  },
+  "cache": {
+    "existingTranslationsPreserved": true,
+    "translationStoreUnchanged": true,
+    "noBulkInvalidation": true,
+    "TibiaNotRetranslated": true
+  },
+  "potentialSample": {
+    "gameId": "igdb-7351",
+    "name": "Doom",
+    "active": true,
+    "descriptionLength": 617,
+    "translationPresent": false,
+    "readOnlyInspection": true
+  },
+  "remoteDeploymentPerformed": false,
+  "inferenceAttempted": false,
+  "publicLaunchApproved": false,
+  "limitations": [
+    "Finite geography list; longer proper-name phrases intentionally remain protected",
+    "Mocked provider responses prove plumbing/protections, not live language quality",
+    "Prompt requests factual fidelity; no semantic correctness guarantee",
+    "Additional source tokens may affect inference usage; verify shared free quota before any live test"
+  ]
+}
