@@ -2255,3 +2255,76 @@ Etapa autorizada: base674e52e68f98b35f2bbe345161b115742839c7cb conciliada com re
 Ponto localetapa-1-2026-10-28T03-53-22-801Z, fora doGit: histórico Git em bundle, arquivos pendentes, patch e bundle/assets públicos congelados; manifesto privado e hashes no workspace. Não inclui ignorados/credenciais/segredos/dados remotos nem protege contra perda do disco. Procedimento de recuperação e limites em docs/etapa-1-ponto-de-seguranca.md/evidência correspondente. Não executar recuperação, novo deploy, inferência, commit ou push automaticamente. Proprietário revisa e efetiva3commits; CI deve ser conferido após seu push.
 
 Cópia fechada e verificada:16arquivos pendentes/62hashes, Git bundle íntegro e patch reverso compatível; nenhuma credencial lida ou documento remoto copiado. Commits ainda não executados.
+
+
+## 28/10/2026 — Etapa 2: qualidade da tradução preparada localmente
+
+Três commits do proprietário conferidos:5c90395,6bb39d9,a3bbd7f; árvore inicialmente limpa. Prompt refinado para concordância/fidelidade/RPG/MMORPG/geografia. Lista finita libera nomes geográficos convencionais da heurística, com precedência de títulos/aliases explícitos e marcas maiores protegidas. Quatro testes novos;23focados/809totais, tipos/lint/dry-run aprovados. Só tradução futura: cache/armazenamento intactos, Tibia pronto não será refeito por reconfirmação simples.
+
+Pacote localdbbbd8b1,101fontes com hashes e mesmos43assetsAPI do Workerc796854d; flags/segredos/planos/modelo/limites intactos. Leitura confirmou Doomigdb-7351 ativo,617caracteres, sem tradução/tarefa, possível amostra legítima mediante autorização nova. Nenhum deploy, inferência, commit/push ou invalidação em massa nesta rodada. Qualidade real ainda não demonstrada; CPU/TikTok/ranking seguem pendentes. Relatório/evidência etapa-2-qualidade-traducao-local.
+
+
+## 28/10/2026 — Etapa 2 publicada; Doom falhou; nova política proposta
+
+Worker533b554a ativo100%, anteriorc796854d;43assetsAPI idênticos/nove segredos preservados,13guardas/42hashes aprovados. Uma amostra autorizada de Doom7351 foi executada e consumida; falhou invalid-translation-response-shape-mixed, original617caracteres preservado, sem tradução. ContadoresDoom1/global4. Próxima elegibilidade28/10 02h25min50Brasília; nenhuma nova tentativa autorizada. Coleta180s/11eventos, confirmação200/17msCPU/3284ms, sem exceções/exceededCpu; qualidade/CPU ainda pendentes. Tibia não foi refeito.
+
+Documentação oficial descreve choices/chat.completion. Proposta LOCAL usa conteúdo final canônico, legado apenas quando choices ausente; retira a comparação com response, mantém validação completa e recusa fallback de conclusão inválida. Isso muda a regra de divergência antes aprovada e REQUER nova autorização remota.814testes/tipos/lint/dry-run aprovados, bundlead41aa5e, mesmos43assets/101fontes conferidos. A árvore local contém essa proposta ainda NÃO publicada; não confundir com Workeratual. Não inferir ou commitar/push automaticamente. Relatório/evidência etapa-2-qualidade-traducao-homologacao.
+
+
+## 28/10/2026 — política canônica publicada; Doom autorizado aguardando espera
+
+Autorização específica recebida para retirar comparação com legado e usar choices final validado. Workerd6782c6c-7323-44a2-98fb-1aa39d85741a ativo100%, anterior533b554a, bundlead41aa5e,43assetsAPI idênticos/nove segredos/ACL preservados.814testes/tipos/lint/dry-run aprovados;13guardas/42hashes conferidos. Sem novo modelo/plano/cron/jobs/inferência.
+
+EstadoDoom01h33: sem tradução,failed/attempts1,updatedAt04:25:50UTC,retryAt05:25:50UTC=28/10 02h25min50Brasília; global4. Nova amostra única expressamente AUTORIZADA e NÃO consumida. Registro privado etapa-2-doom-canonical-authorization.json e observador preparados; não pedir aprovação novamente. Após horário: reconferir estado/orçamento/franquia/versão, reservar recibo exclusivo e confirmar7351uma vez comCPU. Se alguém já tentou/traduziu ou houver divergência, não repetir. Não agendar. Qualidade e CPU continuam pendentes. Evidência etapa-2-compatibilidade-canonica-deploy. Sem commit/push pelo agente.
+
+
+## 28/10/2026 — Doom traduzido; amostra canônica autorizada consumida
+
+Retomada02h49Brasília: Workerd6782c6c confirmado, espera vencida e tarefaDoom1sem alteração, franquiaAI32,97/10.000. UMA confirmação oficial7351 executada: ready/pt-BR,633caracteres ligados ao original617/nome atual; contadoresDoom2/global5. UI traduzida, original acessível e persistência após reload aprovados. Autorização/recibo completed-success-no-repeat; não há amostra pendente ou autorizada restante. Sem novo deploy, vídeo, jogo ou reprocessamentoTibia.
+
+Coleta180s/15eventos, confirmação200/16msCPU/3270ms, zero exceções/exceededCpu; sem inspeção dos corpos1102.16ms acima do alvo10, produçãoCPU pendente. Texto legível, mas estilo pioneirou e nuance fun omitida registrados; qualidade editorial perfeita não certificada. Geografia só foi exercitada localmente, pois Doom não contém esses nomes. Relatório/evidência etapa-2-doom-traducao-confirmada. Próximo foco técnico CPU, mantendo demais pendências. Nenhum código alterado ou commit/push pelo agente nesta rodada.
+
+## 28/10/2026 — Etapa 3: primeiro pacote de CPU preparado localmente
+
+Pares de documentos independentes agrupados na mesma transação nas chaves de nome e no armazenamento da tradução, sem cache novo ou mudança de proteções/modelo/quota. Comparação local REST e workerd minificado: confirmação nova com tradução simulada 12→9 chamadas; reconfirmação com cache 7→6; mesmos documentos lidos (9/5), sem alegação de economia faturada ou ganho de CPU já medido. Fixture de documentos corrigida para visão consistente por transação; runQuery continua simplificado.
+
+34 testes focados, 820 Node e 141 no emulador Firestore aprovados, sem falhas/skips; tipos/lint/dry-run aprovados e dois contratos comparativos workerd sem fetch externo. Pacote congelado ed90acb58acfa3a0ed3cb18df4d6d198ad8e7451703956e294d2346ad9d91c37, 102 fontes registradas e mesmos 43 assets API verificados. Nenhum deploy, documento remoto, credencial ou inferência real nesta preparação; nove segredos, flags e planos preservados, ranking/jobs/cron desligados. Baseline conhecido d6782c6c-7323-44a2-98fb-1aa39d85741a continua sendo a versão remota; candidato NÃO publicado.
+
+Próximo passo proposto, ainda sem autorização específica: até duas reconfirmações Doom em cache antes e duas depois do deploy exclusivo na homologação, com preflight/CPU e interrupção por divergência. Não planejar inferência nem invalidar cache; a rota pode gravar manutenção de metadados. Não comparar esse caminho com os 16 ms da inferência anterior como se fossem equivalentes. Relatório/evidência etapa-3-cpu-leituras-em-lote. CPU global, ranking automático, TikTok e lançamento seguem pendentes; sem commit/push pelo agente.
+
+
+## 28/10/2026 — Etapa 3: pacote publicado e comparação limitada concluída
+
+Autorização específica consumida: Worker df8da48f-975f-47a5-9424-4d2476f4a0fc ativo100%, anterior d6782c6c-7323-44a2-98fb-1aa39d85741a, bundle ed90acb5; 43assetsAPI idênticos, nove segredos/ACL preservados, 42hashes e13guardas aprovados. Quatro reconfirmações Doom em cache: antes CPU7/8ms, depois7/12ms; todas200. Antes rota reutilizada, depois primeiros usos em isolates diferentes; não afirmar ganho de CPU nem cold start completo. Janelas180s: 17/25eventos, zero exceções/exceededCpu; corpos1102 não inspecionados. Pico12ms isolado mantém homologação controlada, não aprovação de produção.
+
+Cache/tradução/original preservados e conferidos naUI; tarefa2/global5 intactos, sem inferência nova. Reconferidos Spark e margem de quotas no painel; nenhum plano, autenticação, quota ou cron alterado. Ranking/jobs/diagnósticos de provedor desligados. Escopo autorizado concluído, não repetir confirmações automaticamente. Relatório/evidência etapa-3-cpu-homologacao; CPUdosdemaiscaminhos/ranking/TikTok/lançamento seguem pendentes. Sem commit/push pelo agente.
+
+
+## 28/10/2026 — tradução retroativa do catálogo concluída
+
+Pedido explícito do proprietário executado: nove jogos IGDB pendentes traduzidos em uma operação administrativa local usando os mesmos módulos/validadores, modelo e credenciais existentes. 12 jogos IGDB agora com cache válido; Doom/Tibia/Dragon Ball preservados, manual teste sem descrição ignorado. Originais e sourceHashes conferidos, UI Counter-Strike2/original aprovados. Seis testes do operador passaram; nove inferências, 63 requisições Firestore, orçamento6→15/20, sem retry ou agendamento. Recibo catalog-translation-backfill-receipt completed exclusivo fora do Git. Nenhuma nova inferência em lote autorizada restante.
+
+Execução não passou pelo HTTP do Worker, portanto não mede/resolvaCPU nem certifica lançamento. Sem deploy/plano/IAM/jobs/cron alterados; versão df8da48f preservada. PainelAI50,81/10mil antes e ainda sem atualização posterior; não alegar consumo zero. Relatório/evidência catalogo-traducao-retroativa. Próxima frente local: retenção isolada do ranking; CPU/TikTok e demais gates continuam pendentes. Sem commit/push pelo agente.
+
+
+## 28/10/2026 — Etapa 4 iniciada: retenção isolada preparada somente localmente
+
+Novo modo interno ranking-with-retention condicionado a ranking=true e nova flag exata CLIPZONE_RANKING_RETENTION_ENABLED=true; flag ausente no remoto. Ranking-only/geral preservados, nenhuma manutenção de likes/rede acoplada. Descoberta reservada em budget, claim durável por quarto de hora, fatias15, proteção atual/anterior/2h/lease e retomada por cursor. Código local não publicado; Worker df8da48f permanece ativo com flags/cron desligados.
+
+832Node/tipos/lint/dry-run aprovados, três testes específicos no emulador Firestore aprovados (não repetir como se fossem a suíte141 completa). Simulação por minuto: nove vídeos/dois dias93gerações,890registros auxiliares removidos, máximo45itens/final36, sem bloqueio;100vídeos/um dia28gerações,393removidos, pico2425/final2410,572ticks de orçamento recusados. Stress demonstra acúmulo ainda não sustentável: NÃO ativar remotamente antes de política de backlog/pausa e avaliação global de quota/CPU. Reservas não são faturamento real; polling/retries precisam de estimativa. Relatório/evidência etapa-4-ranking-retencao-local. Sem exclusão remota, deploy, agendamento, inferência ou commit/push nesta etapa.
+
+
+## 28/10/2026 — Etapa 4: acúmulo limitado e proteção UTC validados localmente
+
+Novo controle de admissão apenas no modo ranking-with-retention: menos de seis gerações para iniciar build; consulta pendente/falha bloqueia, backlog é rechecado após15min e a limpeza pode avançar mesmo com ranking devido. Ponteiro/score/intervalo30min/proteções preservados. Pode haver atualização mais lenta sob pressão gratuita. Simulação também revelou reembolso do budget anterior por build cruzando UTC; novo modo singleUtcDay não inicia nos últimos30minUTC e abandona checkpoint/finalização cruzada sem alterar budget passado ou promover ponteiro. Modos antigos não mudam.
+
+842Node/21focados, seis testes específicos emulador, tipos/lint/dry-run aprovados. Cenários:9vídeos/2dias92gerações/pico45itens/final27;100vídeos/3dias40gerações/pico600/final485; crescimento9→100/3dias74gerações/pico600/final500. Máximo6runs,38chamadas simuladas/invocação, nenhum esgotamento de quota; pausas preventivas esperadas. Leituras pedidas por dia14.392–16.303 e até3.877tentativas de escrita/exclusão incluem polling mas NÃO equivalem à faturação ou toda carga real. Orçamentos reservados dentro dos tetos.
+
+Bundle local 47a1dfcdd20eb4401006a38ca16ec363c3ca56d83d80f7d64b8f096931f28e2a,104fontes e43assetsAPI preservados. Arquivos anteriores copiados em checkpoint workspace. Nenhuma consulta/mutação remota, chave aberta, inferência, deploy, cron, commit ou push nesta rodada. Worker conhecido df8da48f continua com ranking/jobs/cron desligados e sem nova flag. Relatório/evidência etapa-4-ranking-controle-acumulo complementa a versão inicial. Próximo: preparar piloto delimitado de CPU real antes de solicitar autorização específica de pacote/acionamento/gravação/exclusão remota; sem cron permanente. CPU/TikTok/lançamento seguem pendentes.
+
+
+## 28/10/2026 — Etapa 4: trava e proposta de piloto preparadas localmente
+
+Preparada configuração privada de scheduled com janela absoluta de até20min para iniciar trabalho, até8claims duráveis e recusa de duplicatas. Expiração verificada antes do banco, na transação e póscommit; tentativa falha não devolve contador. Somente modo ranking-with-retention, nunca jobs gerais, sem rota pública ou novo segredo. Janela não cancela passo já iniciado. Não apagar apenas a variável do piloto com ranking/cron ativos; parada restaura versão desligada e remove gatilho.
+
+849Node/oito específicos emulador/tipos/lint/dry-run aprovados; cinco cenários workerd local sem rede externa, sem medir CPUedge. Bundle fff20003ef28e57448d20f5e17d5412aadd61b8c2d1a8b6c609dd6e8bc79398e,105fontes/43assetsAPI preservados. Plano detalhado em etapa-4-ranking-piloto-preparacao e evidência: preflight Free/Spark/quota/versão/métricas/inventário≤15; piloto por minuto com8claims/20min; pode gravar/excluir somente auxiliares de ranking; sem dados fictícios/inferência; parar por falha/telemetria ausente/doisCPU>10consecutivos; restaurar df8da48f e remover cron ao final. Aprovação remota específica AINDA pendente. Nenhum segredo aberto, acesso remoto de conta/dados, deploy, cron, plano, commit ou push nesta rodada. Fontes oficiais documentam10msCronFree e propagação até15min. Tradução pronta; CPU/TikTok e lançamento continuam pendentes.
