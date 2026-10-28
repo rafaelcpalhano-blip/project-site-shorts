@@ -1,0 +1,13 @@
+# Tradução dos jogos já cadastrados
+
+28/10/2026. Pedido explícito do proprietário concluído. Os nove jogos pendentes da IGDB receberam tradução salva; os 12 jogos da IGDB do catálogo agora possuem tradução válida vinculada ao original. Doom, Tibia e Dragon Ball: Xenoverse 2 não foram reprocessados. O cadastro manual teste foi ignorado por não ter descrição.
+
+Jogos processados: It Takes Two, Minecraft, Cyberpunk, Grand Theft Auto V, Counter-Strike 2, Metin2, EA Sports FC 26, Grand Theft Auto VI: Ultimate Edition, Valheim: 1.0. Cada jogo consumiu uma única inferência e terminou ready. Orçamento diário passou de 6 para 15 tentativas, restando cinco. Não houve repetição automática; o recibo exclusivo impede reexecutar o mesmo lote. Os hashes de todas as fontes e os campos originais foram conferidos depois da gravação. A ficha de Counter-Strike 2 mostra português e permite abrir o original.
+
+A operação administrativa rodou pontualmente no computador com os mesmos módulos de tradução publicados, adaptador REST e identidade runtime existentes. Não usou a rota HTTP pública, não simulou um visitante, não fez deploy e não ativou jobs. O transporte restringiu as leituras/gravações ao jogo corrente, sua tarefa privada e o orçamento do dia: até nove inferências, 200 requisições Firestore, 1 MiB de respostas Firestore/OAuth e 180 segundos. Foram usadas 63 requisições Firestore; isso não equivale à contagem de leituras faturadas. O modelo manteve seus limites de resposta e tempo.
+
+Seis testes locais verificaram proteção de traduções existentes, recusa de caminhos/alterações indevidas, limites do orçamento e preservação do original em falhas. O token de IA e a chave da identidade já existente foram abertos apenas em memória após conferir ACL; valores não foram registrados nem enviados ao navegador. Sem novas credenciais, alterações de permissões ou plano.
+
+Franquia observada antes: 50,81/10 mil neurônios; a atualização posterior do painel ainda repetia esse contador, portanto não afirmar consumo final zero. Quotas permanecem controladas pelo serviço e pelo orçamento do aplicativo. Esta execução local NÃO mede CPU do Worker e NÃO resolve o bloqueio de desempenho de produção. A tradução automática continua sujeita a imprecisões; conclusão técnica não certifica revisão editorial individual. Worker preservado: df8da48f-975f-47a5-9424-4d2476f4a0fc.
+
+Próxima frente: preparação local do ranking com retenção limitada e opt-in separado. Nenhum agendamento, exclusão remota de ranking, inferência adicional ou lançamento público está autorizado por este relatório. Evidência sanitizada em docs/evidencias/catalogo-traducao-retroativa.json; prova visual fora do Git. Sem commit/push pelo agente.
