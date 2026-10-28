@@ -1,0 +1,90 @@
+{
+  "recordedAt": "2026-10-28T03:55:22.843Z",
+  "checkpointId": "etapa-1-2026-10-28T03-53-22-801Z",
+  "baseCommit": "674e52e68f98b35f2bbe345161b115742839c7cb",
+  "originMainAtInspection": "674e52e68f98b35f2bbe345161b115742839c7cb",
+  "branch": "main",
+  "workerVersion": "c796854d-aaad-4e84-901e-bd65cbdbb45d",
+  "workerVersionCheckedAt": "2026-10-28T03:54:08.394Z",
+  "activeAt100Percent": true,
+  "sourceValidation": {
+    "previousNodeTestsPassed": 805,
+    "failed": 0,
+    "skipped": 0,
+    "newApplicationChangesInStage1": false,
+    "previousTypesPassed": true,
+    "previousLintPassed": true
+  },
+  "securityScan": {
+    "workingFiles": 751,
+    "findings": 0,
+    "scope": "Tracked and untracked nonignored files, pattern-based; not a guarantee of absence of all secrets"
+  },
+  "groups": [
+    {
+      "name": "ranking",
+      "message": "test: validar ciclo diario e retencao segura do ranking",
+      "files": [
+        "tests/worker-ranking-isolation.test.mjs",
+        "docs/etapa-9-a-ranking-ciclo-diario.md",
+        "docs/evidencias/etapa-9-a-ranking-ciclo-diario.json"
+      ]
+    },
+    {
+      "name": "translation",
+      "message": "fix: aceitar resposta compativel da traducao de jogos",
+      "files": [
+        "server/games/translate-description.ts",
+        "tests/translation-current-response.test.mjs",
+        "tests/translation-safe-failure.test.mjs",
+        "docs/etapa-9-a-tibia-terceira-tentativa.md",
+        "docs/etapa-9-a-traducao-formato-misto.md",
+        "docs/etapa-9-a-tibia-traducao-confirmada.md",
+        "docs/evidencias/etapa-9-a-tibia-terceira-tentativa.json",
+        "docs/evidencias/etapa-9-a-traducao-formato-misto.json",
+        "docs/evidencias/etapa-9-a-traducao-compatibilidade-deploy.json",
+        "docs/evidencias/etapa-9-a-tibia-traducao-confirmada.json"
+      ]
+    },
+    {
+      "name": "checkpoint",
+      "message": "docs: consolidar ponto de seguranca e continuidade",
+      "files": [
+        "docs/continuidade.md",
+        "docs/etapa-1-ponto-de-seguranca.md",
+        "docs/evidencias/etapa-1-ponto-de-seguranca.json"
+      ]
+    }
+  ],
+  "backupScope": [
+    "Committed history and refs in a Git bundle",
+    "Current changed tracked files and new files listed for the three commits",
+    "Binary working-tree patch against base HEAD",
+    "Frozen deployed Worker bundle and public assets, verified by hashes"
+  ],
+  "excluded": [
+    "Ignored files and environment secrets",
+    "Private credentials and secret values",
+    "Firestore documents and other remote data",
+    "Unrelated workspace files"
+  ],
+  "remoteActions": "Read-only Worker version check",
+  "commitsCreated": false,
+  "pushPerformed": false,
+  "publicVisibilityChanged": false,
+  "remainingOwnerStep": "Review and execute the three prepared commits, then inspect CI after an owner-authorized push",
+  "limitations": [
+    "Local safety copy is on the same computer; it does not protect against disk loss",
+    "No restore into the remote database or runtime was performed",
+    "No further Tibia inference is authorized or scheduled"
+  ],
+  "checkpointVerification": {
+    "completed": true,
+    "sourceFiles": 16,
+    "filesVerified": 62,
+    "gitBundleVerified": true,
+    "trackedPatchReverseCheckPassed": true,
+    "credentialsRead": false,
+    "remoteDataCopied": false
+  }
+}

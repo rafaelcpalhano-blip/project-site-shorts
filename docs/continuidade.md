@@ -2213,3 +2213,45 @@ Snapshot recebido27a9dc0 limpo e conciliado comorigin/main. Varredura740arquivos
 Correção somente de teste escolhe admitido/bloqueado pelos resultados reais, exige uma recusaabuse-limit e mantém20limite/19ao desfazer/20ao recurtir/21por outra rede. Acrescenta cenário com última identidade já admitida;20repetições passaram. Duas rodadas locais completas com concorrência padrão deram timeout15s do smoke CLI; isoladoCLI5testes passaram, versão em~1,3s. Mesma suíte com dois arquivos paralelos passou800/800 em33,9s. npmtest preparado com--test-concurrency=2, sem aumentar timeout e sem reduzir concorrência explícita nos cenários. Código da aplicação, limites e proteções intactos.
 
 Relatório:docs/etapa-9-b5-conferencia-final.md; evidência correspondente. Nenhum rerun remoto, commit/push/deploy ou alteração de credencial/visibilidade pelo agente. Não concluir publicação ainda: proprietário envia correção e conferirCI verde no novoSHA, depois aceite informado do histórico e autorização final de visibilidade. Não usar run antiga verde para certificar snapshot novo com falha.
+
+
+## 27/10/2026 — ranking: simulação de ciclo diário e retenção protegida
+
+Preparação local: três regressões novas usam REST em memória. Com nove fontes,47 gerações/dia UTC, reservas3854/1034 e423 itens auxiliares; com100 fontes,29 gerações, reservas11455/3857 e2900 itens antes de interromper atomicamente por orçamento. Retomada no dia seguinte preserva orçamento anterior e ponteiro vigente. Limpeza explícita recusa gerações atual/anterior, remove geração antiga sem tocar dados primários. Sem rede externa, escrita remota, inferência, deploy, cron ou mudança de limites. Não é medição de CPU no edge nem faturamento Firestore. Modo ranking-only não limpa gerações: integração limitada de retenção e CPU continuam requisitos para rotina contínua. Ver docs/etapa-9-a-ranking-ciclo-diario.md e evidência. Terceira tentativa de Tibia aguarda autorização específica; TikTok pendente.
+
+Validação desta rodada:803 testes Node aprovados,0falhas/0skips; lint e diff-check aprovados. Nenhum commit/push pelo agente.
+
+
+## 27/10/2026 — terceira reconfirmação única de Tibia concluída
+
+Autorização específica consumida uma vez: confirmação21h10Brasília, Worker6910fddf, HTTP200/CPU19ms/2666ms, sem exceções/exceededCpu na janela180s. Falhou invalid-translation-response-shape; descrição original preservada, sem tradução. Primeiro uso do novo diaUTC:contador1hoje, terceira tentativa no histórico. Diagnóstico ainda não distingue as quatro condições do validador; não afirmar campo exato. Preparação somente local separa códigos fixos, sem relaxar validação nem guardar resposta/model reasoning.18testes focados/804totais aprovados. Sem deploy, repetição, cron ou mudança de plano. RetryAt28/10 01:10:29UTC=27/10 22h10min29Brasília; nova tentativa NÃO autorizada. Relatório/evidência etapa-9-a-tibia-terceira-tentativa.
+
+
+## 27/10/2026 — formato misto identificado; correção local preparada
+
+Deploy autorizado de diagnóstico: build genérica gerou demo em efe65a54, identificado visualmente e revertido imediatamente para6910fddf antes de inferência. Reempacotado com VITE_DATA_MODE=api explícito/variáveis públicas restritas; versão corrigida1b45ef41 ativa100%,43assets/42hashes/13guardas aprovados e catálogo real conferido, nove segredos preservados. Regra para futuros pacotes: nunca aproveitar dist genérico; gerarAPI em pasta isolada e validar modo antes do deploy. Nenhum conteúdo demo migrado/escrito.
+
+Única reconfirmação autorizada23h13Brasília falhou invalid-translation-response-shape-mixed: coexistem choices e response; valor de response desconhecido. HTTP200/22msCPU/2509ms, janela180s/11eventos, sem exceções/exceededCpu; original preservado. Contador2hojeUTC, quarta no histórico. Próxima elegibilidade28/10 00h13min18Brasília, sem nova tentativa autorizada.
+
+Correção local permite somente legado vazio/null ou idêntico ao conteúdo final validado; conflito continua bloqueado e demais proteções intactas.805testes totais/19focados, tipos/lint/dry-run aprovados; bundle4749e2fc,43assetsAPI idênticos aos atuais. Correção ainda NÃO publicada. Relatório/evidência etapa-9-a-traducao-formato-misto. Ranking/jobs/cron desligados, TikTok pendente, planos preservados. Sem commit/push pelo agente.
+
+
+## 27/10/2026 — compatibilidade de tradução publicada; teste autorizado pendente de espera
+
+Deploy específico autorizado concluído:c796854d-aaad-4e84-901e-bd65cbdbb45d, bundle4749e2fc, anterior1b45ef41.43assetsAPI idênticos/nove segredos preservados,13guardas e42hashes aprovados, ativo100%, ranking/jobs/cron desligados. ReadTibia23h19: sem tradução, contador2hoje, retryAt28/10 03:13:18UTC=00h13min18Brasília. Uma tentativa de Tibia expressamente autorizada para depois desse horário permanece NÃO consumida; não pedir aprovação novamente para esse mesmo teste. Antes: reconferir estado/quotas/versão e abrir coletaCPU, criar recibo exclusivo e confirmar uma vez. Se já houver nova tentativa/tradução ou divergência, não repetir. Sem agendamento ou inferência nesta rodada. Autorização e observador preparados fora doGit. Relatório atualizado e evidência etapa-9-a-traducao-compatibilidade-deploy.
+
+
+## 28/10/2026 — Tibia traduzida com sucesso; autorização consumida
+
+Após reiniciar, proprietário entrou novamente no painel Cloudflare. Worker c796854d ativo100%, estado2tentativas/espera vencida, franquiaAI15,68/10.000observada. Executada UMA confirmação oficial, sem vídeo: tarefa ready/pt-BR,349caracteres, vinculada ao original340caracteres/nome atual; contador3hojeUTC. UI mostra tradução, abre originalinglês e conserva ambos após reload. Recibo exclusivo e autorização atualizados para completed-success-no-repeat; NÃO há tentativa pendente ou autorizada restante.
+
+Coleta180s/15eventos: confirmação200/17msCPU/2403ms, pesquisa14ms, ficha3/8ms, feedordenado5/6ms; zero exceções/exceededCpu, sem inspeção de corpo1102. Primeiro uso de rota no isolate, não cold start completo.17ms acima do alvo10; CPUprodução continua pendente. Texto possui concordância e geográficos preservados eminglês: refinamento editorial separado, sem novas chamadas nesta rodada. Nenhum deploy, cron, job, plano, segredo, vídeo ou código alterado; somente tradução/tarefa/orçamento autorizados. Sem commit/push pelo agente. Relatório/evidência etapa-9-a-tibia-traducao-confirmada. TikTok/ranking/CPU seguem pendentes.
+
+
+## 28/10/2026 — Etapa 1: organização e ponto de segurança
+
+Etapa autorizada: base674e52e68f98b35f2bbe345161b115742839c7cb conciliada com referência local origin/main; Workerc796854d-aaad-4e84-901e-bd65cbdbb45d confirmado ativo100% por leitura. Inventário separado em3commits:ranking3arquivos,tradução10,continuidade3. Código funcional sem alterações adicionais nesta etapa. Referência805testes/tipos/lint aprovados; varredura atual751arquivos sem achados pelos padrões e diff-check sem erros.
+
+Ponto localetapa-1-2026-10-28T03-53-22-801Z, fora doGit: histórico Git em bundle, arquivos pendentes, patch e bundle/assets públicos congelados; manifesto privado e hashes no workspace. Não inclui ignorados/credenciais/segredos/dados remotos nem protege contra perda do disco. Procedimento de recuperação e limites em docs/etapa-1-ponto-de-seguranca.md/evidência correspondente. Não executar recuperação, novo deploy, inferência, commit ou push automaticamente. Proprietário revisa e efetiva3commits; CI deve ser conferido após seu push.
+
+Cópia fechada e verificada:16arquivos pendentes/62hashes, Git bundle íntegro e patch reverso compatível; nenhuma credencial lida ou documento remoto copiado. Commits ainda não executados.
