@@ -1,8 +1,8 @@
 ---
 projeto: Clipzone
 etapa: 9-A
-status: aguardando-testes-complementares
-versao: ffec1d98-360b-43ea-bcb4-f3dbc29da2eb
+status: revisao-operacional-final
+versao: 7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4
 tags: [clipzone, homologacao, fechamento]
 ---
 
@@ -10,7 +10,9 @@ tags: [clipzone, homologacao, fechamento]
 
 Site: https://www.clipzone.workers.dev/. Usar a versão publicada, sem depender dos servidores locais. Esta nota complementa o checklist 9-A; não substitui resultados antigos nem autoriza lançamento.
 
-## Já confirmado nesta versão
+Confirmações manuais anteriores referem-se à opção A em ffec1d98-360b-43ea-bcb4-f3dbc29da2eb. A versão atual recebeu apenas as correções de acessibilidade/robots; conferir navegação e sessão após atualizar. Os hashes, rotas e cabeçalhos atuais já foram verificados automaticamente.
+
+## Já confirmado na homologação
 
 - [x] PC e celular: três ordenações, filtro por jogo e abrir/fechar vídeo — confirmação do proprietário.
 - [x] Acesso administrativo na sessão habitual — confirmação do proprietário.
@@ -43,10 +45,10 @@ Não repetir os casos já aprovados acima. Marcar somente após testar; se um ca
 
 Uma rodada Mobile emulada e uma Desktop no Chrome do PC, em janela anônima. Home com cards carregados, Todos os jogos/Últimos Postados e nenhum player, formulário ou comentário aberto. Fechar boas-vindas antes de iniciar e registrar se reaparecerem na captura. Usar as mesmas opções nas duas execuções. Não repetir para selecionar a melhor nota.
 
-- [ ] Mobile: guardar HTML e JSON.
-- [ ] Desktop: guardar HTML e JSON.
+- [x] Mobile: HTML e JSON recebidos da rodada 21h56 de 28/10.
+- [x] Desktop: HTML e JSON recebidos da rodada 21h56 de 28/10.
 - [ ] Anotar Chrome/Lighthouse, data, opções de armazenamento/throttling e Clipper no screenshot final.
-- [ ] Enviar os quatro relatórios para comparação; preservar eventuais falhas da auditoria.
+- [x] Quatro relatórios recebidos e analisados; avisos de IndexedDB preservados.
 
 | Métrica | Mobile | Desktop |
 | --- | --- | --- |
@@ -67,3 +69,10 @@ O perfil Mobile do Lighthouse não substitui o aparelho físico e suas notas nã
 - [ ] Obter autorização específica para GitHub público e lançamento do site.
 
 O checkpoint privado antigo do ranking permanece preservado; qualquer limpeza/recuperação será decidida separadamente. Não reativar o algoritmo para preencher esta lista.
+
+
+## Resultado consolidado após a rodada 21h56
+
+As regras de nomes acessíveis e robots passaram nos dois relatórios. Performance desktop99/mobile94, Acessibilidade100/BoasPráticas100 e SEO66 pelo bloqueio intencional de rastreamento. Não repetir Lighthouse agora; aviso IndexedDB limita comparação limpa de performance. Ver etapa-9-a-lighthouse-fechamento.md.
+
+Revisão local 9-B e guia de operação/recuperação preparados, sem alteração de código funcional adicional, conta, plano ou infraestrutura. 112 testes direcionados aprovados; nenhum novo impedimento crítico no código revisado. Recuperação/custódia/frequência de backup, estratégia de retenção, CI do commit final e README conjunto ainda exigem fechamento. Ver etapa-9-b-revisao-final-local.md e guia-operacao-recuperacao.md.

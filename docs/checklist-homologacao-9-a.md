@@ -10,7 +10,7 @@ tags: [clipzone, homologacao, desktop, mobile, lighthouse]
 
 Endereço desta rodada: **https://www.clipzone.workers.dev/**. Use a versão HTTPS publicada; esta rodada não usa os servidores locais 5174/5175. Não faça upgrade, deploy, limpeza de banco ou cadastro fictício para preencher o checklist.
 
-Versão de referência atualizada em 28/10/2026: `ffec1d98-360b-43ea-bcb4-f3dbc29da2eb` (opção A). Se houver novo deploy, identifique a versão e separe os resultados. TikTok teve publicação real relatada e registro público observado em 28/10; reprodução também confirmada pelo proprietário para esse vídeo e a causa do antigo 429 continua desconhecida. Não repetir envios em massa ou testes de IDs inexistentes.
+Versão de referência atualizada em 28/10/2026: `7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4` (opção A com correções de acessibilidade e robots). Se houver novo deploy, identifique a versão e separe os resultados. TikTok teve publicação real relatada e registro público observado em 28/10; reprodução também confirmada pelo proprietário para esse vídeo e a causa do antigo 429 continua desconhecida. Não repetir envios em massa ou testes de IDs inexistentes.
 
 ## Como preencher
 
@@ -44,7 +44,7 @@ Marque somente quando confirmar o resultado. Para falha, mantenha desmarcado e r
 - [ ] F03-PC
 - [ ] F03-MOB
 
-**F04 — Paginação (se houver mais de uma página):** trocar página e conferir alinhamento em “Últimos Postados”, ausência de cards antigos/duplicados e estados de Anterior/Próxima. Saltos de cinco páginas só são testáveis com páginas suficientes. Na verificação de 28/10, a home tem dez cards/uma página; não criar conteúdo só para aumentar a paginação. Registrar itens sem conteúdo suficiente como não executados.
+**F04 — Paginação (se houver mais de uma página):** trocar página e conferir alinhamento em “Últimos Postados”, ausência de cards antigos/duplicados e estados de Anterior/Próxima. Saltos de cinco páginas só são testáveis com páginas suficientes. Na verificação pós-deploy de 28/10, a home tem treze cards/uma página; não criar conteúdo só para aumentar a paginação. Registrar itens sem conteúdo suficiente como não executados.
 
 - [ ] F04-PC
 - [ ] F04-MOB
@@ -147,3 +147,8 @@ Não repetir para buscar nota maior. Se houver timeout/IndexedDB/falha, guardar 
 - [ ] Registrar sucesso funcional TikTok e tratamento de indisponibilidade externa na revisão de lançamento 9-C
 
 Nenhuma marcação deste checklist autoriza lançamento, deploy, mudança de plano ou publicação do repositório. Backup privado real foi verificado em 26/10/2026; recuperação Auth/TOTP, custódia adicional e autorização de restauração continuam separadas.
+
+
+## Fechamento das correções — 28/10, rodada 21h56
+
+Os quatro arquivos Lighthouse foram recebidos. Nomes acessíveis e robots válidos aprovados em desktop/mobile; navegação/layout/painel já confirmados pelo proprietário após o deploy. SEO66 é consequência do bloqueio de rastreamento autorizado, não falha de sintaxe. Aviso IndexedDB impede classificar performance como baseline anônima limpa. Relatório atual: etapa-9-a-lighthouse-fechamento.md. Não ampliar a cobertura dos demais itens/aparelhos por inferência; casos não individualizados permanecem com os limites registrados. Revisão operacional 9-B preparada e decisões no guia-operacao-recuperacao.md; não implica autorização de lançamento.

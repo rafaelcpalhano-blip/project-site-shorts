@@ -1,0 +1,106 @@
+{
+  "recordedAt": "2026-10-29T01:02:48.758Z",
+  "version": "7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4",
+  "reports": [
+    {
+      "formFactor": "desktop",
+      "fetchTime": "2026-10-29T00:56:17.876Z",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 66
+      },
+      "metrics": {
+        "first-contentful-paint": 670.6077499999999,
+        "largest-contentful-paint": 759.5292999999999,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.03439322432168915,
+        "speed-index": 759.8381889164752
+      },
+      "accessibleNameAudit": {
+        "score": 1,
+        "failures": 0
+      },
+      "robotsSyntaxAudit": {
+        "score": 1,
+        "errors": 0
+      },
+      "crawlBlocked": true,
+      "crawlBlockingSource": [
+        "https://www.clipzone.workers.dev/robots.txt"
+      ],
+      "warnings": [
+        "There may be stored data affecting loading performance in this location: IndexedDB. Audit this page in an incognito window to prevent those resources from affecting your scores."
+      ],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "storageResetDisabled": false,
+      "throttlingMethod": "simulate",
+      "jsonSha256": "86b83e33949f2dce6c0f5163dbfddae7f01cbecace9b4ffb3ff950c1c1bd5395",
+      "htmlSha256": "833f1a13d148cb5b35cf468df4479fe663edb793d0b3a21e0ee821ec43589012"
+    },
+    {
+      "formFactor": "mobile",
+      "fetchTime": "2026-10-29T00:56:53.647Z",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 66
+      },
+      "metrics": {
+        "first-contentful-paint": 2343.618875,
+        "largest-contentful-paint": 2618.14265,
+        "total-blocking-time": 5,
+        "cumulative-layout-shift": 0.03219921295257025,
+        "speed-index": 2343.618875
+      },
+      "accessibleNameAudit": {
+        "score": 1,
+        "failures": 0
+      },
+      "robotsSyntaxAudit": {
+        "score": 1,
+        "errors": 0
+      },
+      "crawlBlocked": true,
+      "crawlBlockingSource": [
+        "https://www.clipzone.workers.dev/robots.txt"
+      ],
+      "warnings": [
+        "There may be stored data affecting loading performance in this location: IndexedDB. Audit this page in an incognito window to prevent those resources from affecting your scores."
+      ],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "storageResetDisabled": false,
+      "throttlingMethod": "simulate",
+      "jsonSha256": "173b8b11fb0fb4282d785e332d836ec670fb09bd1590c879e7c960410399b837",
+      "htmlSha256": "93eb48fa7e5cafc94cd1093bd6a444e37e47fdf0b12f9bc86710e681b79aac0e"
+    }
+  ],
+  "accessibleNameFixVerifiedInBoth": true,
+  "robotsSyntaxFixVerifiedInBoth": true,
+  "seoReductionExplainedByIntentionalCrawlBlock": true,
+  "performanceCategoriesUnchanged": true,
+  "strictCleanPerformanceComparison": false,
+  "strictComparisonLimit": "IndexedDB warning in both reports; disabled screen emulation, no proof of incognito",
+  "manualPostDeployConfirmed": true,
+  "functional9AStatus": "Current targeted corrections closed; exact device coverage follows user reports and prior checklist limitations",
+  "productionCpuCertified": false,
+  "deploymentPerformed": false
+}

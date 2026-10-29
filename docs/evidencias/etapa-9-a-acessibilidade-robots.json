@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-28",
+  "scope": "Local preparation followed by explicitly authorized homologation deployment",
+  "referenceVersion": "ffec1d98-360b-43ea-bcb4-f3dbc29da2eb",
+  "changes": [
+    "Native content-based preview name with visible labels before screen-reader action/title",
+    "Decorative preview artwork uses empty alt; game and fallback caption remain visible",
+    "robots.txt serves User-agent: * and Disallow: / with explicit plain-text MIME and revalidation"
+  ],
+  "validation": {
+    "generalParallel": {
+      "passed": 888,
+      "failed": 1,
+      "reason": "Firebase CLI startup exceeded existing 15-second timeout under concurrent host work"
+    },
+    "isolatedToolchain": {
+      "passed": 5,
+      "failed": 0
+    },
+    "generalSerial": {
+      "passed": 889,
+      "failed": 0
+    },
+    "nativeChromeAccessibleName": {
+      "cases": 9,
+      "realReactMarkup": true,
+      "realCss": true,
+      "thumbnailCoverFallbackForThreePlatforms": true,
+      "isolatedProfile": true,
+      "lighthouseOrAxeExecuted": false
+    },
+    "localStaticRoutesAndHeaders": {
+      "passed": 6,
+      "robotsPlainText": true,
+      "spaAdminPreserved": true,
+      "apiHeadersPreserved": true
+    },
+    "types": true,
+    "build": true,
+    "lint": true,
+    "workingTreeSecretCheck": true,
+    "diffCheck": true,
+    "workerDryRun": true,
+    "firestoreSuiteRepeated": false,
+    "reasonFirestoreNotRepeated": "No API/server/database/rules or data-flow changes"
+  },
+  "package": {
+    "assets": 44,
+    "apiBundleSha256": "e9c81ab6a913414c7a263dce7ceab2bbd03a39130d65e850f21e8b688324ea87",
+    "apiBundleUnchanged": true,
+    "nineSecretReferencesPreserved": true,
+    "privateSecretFileOpened": false,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "cron": false
+  },
+  "limits": [
+    "Real Lighthouse rule must be rechecked after authorized deployment",
+    "Robots crawl directives are voluntary and are not authentication or a guarantee of exclusion from search results",
+    "Indexing policy must be reviewed explicitly before public launch"
+  ],
+  "deployed": true,
+  "remoteProviderCalls": false,
+  "credentialsOpened": true,
+  "dependenciesChanged": false,
+  "publicLaunchApproved": false,
+  "homologation": {
+    "authorizedSeparately": true,
+    "deployedAt": "2026-10-29T00:42:42.199Z",
+    "version": "7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4",
+    "priorVersion": "ffec1d98-360b-43ea-bcb4-f3dbc29da2eb",
+    "activeAt100Percent": true,
+    "assetsPublished": 44,
+    "publicHashesChecked": 43,
+    "apiBundleUnchanged": true,
+    "bundleSha256": "e9c81ab6a913414c7a263dce7ceab2bbd03a39130d65e850f21e8b688324ea87",
+    "nineSecretValuesPreserved": true,
+    "secretFileUnchanged": true,
+    "robotsMime": "text/plain; charset=utf-8",
+    "robotsPolicy": "crawl-blocked",
+    "robotsRevalidates": true,
+    "apiChecks": [
+      {
+        "order": "likes",
+        "session": false,
+        "status": 401
+      },
+      {
+        "order": "latest",
+        "status": 200,
+        "itemCount": 13
+      },
+      {
+        "order": "oldest",
+        "status": 200,
+        "itemCount": 13
+      },
+      {
+        "order": "likes",
+        "status": 200,
+        "itemCount": 13
+      },
+      {
+        "order": "relevant",
+        "status": 400,
+        "itemCount": null
+      }
+    ],
+    "adminShellVerified": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "cron": 0,
+    "contentWrites": false,
+    "sessionOperationalWritesExpected": true,
+    "manualSessionAndNavigationPending": false,
+    "lighthouseRuleRetestPending": false,
+    "publicLaunchApproved": false,
+    "manualConfirmation": {
+      "recordedAt": "2026-10-29T00:55:00.755Z",
+      "source": "User replied Tudo funcionou to the post-deploy PC/mobile navigation, layout and admin-session check",
+      "videoOpenClose": true,
+      "layout": true,
+      "existingAdminSession": true,
+      "desktopAndMobileReported": true,
+      "standaloneModeIndividuallySpecified": false
+    },
+    "lighthouseVerified": {
+      "reference": "etapa-9-a-lighthouse-fechamento.json",
+      "bothProfilesPassedAccessibleNames": true,
+      "bothProfilesPassedRobotsSyntax": true,
+      "indexedDbWarning": true,
+      "seo66ExpectedCrawlBlock": true
+    }
+  }
+}
