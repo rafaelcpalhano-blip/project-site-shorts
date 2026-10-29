@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-29",
+  "state": "local-candidate-not-deployed",
+  "publicLaunchAuthorized": false,
+  "activeVersionObserved": "7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4",
+  "activeAt100Percent": true,
+  "workersPlanObserved": "Free",
+  "workersDailyUsageDisplayed": 76,
+  "workersDailyLimitDisplayed": 100000,
+  "package": {
+    "files": 44,
+    "publicFiles": 43,
+    "changedAssets": [
+      "robots.txt",
+      "_headers"
+    ],
+    "unchangedFiles": 42,
+    "apiUnchanged": true,
+    "apiSha256": "e9c81ab6a913414c7a263dce7ceab2bbd03a39130d65e850f21e8b688324ea87",
+    "secretReferencesObserved": 9,
+    "secretValuesOpened": false,
+    "routingAndVariablesUnchanged": true,
+    "jobsAndRankingDisabled": true,
+    "cronAdded": false
+  },
+  "validation": {
+    "robotsContractPassed": true,
+    "localStaticRuntimeCasesPassed": 8,
+    "lint": true,
+    "workingTreeSecurityCheck": true,
+    "diffCheck": true,
+    "dryRun": true,
+    "fullApplicationSuiteRepeated": false,
+    "reason": "Only robots and static administrative indexing headers changed; executable API/frontend/data rules unchanged"
+  },
+  "backup": {
+    "verified": true,
+    "readTime": "2026-10-29T05:56:09.174Z",
+    "documents": 371,
+    "ssdAndHdVerified": true
+  },
+  "recovery": {
+    "ownerReportedAccessRecovery": true,
+    "runtimeCredentialLocationExplainedPrivately": true,
+    "independentAccountRestoreTested": false
+  },
+  "backupReminder": {
+    "provider": "Google Calendar",
+    "start": "2026-11-08T21:00:00-03:00",
+    "timezone": "America/Sao_Paulo",
+    "popupMinutes": 0,
+    "private": true,
+    "recurring": false,
+    "automaticCapture": false
+  },
+  "remoteEffects": {
+    "calendarEventCreated": true,
+    "deploy": false,
+    "remoteDataWrites": false,
+    "planChange": false,
+    "githubChange": false
+  },
+  "postLaunchLighthousePending": true
+}

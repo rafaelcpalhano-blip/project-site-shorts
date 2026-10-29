@@ -1,3 +1,6 @@
-# Homologation: crawling remains disabled until an explicit launch decision.
+# Launch candidate: public pages may be crawled after the authorized deploy.
+# These directives are not access control; administration remains authenticated.
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin
+Disallow: /api

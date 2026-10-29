@@ -2479,3 +2479,19 @@ Usuário aprovou descrição simplificada de canal/título/links curtos TikTok n
 ## 29/10/2026 — README aprovado pelo proprietário
 
 Usuário declarou que gostou do README e autorizou prosseguir. Revisão editorial conjunta concluída; preparar comandos exatos para os cinco arquivos documentais pendentes, sem commit/push automático. Após push, conferir CI do SHA final. Não confundir aprovação do README com alteração de visibilidade ou lançamento; backup atualizado/HD e confirmações operacionais restantes seguem separados.
+
+
+## 29/10/2026 — Backup atualizado no SSD e HD concluído
+
+Após reinício, proprietário definiu destino no HD, autorizou subpasta privada usuário/SYSTEM e captura única250. Preflight Spark/default/quota/ACL/hashes aprovado; tentativa parou com250Firestore+1OAuth, sem arquivo. Preparação privada separada750 (500caminhos/5MiB/arquivo8MiB/sinal120s),54testes existentes e300docs fictícios/302chamadas aprovados; nova tentativa explicitamente autorizada. Repreflight123hashes/Spark/3,3mil leituras de50mil(6,6%)/335writes/0deletes exibidos com possível atraso.
+
+Captura consistente2026-10-29T05:56:09.174Z (02h56Brasília):371docs/412Firestore+1OAuth1.083bytes, snapshot204.841bytes. SSD e HD privados verificados, bytes/checksum/recibos iguais; releitura local independente aprovada sem novo banco/chave. Duas tentativas total662requisiçõesFirestore/2OAuth, não contagem de leituras debitadas. Zero writes/deletes remotos, sobrescritas de backup, deploy/plano/cron/IAM/GitHub alterados. Copias reais/recibos operacionais fora do Git; relatório/evidência etapa-9-b-backup-verificado-2026-10-29. Runner/marcadores privados preservados, sem retry.
+
+Backup/segunda cópia deixam de ser pendências; nenhuma restauração real ou criptografia do HD comprovada. Proprietário pode desconectar pelos cuidados normais. Política15dias, próxima revisão13/11 se captura atual for referência; lembrete móvel não criado (faltam horário/canal). Lançamento/indexação/Lighthouse final e confirmação individual de recuperação Cloudflare/GitHub seguem separados. Repositório23ffccc teve CI14 aprovado; proprietário informou intenção de torná-lo público, sem confirmação independente de mudança de visibilidade nesta etapa.
+
+
+## 29/10/2026 — Recuperação explicada, lembrete e candidato9-C prontos
+
+Proprietário relatou recuperação dos acessos por e-mail/autenticador/alternativas e perguntou sobre runtime. Local privado informado diretamente na conversa, finalidade de chave de serviço Firestore e cuidados explicados; não aberta ou copiada para HD nesta fase. Primeira revisão alterada a pedido para08/11/2026 às21hBrasília; busca Agenda primário sem evento no dia, evento único privado de30min criado com popup0min, sem convidados/captura automática. ID/link só no recibo privado. Depois combinar15dias;13/11 deixa de ser a primeira revisão.
+
+Candidato9-C congelado44arquivos, apenas robots/_headers alterados e42idênticos; APIbundle e9c81ab6... idêntico. RobotsAllow:/ exclui/admin e/api, HTMLadmin noindex/nofollow.1contrato+8rotas locais/lint/segredos/diff/dryrun aprovados, sem nova suíte integral por não mudar executáveis/dados. CLIleitura confirmou versão7ec6774e...100% e9referências secretas/flags; CloudflareUI confirmou Free/Currentplan,76/100mil pedidos exibidos. Sem segredo aberto/deploy/cron/plano/GitHub modificado. Relatório/evidência etapa-9-c-preparacao-lancamento. Próxima ação requer autorização específica do lançamento/pacote; depoisverificação remota/humana/Lighthousefinal/README e9-D. CI23ffccc anterior não aprova estes arquivos locais novos.

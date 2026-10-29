@@ -20,7 +20,7 @@ const {unstable_dev}=await import(pathToFileURL(join(lab,'node_modules/wrangler/
 const previous=process.cwd(),checks=[];let worker
 try{
  process.chdir(run);worker=await unstable_dev(main,{config,envFiles:[],local:true,ip:'127.0.0.1',port:19382,inspectorPort:0,inspect:false,persist:false,logLevel:'error',experimental:{forceLocal:true,disableExperimentalWarning:true,disableDevRegistry:true,showInteractiveDevSession:false,watch:false}})
- for(const path of ['/','/admin','/assets/index-fixturehash.js','/clipper/welcome.webp','/robots.txt','/api/admin/config']){
+ for(const path of ['/','/admin','/admin/fixture','/jogos/igdb-9596','/assets/index-fixturehash.js','/clipper/welcome.webp','/robots.txt','/api/admin/config']){
   const response=await worker.fetch(path),body=await response.text(),h=response.headers
   assert.equal(response.status,200)
   if(path.startsWith('/api/')){
@@ -32,8 +32,9 @@ try{
    assert.equal(h.get('referrer-policy'),'strict-origin-when-cross-origin');assert.equal(h.get('strict-transport-security'),'max-age=86400')
    assert.equal(h.get('cache-control')?.includes('immutable'),path.startsWith('/assets/'))
   }
+  assert.equal(h.get('x-robots-tag'),path==='/admin'||path.startsWith('/admin/')?'noindex, nofollow':null)
   if(path==='/robots.txt'){assert.equal(h.get('content-type'),'text/plain; charset=utf-8');assert.equal(h.get('cache-control'),'public, max-age=0, must-revalidate');assert.equal(body,await readFile(join(repo,'public/robots.txt'),'utf8'));assert.ok(!body.includes('<!doctype'))}
-  checks.push({path,status:response.status,passed:true,headers:Object.fromEntries(['cache-control','referrer-policy','strict-transport-security','content-security-policy','x-frame-options','x-content-type-options'].map(key=>[key,h.get(key)]))})
+  checks.push({path,status:response.status,passed:true,headers:Object.fromEntries(['cache-control','referrer-policy','strict-transport-security','content-security-policy','x-frame-options','x-content-type-options','x-robots-tag'].map(key=>[key,h.get(key)]))})
  }
  const result={observedAt:new Date().toISOString(),wrangler:tool.version,passed:checks.length,checks,limits:['Local static routing fixture only; no real Google or provider playback assertion','No remote resources, credentials, data, deploy or plan changes','HSTS does not redirect the first HTTP request; HTTPS routing remains pending']}
  await mkdir(join(lab,'evidence'),{recursive:true});await writeFile(join(lab,'evidence/static-headers-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result))
