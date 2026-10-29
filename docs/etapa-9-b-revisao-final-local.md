@@ -70,3 +70,8 @@ Esse resultado encerra a falta de CI do snapshot ac5e89d. Não aprova alteraçõ
 ## Decisões operacionais atualizadas — frequência e destino
 
 Em29/10 o proprietário definiu backup manual no lançamento e a cada15dias, substituindo a proposta semanal. Escolheu HD separado do SSD, mantido desconectado quando não usado. Política e meio deixam de estar indefinidos; captura atualizada, diretório/proteção do destino e recuperação do autenticador continuam pendentes. Não houve acesso ao HD, nova captura/cópia, alteração de permissões ou agendamento. Lembrete móvel recorrente solicitado para quando data/hora/canal forem definidos; não criado nesta rodada.
+
+
+## Retenção — procedimento de inspeção real validado
+
+Em29/10, primeira leitura real separadamente autorizada de networkAbuse executada com sucesso, após conferir Spark/quota/ACL/hashes: query de expiração/projeção retornou0documentos;1OAuth+1query,1.133bytes e zero escritas/exclusões. Não há limpeza indicada neste instante. Procedimento/limites em etapa-9-b-executor-inspecao.md. A autorização única está consumida, sem agendamento. Isso valida a inspeção manual no escopo da rede e não ativa rotina, TTL ou leitura de outras coleções. Recuperação TOTP e cópia de dados atualizada antes do lançamento permanecem pendentes.

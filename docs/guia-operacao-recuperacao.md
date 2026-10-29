@@ -103,3 +103,11 @@ Escopo do backup: documentos do Firestore no instante da captura, incluindo cada
 ## Inspeção de retenção preparada localmente — 29/10/2026
 
 Biblioteca de leitura opt-in disponível em server/maintenance/inspect-retention.ts, ainda sem runner real, credenciais, rota ou cron. Uma página de até30 documentos e nenhuma escrita; retorna contagens e eventual cursor operacional privado. Reutiliza regras existentes para tentativas/descurtidas de mais de90dias e observa expiração da rede. Ver etapa-9-b-inspecao-retencao.md para limites e proposta de conexão real futura. A existência da biblioteca não autoriza sua conexão ao banco ou exclusões.
+
+## Executor de inspeção única preparado — 29/10/2026
+
+Transporte específico e executor privado de leitura prontos para revisão: primeiro escopo é somente networkAbuse em clipzone-db02a/(default), uma consulta de até30 datas de expiração, até128KiB de resposta, mais uma troca OAuth limitada a16KiB, sem escrita/retry/paginação. Credencial runtime existente só será aberta após conferência ACL e autorização específica, com Spark/margem/alvo verificados. Simulação RSA/OAuth/Firestore aprovada sem abrir dados reais. Ver etapa-9-b-executor-inspecao.md. Não executar como parte automática do backup ou do site; nenhuma consulta real foi realizada na preparação.
+
+## Primeiro uso real da inspeção — 29/10/2026
+
+Inspeção única separadamente autorizada em networkAbuse, após conferir Spark/margem/alvo/ACL/hashes: zero documentos expirados retornados, uma query, uma troca OAuth,1.133bytes de respostas e nenhuma escrita/exclusão. Não há limpeza a executar com base nessa observação. Recibo não é backup, inventário total ou saldo de quota em tempo real. Não repetir usando a aprovação já consumida; rever em operação futura quando necessário. HD e conteúdo primário preservados. Ver etapa-9-b-executor-inspecao.md.

@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-29",
+  "scope": "Local fixed-target transport and private operational runner; no real execution",
+  "sourceHashSetSha256": "9b1076cf8924470431cc4ae8bca96d4a9c21534592a99171128d805b27b191d8",
+  "hashedFiles": 122,
+  "target": "clipzone-db02a/(default)",
+  "collection": "networkAbuse",
+  "projection": [
+    "expiresAt"
+  ],
+  "limits": {
+    "documents": 30,
+    "firestoreHttp": 1,
+    "oauthHttp": 1,
+    "firestoreResponseBytes": 131072,
+    "oauthResponseBytes": 16384,
+    "totalBytes": 147456,
+    "overallAbortMs": 120000,
+    "queryAbortMs": 30000
+  },
+  "validation": {
+    "newTransportTests": 11,
+    "targetedTransportAndInspectorPassed": 22,
+    "generalSerialPassed": 911,
+    "generalSerialFailed": 0,
+    "serverTypes": true,
+    "globalLint": true,
+    "runnerSyntax": true,
+    "runnerSyntheticRsaOAuthFirestoreProof": true,
+    "selftestTotalResponseBytes": 303,
+    "localSecretsCheck": true,
+    "diffCheck": true
+  },
+  "guards": [
+    "Fresh separately approved preflight for exact target, Spark and quota margin",
+    "Source hashes match frozen code",
+    "Existing credential file/parent ACL checked without changes",
+    "Single-attempt marker before credential loading",
+    "One source query and one OAuth exchange, no retries",
+    "Counts only, no document IDs/content in saved receipt"
+  ],
+  "realCredentialsOpened": true,
+  "realPreflightCreated": true,
+  "realQueries": 1,
+  "deletedDocuments": 0,
+  "backupOrHdAccess": false,
+  "cronOrJobsActivated": false,
+  "deployed": false,
+  "publicLaunchApproved": false,
+  "execution": {
+    "authorizedSeparately": true,
+    "completedAt": "2026-10-29T03:58:12.574Z",
+    "observedAt": "2026-10-29T03:58:11.956Z",
+    "target": "clipzone-db02a/(default)",
+    "collection": "networkAbuse",
+    "projection": [
+      "expiresAt"
+    ],
+    "plan": "Spark",
+    "quotaBefore": {
+      "readsDisplayedApprox": 2600,
+      "readLimitPerDay": 50000,
+      "writesDisplayed": 304,
+      "writeLimitPerDay": 20000,
+      "deletesDisplayed": 0,
+      "indicatorMayBeDelayed": true
+    },
+    "credentialAclVerified": true,
+    "sourceHashesMatched": true,
+    "returnedDocuments": 0,
+    "examined": 0,
+    "eligible": 0,
+    "continuationPossible": false,
+    "oauthRequests": 1,
+    "firestoreRequests": 1,
+    "firestoreResponseBytes": 50,
+    "oauthResponseBytes": 1083,
+    "totalResponseBytes": 1133,
+    "writes": 0,
+    "deletes": 0,
+    "backupPerformed": false,
+    "hdAccessed": false,
+    "metadataOnlySummarySaved": true,
+    "noRetry": true,
+    "authorizationConsumed": true,
+    "billedReadsMeasured": false,
+    "planChanged": false,
+    "deployPerformed": false
+  }
+}
