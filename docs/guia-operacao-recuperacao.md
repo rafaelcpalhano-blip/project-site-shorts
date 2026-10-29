@@ -29,10 +29,12 @@ Se perder TOTP/Google, a API deve continuar recusando acesso. Usar recuperação
 
 Última cópia de dados efetivamente verificada: 26/10/2026, readTime `2026-10-26T23:26:28.074Z`. Não contém cadastros posteriores. A biblioteca não faz novas capturas automaticamente.
 
-Proposta mínima sem novo serviço: cópia manual antes do lançamento e antes de alteração estrutural/ação destrutiva; depois, revisão semanal enquanto houver conteúdo novo, ajustando a frequência ao volume e à perda de dados aceitável. Isto é uma proposta, não uma política já aceita nem um agendamento.
+Política atual definida pelo proprietário em 29/10/2026: backup manual no lançamento e, depois, a cada 15 dias. Substitui a proposta de revisão semanal. O proprietário escolheu um HD separado do SSD e normalmente desconectado; diretório, proteção/criptografia e verificação do destino ainda não foram conferidos. Nenhuma cópia real ou automação de backup foi executada. Antes de mudanças estruturais/destrutivas, uma cópia adicional continua sendo uma precaução recomendada, a combinar no caso concreto.
 
-- [ ] Definir frequência e perda de dados aceitável (RPO); não presumir zero perda.
-- [ ] Escolher custódia independente: por exemplo mídia externa sob controle do proprietário, protegida e preferencialmente criptografada. Não criar armazenamento externo por este guia.
+- [x] Frequência escolhida: no lançamento e a cada 15 dias.
+- [ ] Confirmar a perda de dados aceitável: a frequência não garante zero perda, e uma captura perdida pode aumentar o intervalo.
+- [x] Meio escolhido: HD separado do SSD, normalmente desconectado.
+- [ ] Conferir diretório e proteção do destino antes da cópia; não presumir que o HD já esteja criptografado ou montar/alterar suas permissões por esta escolha.
 - [ ] Guardar dados e recibo fora do Git; conservar também instruções de recuperação das contas separadamente.
 - [ ] Autorizar nova captura somente após conferir alvo, quota e limites. A aprovação de uma captura não autoriza a seguinte.
 
@@ -83,3 +85,16 @@ Antes de aplicar: orçamento, alvo, inspeção de elegíveis, teto por lote e re
 - [ ] Aprovações separadas para GitHub público e lançamento do site.
 
 Nada aqui autoriza ativar automações, enviar mensagens externas, criar recursos, faturamento ou publicar. Este documento é um plano operacional revisável e pode permanecer público somente sem o preenchimento de informações privadas.
+
+## Decisões de 29/10/2026
+
+Proprietário informou conseguir recuperar o e-mail e aceitou a frequência proposta. Aplicativo TOTP e sua recuperação ainda não confirmados; não presumir uma marca de autenticador. Recuperação específica Cloudflare/GitHub não individualizada. GitHub foi sugerido pelo proprietário como possibilidade de destino, ainda sem escolha: repositório de código não captura automaticamente o banco. Nenhum repositório novo, upload de backup ou envio de segredo está autorizado. Se uma alternativa GitHub vier a ser escolhida, exigir avaliação separada de repositório privado, criptografia antes do envio e custódia da chave fora dele; não usar o portfólio público para dados operacionais.
+
+
+## Atualização da política e lembrete — 29/10/2026
+
+Frequência corrigida por preferência explícita: no lançamento e a cada15dias, em lugar de revisão semanal. Segunda cópia em HD apartado do SSD, mantido desconectado quando não utilizado. GitHub deixa de ser a opção proposta para dados operacionais. A escolha do dispositivo não autoriza copiar agora, abrir conteúdo do HD, alterar ACL, criptografar/formatar unidade ou criar arquivo.
+
+O proprietário solicitou lembrete no celular a cada15dias quando houver data prevista. Pedido futuro condicionado registrado; nenhuma data/hora/canal foi presumido e nenhum lembrete/agendamento foi criado. Quando a data de lançamento e o canal móvel forem combinados, configurar um lembrete de backup manual, sem transformar isso em captura automática. Não usar recorrência de duas semanas (14dias) como substituta de15dias.
+
+Escopo do backup: documentos do Firestore no instante da captura, incluindo cadastros, links de shorts, comentários e dados operacionais privados. Não baixa os vídeos YouTube/Twitch/TikTok nem substitui cópia do código/assets, configuração de infraestrutura, credenciais ou recuperação das contas/TOTP.

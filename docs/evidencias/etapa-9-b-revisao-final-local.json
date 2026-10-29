@@ -74,5 +74,60 @@
   "githubSettingsChanged": false,
   "cronActivated": false,
   "providerCalls": false,
-  "publicLaunchApproved": false
+  "publicLaunchApproved": false,
+  "followupCiConfirmation": {
+    "recordedAt": "2026-10-29T03:18:59.339Z",
+    "head": "ac5e89d57c147f19fcdf4529be6a6701364892e8",
+    "workingTreeCleanAtStart": true,
+    "localOriginReferenceAligned": true,
+    "source": "Authenticated read-only GitHub Actions summary",
+    "url": "https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40811000187",
+    "runNumber": 9,
+    "event": "push",
+    "status": "Success",
+    "job": "verify",
+    "jobStatus": "completed successfully",
+    "totalDuration": "2m 28s",
+    "jobDuration": "2m 25s",
+    "artifacts": 0,
+    "workflowRerunTriggered": false,
+    "githubSettingsChanged": false,
+    "appliesOnlyToObservedSha": true
+  },
+  "ownerOperationalPreferences": {
+    "recordedAt": "2026-10-29T03:25:03.747Z",
+    "emailRecoveryReportedAvailable": true,
+    "totpApplicationNameConfirmed": false,
+    "totpRecoveryConfirmed": false,
+    "cloudflareAndGithubRecoveryIndividuallyConfirmed": false,
+    "backupPolicyAccepted": {
+      "manualAtLaunch": true,
+      "everyDays": 15,
+      "manualBeforeImportantChanges": "additional precaution, not an automatic task",
+      "weeklyReviewWhileNewContent": false,
+      "automaticBackupAuthorized": false,
+      "newRealCaptureAuthorized": false
+    },
+    "independentStorageChoice": {
+      "type": "Separate hard drive from system SSD",
+      "ownerNormallyKeepsDisconnected": true,
+      "selectedByOwner": true,
+      "exactDirectorySpecified": false,
+      "encryptionConfirmed": false,
+      "destinationVerified": false,
+      "copyPerformed": false
+    },
+    "updatedAt": "2026-10-29T03:32:39.546Z",
+    "reminderPreference": {
+      "purpose": "Remind owner on mobile to perform manual backup",
+      "intervalDays": 15,
+      "anchor": "launch date once agreed",
+      "timezone": "America/Sao_Paulo",
+      "startDate": null,
+      "timeOfDay": null,
+      "calendarOrNotificationChannel": null,
+      "conditionalFutureRequestRecorded": true,
+      "created": false
+    }
+  }
 }

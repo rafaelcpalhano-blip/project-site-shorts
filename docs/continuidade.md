@@ -2412,3 +2412,20 @@ Usuário autorizou continuar trabalhos necessários enquanto ausente, questionan
 Revisão local de auth/UID/Google/TOTP/estado atual, sessão, origem/IP, rede, orçamento, regras e recuperação concluída no escopo descrito em etapa-9-b-revisao-final-local.md; 112 testes de fixtures aprovados, 816 arquivos/1.802blobs sem achados heurísticos e npm audit zero conhecidas. Sem nova mudança funcional, instalação, credencial/snapshot real aberto, coleta de provedor, dados remotos, deploy, conta/MFA, plano, cron ou GitHub alterado. Guia de operação/recuperação preparado com propostas para revisão posterior, sem execução automática.
 
 Pendências concretas: confirmar recuperação/custódia de contas/TOTP e política de backup (cópia real atual é de26/10 e não inclui novos cadastros), decidir manutenção manual limitada dos auxiliares pois cron/jobs estão desligados, reconhecer limites de evidência CPU de rotas comuns, commit/push e CI verde do SHA final. README tem trechos históricos e será atualizado com contatos em conjunto por último conforme pedido. Não iniciar novo piloto de ranking, restauração/exclusão ou captura real com aprovação antiga. Aguardar proprietário para essas decisões, sem exigir resposta durante sua ausência. Lançamento e visibilidade pública continuam separados.
+
+
+## 29/10/2026 — Fechamento operacional 9-B iniciado e CI do snapshot confirmado
+
+Usuário pediu próxima etapa. Checkout limpo, três commits anteriores realizados e HEAD ac5e89d alinhado com a referência local origin/main. Leitura autenticada da página Actions confirmou run9/40811000187, push no SHA ac5e89d57c147f19fcdf4529be6a6701364892e8, Success2m28s/job verify2m25s, sem artefatos. Sem CLI GitHub instalado; consulta por aba temporária em segundo plano, sem instalação/rerun/configuração. Evidência adicionada à revisão9-B; não declarar esse CI como aprovação de alterações posteriores.
+
+Perguntas pendentes ao proprietário: recuperação Google/TOTP/Cloudflare/GitHub independente do celular principal, preferência de backup manual antes de lançamento/mudanças com ou sem revisão semanal, e existência de destino privado independente do computador. Não solicitar valores de credenciais/códigos. Nenhuma preferência presumida, captura/transferência/exclusão real, alteração de MFA ou agendamento. Próxima ação depende dessas respostas para registrar política e preparar proposta concreta de backup/manutenção manual limitada. Retenção continua sem ativação; README/contatos por último e lançamento/GitHub público separados.
+
+
+## 29/10/2026 — Frequência manual de backup aceita; destino e TOTP pendentes
+
+Proprietário informou recuperação do e-mail disponível e concordou com frequência proposta: cópia manual antes do lançamento/mudanças importantes, revisão semanal com conteúdo novo. Não autoriza agendamento ou nova captura real. Perguntou qual autenticador TOTP foi usado e se GitHub serviria como destino; marca do aplicativo não documentada, recuperação do fator não confirmada, nenhum repositório/destino escolhido. Explicar fator como código do app solicitado após Google no painel, sem solicitar códigos/chaves. Código no repositório não é cópia do banco; dados operacionais devem permanecer privados. Nenhuma ação remota/cópia/upload executada.
+
+
+## 29/10/2026 — Backup a cada15dias e HD escolhido
+
+Proprietário atualizou preferência: backup no lançamento e a cada15dias (não semanal), com lembrete no celular quando datas forem previstas. Escolheu HD apartado do SSD e normalmente desconectado. Registrar política/destino escolhidos, mas sem presumir pasta, criptografia ou verificação do dispositivo. Nenhum acesso ao HD, backup/cópia real ou agendamento executado; data inicial, horário e canal móvel ainda indefinidos. Pedir esses detalhes somente quando definirmos lançamento, usando ferramenta de calendário/automação apropriada, sem converter15dias em14. Esclarecer que snapshot é de documentos/links/estado do Firestore, sem vídeos de provedores, código, credenciais ou contas/TOTP. Recuperação do autenticador ainda pendente de identificação/checagem pelo proprietário.

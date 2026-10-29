@@ -59,3 +59,14 @@ README/contatos e resumo de estado devem ser atualizados em conjunto; documenta�
 As correções 9-A de acessibilidade/robots estão confirmadas nos dois relatórios Lighthouse e no uso relatado. A parte local da revisão 9-B está documentada e não requer nova mudança no produto agora. A prontidão operacional global permanece condicionada à recuperação/custódia/backup, estratégia de retenção, avaliação honesta de limites, CI final e revisão conjunta do README. Não autorizar lançamento ou GitHub público automaticamente.
 
 Nenhum deploy, configuração de conta, plano, permissão, chave, regra remota, cron, conteúdo ou contato externo foi alterado nesta rodada.
+
+## Atualização de 29/10/2026 — commits e CI conferidos
+
+O proprietário efetivou os três commits de correções/documentação: 895d97a, 4d7683c e ac5e89d. Checkout limpo e HEAD alinhado à referência local origin/main no início da conferência. A consulta autenticada somente de leitura ao GitHub confirmou a [execução automática nº9](https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40811000187), evento push, SHA completo ac5e89d57c147f19fcdf4529be6a6701364892e8: Success, duração2m28s; job verify aprovado em2m25s, sem artefatos. Nenhum rerun ou alteração de controles/visibilidade foi feito.
+
+Esse resultado encerra a falta de CI do snapshot ac5e89d. Não aprova alterações posteriores; depois dos próximos commits, conferir a execução correspondente sem criar um ciclo de commits apenas para atualizar o próprio recibo. As demais pendências operacionais permanecem. Foram solicitadas confirmações de recuperação das contas, preferência de frequência e existência de destino independente para backup, sem solicitar segredos nem executar cópia real. Política proposta não equivale a agendamento ou autorização de captura/exclusão.
+
+
+## Decisões operacionais atualizadas — frequência e destino
+
+Em29/10 o proprietário definiu backup manual no lançamento e a cada15dias, substituindo a proposta semanal. Escolheu HD separado do SSD, mantido desconectado quando não usado. Política e meio deixam de estar indefinidos; captura atualizada, diretório/proteção do destino e recuperação do autenticador continuam pendentes. Não houve acesso ao HD, nova captura/cópia, alteração de permissões ou agendamento. Lembrete móvel recorrente solicitado para quando data/hora/canal forem definidos; não criado nesta rodada.
