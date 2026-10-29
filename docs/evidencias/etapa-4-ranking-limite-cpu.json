@@ -1,0 +1,405 @@
+{
+  "date": "2026-10-28",
+  "decision": "local round closed; no reliable ten-ms margin demonstrated; discuss delivery alternatives",
+  "realEdgeCpuCertified": false,
+  "mathematicalImpossibilityClaimed": false,
+  "newRemotePilotPerformed": false,
+  "deploymentPerformed": false,
+  "realCredentialsOpened": false,
+  "externalNetworkRequestsInBenchmarks": 0,
+  "candidateChanges": {
+    "atomicAdmissionAndStart": true,
+    "maximumRetainedGenerations": 6,
+    "negativeRecheckMinutes": 15,
+    "admissionReadAndWriteReservationsUnchanged": true,
+    "combinedQuotaCheckedBeforeCommit": true,
+    "snapshotBatchMaximum": 16,
+    "snapshotEpochGroupedWithFirstGames": true,
+    "ordinaryAndTransactionalReadBatchMaximum": 4,
+    "freshNegativeWaitRequests": 4,
+    "freshNegativeWaitDocumentReads": 4,
+    "perGameHighlights": 15,
+    "intervalMinutes": 45
+  },
+  "rpcComparisons": [
+    {
+      "scenario": "10-videos-8-games-bounded-pilot",
+      "sameRankedOutput": true,
+      "sameStepCount": true,
+      "beforeSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 1817,
+          "documentReadRequests": 12
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 11917,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 6377,
+          "documentReadRequests": 5
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 7,
+          "responseBytes": 7162,
+          "documentReadRequests": 8
+        }
+      ],
+      "afterSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 1154,
+          "documentReadRequests": 10
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 11915,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 6377,
+          "documentReadRequests": 5
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 7,
+          "responseBytes": 7161,
+          "documentReadRequests": 8
+        }
+      ],
+      "beforeOutbound": 37,
+      "afterOutbound": 31,
+      "beforeResponseBytes": 27273,
+      "afterResponseBytes": 26607,
+      "beforeDocumentReadRequests": 59,
+      "afterDocumentReadRequests": 57
+    },
+    {
+      "scenario": "100-distinct-games-automatic",
+      "sameRankedOutput": true,
+      "sameStepCount": true,
+      "beforeSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 1663,
+          "documentReadRequests": 11
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 10,
+          "responseBytes": 21113,
+          "documentReadRequests": 65
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 25020,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 32295,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 36362,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 43635,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 47702,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 45611,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39858,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 5,
+          "responseBytes": 40646,
+          "documentReadRequests": 7
+        }
+      ],
+      "afterSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 7,
+          "responseBytes": 1000,
+          "documentReadRequests": 9
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 7,
+          "responseBytes": 21110,
+          "documentReadRequests": 65
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 25018,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 7,
+          "responseBytes": 32293,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 36360,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 7,
+          "responseBytes": 43633,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 47700,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 7,
+          "responseBytes": 45608,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39857,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 5,
+          "responseBytes": 40646,
+          "documentReadRequests": 7
+        }
+      ],
+      "beforeOutbound": 97,
+      "afterOutbound": 78,
+      "beforeResponseBytes": 493349,
+      "afterResponseBytes": 492669,
+      "beforeDocumentReadRequests": 367,
+      "afterDocumentReadRequests": 365
+    }
+  ],
+  "cpuMethod": {
+    "metric": "whole local workerd child process CPU, fixture host excluded",
+    "syntheticRsaBits": 2048,
+    "sameKeyWithinEachBeforeAfterPair": true,
+    "labelOrderReversedForSecondRun": true,
+    "totalMeasuredInvocations": 3200,
+    "includesColdIsolateStartup": false,
+    "includesLocalRuntimeAndBridgeOverhead": true,
+    "billedCloudflareCpuEquivalent": false,
+    "distributionOfIndividualInvocationCpuMeasured": false,
+    "timingCandidatePrecedesFinalWaitPathRefinement": true
+  },
+  "localCpuBatchMeans": [
+    {
+      "mode": "cold",
+      "phase": "start",
+      "before": {
+        "minimumBatchMeanMs": 10,
+        "maximumBatchMeanMs": 12.34375,
+        "meanOfBatchMeansMs": 11.25,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      },
+      "after": {
+        "minimumBatchMeanMs": 7.65625,
+        "maximumBatchMeanMs": 9.6875,
+        "meanOfBatchMeansMs": 8.7109375,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      }
+    },
+    {
+      "mode": "cold",
+      "phase": "scan",
+      "before": {
+        "minimumBatchMeanMs": 9.6875,
+        "maximumBatchMeanMs": 12.03125,
+        "meanOfBatchMeansMs": 10.625,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      },
+      "after": {
+        "minimumBatchMeanMs": 9.375,
+        "maximumBatchMeanMs": 10.78125,
+        "meanOfBatchMeansMs": 9.9609375,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      }
+    },
+    {
+      "mode": "warm",
+      "phase": "start",
+      "before": {
+        "minimumBatchMeanMs": 9.21875,
+        "maximumBatchMeanMs": 10.3125,
+        "meanOfBatchMeansMs": 9.8046875,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      },
+      "after": {
+        "minimumBatchMeanMs": 5.9375,
+        "maximumBatchMeanMs": 6.71875,
+        "meanOfBatchMeansMs": 6.40625,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      }
+    },
+    {
+      "mode": "warm",
+      "phase": "scan",
+      "before": {
+        "minimumBatchMeanMs": 7.1875,
+        "maximumBatchMeanMs": 9.53125,
+        "meanOfBatchMeansMs": 8.3984375,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      },
+      "after": {
+        "minimumBatchMeanMs": 6.875,
+        "maximumBatchMeanMs": 8.4375,
+        "meanOfBatchMeansMs": 7.5390625,
+        "batches": 4,
+        "invocationsPerBatch": 100
+      }
+    }
+  ],
+  "validation": {
+    "generalPassed": 880,
+    "generalFailed": 0,
+    "targetedEmulatorPassed": 8,
+    "latestTargetedPassed": 36,
+    "typesPassed": true,
+    "lintPassed": true
+  },
+  "nextRemoteActionApproved": false,
+  "activationReady": false,
+  "publicLaunchApproved": false
+}

@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-28",
+  "scope": "local-only",
+  "generalTests": 862,
+  "emulatorTargetedTests": 4,
+  "postTypeAdjustmentTargetedTests": 30,
+  "typesPassed": true,
+  "lintPassed": true,
+  "securityWorkingTreeFindings": 0,
+  "dryRunPassed": true,
+  "bundleSha256": "06e2edac28dc6d13a4a809efbda549f4e47aa7c7d3dfa44dd29b466b793fded4",
+  "sourceFiles": 107,
+  "assetsPreserved": 43,
+  "secretReferencesPreserved": 9,
+  "secretsOpened": false,
+  "remoteAccess": false,
+  "deploymentPerformed": false,
+  "recoveryExecuted": false,
+  "cpuMeasured": false,
+  "activationReady": false,
+  "comparisons": [
+    {
+      "scenario": "10 videos, 8 games, bounded pilot",
+      "callsBefore": 69,
+      "callsAfter": 39,
+      "responseBytesBefore": 47716,
+      "responseBytesAfter": 27275,
+      "documentReadRequestsBefore": 65,
+      "documentReadRequestsAfter": 59,
+      "steps": 4,
+      "sameRankedOutput": true
+    },
+    {
+      "scenario": "100 videos, distinct games, automatic mode",
+      "callsBefore": 314,
+      "callsAfter": 123,
+      "responseBytesBefore": 827230,
+      "responseBytesAfter": 493375,
+      "documentReadRequestsBefore": 381,
+      "documentReadRequestsAfter": 367,
+      "steps": 14,
+      "sameRankedOutput": true
+    }
+  ]
+}

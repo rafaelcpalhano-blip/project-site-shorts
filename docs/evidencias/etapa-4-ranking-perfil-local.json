@@ -1,0 +1,290 @@
+{
+  "localOnly": true,
+  "realEdgeCpuCertified": false,
+  "realCredentialsOpened": false,
+  "remoteDataAccessed": false,
+  "externalNetworkRequests": 0,
+  "deploymentPerformed": false,
+  "totalProfiledInvocations": 960,
+  "runs": [
+    {
+      "collectedAt": "2026-10-28T18:20:37.045Z",
+      "modes": [
+        {
+          "mode": "cold",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 1052,
+          "categories": {
+            "authentication": {
+              "samples": 444,
+              "sharePercent": 42.2
+            },
+            "firestore-codec-and-rpc": {
+              "samples": 201,
+              "sharePercent": 19.1
+            },
+            "transport-and-budgets": {
+              "samples": 298,
+              "sharePercent": 28.3
+            },
+            "runtime-native-or-probe": {
+              "samples": 35,
+              "sharePercent": 3.3
+            },
+            "ranking-state-and-score": {
+              "samples": 60,
+              "sharePercent": 5.7
+            },
+            "application-composition": {
+              "samples": 14,
+              "sharePercent": 1.3
+            }
+          },
+          "oauthExchanges": 160
+        },
+        {
+          "mode": "warm",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 557,
+          "categories": {
+            "transport-and-budgets": {
+              "samples": 252,
+              "sharePercent": 45.2
+            },
+            "ranking-state-and-score": {
+              "samples": 46,
+              "sharePercent": 8.3
+            },
+            "firestore-codec-and-rpc": {
+              "samples": 212,
+              "sharePercent": 38.1
+            },
+            "authentication": {
+              "samples": 8,
+              "sharePercent": 1.4
+            },
+            "runtime-native-or-probe": {
+              "samples": 30,
+              "sharePercent": 5.4
+            },
+            "application-composition": {
+              "samples": 9,
+              "sharePercent": 1.6
+            }
+          },
+          "oauthExchanges": 0
+        },
+        {
+          "mode": "store",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 623,
+          "categories": {
+            "ranking-state-and-score": {
+              "samples": 61,
+              "sharePercent": 9.8
+            },
+            "transport-and-budgets": {
+              "samples": 290,
+              "sharePercent": 46.5
+            },
+            "firestore-codec-and-rpc": {
+              "samples": 236,
+              "sharePercent": 37.9
+            },
+            "runtime-native-or-probe": {
+              "samples": 36,
+              "sharePercent": 5.8
+            }
+          },
+          "oauthExchanges": 0
+        }
+      ]
+    },
+    {
+      "collectedAt": "2026-10-28T18:23:19.309Z",
+      "modes": [
+        {
+          "mode": "cold",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 1100,
+          "categories": {
+            "application-composition": {
+              "samples": 13,
+              "sharePercent": 1.2
+            },
+            "authentication": {
+              "samples": 447,
+              "sharePercent": 40.6
+            },
+            "transport-and-budgets": {
+              "samples": 339,
+              "sharePercent": 30.8
+            },
+            "firestore-codec-and-rpc": {
+              "samples": 201,
+              "sharePercent": 18.3
+            },
+            "runtime-native-or-probe": {
+              "samples": 43,
+              "sharePercent": 3.9
+            },
+            "ranking-state-and-score": {
+              "samples": 57,
+              "sharePercent": 5.2
+            }
+          },
+          "oauthExchanges": 160
+        },
+        {
+          "mode": "warm",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 555,
+          "categories": {
+            "firestore-codec-and-rpc": {
+              "samples": 213,
+              "sharePercent": 38.4
+            },
+            "transport-and-budgets": {
+              "samples": 244,
+              "sharePercent": 44
+            },
+            "ranking-state-and-score": {
+              "samples": 59,
+              "sharePercent": 10.6
+            },
+            "application-composition": {
+              "samples": 6,
+              "sharePercent": 1.1
+            },
+            "authentication": {
+              "samples": 5,
+              "sharePercent": 0.9
+            },
+            "runtime-native-or-probe": {
+              "samples": 28,
+              "sharePercent": 5
+            }
+          },
+          "oauthExchanges": 0
+        },
+        {
+          "mode": "store",
+          "profiledInvocations": 160,
+          "attributedNonIdleSamples": 573,
+          "categories": {
+            "transport-and-budgets": {
+              "samples": 270,
+              "sharePercent": 47.1
+            },
+            "firestore-codec-and-rpc": {
+              "samples": 208,
+              "sharePercent": 36.3
+            },
+            "runtime-native-or-probe": {
+              "samples": 36,
+              "sharePercent": 6.3
+            },
+            "ranking-state-and-score": {
+              "samples": 59,
+              "sharePercent": 10.3
+            }
+          },
+          "oauthExchanges": 0
+        }
+      ]
+    }
+  ],
+  "date": "2026-10-28",
+  "scope": "local diagnostic only; no application changes",
+  "profiledInvocationsIncludingAutomaticComparison": 1280,
+  "rounds": {
+    "pilotModesReversedOrder": 2,
+    "pilotModesProfiledInvocations": 960,
+    "automaticModeProfiledInvocations": 320
+  },
+  "disposableRsaBits": 2048,
+  "coldDefinition": "new application/signer per invocation, after warm-up; not cold isolate startup",
+  "databaseFixtureOutsideSampledWorker": true,
+  "sameRankingScoresAndOrder": true,
+  "primaryFixturePreserved": true,
+  "applicationSourceHashesUnchanged": 107,
+  "sampleSharesAreNotBilledCpuMilliseconds": true,
+  "actualSamplingIntervalPlatformDependent": true,
+  "tlsAndRealFirestoreLatencyNotReproduced": true,
+  "automaticModeCases": [
+    {
+      "mode": "cold-auto",
+      "phase": "start",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        11
+      ],
+      "oauthExchanges": 40
+    },
+    {
+      "mode": "cold-auto",
+      "phase": "scan",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        11
+      ],
+      "oauthExchanges": 40
+    },
+    {
+      "mode": "cold-auto",
+      "phase": "stage",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        4
+      ],
+      "oauthExchanges": 40
+    },
+    {
+      "mode": "cold-auto",
+      "phase": "publish",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        5
+      ],
+      "oauthExchanges": 40
+    },
+    {
+      "mode": "warm-auto",
+      "phase": "start",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        10
+      ],
+      "oauthExchanges": 0
+    },
+    {
+      "mode": "warm-auto",
+      "phase": "scan",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        10
+      ],
+      "oauthExchanges": 0
+    },
+    {
+      "mode": "warm-auto",
+      "phase": "stage",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        3
+      ],
+      "oauthExchanges": 0
+    },
+    {
+      "mode": "warm-auto",
+      "phase": "publish",
+      "profiledInvocations": 40,
+      "outboundPerInvocation": [
+        4
+      ],
+      "oauthExchanges": 0
+    }
+  ],
+  "permanentActivationReady": false,
+  "newRemotePilotAuthorized": false
+}

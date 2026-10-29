@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-28",
+  "status": "stopped-at-two-consecutive-cpu-above-10ms",
+  "explicitOwnerAuthorization": true,
+  "project": "clipzone-db02a/(default)",
+  "pilotVersion": "15648ee2-7962-44b9-874d-103894d455c0",
+  "restoredVersion": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+  "bundleSha256": "06e2edac28dc6d13a4a809efbda549f4e47aa7c7d3dfa44dd29b466b793fded4",
+  "recovery": {
+    "status": "abandoned",
+    "committedAuxiliaryWrites": 3,
+    "firestoreRequests": 3,
+    "oauthRequests": 1,
+    "primaryWrites": 0,
+    "deletes": 0,
+    "budgetWrites": 0,
+    "publicPointerWrites": 0
+  },
+  "events": [
+    {
+      "observedAt": "2026-10-28T18:04:54.258Z",
+      "outcome": "ok",
+      "cpuMs": 21,
+      "wallMs": 9808,
+      "exceptionCount": 0,
+      "job": {
+        "task": "ranking",
+        "status": "building",
+        "pilotAttempt": 1,
+        "outbound": 13
+      }
+    },
+    {
+      "observedAt": "2026-10-28T18:05:52.025Z",
+      "outcome": "ok",
+      "cpuMs": 16,
+      "wallMs": 7380,
+      "exceptionCount": 0,
+      "job": {
+        "task": "ranking",
+        "status": "building",
+        "pilotAttempt": 2,
+        "outbound": 13
+      }
+    }
+  ],
+  "exceptionsObserved": 0,
+  "exceededCpuObserved": 0,
+  "error1102BodiesInspected": false,
+  "coldStartOrReuseCertified": false,
+  "cleanup": {
+    "completed": true,
+    "rollbackExitCode": 0,
+    "cronRemovalExitCode": 0,
+    "restoredVersionAt100Percent": true,
+    "rankingDisabled": true,
+    "jobsDisabled": true,
+    "pilotBindingAbsent": true,
+    "retentionBindingAbsent": true,
+    "secretNamesPreserved": 9,
+    "publicAssetHashesVerified": 42,
+    "guardChecksPassed": 13,
+    "dashboardNoCronConfiguredConfirmed": true
+  },
+  "state": {
+    "actualClaims": 2,
+    "phase": "stage",
+    "privateFrames": 10,
+    "stagedItems": 0,
+    "publishedItems": 9,
+    "publicPointerUnchanged": true,
+    "newIncompleteCheckpointPreserved": true,
+    "budgetReserved": {
+      "readsReserved": 1872,
+      "writesReserved": 366,
+      "deletesReserved": 0
+    },
+    "claimsAfterRestorationRecheck": 2
+  },
+  "permanentActivationApproved": false,
+  "paidPlanOrBillingChange": false,
+  "inferenceExecutedByOperator": false,
+  "publicLaunchApproved": false
+}

@@ -1,0 +1,106 @@
+{
+  "recordedAt": "2026-10-28T16:40:49.632Z",
+  "status": "stopped-at-agreed-cpu-threshold-restored-and-cron-removed",
+  "explicitOwnerAuthorization": true,
+  "projectId": "clipzone-db02a",
+  "database": "(default)",
+  "pilotVersion": "c8cb58fd-df11-4359-8d2e-679d68b42bf6",
+  "restoredVersion": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+  "bundleSha256": "fff20003ef28e57448d20f5e17d5412aadd61b8c2d1a8b6c609dd6e8bc79398e",
+  "startWindow": {
+    "startsAt": "2026-10-28T16:22:00.000Z",
+    "endsAt": "2026-10-28T16:42:00.000Z",
+    "maximumAttempts": 8
+  },
+  "deployCompletedAt": "2026-10-28T16:21:36.836Z",
+  "observation": {
+    "startedAt": "2026-10-28T16:21:56.466Z",
+    "completedAt": "2026-10-28T16:34:37.931Z",
+    "stopReason": "two-consecutive-cpu-above-10ms",
+    "events": [
+      {
+        "observedAt": "2026-10-28T16:33:37.132Z",
+        "outcome": "ok",
+        "cpuMs": 38,
+        "wallMs": 5397,
+        "exceptionCount": 0,
+        "job": {
+          "task": "ranking",
+          "status": "building",
+          "pilotAttempt": 1,
+          "outbound": 17
+        }
+      },
+      {
+        "observedAt": "2026-10-28T16:34:37.930Z",
+        "outcome": "ok",
+        "cpuMs": 37,
+        "wallMs": 5971,
+        "exceptionCount": 0,
+        "job": {
+          "task": "ranking",
+          "status": "building",
+          "pilotAttempt": 2,
+          "outbound": 31
+        }
+      }
+    ],
+    "exceptionsObserved": 0,
+    "exceededCpuObserved": 0,
+    "error1102BodiesInspected": false,
+    "coldStartOrReuseCertified": false
+  },
+  "actualClaims": 2,
+  "auxiliaryState": {
+    "phase": "stage",
+    "stagedItems": 0,
+    "privateCandidateFrames": 10,
+    "publicPointerUnchanged": true,
+    "publishedItems": 9,
+    "internalBudget": {
+      "readsReserved": 936,
+      "writesReserved": 183,
+      "deletesReserved": 0
+    },
+    "privateIncompleteCheckpointPreserved": true
+  },
+  "cleanup": {
+    "completedAt": "2026-10-28T16:35:18.362Z",
+    "rollbackExitCode": 0,
+    "removeCronExitCode": 0,
+    "activeVersionAt100PercentConfirmed": true,
+    "rankingDisabled": true,
+    "jobsDisabled": true,
+    "pilotBindingAbsent": true,
+    "retentionBindingAbsent": true,
+    "noCronConfiguredConfirmedByDashboard": true,
+    "publicAssetHashesVerified": 42,
+    "guardsPassed": 13,
+    "sameNineSecretsPreserved": true,
+    "secretFileUnchanged": true,
+    "secretFileAclVerified": true
+  },
+  "primaryContentWrittenByPilot": false,
+  "inferencePerformedByPilot": false,
+  "rankingGenerationPromoted": false,
+  "oldGenerationPruningExercised": false,
+  "plansChanged": false,
+  "publicLaunchApproved": false,
+  "approvalRemaining": false,
+  "retryAuthorized": false,
+  "automaticMaintenanceApproved": false,
+  "localSourceCodeChangedThisTurn": false,
+  "commitOrPushPerformed": false,
+  "remaining": [
+    "Optimize CPU of admission/start and per-source scan locally",
+    "Treat private incomplete checkpoint under a bounded reviewed operation before another pilot; do not fabricate aging or bypass protected retention",
+    "Measure staging, final publication and cleanup only in a future specifically authorized pilot",
+    "TikTok and final release gates"
+  ],
+  "postWindowVerification": {
+    "checkedAt": "2026-10-28T16:42:48.094Z",
+    "attempts": 2,
+    "publicPointerUnchanged": true,
+    "windowExpired": true
+  }
+}

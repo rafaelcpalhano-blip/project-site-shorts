@@ -1,0 +1,599 @@
+{
+  "date": "2026-10-28",
+  "scope": "local-only; top fifteen per game shared with global first page",
+  "policy": {
+    "perGameMaximum": 15,
+    "globalMaximumVisible": 15,
+    "relevantPagination": false,
+    "intervalMinutes": 45,
+    "eligibleVideoCapUnchanged": 100,
+    "sourceDocumentCapUnchanged": 300,
+    "transactionAndCurrentReadBatchMaximumUnchanged": 4,
+    "rankingSnapshotBatchMaximum": 8
+  },
+  "validation": {
+    "generalSuitePassed": 871,
+    "generalSuiteFailed": 0,
+    "latestTargetedHighlightsPassed": 10,
+    "extraTestAddedAfterGeneralSuite": 1,
+    "targetedFirestoreEmulatorPassed": 6,
+    "typesPassed": true,
+    "lintPassed": true,
+    "frontendBuildPassed": true,
+    "workerDryRunPassed": true
+  },
+  "dailyModel": {
+    "measuredAt": "2026-10-28T19:35:31.882Z",
+    "runtime": "Local Node protocol fixture; 1440 scheduled ticks per scenario, no actual OAuth or remote network",
+    "cpuMeasured": false,
+    "billedFirestoreReadsCertified": false,
+    "documentReadRequestsIncludeMinimumOneForEmptyQuery": true,
+    "transactionRetriesAndIndexEntryReadsNotModeled": true,
+    "sameSyntheticInventoryAllDay": true,
+    "remoteDataAccessed": false,
+    "realCredentialsOpened": false,
+    "deploymentPerformed": false,
+    "theoreticalCadenceOnly": {
+      "beforePerDay": 48,
+      "afterPerDay": 32
+    },
+    "results": [
+      {
+        "label": "before",
+        "eligibleVideos": 10,
+        "games": 8,
+        "sources": 10,
+        "requests": 8725,
+        "documentReadRequests": 13123,
+        "writeAttempts": 1488,
+        "deleteAttempts": 473,
+        "itemWriteAttempts": 460,
+        "idleMinutes": 1213,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 46,
+        "peakItems": 50,
+        "statuses": {
+          "building": 138,
+          "ready": 46,
+          "not-scheduled": 1173,
+          "idle": 31,
+          "pruned": 43,
+          "protected": 9
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 11804,
+          "writesReserved": 1574,
+          "deletesReserved": 473,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 10,
+        "primaryPreserved": true
+      },
+      {
+        "label": "before",
+        "eligibleVideos": 100,
+        "games": 1,
+        "sources": 100,
+        "requests": 8642,
+        "documentReadRequests": 14242,
+        "writeAttempts": 2744,
+        "deleteAttempts": 1100,
+        "itemWriteAttempts": 1600,
+        "idleMinutes": 1140,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 16,
+        "peakItems": 600,
+        "statuses": {
+          "building": 208,
+          "ready": 16,
+          "not-scheduled": 1135,
+          "idle": 4,
+          "protected": 1,
+          "pruned": 76
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 16164,
+          "writesReserved": 2830,
+          "deletesReserved": 1100,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 100,
+        "primaryPreserved": true
+      },
+      {
+        "label": "before",
+        "eligibleVideos": 100,
+        "games": 10,
+        "sources": 100,
+        "requests": 8866,
+        "documentReadRequests": 15250,
+        "writeAttempts": 2744,
+        "deleteAttempts": 1100,
+        "itemWriteAttempts": 1600,
+        "idleMinutes": 1140,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 16,
+        "peakItems": 600,
+        "statuses": {
+          "building": 208,
+          "ready": 16,
+          "not-scheduled": 1135,
+          "idle": 4,
+          "protected": 1,
+          "pruned": 76
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 17172,
+          "writesReserved": 2830,
+          "deletesReserved": 1100,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 100,
+        "primaryPreserved": true
+      },
+      {
+        "label": "before",
+        "eligibleVideos": 100,
+        "games": 100,
+        "sources": 300,
+        "requests": 8324,
+        "documentReadRequests": 17297,
+        "writeAttempts": 2978,
+        "deleteAttempts": 969,
+        "itemWriteAttempts": 1500,
+        "idleMinutes": 953,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 15,
+        "peakItems": 600,
+        "statuses": {
+          "building": 405,
+          "ready": 15,
+          "not-scheduled": 952,
+          "protected": 1,
+          "pruned": 67
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 19998,
+          "writesReserved": 3054,
+          "deletesReserved": 969,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 100,
+        "primaryPreserved": true
+      },
+      {
+        "label": "after",
+        "eligibleVideos": 10,
+        "games": 8,
+        "sources": 10,
+        "requests": 4486,
+        "documentReadRequests": 5718,
+        "writeAttempts": 1096,
+        "deleteAttempts": 319,
+        "itemWriteAttempts": 310,
+        "idleMinutes": 1287,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 31,
+        "peakItems": 30,
+        "statuses": {
+          "building": 93,
+          "ready": 31,
+          "not-scheduled": 1229,
+          "idle": 52,
+          "pruned": 29,
+          "protected": 6
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 9199,
+          "writesReserved": 1154,
+          "deletesReserved": 319,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 10,
+        "primaryPreserved": true
+      },
+      {
+        "label": "after",
+        "eligibleVideos": 100,
+        "games": 1,
+        "sources": 100,
+        "requests": 5450,
+        "documentReadRequests": 12105,
+        "writeAttempts": 1587,
+        "deleteAttempts": 464,
+        "itemWriteAttempts": 465,
+        "idleMinutes": 1101,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 31,
+        "peakItems": 60,
+        "statuses": {
+          "building": 279,
+          "ready": 31,
+          "not-scheduled": 1055,
+          "idle": 29,
+          "protected": 17,
+          "pruned": 29
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 15012,
+          "writesReserved": 1645,
+          "deletesReserved": 464,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 15,
+        "primaryPreserved": true
+      },
+      {
+        "label": "after",
+        "eligibleVideos": 100,
+        "games": 10,
+        "sources": 100,
+        "requests": 7183,
+        "documentReadRequests": 13251,
+        "writeAttempts": 2694,
+        "deleteAttempts": 1085,
+        "itemWriteAttempts": 1600,
+        "idleMinutes": 1141,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 16,
+        "peakItems": 600,
+        "statuses": {
+          "building": 208,
+          "ready": 16,
+          "not-scheduled": 1135,
+          "idle": 5,
+          "protected": 1,
+          "pruned": 75
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 16526,
+          "writesReserved": 2779,
+          "deletesReserved": 1085,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 100,
+        "primaryPreserved": true
+      },
+      {
+        "label": "after",
+        "eligibleVideos": 100,
+        "games": 100,
+        "sources": 300,
+        "requests": 7299,
+        "documentReadRequests": 16459,
+        "writeAttempts": 2932,
+        "deleteAttempts": 939,
+        "itemWriteAttempts": 1500,
+        "idleMinutes": 955,
+        "quotaBlockedMinutes": 0,
+        "completedGenerations": 15,
+        "peakItems": 600,
+        "statuses": {
+          "building": 405,
+          "ready": 15,
+          "not-scheduled": 952,
+          "idle": 2,
+          "protected": 1,
+          "pruned": 65
+        },
+        "reservedBudget": {
+          "version": 1,
+          "readsReserved": 19354,
+          "writesReserved": 3006,
+          "deletesReserved": 939,
+          "updatedAt": "2026-10-28T23:48:00.000Z"
+        },
+        "publishedItems": 100,
+        "primaryPreserved": true
+      }
+    ]
+  },
+  "rpcComparisons": [
+    {
+      "scenario": "10-videos-8-games-bounded-pilot",
+      "sameRankedOutput": true,
+      "sameStepCount": true,
+      "beforeSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 1817,
+          "documentReadRequests": 12
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 11919,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 6377,
+          "documentReadRequests": 5
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 7,
+          "responseBytes": 7162,
+          "documentReadRequests": 8
+        }
+      ],
+      "afterSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 1817,
+          "documentReadRequests": 12
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 11917,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 6,
+          "responseBytes": 6377,
+          "documentReadRequests": 5
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 7,
+          "responseBytes": 7162,
+          "documentReadRequests": 8
+        }
+      ],
+      "beforeOutbound": 39,
+      "afterOutbound": 37,
+      "beforeResponseBytes": 27275,
+      "afterResponseBytes": 27273,
+      "beforeDocumentReadRequests": 59,
+      "afterDocumentReadRequests": 59
+    },
+    {
+      "scenario": "100-distinct-games-automatic",
+      "sameRankedOutput": true,
+      "sameStepCount": true,
+      "beforeSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 1663,
+          "documentReadRequests": 11
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 14,
+          "responseBytes": 21117,
+          "documentReadRequests": 65
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 12,
+          "responseBytes": 25024,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 32299,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 12,
+          "responseBytes": 36366,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 13,
+          "responseBytes": 43639,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 12,
+          "responseBytes": 47706,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 45613,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39858,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 5,
+          "responseBytes": 40646,
+          "documentReadRequests": 7
+        }
+      ],
+      "afterSteps": [
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 11,
+          "responseBytes": 1663,
+          "documentReadRequests": 11
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 10,
+          "responseBytes": 21113,
+          "documentReadRequests": 65
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 25020,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 32295,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 36362,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 43635,
+          "documentReadRequests": 64
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 8,
+          "responseBytes": 47702,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 9,
+          "responseBytes": 45611,
+          "documentReadRequests": 34
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39858,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39860,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "building",
+          "outbound": 4,
+          "responseBytes": 39862,
+          "documentReadRequests": 4
+        },
+        {
+          "task": "ranking",
+          "status": "ready",
+          "outbound": 5,
+          "responseBytes": 40646,
+          "documentReadRequests": 7
+        }
+      ],
+      "beforeOutbound": 123,
+      "afterOutbound": 97,
+      "beforeResponseBytes": 493375,
+      "afterResponseBytes": 493349,
+      "beforeDocumentReadRequests": 367,
+      "afterDocumentReadRequests": 367
+    }
+  ],
+  "package": {
+    "bundleSha256": "357abc43bd2124c0c497d9a81399702ebb9e42aea5cad70fe9cde30081b4bd78",
+    "assetFiles": 43,
+    "fixedPublicAssetsUnchanged": true,
+    "frontendMode": "api",
+    "secretReferences": 9,
+    "secretFileOpened": false,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "cronAdded": false
+  },
+  "realEdgeCpuMeasured": false,
+  "cadenceGuaranteedForAllDistributions": false,
+  "remoteOperationsPerformed": false,
+  "deploymentPerformed": false,
+  "activationReady": false,
+  "publicLaunchApproved": false
+}
