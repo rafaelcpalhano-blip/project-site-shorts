@@ -98,3 +98,8 @@ Frequência corrigida por preferência explícita: no lançamento e a cada15dias
 O proprietário solicitou lembrete no celular a cada15dias quando houver data prevista. Pedido futuro condicionado registrado; nenhuma data/hora/canal foi presumido e nenhum lembrete/agendamento foi criado. Quando a data de lançamento e o canal móvel forem combinados, configurar um lembrete de backup manual, sem transformar isso em captura automática. Não usar recorrência de duas semanas (14dias) como substituta de15dias.
 
 Escopo do backup: documentos do Firestore no instante da captura, incluindo cadastros, links de shorts, comentários e dados operacionais privados. Não baixa os vídeos YouTube/Twitch/TikTok nem substitui cópia do código/assets, configuração de infraestrutura, credenciais ou recuperação das contas/TOTP.
+
+
+## Inspeção de retenção preparada localmente — 29/10/2026
+
+Biblioteca de leitura opt-in disponível em server/maintenance/inspect-retention.ts, ainda sem runner real, credenciais, rota ou cron. Uma página de até30 documentos e nenhuma escrita; retorna contagens e eventual cursor operacional privado. Reutiliza regras existentes para tentativas/descurtidas de mais de90dias e observa expiração da rede. Ver etapa-9-b-inspecao-retencao.md para limites e proposta de conexão real futura. A existência da biblioteca não autoriza sua conexão ao banco ou exclusões.

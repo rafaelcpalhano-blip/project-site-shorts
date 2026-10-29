@@ -2429,3 +2429,10 @@ Proprietário informou recuperação do e-mail disponível e concordou com frequ
 ## 29/10/2026 — Backup a cada15dias e HD escolhido
 
 Proprietário atualizou preferência: backup no lançamento e a cada15dias (não semanal), com lembrete no celular quando datas forem previstas. Escolheu HD apartado do SSD e normalmente desconectado. Registrar política/destino escolhidos, mas sem presumir pasta, criptografia ou verificação do dispositivo. Nenhum acesso ao HD, backup/cópia real ou agendamento executado; data inicial, horário e canal móvel ainda indefinidos. Pedir esses detalhes somente quando definirmos lançamento, usando ferramenta de calendário/automação apropriada, sem converter15dias em14. Esclarecer que snapshot é de documentos/links/estado do Firestore, sem vídeos de provedores, código, credenciais ou contas/TOTP. Recuperação do autenticador ainda pendente de identificação/checagem pelo proprietário.
+
+
+## 29/10/2026 — Inspeção de retenção somente leitura preparada
+
+Usuário pediu próxima etapa; iniciou-se preparação local da retenção manual9-B, sem acesso remoto. Novo módulo server/maintenance/inspect-retention.ts é opt-in, sem CLI/rota/transporte padrão/credenciais/timer. Aceita apenas networkAbuse/shortLikes/likeAttempts, uma consulta à fonte e até30 resultados; sem paginação automática, modo apply ou escrita. Reutiliza cleanupLikes em adaptador sem transações; rede é apenas observada, sem chamar função de exclusão. Resultados são parciais e contagens não equivalem a leituras debitadas.
+
+Onze casos novos; direcionados37/0, suíte geral em série900/0, tipos servidor/lint/segredos/diff aprovados. Relatório/evidência etapa-9-b-inspecao-retencao. Nenhum dado real, credencial, HD, backup, exclusão, provider, cron, build/deploy ou plano alterado. Próximo: preparar runner privado de inspeção real com alvo, orçamento/transporte e autorização específicos; eventual limpeza é decisão separada e revalida expiração. Lembrete de backup15dias ainda depende data/hora/canal; recuperação do TOTP ainda não confirmada. Não retomar ranking nem ampliar este preparo para lançamento.

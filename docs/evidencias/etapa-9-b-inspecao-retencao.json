@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-29",
+  "scope": "Local opt-in read-only auxiliary retention inspection",
+  "headBeforeChanges": "01aca1e",
+  "files": [
+    "server/maintenance/inspect-retention.ts",
+    "tests/retention-inspection.test.mjs"
+  ],
+  "acceptedCollections": [
+    "networkAbuse",
+    "shortLikes",
+    "likeAttempts"
+  ],
+  "maximumReturnedRows": 30,
+  "sourceQueriesPerInspection": 1,
+  "automaticPagination": false,
+  "writeModeAvailable": false,
+  "credentialsOrDefaultTransport": false,
+  "outputIncludesDocumentPayload": false,
+  "privateContinuationCursorPossible": true,
+  "realSourceConnected": false,
+  "validation": {
+    "newTests": 11,
+    "targetedPassed": 37,
+    "targetedFailed": 0,
+    "generalSerialPassed": 900,
+    "generalSerialFailed": 0,
+    "serverTypes": true,
+    "globalLint": true,
+    "localSecretCheck": true,
+    "diffCheck": true
+  },
+  "preserved": [
+    "Primary collections",
+    "Active/recent likes",
+    "Public counters",
+    "Ranking state",
+    "Real backups and credentials",
+    "Existing remote deployment"
+  ],
+  "remoteQueries": 0,
+  "deletedDocuments": 0,
+  "newBackup": false,
+  "hdAccessed": false,
+  "cronActivated": false,
+  "deployed": false,
+  "dependenciesChanged": false,
+  "publicLaunchApproved": false,
+  "limits": [
+    "One page, not total database inventory",
+    "Source calls and returned rows are not billed reads or full HTTP request counts",
+    "Injected transport must enforce cancellation/timeout for a real operation",
+    "Future deletion requires fresh transactional eligibility and separate approval"
+  ]
+}
