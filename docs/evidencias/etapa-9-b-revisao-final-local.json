@@ -1,0 +1,78 @@
+{
+  "recordedAt": "2026-10-29T01:07:00.537Z",
+  "dateLocal": "2026-10-28",
+  "referenceVersion": "7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4",
+  "headObserved": "18b63b6",
+  "scope": "Local review of existing security controls and operational recovery readiness; uncommitted final files present",
+  "controlsReviewed": [
+    "Firebase token signature/audience/issuer/time/UID/Google/TOTP/current-state lookup",
+    "Administrative origin/method/session/body validation and backend actor",
+    "Signed host-only secure visitor cookie",
+    "Direct Cloudflare client-address policy and persistent network quotas",
+    "Outbound request budget and fail-closed errors",
+    "Local Firestore rules and private collection boundaries",
+    "Bounded snapshot capture, ACL/integrity and simulated recovery",
+    "Read-only GitHub workflow permissions and pinned actions"
+  ],
+  "targetedTests": {
+    "passed": 112,
+    "failed": 0,
+    "fixturesOnly": true,
+    "sourceCodeChanged": false
+  },
+  "securityScan": {
+    "workingFiles": 816,
+    "historicalBlobs": 1802,
+    "findings": 0,
+    "heuristic": true
+  },
+  "dependencyAudit": {
+    "knownVulnerabilities": 0,
+    "dependenciesChanged": false
+  },
+  "newCriticalCodeFindings": [],
+  "operationalFindings": [
+    {
+      "severity": "high",
+      "id": "account-backup-recovery-readiness",
+      "state": "owner confirmation/approval pending",
+      "description": "Existing real snapshot is dated 2026-10-26 and does not include later content or account/factor recovery; independent custody and frequency undefined"
+    },
+    {
+      "severity": "medium",
+      "id": "auxiliary-retention-disabled",
+      "state": "manual bounded policy proposed, no activation",
+      "description": "No cron/jobs means no automated cleanup; expiry fields do not prove TTL deletion"
+    },
+    {
+      "severity": "medium",
+      "id": "free-runtime-evidence-limits",
+      "state": "no universal CPU certification",
+      "description": "Composite ranking removed from release scope; historical first-use CPU peaks remain evidence limits for ordinary routes"
+    },
+    {
+      "severity": "medium",
+      "id": "final-snapshot-ci",
+      "state": "pending commits/push and exact SHA result",
+      "description": "No remote GitHub state or workflow triggered in this round"
+    },
+    {
+      "severity": "low",
+      "id": "joint-readme-update",
+      "state": "deferred per owner instruction",
+      "description": "README has historical ranking/TikTok/translation statements; contacts and final README will be prepared together"
+    }
+  ],
+  "runbook": "docs/guia-operacao-recuperacao.md",
+  "freshRemoteIamRulesBillingVerified": false,
+  "realCredentialsOpened": false,
+  "realBackupOpened": false,
+  "newSnapshotTaken": false,
+  "remoteDataWrites": false,
+  "deployPerformed": false,
+  "accountsOrMfaChanged": false,
+  "githubSettingsChanged": false,
+  "cronActivated": false,
+  "providerCalls": false,
+  "publicLaunchApproved": false
+}

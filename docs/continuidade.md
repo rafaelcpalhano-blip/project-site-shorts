@@ -2388,3 +2388,27 @@ Checklist 9-A atualizado para versão ffec1d98-360b-43ea-bcb4-f3dbc29da2eb, trê
 ## TikTok — correlação e reprodução confirmadas pelo proprietário
 
 Link informado corresponde ao TikTok de revistaarkade observado no feed, ID 7701828211558108434. Usuário confirmou que abriu e assistiu normalmente no player. Publicação/reprodução funcionais desse caso aprovadas; ausência de prova funcional deixa de bloquear. Não inferir teste em ambos os dispositivos nem resolução definitiva do 429, cuja causa permanece desconhecida. Sem nova consulta ao provedor, postagem, deploy ou mudança de validação. Próximos ajustes concretos de homologação: nomes acessíveis dos previews e robots.txt válido preservando política de indexação; demais gates finais continuam separados.
+
+
+## 28/10/2026 — Acessibilidade dos previews e robots preparados localmente
+
+[Relatório](etapa-9-a-acessibilidade-robots.md). Preview usa nome nativo com texto visível seguido de ação/título somente para leitor de tela; imagem decorativa evita descrição duplicada. Nove cenários reais de nome computado no Chrome aprovados (não axe/Lighthouse). Robots.txt válido bloqueia crawlers e recebe MIME texto/cache revalidado; seis contratos Workers Assets locais aprovados. Suíte paralela 888/889 teve timeout do CLI; toolchain isolado5/5 e suíte completa em série889/0, sem mudar timeout. Tipos/build/lint/segredos/diff/dry-run aprovados. Novo pacote de44 assets, API byte-idêntica, nove referências privadas e jobs/ranking desligados; sem cron. Sem deploy, credenciais abertas, dependência, acesso remoto ou consulta TikTok. Solicitar autorização específica deste pacote para homologação e depois retestar auditoria e navegação.
+
+
+## 28/10/2026 — Nomes acessíveis e robots publicados na homologação
+
+Deploy específico autorizado: `7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4`, 100%; rollback `ffec1d98-360b-43ea-bcb4-f3dbc29da2eb`. Pré-conferência de hashes, versão, nove nomes de segredos e cron vazio aprovada. Pós-deploy: 43 hashes públicos/44 arquivos, robots texto UTF-8 revalidado com Disallow: /, cabeçalhos e shell /admin aprovados; três ordenações200/treze itens, sessão401, relevant400. API byte-idêntica, nove valores de segredos preservados, ranking/jobs/diagnósticos desligados, tradução preservada, zero cron. Conteúdo e planos intactos; apenas estado operacional esperado das consultas. Aguardam navegação/painel humanos e Lighthouse da nova versão; sem lançamento público.
+
+
+## Correções de acessibilidade/robots — reteste humano aprovado
+
+Usuário confirmou “Tudo funcionou” no pedido de navegação/layout/vídeo/painel no PC e celular após o deploy 7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4. Modo standalone não individualizado. Falta Lighthouse Mobile/Desktop HTML+JSON desta versão para conferir label-content-name-mismatch e robots. Sem nova operação remota nesta anotação.
+
+
+## 28/10/2026 — Fechamento Lighthouse e revisão local 9-B durante ausência autorizada
+
+Usuário autorizou continuar trabalhos necessários enquanto ausente, questionando apenas pontos indispensáveis. Relatórios21h56 recebidos: nomes acessíveis/robots aprovados nos dois perfis, zero falhas nessas regras; performance99desktop/94mobile, Acessibilidade100/BoasPráticas100, SEO66 pelo Disallow:/ intencional. Há aviso IndexedDB em ambos; não pedir nova rodada idêntica nem liberar crawlers para aumentar nota. Relatório etapa-9-a-lighthouse-fechamento.md.
+
+Revisão local de auth/UID/Google/TOTP/estado atual, sessão, origem/IP, rede, orçamento, regras e recuperação concluída no escopo descrito em etapa-9-b-revisao-final-local.md; 112 testes de fixtures aprovados, 816 arquivos/1.802blobs sem achados heurísticos e npm audit zero conhecidas. Sem nova mudança funcional, instalação, credencial/snapshot real aberto, coleta de provedor, dados remotos, deploy, conta/MFA, plano, cron ou GitHub alterado. Guia de operação/recuperação preparado com propostas para revisão posterior, sem execução automática.
+
+Pendências concretas: confirmar recuperação/custódia de contas/TOTP e política de backup (cópia real atual é de26/10 e não inclui novos cadastros), decidir manutenção manual limitada dos auxiliares pois cron/jobs estão desligados, reconhecer limites de evidência CPU de rotas comuns, commit/push e CI verde do SHA final. README tem trechos históricos e será atualizado com contatos em conjunto por último conforme pedido. Não iniciar novo piloto de ranking, restauração/exclusão ou captura real com aprovação antiga. Aguardar proprietário para essas decisões, sem exigir resposta durante sua ausência. Lançamento e visibilidade pública continuam separados.
