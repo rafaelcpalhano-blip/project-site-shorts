@@ -97,8 +97,8 @@
   "ownerOperationalPreferences": {
     "recordedAt": "2026-10-29T03:25:03.747Z",
     "emailRecoveryReportedAvailable": true,
-    "totpApplicationNameConfirmed": false,
-    "totpRecoveryConfirmed": false,
+    "totpApplicationNameConfirmed": true,
+    "totpRecoveryConfirmed": true,
     "cloudflareAndGithubRecoveryIndividuallyConfirmed": false,
     "backupPolicyAccepted": {
       "manualAtLaunch": true,
@@ -117,7 +117,7 @@
       "destinationVerified": false,
       "copyPerformed": false
     },
-    "updatedAt": "2026-10-29T03:32:39.546Z",
+    "updatedAt": "2026-10-29T04:06:07.597Z",
     "reminderPreference": {
       "purpose": "Remind owner on mobile to perform manual backup",
       "intervalDays": 15,
@@ -128,6 +128,30 @@
       "calendarOrNotificationChannel": null,
       "conditionalFutureRequestRecorded": true,
       "created": false
-    }
+    },
+    "totpApplication": "Google Authenticator",
+    "totpRecoveryEvidence": "Owner reports recovery through Google account with several email-recovery options",
+    "totpRecoveryIndependentlyExercised": false,
+    "hdDirectoryDecision": "Owner will check later; no drive access authorized"
+  },
+  "latestCiConfirmation": {
+    "recordedAt": "2026-10-29T04:06:07.598Z",
+    "head": "a6b8d3f4fb695455d1b963bb6f0bcbbc5b55a4f3",
+    "url": "https://github.com/rafaelcpalhano-blip/project-site-shorts/actions/runs/40815315804",
+    "runNumber": 12,
+    "event": "push",
+    "status": "completed successfully",
+    "totalDuration": "1m 39s",
+    "readOnly": true,
+    "rerunTriggered": false,
+    "githubSettingsChanged": false,
+    "appliesOnlyToObservedSha": true
+  },
+  "prelaunchBackupPlan": {
+    "document": "docs/etapa-9-b-backup-lancamento.md",
+    "newCapturePerformed": false,
+    "hdPathPending": true,
+    "hdAccessed": false,
+    "existingSingleUseRunnerNotReused": true
   }
 }

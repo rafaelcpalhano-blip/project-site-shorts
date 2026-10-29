@@ -75,3 +75,10 @@ Em29/10 o proprietário definiu backup manual no lançamento e a cada15dias, sub
 ## Retenção — procedimento de inspeção real validado
 
 Em29/10, primeira leitura real separadamente autorizada de networkAbuse executada com sucesso, após conferir Spark/quota/ACL/hashes: query de expiração/projeção retornou0documentos;1OAuth+1query,1.133bytes e zero escritas/exclusões. Não há limpeza indicada neste instante. Procedimento/limites em etapa-9-b-executor-inspecao.md. A autorização única está consumida, sem agendamento. Isso valida a inspeção manual no escopo da rede e não ativa rotina, TTL ou leitura de outras coleções. Recuperação TOTP e cópia de dados atualizada antes do lançamento permanecem pendentes.
+
+
+## Recuperação TOTP e CI atualizados
+
+Em29/10 o proprietário identificou Google Authenticator e confirmou recuperação pela conta Google/e-mail com alternativas. Essa parte deixa de aguardar sua identificação/confirmação; não houve coleta de códigos, teste independente, logout ou alteração do fator. Pasta do HD continua pendente por escolha do proprietário (“verificarei depois”). Plano de backup consolidado em etapa-9-b-backup-lancamento.md, sem nova captura/transferência.
+
+CI observado somente de leitura: run12/40815315804, push do SHA a6b8d3f4fb695455d1b963bb6f0bcbbc5b55a4f3, concluído com sucesso em1m39s. Nenhum rerun ou alteração remota; futuras alterações precisam do CI correspondente. Recuperação específica Cloudflare/GitHub não foi individualizada por esse relato sobre Google Authenticator.

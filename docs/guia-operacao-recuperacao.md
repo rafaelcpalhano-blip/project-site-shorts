@@ -17,8 +17,8 @@ Nenhuma senha, chave, token, UID privado, QR, código TOTP, conteúdo de backup 
 
 Marcar apenas quando verificado pessoalmente. Não remover fatores nem sair das sessões atuais para testar recuperação.
 
-- [ ] Tenho acesso à conta Google administradora e a um método de recuperação que não dependa apenas do aparelho principal.
-- [ ] Meu autenticador TOTP tem recuperação/cópia protegida conforme suas opções; não vou compartilhar nem registrar a chave neste projeto.
+- [x] Proprietário relatou acesso à conta Google/e-mail com diversas alternativas de recuperação.
+- [x] Proprietário identificou Google Authenticator e informou recuperação por sua conta Google; não foi feito teste independente de restauração nem coletado código/chave.
 - [ ] Consigo recuperar o acesso à Cloudflare e ao GitHub; códigos de recuperação, quando fornecidos pelos serviços, estão guardados privadamente.
 - [ ] O acesso ao e-mail de suporte está sob minha custódia; não depende de senha ou token no repositório.
 - [ ] Identifiquei o local privado das credenciais runtime existentes, sem duplicá-las no projeto ou expô-las.
@@ -111,3 +111,8 @@ Transporte específico e executor privado de leitura prontos para revisão: prim
 ## Primeiro uso real da inspeção — 29/10/2026
 
 Inspeção única separadamente autorizada em networkAbuse, após conferir Spark/margem/alvo/ACL/hashes: zero documentos expirados retornados, uma query, uma troca OAuth,1.133bytes de respostas e nenhuma escrita/exclusão. Não há limpeza a executar com base nessa observação. Recibo não é backup, inventário total ou saldo de quota em tempo real. Não repetir usando a aprovação já consumida; rever em operação futura quando necessário. HD e conteúdo primário preservados. Ver etapa-9-b-executor-inspecao.md.
+
+
+## Confirmação de autenticador e plano de lançamento — 29/10/2026
+
+Proprietário confirmou Google Authenticator e recuperação pela conta Google com alternativas de recuperação do e-mail. Considerar confirmação humana, sem afirmar teste independente de sync/restauração ou cobrir automaticamente Cloudflare/GitHub. A pasta do HD será verificada depois pelo proprietário; não acessar unidade por suposição. Procedimento consolidado em etapa-9-b-backup-lancamento.md: autorização específica, captura limitada para pasta privada no SSD, verificação, segunda cópia somente para destino definido/protegido e checksum comparado. Nenhuma nova captura/cópia foi realizada.
