@@ -19,28 +19,28 @@ Marcar apenas quando verificado pessoalmente. Não remover fatores nem sair das 
 
 - [x] Proprietário relatou acesso à conta Google/e-mail com diversas alternativas de recuperação.
 - [x] Proprietário identificou Google Authenticator e informou recuperação por sua conta Google; não foi feito teste independente de restauração nem coletado código/chave.
-- [ ] Consigo recuperar o acesso à Cloudflare e ao GitHub; códigos de recuperação, quando fornecidos pelos serviços, estão guardados privadamente.
-- [ ] O acesso ao e-mail de suporte está sob minha custódia; não depende de senha ou token no repositório.
-- [ ] Identifiquei o local privado das credenciais runtime existentes, sem duplicá-las no projeto ou expô-las.
+- [x] Proprietário confirmou recuperação de Cloudflare/GitHub pelo e-mail, autenticador e alternativas de confiança; confirmação humana, sem teste de restauração ou coleta de códigos.
+- [x] Proprietário relatou disponibilidade dos acessos e recuperação por e-mail; não foram coletadas senhas nem códigos. Não presumir auditoria independente de cada conta.
+- [x] O local privado da credencial runtime existente foi informado ao proprietário nesta conversa, junto da orientação de tratá-la como senha. Não publicar o arquivo, não incluí-lo no Git ou confundi-lo com o backup do Firestore.
 
 Se perder TOTP/Google, a API deve continuar recusando acesso. Usar recuperação oficial da conta; qualquer intervenção privilegiada no Firebase requer identidade/escopo e aprovação próprios. Não contornar a proteção retirando checagens de UID/MFA do backend. Backup Firestore não recupera contas de autenticação.
 
-## 2. Backup — proposta para aprovação posterior
+## 2. Backup — estado atual e próxima revisão
 
-Última cópia de dados efetivamente verificada: 26/10/2026, readTime `2026-10-26T23:26:28.074Z`. Não contém cadastros posteriores. A biblioteca não faz novas capturas automaticamente.
+Última captura verificada:29/10/2026, readTime `2026-10-29T05:56:09.174Z`,371documentos/412requisições Firestore, arquivo204.841bytes. SSD privado e segunda cópia no HD autorizado foram conferidos por checksum, igualdade de bytes e recibos, incluindo releitura independente. A cópia de26/10 foi preservada. [Relatório](etapa-9-b-backup-verificado-2026-10-29.md).
 
-Política atual definida pelo proprietário em 29/10/2026: backup manual no lançamento e, depois, a cada 15 dias. Substitui a proposta de revisão semanal. O proprietário escolheu um HD separado do SSD e normalmente desconectado; diretório, proteção/criptografia e verificação do destino ainda não foram conferidos. Nenhuma cópia real ou automação de backup foi executada. Antes de mudanças estruturais/destrutivas, uma cópia adicional continua sendo uma precaução recomendada, a combinar no caso concreto.
+A primeira tentativa250 parou sem arquivo; a nova tentativa750 foi autorizada separadamente e concluída. A composição privada mantém500caminhos/5MiB de respostas/arquivo8MiB/sinal120s e uma troca OAuth de até16KiB. Não reutilizar autorizações ou marcadores; crescimento além do orçamento exige revisão.
 
-- [x] Frequência escolhida: no lançamento e a cada 15 dias.
-- [ ] Confirmar a perda de dados aceitável: a frequência não garante zero perda, e uma captura perdida pode aumentar o intervalo.
-- [x] Meio escolhido: HD separado do SSD, normalmente desconectado.
-- [ ] Conferir diretório e proteção do destino antes da cópia; não presumir que o HD já esteja criptografado ou montar/alterar suas permissões por esta escolha.
-- [ ] Guardar dados e recibo fora do Git; conservar também instruções de recuperação das contas separadamente.
-- [ ] Autorizar nova captura somente após conferir alvo, quota e limites. A aprovação de uma captura não autoriza a seguinte.
+Política escolhida: backup no lançamento e depois a cada15dias. Para avaliar o primeiro intervalo, o proprietário antecipou a revisão para **08/11/2026 às21h de Brasília**. Lembrete único privado criado no Google Agenda, com aviso no horário; não executa captura. Após essa revisão, combinar a sequência de15dias, sem converter para14. Entrega no celular depende de sincronização e notificações do Agenda.
 
-O procedimento preparado verifica projeto, ACL do destino, chave existente, integridade e limites. Limites usados na primeira captura: 500 caminhos, 250 requisições, 5 MiB de respostas contabilizadas, arquivo de 8 MiB e cancelamento em 120 s. Não são promessa de custo contábil exato ou autorização para ampliá-los. Se o banco crescer além desses tetos, interromper e revisar; não aumentar limites automaticamente.
+- [x] HD separado do SSD e pasta privada usuário/SYSTEM verificados; ACL não comprova criptografia.
+- [x] Dados e recibos reais permanecem fora do Git; backup não contém credenciais, vídeos ou recuperação de contas/TOTP.
+- [x] Frequência e primeira revisão definidas pelo proprietário; o intervalo pode permitir perda de alterações posteriores à última captura em caso de incidente.
+- [ ] Na próxima captura, reconferir alvo/plano/quota, apresentar limites e obter autorização específica; preparar outra segunda cópia verificada.
 
-Falha ou confirmação perdida não autoriza repetir, apagar parciais ou alterar ACL de diretórios existentes. Credenciais não fazem parte da cópia de documentos. Cópia no mesmo computador não é custódia independente.
+Credencial runtime é chave de serviço para acesso autorizado ao Firestore, não o login Google/TOTP do painel. Deve permanecer privada, com permissões restritas. Sua localização foi informada diretamente ao proprietário; não copiar seu conteúdo para README, issues, relatórios públicos, e-mail ou chat. Nenhuma cópia dessa chave para o HD foi autorizada ou realizada. Em exposição, preparar revogação/substituição com aprovação, sem expor o valor. Recuperação dessa identidade exige procedimentos próprios; snapshot do banco não substitui isso.
+
+Falha não autoriza repetir ou apagar parciais automaticamente. Desconectar o HD pelos cuidados normais do sistema após a verificação. Sem restauração remota ou tempo de recuperação de produção medido.
 
 ## 3. Restauração — ensaio não é operação remota
 
@@ -116,3 +116,8 @@ Inspeção única separadamente autorizada em networkAbuse, após conferir Spark
 ## Confirmação de autenticador e plano de lançamento — 29/10/2026
 
 Proprietário confirmou Google Authenticator e recuperação pela conta Google com alternativas de recuperação do e-mail. Considerar confirmação humana, sem afirmar teste independente de sync/restauração ou cobrir automaticamente Cloudflare/GitHub. A pasta do HD será verificada depois pelo proprietário; não acessar unidade por suposição. Procedimento consolidado em etapa-9-b-backup-lancamento.md: autorização específica, captura limitada para pasta privada no SSD, verificação, segunda cópia somente para destino definido/protegido e checksum comparado. Nenhuma nova captura/cópia foi realizada.
+
+
+## Atualização consolidada de29/10/2026
+
+Os registros históricos abaixo das seções principais descrevem decisões anteriores e podem ter pendências superadas. Backup atualizado/HD concluídos e primeira revisão8/11/2026 às21h no Agenda substituem as pendências antigas de destino e lembrete. Proprietário confirmou recuperação dos acessos, recebeu localização e cuidados da chave runtime. README aprovado/CI23ffccc concluído; abertura do GitHub é decisão do proprietário. Pacote de indexação9-C está apenas preparado localmente, sem deploy ou autorização de lançamento.

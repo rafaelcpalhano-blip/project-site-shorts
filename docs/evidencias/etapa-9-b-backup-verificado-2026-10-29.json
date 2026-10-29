@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-29",
+  "target": "clipzone-db02a/(default)",
+  "planObserved": "Spark",
+  "quotaObserved": {
+    "dailyReadsApproximate": 3300,
+    "dailyReadAllowance": 50000,
+    "readPercent": 6.6,
+    "writesDisplayed": 335,
+    "deletesDisplayed": 0,
+    "mayBeDelayed": true
+  },
+  "capture": {
+    "readTime": "2026-10-29T05:56:09.174Z",
+    "documents": 371,
+    "firestoreRequests": 412,
+    "oauthRequests": 1,
+    "oauthResponseBytes": 1083,
+    "fileBytes": 204841,
+    "remoteWrites": 0,
+    "remoteDeletes": 0
+  },
+  "verification": {
+    "ssdPrivateDirectory": true,
+    "hdPrivateDirectory": true,
+    "internalIntegrity": true,
+    "rawBytesHashEqual": true,
+    "receiptsEqual": true,
+    "independentLocalReread": true,
+    "previousBackupsOverwritten": false,
+    "remoteRestoreTested": false
+  },
+  "attempts": {
+    "first": {
+      "firestoreRequests": 250,
+      "oauthRequests": 1,
+      "completed": false,
+      "snapshotPublished": false
+    },
+    "second": {
+      "approvedRequestCeiling": 750,
+      "completed": true
+    },
+    "totalFirestoreRequests": 662,
+    "notAnExactBilledReadCount": true,
+    "automaticRetries": false
+  },
+  "applicationCodeChanged": false,
+  "deployPerformed": false,
+  "visibilityChangedByAgent": false,
+  "nextReviewIfUsingThisCaptureAsReference": "2026-11-13",
+  "mobileReminderCreated": false,
+  "privateDataAndPathsOmitted": true
+}

@@ -40,3 +40,7 @@ Checkout limpo no início, HEAD a6b8d3f. A página Actions confirmou a [execuç�
 - Backup atual efetivamente verificado: permanece a captura de26/10, sem os cadastros posteriores.
 - Nova autorização de captura/cópia: ainda não solicitada, pois falta fechar o destino.
 - Site/planos/contas/dados: preservados; sem deploy ou acesso remoto de conteúdo nesta rodada.
+
+## Atualização: captura e custódia concluídas em29/10/2026
+
+O plano histórico acima foi executado após o proprietário definir o HD e autorizar a subpasta privada usuário/SYSTEM. Primeira tentativa250chamadas não concluiu; nova preparação/autorização750 resultou em371documentos/412chamadas, arquivo204.841bytes e duas cópias privadas verificadas com recibos e releitura independente. Instante do banco02h56min09s de Brasília. Captura26/10 preservada, zero writes/deletes remotos. Relatório atual: [backup verificado](etapa-9-b-backup-verificado-2026-10-29.md). Destino e segunda cópia deixam de estar pendentes; nenhuma autorização de captura é reutilizável. Próxima revisão13/11 se esta captura for referência; horário/canal de lembrete e autorização de lançamento continuam separados.
