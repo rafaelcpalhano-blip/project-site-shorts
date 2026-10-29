@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-29",
+  "state": "deployment-technical-human-and-lighthouse-validated-documentation-commit-pending",
+  "ownerAuthorized": true,
+  "origin": "https://www.clipzone.workers.dev",
+  "version": "68add1ea-d8f8-468c-a8ba-9d752a41dac3",
+  "priorVersion": "7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4",
+  "deployedAt": "2026-10-29T16:20:47.933Z",
+  "commit": "cb0e9dc6f0540180355980d81df7f54322454e9e",
+  "ci": {
+    "run": 40827859709,
+    "number": 15,
+    "status": "success",
+    "duration": "1m29s"
+  },
+  "plansObserved": {
+    "workers": "Free",
+    "firebase": "Spark"
+  },
+  "package": {
+    "files": 44,
+    "publicHashesVerified": 43,
+    "changedAssets": [
+      "robots.txt",
+      "_headers"
+    ],
+    "unchangedFiles": 42,
+    "apiUnchanged": true,
+    "secretCount": 9,
+    "sameValuesPreserved": true,
+    "privateSecretFileUnchanged": true
+  },
+  "verification": {
+    "activeAt100Percent": true,
+    "robotsPlainText": true,
+    "robotsRevalidates": true,
+    "publicPagesAllowed": true,
+    "adminNoindex": true,
+    "adminVisitorSessionRequiredStatus": 429,
+    "adminWithoutTokenWithVisitorSessionStatus": 401,
+    "feedWithoutSessionStatus": 401,
+    "orders": {
+      "latest": 200,
+      "oldest": 200,
+      "likes": 200,
+      "relevant": 400
+    },
+    "itemCounts": {
+      "latest": 15,
+      "oldest": 15,
+      "likes": 15
+    },
+    "schedules": 0,
+    "ranking": false,
+    "jobs": false,
+    "providerDiagnostics": false,
+    "translationPreserved": true,
+    "cpuMeasured": false,
+    "humanRetestPending": false,
+    "postLaunchLighthousePending": false,
+    "humanConfirmation": {
+      "date": "2026-10-29",
+      "source": "Owner replied tudo funcionando to the combined PC/mobile/PWA video, filters, orders and existing admin-session check",
+      "combinedCheckPassed": true,
+      "individualDeviceDetailsSupplied": false
+    },
+    "postLaunchLighthouse": {
+      "reference": "etapa-9-c-lighthouse-final.json",
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "mobile": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "crawlabilityPassedBoth": true,
+      "indexedDbWarningBoth": true
+    }
+  },
+  "verifierCorrection": {
+    "firstExpectationIncorrect": true,
+    "expected401WithoutVisitorCookie": false,
+    "correctContract429WithoutVisitorCookieThen401WithoutToken": true,
+    "applicationChangedForThis": false,
+    "extraDeploy": false
+  },
+  "effects": {
+    "deploy": true,
+    "contentWrites": false,
+    "operationalSessionEffectsExpected": true,
+    "planChange": false,
+    "credentialRotation": false,
+    "githubSettingsChange": false,
+    "newBackupCapture": false
+  },
+  "backupReadTime": "2026-10-29T05:56:09.174Z",
+  "privatePayloadsAndPathsOmitted": true
+}

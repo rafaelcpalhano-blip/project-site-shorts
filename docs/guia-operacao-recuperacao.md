@@ -4,9 +4,9 @@ Preparado localmente em 28/10/2026 para revisão com o proprietário. Este guia 
 
 ## Informações públicas de referência
 
-- Homologação: https://www.clipzone.workers.dev/.
-- Worker: www. Versão verificada: `7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4`.
-- Rollback registrado desse pacote: `ffec1d98-360b-43ea-bcb4-f3dbc29da2eb`. São referências históricas; confirmar a versão ativa antes de qualquer ação.
+- Site publicado: https://www.clipzone.workers.dev/. Lançamento autorizado em29/10/2026; reteste humano e Lighthouse final concluídos.
+- Worker: www. Versão verificada: `68add1ea-d8f8-468c-a8ba-9d752a41dac3`.
+- Rollback registrado desse pacote: `7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4`. São referências históricas; confirmar a versão ativa antes de qualquer ação.
 - Projeto/banco: clipzone-db02a/(default).
 - Premissa: Workers Free e Firebase Spark, sem upgrade automático. Os estados de plano foram conferidos nas etapas anteriores, não nesta revisão local.
 - Ranking composto/jobs desligados e cron ausente no último deploy verificado.
@@ -121,3 +121,13 @@ Proprietário confirmou Google Authenticator e recuperação pela conta Google c
 ## Atualização consolidada de29/10/2026
 
 Os registros históricos abaixo das seções principais descrevem decisões anteriores e podem ter pendências superadas. Backup atualizado/HD concluídos e primeira revisão8/11/2026 às21h no Agenda substituem as pendências antigas de destino e lembrete. Proprietário confirmou recuperação dos acessos, recebeu localização e cuidados da chave runtime. README aprovado/CI23ffccc concluído; abertura do GitHub é decisão do proprietário. Pacote de indexação9-C está apenas preparado localmente, sem deploy ou autorização de lançamento.
+
+
+## Publicação autorizada29/10/2026
+
+Pacote9-C publicado e verificado, versão68add1ea-d8f8-468c-a8ba-9d752a41dac3,100%; Free/Spark reconfirmados, dados/9segredos/API preservados,0cron. Política pública de rastreamento/admin noindex aplicada. As pendências históricas de autorização/indexação deste pacote foram atendidas; reteste humano/Lighthouse/README de notas e acompanhamento9-D continuam. Ver etapa-9-c-lancamento.md.
+
+
+## Fechamento da validação9-C
+
+Em29/10, reteste humano e relatórios finais Lighthouse concluídos. Desktop100/100/100/100; mobile99/100/100/100. SEO66 anterior explicado pelo bloqueio intencional da homologação. README atualizado; oportunidades opcionais/IndexedDB/simulação registradas em etapa-9-c-lighthouse-final.md. Nenhum novo deploy necessário. Acompanhamento9-D continua sem nova automação criada.

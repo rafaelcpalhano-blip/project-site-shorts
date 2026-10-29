@@ -44,3 +44,8 @@ Depois do deploy autorizado:
 - [ ] Iniciar9-D: observação do uso legítimo e de falhas/cotas, sem carga artificial, jobs ou upgrades automáticos.
 
 A liberação para crawlers pode aumentar acessos e consumo de franquias. O ambiente continuará sujeito a indisponibilidade externa e a picos de CPU; os testes não garantem todas as invocações abaixo de10ms. Uma recorrência de falhas de limite exige registrar e discutir suspensão controlada, sem enfraquecer segurança ou ativar pagamento.
+
+
+## Atualização — publicado após autorização específica
+
+Em29/10/2026, proprietário autorizou o pacote. Publicado `68add1ea-d8f8-468c-a8ba-9d752a41dac3`, confirmado100%;43hashes/robots/admin/API/bindings/cron conferidos. Nenhuma mudança de escopo. [Relatório do lançamento](etapa-9-c-lancamento.md). A indicação inicial de candidato não publicado é histórica e foi superada; reteste humano e Lighthouse final continuam pendentes.
