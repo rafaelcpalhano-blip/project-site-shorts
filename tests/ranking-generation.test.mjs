@@ -31,8 +31,8 @@ test('preparação não aplica prefixo incompleto quando ultrapassa limite ou en
 })
 test('geração só promove depois de completa, mantém metadados e não publica novamente antes do intervalo configurado',async()=>{
  const deps=memory(37),before=structuredClone(deps.docs.get('shorts/s000')),result=await buildRankingGeneration(deps)
- assert.equal(result.status,'ready');assert.equal(result.itemCount,37);assert.equal(current(deps).generationId,result.generationId);assert.equal(deps.docs.get('rankingRuns/'+result.generationId).status,'ready');assert.deepEqual(deps.docs.get('shorts/s000'),before)
- assert.equal([...deps.docs.keys()].filter(p=>p.startsWith('rankingItems/')).length,37);assert.equal((await buildRankingGeneration(deps)).status,'not-due')
+ assert.equal(result.status,'ready');assert.equal(result.itemCount,15);assert.equal(current(deps).generationId,result.generationId);assert.equal(deps.docs.get('rankingRuns/'+result.generationId).status,'ready');assert.deepEqual(deps.docs.get('shorts/s000'),before)
+ assert.equal([...deps.docs.keys()].filter(p=>p.startsWith('rankingItems/')).length,15);assert.equal((await buildRankingGeneration(deps)).status,'not-due')
 })
 test('métricas ausentes/limites deixam geração anterior intacta e nunca publicam ranking truncado',async()=>{
  for(const [count,removeMetric,pattern]of [[1,true,/metrics-not-ready/],[101,false,/video-limit/]]){
@@ -52,10 +52,10 @@ test('concorrência permite um construtor; falha de staging preserva ponteiro e 
 test('leitura usa um snapshot de fontes mesmo que fonte atual mude durante coleta',async()=>{
  const deps=memory(31),scan=deps.store.rankingSourcePage;let calls=0
  deps.store.rankingSourcePage=async(...args)=>{const result=await scan(...args);if(++calls===1)deps.docs.get('rankingMetrics/s030').likeMass=999;return result}
- assert.equal((await buildRankingGeneration(deps)).itemCount,31)
+ const result=await buildRankingGeneration(deps);assert.equal(result.itemCount,15);assert.equal(result.examined,31)
 })
 test('limpeza recusa geração corrente/anterior, remove somente cache antigo em lotes',async()=>{
- const deps=memory(31),result=await buildRankingGeneration(deps);deps.clock(new Date(deps.now().getTime()+3*3600000));await assert.rejects(pruneRankingGeneration({...deps,generationId:result.generationId}),/generation-protected/)
+ const deps=memory(31),result=await buildRankingGeneration(deps);for(let n=0;[...deps.docs.keys()].filter(p=>p.startsWith('rankingItems/')).length<31;n++)deps.docs.set('rankingItems/'+result.generationId+'_legacy'+n,{generationId:result.generationId});deps.clock(new Date(deps.now().getTime()+3*3600000));await assert.rejects(pruneRankingGeneration({...deps,generationId:result.generationId}),/generation-protected/)
  deps.docs.set('rankingState/current',{generationId:'c'.repeat(32),previousGenerationId:'d'.repeat(32)})
  assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,30);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).deleted,2);assert.equal((await pruneRankingGeneration({...deps,generationId:result.generationId})).complete,true);assert.equal(deps.docs.has('shorts/s000'),true)
 })

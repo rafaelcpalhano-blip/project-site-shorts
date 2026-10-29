@@ -12,7 +12,7 @@ for(const order of ['latest','oldest','likes','relevant'])test(order+': ordem, e
    assert.ok(page.items.every(short=>short.gameName==='Jogo '+short.gameId.slice(1)&&short.commentCount!==undefined&&short.likeCount!==undefined))
    assert.ok(page.items.every(short=>!gameId||short.gameId===gameId));all.push(...page.items.map(short=>short.id));cursor=page.next??undefined
   }while(cursor)
-  const rows=[...d.snapshots.values()][0],expected=rows.map(row=>order==='relevant'?row.data.shortId:row.id)
+  const rows=[...d.snapshots.values()][0],expected=(order==='relevant'?rows.slice(0,15):rows).map(row=>order==='relevant'?row.data.shortId:row.id)
   assert.deepEqual(all,expected);assert.equal(new Set(all).size,all.length);assert.ok(d.stats.maxActive>1&&d.stats.maxActive<=4)
  }
 })
@@ -36,7 +36,7 @@ test('segunda página de candidatos só consulta os slots restantes; âncora nã
 for(const order of ['latest','oldest','likes','relevant'])test(order+': revalida dados atuais de shorts e jogos, sem confiar no snapshot',async()=>{
  const d=orderedFeedStore({count:35,delay:1}),query=d.store.rankingPage
  d.store.rankingPage=async value=>{const page=await query(value);for(const [path,record]of d.docs)if(path.startsWith('shorts/')){const n=Number(path.slice(-3));if(n%5===0)record.moderationStatus='removed';if(n%5===1)record.gameId='g4'}d.docs.get('games/g2').status='hidden';d.docs.get('games/g3').status='banned';d.docs.get('games/g4').status='inactive';return page}
- const page=await readOrderedFeed({order},d);assert.ok(page.items.every(short=>short.gameId==='g0'||short.gameId==='g1'));assert.ok(page.items.every(short=>d.docs.get('shorts/'+short.id).moderationStatus==='published'));assert.equal(page.candidatesRead,30);assert.equal(page.candidatesExamined,30);assert.equal(page.limited,true);assert.ok(page.next)
+ const page=await readOrderedFeed({order},d);assert.ok(page.items.every(short=>short.gameId==='g0'||short.gameId==='g1'));assert.ok(page.items.every(short=>d.docs.get('shorts/'+short.id).moderationStatus==='published'));assert.equal(page.candidatesRead,order==='relevant'?15:30);assert.equal(page.candidatesExamined,order==='relevant'?15:30);assert.equal(page.limited,order!=='relevant');if(order==='relevant')assert.equal(page.next,null);else assert.ok(page.next)
 })
 
 test('todos invisíveis mantém limite30/continuação, sem inventar página vazia definitiva',async()=>{

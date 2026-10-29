@@ -2,10 +2,11 @@ import type {AtomicStore} from '../firestore/atomic-store.ts'
 import {readTransactionPair} from '../firestore/transaction-reads.ts'
 import {generationLimits} from './generation.ts'
 import {timestamp} from './metrics.ts'
-import {segmentedRankingLimits,stepRankingGeneration} from './segmented-generation.ts'
+import {segmentedRankingLimits,stepRankingGenerationFromCheckpoint} from './segmented-generation.ts'
 import {maintainRankingRetention} from './maintenance-retention.ts'
 
-export const rankingBackpressureLimits=Object.freeze({maximumRetainedGenerations:6,recheckMs:15*60000,readReservation:36,writeReservation:3})
+import {rankingBackpressureLimits} from './atomic-admission.ts'
+export {rankingBackpressureLimits} from './atomic-admission.ts'
 const admissionPath='maintenanceState/rankingAdmission'
 /** Conservative admission for new builds only. An unavailable or stale check
  * never permits a new generation. Existing builds and the public pointer survive. */
@@ -39,15 +40,23 @@ export async function runBoundedRankingMaintenance(options:{store:AtomicStore;no
  if(!store.get)throw Error('ranking-store-unavailable')
  const build=await store.get('rankingState/build')
  // Let the generation validator handle active and malformed checkpoints.
- if(build&&!['ready','failed'].includes(String(build.phase)))return {task:'ranking',...await stepRankingGeneration({...options,singleUtcDay:true})}
+ if(build&&!['ready','failed'].includes(String(build.phase)))return {task:'ranking',...await stepRankingGenerationFromCheckpoint({...options,singleUtcDay:true},build)}
  const now=options.now()
  if(86400000-(timestamp(now)%86400000)<=segmentedRankingLimits.maxBuildMs)return {task:'ranking-retention',...await maintainRankingRetention(options),rankingPaused:'utc-day-boundary'}
  const current=await store.get('rankingState/current')
+ // An idle tick has no writes to authorize. Keep retention scheduled, but avoid
+ // opening a generator transaction solely to rediscover the interval gate.
+ if(current&&timestamp(now)>=timestamp(current.computedAt??current.publishedAt)&&timestamp(now)-timestamp(current.computedAt??current.publishedAt)<generationLimits.intervalMs)return {task:'ranking-retention',...await maintainRankingRetention(options)}
  if(!current||timestamp(now)-timestamp(current.computedAt??current.publishedAt)>=generationLimits.intervalMs){
+  if(store.atomicRankingAdmission){
+   const result=await stepRankingGenerationFromCheckpoint({...options,singleUtcDay:true,atomicAdmission:true},build)
+   if(result.status==='admission-wait'||result.status==='admission-blocked')return {task:'ranking-retention',...await maintainRankingRetention(options),rankingPaused:result.status==='admission-wait'?'backlog-recheck-wait':'retention-backlog'}
+   return {task:'ranking',...result}
+  }
   const gate=await inspectRankingAdmission(options)
   if(!gate.allowed)return {task:'ranking-retention',...await maintainRankingRetention(options),rankingPaused:gate.reason}
  }
- const ranking=await stepRankingGeneration({...options,singleUtcDay:true})
+ const ranking=await stepRankingGenerationFromCheckpoint({...options,singleUtcDay:true},build)
  if(ranking.status!=='not-due')return {task:'ranking',...ranking}
  return {task:'ranking-retention',...await maintainRankingRetention(options)}
 }

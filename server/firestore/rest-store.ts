@@ -59,10 +59,11 @@ export function createRestStore(options: Options): AtomicStore {
     return result
   }
   const decodeDocument = (document: {name:string;fields?:Record<string,Value>}) => ({ id:document.name.split('/').at(-1)!, data:Object.fromEntries(Object.entries(document.fields || {}).map(([key,value]) => [key,decode(value)])) })
-  const readMany=async(paths:string[],transaction?:string,start?:{previous?:string;started:(id:string)=>void})=>{
-      if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
+  const readMany=async(paths:string[],transaction?:string,start?:{previous?:string;started:(id:string)=>void},snapshot?:{readTime:string;fieldPaths:string[]})=>{
+      if(!Array.isArray(paths)||paths.length<1||paths.length>(snapshot?16:4)||new Set(paths).size!==paths.length)throw new Error('Lote de leitura inválido')
+      if(snapshot&&(transaction||start||!Number.isFinite(Date.parse(snapshot.readTime))))throw Error('Snapshot inválido')
       const documents=paths.map(name),expected=new Set(documents),records=new Map<string,RecordData|null>()
-      const result=await request('batchGet',{documents,...(transaction?{transaction}:start?{newTransaction:{readWrite:start.previous?{retryTransaction:start.previous}:{}}}:{})})
+      const result=await request('batchGet',{documents,...(snapshot?{readTime:snapshot.readTime,mask:{fieldPaths:snapshot.fieldPaths}}:{}),...(transaction?{transaction}:start?{newTransaction:{readWrite:start.previous?{retryTransaction:start.previous}:{}}}:{})})
       if(start){const id=(Array.isArray(result)?result[0]:result)?.transaction;if(typeof id!=='string'||!id||id.length>4096||/[\s\p{C}]/u.test(id))throw Error('Identificador de transação inválido');start.started(id)}
       for(const row of Array.isArray(result)?result:[result]){
         // Firestore may send a metadata-only row; found/missing rows are unordered.
@@ -75,10 +76,15 @@ export function createRestStore(options: Options): AtomicStore {
       return documents.map(key=>records.get(key)!)
     }
   return {
+    atomicRankingAdmission:true,
     async expiredNetworkRecords(now) {
       if(!Number.isSafeInteger(now.getTime()))throw Error('Prazo inválido')
       const result=await request('runQuery',{structuredQuery:{from:[{collectionId:'networkAbuse'}],where:{fieldFilter:{field:{fieldPath:'expiresAt'},op:'LESS_THAN_OR_EQUAL',value:encode(now)}},orderBy:[{field:{fieldPath:'expiresAt'},direction:'ASCENDING'}],limit:30}})
       return (Array.isArray(result)?result:[result]).filter(item=>item.document).map(item=>decodeDocument(item.document))
+    },
+    async rankingSnapshotGetMany(paths,readTime) {
+      if(!Array.isArray(paths)||paths.some(p=>typeof p!=='string'||!(p==='rankingState/metrics'||/^(games|rankingMetrics)\/[\w-]{1,128}$/.test(p))))throw Error('Lote de ranking inválido')
+      return readMany(paths,undefined,undefined,{readTime,fieldPaths:['status','createdAt','version','ready','epoch','shortId','gameId','likeMass','commentMass','commentContributors','asOf']})
     },
     async snapshotGet(path,readTime) {
       if(!Number.isFinite(Date.parse(readTime)))throw new Error('Snapshot inválido')
@@ -246,6 +252,23 @@ export function createRestStore(options: Options): AtomicStore {
         }
         const writes: unknown[] = []
         const port: AtomicTransaction = {
+          async rankingRunIds(limit){
+            if(writes.length)throw Error('Reads must precede writes')
+            if(limit!==6)throw Error('ranking-invalid-cleanup-page')
+            await begin()
+            const result=await request('runQuery',{transaction,structuredQuery:{from:[{collectionId:'rankingRuns'}],select:{fields:[{fieldPath:'__name__'}]},orderBy:[{field:{fieldPath:'__name__'},direction:'ASCENDING'}],limit:6}})
+            const ids:string[]=[];let prior=''
+            for(const row of Array.isArray(result)?result:[result]){
+              if(!row||typeof row!=='object')throw Error('ranking-invalid-cleanup-page')
+              if(!row.document){if(typeof row.readTime!=='string')throw Error('ranking-invalid-cleanup-page');continue}
+              const prefix=root+'/rankingRuns/',full=row.document.name
+              if(typeof full!=='string'||!full.startsWith(prefix))throw Error('ranking-invalid-cleanup-page')
+              const id=full.slice(prefix.length)
+              if(!/^[a-f0-9]{32}$/.test(id)||id<=prior||ids.length>=6)throw Error('ranking-invalid-cleanup-page')
+              ids.push(id);prior=id
+            }
+            return ids
+          },
           async getMany(paths){if(writes.length)throw Error('Reads must precede writes');return documents(paths)},
           async publishedCommentHistory(shortId) {
             if(writes.length)throw Error('Reads must precede writes')

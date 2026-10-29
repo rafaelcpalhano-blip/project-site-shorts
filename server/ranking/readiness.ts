@@ -1,3 +1,4 @@
+import {highlightsPolicy} from './highlights.ts'
 import type {AtomicStore,RecordData} from '../firestore/atomic-store.ts'
 import {generationLimits} from './generation.ts'
 import {segmentedRankingLimits} from './segmented-generation.ts'
@@ -30,7 +31,7 @@ export async function inspectRankingReadiness(options:{store:AtomicStore;now:()=
   if(budget&&(budget.version!==1||['readsReserved','writesReserved','deletesReserved'].some(k=>!Number.isSafeInteger(budget[k])||Number(budget[k])<0)))return blocked('ranking-invalid-budget')
   if(Number(budget?.readsReserved??0)+segmentedRankingLimits.readReservation>generationLimits.dailyReads||Number(budget?.writesReserved??0)+segmentedRankingLimits.writeReservation>generationLimits.dailyWrites)return blocked('ranking-budget-exhausted')
   let after:string|undefined,point:string|undefined
-  const games=new Map<string,RecordData|null>()
+  const games=new Map<string,RecordData|null>(),eligibleByGame=new Map<string,number>()
   for(;;){
    const page=await store.rankingSourcePage(after,point);stats.sourcePages++;stats.modeledDocumentReads+=Math.max(page.items.length,1)
    if(page.items.length>30||!Number.isFinite(Date.parse(page.readTime))||point&&point!==page.readTime||Date.parse(page.readTime)>timestamp(options.now())+1000)return blocked('ranking-invalid-source')
@@ -47,14 +48,14 @@ export async function inspectRankingReadiness(options:{store:AtomicStore;now:()=
     if(row.data.likeCount===undefined)return blocked('ranking-preparation-required')
     const metric=await read('rankingMetrics/'+row.id,point)
     if(metric?.epoch!==metrics.epoch)return blocked('ranking-metrics-not-ready')
-    rankingScore(row.data,game,metric,row.id,new Date(point));stats.eligibleVideos++
+    rankingScore(row.data,game,metric,row.id,new Date(point));stats.eligibleVideos++;eligibleByGame.set(gameId,(eligibleByGame.get(gameId)??0)+1)
    }
    if(page.items.length<30)break
   }
   const finalMetrics=await read('rankingState/metrics')
   if(finalMetrics?.ready!==true||finalMetrics.version!==1||finalMetrics.epoch!==metrics.epoch)return blocked('ranking-metrics-changed')
-  const scanSteps=Math.ceil(stats.sourceDocuments/segmentedRankingLimits.sourcePerStep)+(stats.sourceDocuments%30===0?1:0),stageSteps=Math.ceil(stats.eligibleVideos/segmentedRankingLimits.stagePerStep)
-  return {status:'ready' as const,...stats,snapshotAt:point,estimatedBuildSteps:2+scanSteps+stageSteps,readReservation:segmentedRankingLimits.readReservation,writeReservation:segmentedRankingLimits.writeReservation,writes:0 as const}
+  const scanSteps=Math.ceil(stats.sourceDocuments/segmentedRankingLimits.sourcePerStep)+(stats.sourceDocuments%30===0?1:0),highlightItems=[...eligibleByGame.values()].reduce((n,count)=>n+Math.min(count,highlightsPolicy.maximumItems),0),stageSteps=Math.ceil(highlightItems/segmentedRankingLimits.stagePerStep)
+  return {status:'ready' as const,...stats,snapshotAt:point,estimatedBuildSteps:2+scanSteps+stageSteps,highlightItems,readReservation:segmentedRankingLimits.readReservation,writeReservation:segmentedRankingLimits.writeReservation,writes:0 as const}
  }catch(error){
   const known=new Set(['ranking-invalid-date','ranking-invalid-metrics','ranking-invalid-score','ranking-metrics-not-ready'])
   return blocked(error instanceof Error&&known.has(error.message)?error.message:'ranking-inspection-unavailable')

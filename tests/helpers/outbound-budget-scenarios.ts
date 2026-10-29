@@ -55,7 +55,7 @@ export async function runBudgetScenario(options:{maximum?:number;aborts?:number;
  const request=(path:string,cookie='',body:RecordData={})=>new Request(origin+path,{method:'POST',headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify(body)})
  const session=await api(request('/api/session'));ensure(session.status===204)
  const cookie=session.headers.get('set-cookie')!.split(';')[0]
- const response=await api(request('/api/feed/ordered',cookie,{order:'relevant'})),body=await response.json() as {error?:string;items?:unknown[];next?:string;limited?:boolean}
+ const response=await api(request('/api/feed/ordered',cookie,{order:'latest'})),body=await response.json() as {error?:string;items?:unknown[];next?:string;limited?:boolean}
  if(response.status===503)ensure(Object.keys(body).length===1&&body.error==='unavailable')
  return {status:response.status,error:body.error??null,items:body.items?.length??null,hasContinuation:!!body.next,limited:body.limited??false,cache:response.headers.get('cache-control'),usage:budget.usage(),operations,commits,committedQuota,businessWrites,transactions,oauth,retryTokens,allRedirectsExplicit:policies.every(policy=>policy==='error')}
 }
@@ -72,7 +72,7 @@ export async function runBudgetProof(){
   const result=await runBudgetScenario(options)
   ensure(result.businessWrites===0&&result.allRedirectsExplicit&&result.cache==='no-store')
   ensure(result.usage.dispatched===result.operations.length)
-  if(name.startsWith('cold'))ensure(result.status===200&&result.items===14&&result.hasContinuation&&result.limited&&result.usage.dispatched===46&&result.committedQuota===1)
+  if(name.startsWith('cold'))ensure(result.status===200&&result.items===14&&result.hasContinuation&&result.limited&&result.usage.dispatched===44&&result.committedQuota===1)
   else if(name.includes('recover'))ensure(result.status===200&&result.items===15&&result.commits===3&&result.committedQuota===1&&result.retryTokens.join(',')===',fixture-1,fixture-2')
   else{
    ensure(result.status===503&&result.error==='unavailable'&&result.items===null)

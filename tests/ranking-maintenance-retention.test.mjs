@@ -56,7 +56,7 @@ for(const scenario of [{count:9,days:2},{count:100,days:3},{count:9,growTo:100,d
  const retained=[...f.docs.keys()].filter(p=>p.startsWith('rankingItems/')).length
  assert.ok(ready>0);assert.ok(deleted>0);assert.equal(blocked,0)
  assert.ok(maximumItems<=6*(growTo??count))
- if(count===9&&!growTo){assert.ok(ready>=88);assert.ok(ready<=96);assert.ok(retained<ready*count/3)}else assert.ok(paused>0)
+ if(count===9&&!growTo){assert.ok(ready>=60);assert.ok(ready<=64);assert.ok(retained<ready*count/3)}else assert.ok(paused>0)
  assert.equal(readsByDay.size,days)
  for(const reads of readsByDay.values())assert.ok(reads<50000)
  t.diagnostic(JSON.stringify({sources:count,growTo,days,ready,deleted,blocked,paused,maxCalls,maximumRuns,maximumItems,retainedItems:retained,documentReadRequestsByDay:Object.fromEntries(readsByDay),writeAndDeleteAttemptsByDay:Object.fromEntries(writeAttemptsByDay),budgets:[...f.docs].filter(([p])=>p.startsWith('rankingBudgets/')).map(([path,data])=>({path,...data}))}))

@@ -15,6 +15,7 @@ export async function runControlledRanking(options:{store:AtomicStore;now:()=>Da
  const writable:AtomicStore={...store,
   get:async p=>{const row=await store.get!(p);if(p==='rankingState/build'&&!generationId&&row&&['scan','stage'].includes(String(row.phase)))throw Error('ranking-operator-existing-build');return row},
   rankingSourcePage:async(...args)=>{const p=await store.rankingSourcePage!(...args);sources+=p.items.length;if(sources>limits.sources)throw Error('ranking-operator-source-limit');return p},
+  ...(store.rankingSnapshotGetMany?{rankingSnapshotGetMany:async(paths:string[],point:string)=>{videos+=paths.filter(p=>p.startsWith('rankingMetrics/')).length;if(videos>limits.videos)throw Error('ranking-operator-video-limit');return store.rankingSnapshotGetMany!(paths,point)}}:{}),
   snapshotGet:async(p,point)=>{if(p.startsWith('rankingMetrics/')&&++videos>limits.videos)throw Error('ranking-operator-video-limit');return store.snapshotGet!(p,point)},
   transact:work=>store.transact(async tx=>{
    const write=(p:string)=>{if(!allowed(p))throw Error('ranking-operator-write-refused');if(++attemptedWrites>limits.writes)throw Error('ranking-operator-write-limit')}

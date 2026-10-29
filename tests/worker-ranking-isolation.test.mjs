@@ -70,7 +70,7 @@ test('scheduled entry uses strict opt-in flags, ranking-only mode and preserves 
 })
 
 // Accelerated local day: all Firestore/OAuth traffic stays in the REST fixture.
-for(const count of [9,100])test('30-minute ranking day '+count+' sources preserves primary data and stops atomically at budget',async t=>{
+for(const count of [9,100])test('45-minute ranking day '+count+' sources preserves primary data and stops atomically at budget',async t=>{
  const d=fixture(count,'2026-10-27T00:00:00Z'),primary=structuredClone([...d.f.docs])
  const start=d.now().getTime(),day=d.now().toISOString().slice(0,10)
  let completed=0,blocked=false,maxCalls=0
@@ -102,7 +102,7 @@ for(const count of [9,100])test('30-minute ranking day '+count+' sources preserv
  assert.ok(maxCalls<48)
  for(const [path,data] of primary)assert.deepEqual(d.f.docs.get(path),data)
  assert.equal([...d.f.docs.keys()].filter(path=>path.startsWith('rankingItems/')).length,completed*count)
- if(count===9){assert.ok(completed>=46&&completed<=48);assert.equal(blocked,false)}
+ if(count===9){assert.ok(completed>=31&&completed<=32);assert.equal(blocked,false)}
  else{
   assert.ok(completed>0&&completed<48);assert.equal(blocked,true)
   const oldBudget=structuredClone(budget),pointer=structuredClone(d.f.docs.get('rankingState/current'))
@@ -120,7 +120,7 @@ test('ranking retention after repeated generation preserves current, previous an
  for(let cycle=0;cycle<6;cycle++){
   let result
   do{result=await d.step();if(result.status!=='ready')d.advance(60000)}while(result.status!=='ready')
-  generations.push(result.generationId);d.advance(30*60000)
+  generations.push(result.generationId);d.advance(generationLimits.intervalMs)
  }
  d.advance(2*3600000)
  const budget=createOutboundBudget({maximum:48,cleanupReserve:1,fetcher:d.f.fetcher})

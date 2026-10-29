@@ -165,14 +165,14 @@ add('prepared main separates assets, refuses incomplete API configuration and ke
  check((await main.fetch(request,env)).status===404)
 })
 
-add('300-source worst case remains bounded and next 30-minute run follows snapshot time, not delayed publication',async()=>{
+add('300-source worst case remains bounded and next 45-minute run follows snapshot time, not delayed publication',async()=>{
  const d=memory(300);for(let n=100;n<300;n++)d.docs.get('shorts/s'+String(n).padStart(3,'0'))!.moderationStatus='removed'
  let result:Awaited<ReturnType<typeof stepRankingGeneration>>|undefined,steps=0
  while(result?.status!=='ready'){result=await stepRankingGeneration(d);steps++;check(steps<=30);d.advance()}
  check(result.itemCount===100&&result.examined===300)
  const current=d.docs.get('rankingState/current')!,computedAt=(current.computedAt as Date).getTime(),publishedAt=(current.publishedAt as Date).getTime()
- d.advance(computedAt+1800000-d.now().getTime())
- check(d.now().getTime()-publishedAt<1800000&&(await stepRankingGeneration(d)).status==='building')
+ d.advance(computedAt+2700000-d.now().getTime())
+ check(d.now().getTime()-publishedAt<2700000&&(await stepRankingGeneration(d)).status==='building')
  finalizationMetrics.worstSource={sourceDocuments:300,items:100,steps,snapshotAgeAtPublicationMs:publishedAt-computedAt}
 })
 

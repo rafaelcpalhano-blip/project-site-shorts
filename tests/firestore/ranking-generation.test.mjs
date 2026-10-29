@@ -25,13 +25,13 @@ test('preparação REST é idempotente, preserva contador e deixa falta de métr
  await assert.rejects(buildRankingGeneration(options),/metrics-not-ready/);assert.equal(await store.get('rankingState/current'),null)
 })
 test('geração completa e quatro consultas em três escopos têm paginação 15 e desempate correto',async()=>{
- await seed();const generation=await buildRankingGeneration(options),current=await store.get('rankingState/current');assert.equal(generation.itemCount,37);assert.equal(current.generationId,generation.generationId)
+ await seed();const generation=await buildRankingGeneration(options),current=await store.get('rankingState/current');assert.equal(generation.itemCount,30);assert.equal(current.generationId,generation.generationId)
  const base=[];for(let i=0;i<37;i++){const short=await store.get('shorts/'+id(i)),game=await store.get('games/'+short.gameId),metric=await store.get('rankingMetrics/'+id(i));base.push({id:id(i),...short,score:rankingScore(short,game,metric,id(i),current.computedAt)})}
  for(const order of ['latest','oldest','likes','relevant'])for(const gameId of [undefined,'g1','g2']){
   const expected=base.filter(row=>!gameId||row.gameId===gameId).sort((a,b)=>order==='oldest'?a.createdAt-b.createdAt||a.id.localeCompare(b.id):order==='latest'?b.createdAt-a.createdAt||b.id.localeCompare(a.id):(order==='likes'?b.likeCount-a.likeCount:b.score-a.score)||b.createdAt-a.createdAt||b.id.localeCompare(a.id))
   const ids=[];let cursor,pages=0
   do{const page=await readOrderedFeed({order,gameId,cursor},options);assert.ok(page.items.length<=15);ids.push(...page.items.map(row=>row.id));cursor=page.next??undefined;if(++pages>4)throw Error('loop')}while(cursor)
-  assert.deepEqual(ids,expected.map(row=>row.id),order+':'+gameId);assert.equal(new Set(ids).size,ids.length)
+  assert.deepEqual(ids,(order==='relevant'?expected.slice(0,15):expected).map(row=>row.id),order+':'+gameId);assert.equal(new Set(ids).size,ids.length)
  }
 })
 test('snapshot mantém ordem enquanto contagem muda e moderação atual impede reexibição',async()=>{
@@ -41,8 +41,11 @@ test('snapshot mantém ordem enquanto contagem muda e moderação atual impede r
  const ranked=await readOrderedFeed({order:'relevant'},options);assert.ok(ranked.items.every(row=>row.gameId==='g1'));assert.equal(ranked.orderingAt,(await store.get('rankingState/current')).computedAt.toISOString())
 })
 test('coleta usa snapshot único para métricas e shorts, sem misturar atualização no meio',async()=>{
- await seed(31);let changed=false;const wrapped={...store,snapshotGet:async(path,point)=>{if(!changed&&path==='rankingMetrics/s030'){changed=true;await store.transact(async tx=>{const metric=await tx.get(path);tx.set(path,{...metric,likeMass:999})})}return store.snapshotGet(path,point)}}
- assert.equal((await buildRankingGeneration({...options,store:wrapped})).itemCount,31);assert.equal((await store.get('rankingMetrics/s030')).likeMass,999)
+ await seed(31);let changed=false;const path='rankingMetrics/s028',original=await store.get(path),short=await store.get('shorts/s028'),game=await store.get('games/'+short.gameId)
+ const wrapped={...store,snapshotGet:async(key,point)=>{if(!changed&&key===path){changed=true;await store.transact(async tx=>tx.set(path,{...original,likeMass:999}))}return store.snapshotGet(key,point)}}
+ const result=await buildRankingGeneration({...options,store:wrapped}),current=await store.get('rankingState/current')
+ assert.equal(result.itemCount,30);assert.equal(changed,true);assert.equal((await store.get(path)).likeMass,999)
+ assert.equal((await store.get('rankingItems/'+result.generationId+'_s028')).score,rankingScore(short,game,original,'s028',current.computedAt))
 })
 test('concorrência permite um único publicador e orçamento não passa do limite configurado',async()=>{
  await seed(2);const results=await Promise.allSettled([buildRankingGeneration(options),buildRankingGeneration(options)]);assert.equal(results.filter(r=>r.status==='fulfilled'&&r.value.status==='ready').length,1)
@@ -57,7 +60,7 @@ test('retenção REST protege atuais e apaga somente cache antigo em lotes de 30
  await seed(31);const generation=await buildRankingGeneration(options),future=()=>new Date(Date.now()+3*3600000)
  await assert.rejects(pruneRankingGeneration({store,now:future,generationId:generation.generationId}),/generation-protected/)
  await store.transact(async tx=>tx.set('rankingState/current',{generationId:'a'.repeat(32),previousGenerationId:'b'.repeat(32)}))
- assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).deleted,30);assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).deleted,2);assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).complete,true);assert.equal(await store.get('rankingRuns/'+generation.generationId),null);assert.ok(await store.get('shorts/s000'))
+ assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).deleted,30);assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).deleted,1);assert.equal((await pruneRankingGeneration({store,now:future,generationId:generation.generationId})).complete,true);assert.equal(await store.get('rankingRuns/'+generation.generationId),null);assert.ok(await store.get('shorts/s000'))
 })
 test('nova publicação já nasce com contador zero; duplicatas e cota diária permanecem',async()=>{
  await seed(0);const visitor='f'.repeat(64),deps={...options,checkAbuse:async()=>{},verify:async()=>({existence:'confirmed',shortFormat:'confirmed',gameMatch:'unknown',moderation:'unavailable',flags:[]})},input=n=>({url:'https://clips.twitch.tv/GenerationQuotaClip'+n,title:'Jogada da comunidade '+n,gameId:'g1'})

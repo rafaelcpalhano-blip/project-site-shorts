@@ -1,6 +1,9 @@
 import type {AdminSort,AdminListCursor} from '../../src/features/admin/types/list-order.ts'
 export type RecordData = Record<string, unknown>
 export interface AtomicTransaction {
+  // Trusted public composition: retired relevance metrics are not read or updated.
+  experimentalRankingDisabled?: true
+  rankingRunIds?: (limit:6)=>Promise<string[]>
   getMany?: (paths:string[])=>Promise<Array<RecordData|null>>
   hasPublishedComment?(shortId: string): Promise<boolean>
   publishedCommentHistory?(shortId:string): Promise<Array<{id:string;data:RecordData}>>
@@ -24,6 +27,7 @@ export interface RankingQuery {mode:'latest'|'oldest'|'likes'|'relevant';gameId?
 export interface AdminListQuery {kind:'games'|'gameRequests'|'comments'|'shorts'|'reportSummaries';filter:string;sort:AdminSort;cursor?:AdminListCursor;limit:21}
 export interface PublicGameCursor {id:string;name:string}
 export interface AtomicStore {
+  atomicRankingAdmission?: true
   rankingRunsPage?: (after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   publicGamesPage?: (cursor?:PublicGameCursor)=>Promise<Array<{id:string;data:RecordData}>>
   expiredNetworkRecords?: (now:Date)=>Promise<Array<{id:string;data:RecordData}>>
@@ -33,6 +37,8 @@ export interface AtomicStore {
   rankingItemsPage?: (generationId:string)=>Promise<Array<{id:string;data:RecordData}>>
   rankingSourcePage?: (after?:string,readTime?:string)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   snapshotGet?: (path:string,readTime:string)=>Promise<RecordData|null>
+  // Ranking-only projected reads, same snapshot, at most sixteen distinct paths.
+  rankingSnapshotGetMany?: (paths:string[],readTime:string)=>Promise<Array<RecordData|null>>
   rankingPage?: (query:RankingQuery)=>Promise<{items:Array<{id:string;data:RecordData}>;readTime:string}>
   scanLikeRecords?: (collection:'shortLikes'|'likeAttempts',after?:string)=>Promise<Array<{id:string;data:RecordData}>>
   gameCatalogPage?: (query:GameCatalogQuery)=>Promise<Array<{id:string;data:RecordData}>>

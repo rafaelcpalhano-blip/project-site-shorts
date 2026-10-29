@@ -8,6 +8,7 @@ export async function readOrderedFeed(input:{order?:RankingQuery['mode'];gameId?
  const {store}=options,mode=input.order??'latest',gameId=input.gameId===undefined?undefined:id(input.gameId),scope=mode+':'+(gameId??'*'),now=timestamp(options.now())
  if(!['latest','oldest','likes','relevant'].includes(mode)||Object.keys(input).some(key=>!['order','gameId','cursor'].includes(key))||!store.get||!store.rankingPage)throw Error('ranking-invalid-input')
  let cursor=input.cursor,point=cursor?.readTime,generationId=cursor?.generationId,computedAt=cursor?.computedAt,metricsEpoch=cursor?.metricsEpoch
+ if(cursor&&mode==='relevant')throw Error('ranking-cursor-expired-or-mismatched')
  if(cursor){
   if(cursor.scope!==scope||!Number.isFinite(Date.parse(cursor.readTime))||now-Date.parse(cursor.readTime)>=1800000||Date.parse(cursor.readTime)>now+1000||!Number.isFinite(Date.parse(cursor.time)))throw Error('ranking-cursor-expired-or-mismatched')
   if(mode==='relevant'){if(typeof cursor.id!=='string'||!/^[-_a-zA-Z0-9]{1,192}$/.test(cursor.id))throw Error('ranking-invalid-input')}else id(cursor.id)
@@ -71,6 +72,7 @@ export async function readOrderedFeed(input:{order?:RankingQuery['mode'];gameId?
    }
    start=end
   }
+  if(mode==='relevant'){next=null;break}
   if(items.length===15)break
   if(page.items.length<15){next=null;break}
   next=cursor??null

@@ -6,3 +6,14 @@ export async function readTransactionPair(tx:Pick<AtomicTransaction,'get'|'getMa
  if(!Array.isArray(rows)||rows.length!==2||rows.some(row=>row!==null&&(!row||typeof row!=='object'||Array.isArray(row))))throw Error('invalid-transaction-read-pair')
  return [rows[0],rows[1]]
 }
+
+
+/** Bounded independent reads within the SAME transaction. A rejected or malformed
+ * batch never falls back to new independent/current-state reads. */
+export async function readTransactionGroup(tx:Pick<AtomicTransaction,'get'|'getMany'>,paths:string[]):Promise<Array<RecordData|null>>{
+ if(!Array.isArray(paths)||paths.length<1||paths.length>4||new Set(paths).size!==paths.length)throw Error('invalid-transaction-read-group')
+ let rows:Array<RecordData|null>
+ if(tx.getMany)rows=await tx.getMany(paths);else{rows=[];for(const path of paths)rows.push(await tx.get(path))}
+ if(!Array.isArray(rows)||rows.length!==paths.length||rows.some(row=>row!==null&&(!row||typeof row!=='object'||Array.isArray(row))))throw Error('invalid-transaction-read-group')
+ return rows
+}

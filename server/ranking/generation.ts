@@ -1,6 +1,7 @@
+import {highlightsPolicy,selectRankingHighlights} from './highlights.ts'
 import type {AtomicStore,RecordData} from '../firestore/atomic-store.ts'
 import {rankingScore,timestamp} from './metrics.ts'
-export const generationLimits=Object.freeze({videos:100,sourceDocuments:300,readsPerRun:762,writesPerRun:124,dailyReads:20000,dailyWrites:4000,leaseMs:300000,intervalMs:1800000,maxBuildMs:1200000})
+export const generationLimits=Object.freeze({videos:100,sourceDocuments:300,readsPerRun:762,writesPerRun:124,dailyReads:20000,dailyWrites:4000,leaseMs:300000,intervalMs:highlightsPolicy.intervalMs,maxBuildMs:1200000})
 const amount=(record:RecordData|null,key:string)=>{if(!record)return 0;const value=record[key];if(!Number.isSafeInteger(value)||Number(value)<0)throw Error('ranking-invalid-budget');return Number(value)}
 function assertLease(lease:RecordData|null,id:string,now:Date){if(lease?.id!==id||timestamp(lease.expiresAt)<=timestamp(now))throw Error('ranking-lease-lost')}
 export async function buildRankingGeneration(options:{store:AtomicStore;now:()=>Date}){
@@ -47,9 +48,9 @@ export async function buildRankingGeneration(options:{store:AtomicStore;now:()=>
    if(page.items.length<30)break
    after=page.items.at(-1)!.id
   }
-  const computedAt=new Date(snapshot!)
-  for(let offset=0;offset<frames.length;offset+=20){
-   const chunk=frames.slice(offset,offset+20),now=options.now()
+  const selected=selectRankingHighlights(frames),computedAt=new Date(snapshot!)
+  for(let offset=0;offset<selected.length;offset+=20){
+   const chunk=selected.slice(offset,offset+20),now=options.now()
    if(timestamp(now)-timestamp(started)>generationLimits.maxBuildMs)throw Error('ranking-build-expired')
    await store.transact(async tx=>{
     meteredReads++
@@ -72,11 +73,11 @@ export async function buildRankingGeneration(options:{store:AtomicStore;now:()=>
    const chargedReads=Math.min(generationLimits.readsPerRun,meteredReads+32),reserved=amount(budget,'readsReserved')
    if(reserved<generationLimits.readsPerRun)throw Error('ranking-invalid-budget')
    tx.set('rankingBudgets/'+day,{...budget,readsReserved:reserved-generationLimits.readsPerRun+chargedReads,updatedAt:publishedAt})
-   tx.set('rankingRuns/'+id,{...run,status:'ready',readCharge:chargedReads,snapshotAt:snapshot!,computedAt,publishedAt,itemCount:frames.length,examined})
-   tx.set('rankingState/current',{version:1,generationId:id,metricsEpoch,computedAt,publishedAt,itemCount:frames.length,previousGenerationId:current?.generationId??null})
+   tx.set('rankingRuns/'+id,{...run,status:'ready',readCharge:chargedReads,snapshotAt:snapshot!,computedAt,publishedAt,itemCount:selected.length,examined})
+   tx.set('rankingState/current',{version:1,generationId:id,metricsEpoch,computedAt,publishedAt,itemCount:selected.length,previousGenerationId:current?.generationId??null})
    tx.set(leasePath,{id,expiresAt:publishedAt})
   })
-  return {status:'ready',generationId:id,itemCount:frames.length,examined,snapshotAt:snapshot!}
+  return {status:'ready',generationId:id,itemCount:selected.length,examined,snapshotAt:snapshot!}
  }catch(failure){
   // Staging is never public. A retry uses a new generation; the old pointer is preserved.
   try{await store.transact(async tx=>{

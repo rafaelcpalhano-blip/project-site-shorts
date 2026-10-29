@@ -19,7 +19,7 @@ function fixture(count=1){
  return {store,now,rest,epoch}
 }
 
-for(const [count,steps] of [[0,3],[1,4],[30,7],[31,7],[100,14]])test('readiness validates '+count+' real REST fixture sources and estimates '+steps+' steps without writes',async()=>{
+for(const [count,steps] of [[0,3],[1,4],[30,6],[31,6],[100,10]])test('readiness validates '+count+' real REST fixture sources and estimates '+steps+' steps without writes',async()=>{
  const d=fixture(count),before=structuredClone([...d.rest.docs])
  const result=await inspectRankingReadiness(d)
  assert.equal(result.status,'ready');assert.equal(result.sourceDocuments,count);assert.equal(result.eligibleVideos,count);assert.equal(result.estimatedBuildSteps,steps)
@@ -65,7 +65,7 @@ test('readiness never reports a truncated pilot or more than the generation capa
  assert.equal(pilot.status,'blocked');assert.equal(pilot.reason,'ranking-source-limit')
  const tooMany=await inspectRankingReadiness(fixture(101));assert.equal(tooMany.status,'blocked');assert.equal(tooMany.reason,'ranking-video-limit')
  const worst=fixture(300);for(let n=100;n<300;n++)worst.rest.docs.get('shorts/s'+String(n).padStart(3,'0')).moderationStatus='removed'
- const r=await inspectRankingReadiness(worst);assert.equal(r.status,'ready');assert.equal(r.estimatedBuildSteps,28);assert.equal(r.eligibleVideos,100)
+ const r=await inspectRankingReadiness(worst);assert.equal(r.status,'ready');assert.equal(r.estimatedBuildSteps,24);assert.equal(r.eligibleVideos,100)
 })
 
 test('readiness keeps a fresh ranking untouched and does not leak arbitrary read error messages',async()=>{

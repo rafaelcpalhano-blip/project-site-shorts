@@ -16,33 +16,33 @@ function fixture(age,delayedPublication=0){
  return {store,now,rest}
 }
 
-test('ranking 30-minute gate preserves current result without writes until the exact boundary',async()=>{
- assert.equal(generationLimits.intervalMs,30*60000)
+test('ranking 45-minute gate preserves current result without writes until the exact boundary',async()=>{
+ assert.equal(generationLimits.intervalMs,45*60000)
  for(const generate of [stepRankingGeneration,buildRankingGeneration]){
-  const d=fixture(30*60000-1),before=structuredClone([...d.rest.docs])
+  const d=fixture(45*60000-1),before=structuredClone([...d.rest.docs])
   assert.equal((await inspectRankingReadiness(d)).status,'not-due')
   assert.equal((await generate(d)).status,'not-due')
   assert.deepEqual([...d.rest.docs],before)
  }
 })
 
-test('ranking becomes due at 30 minutes without changing the previous public pointer before completion',async()=>{
- const d=fixture(30*60000),previous=structuredClone(d.rest.docs.get('rankingState/current'))
+test('ranking becomes due at 45 minutes without changing the previous public pointer before completion',async()=>{
+ const d=fixture(45*60000),previous=structuredClone(d.rest.docs.get('rankingState/current'))
  assert.equal((await inspectRankingReadiness(d)).status,'ready')
  assert.equal((await stepRankingGeneration(d)).status,'building')
  assert.deepEqual(d.rest.docs.get('rankingState/current'),previous)
- const legacy=fixture(30*60000)
+ const legacy=fixture(45*60000)
  assert.equal((await buildRankingGeneration(legacy)).status,'ready')
 })
 
-test('segmented 30-minute cadence follows snapshot age even if publication was delayed',async()=>{
- const d=fixture(30*60000,26*60000)
+test('segmented 45-minute cadence follows snapshot age even if publication was delayed',async()=>{
+ const d=fixture(45*60000,26*60000)
  assert.equal((await inspectRankingReadiness(d)).status,'ready')
  assert.equal((await stepRankingGeneration(d)).status,'building')
 })
 
-test('more frequent ranking keeps the daily budget guard and public pointer intact',async()=>{
- const d=fixture(30*60000),previous=structuredClone(d.rest.docs.get('rankingState/current'))
+test('ranking interval keeps the daily budget guard and public pointer intact',async()=>{
+ const d=fixture(45*60000),previous=structuredClone(d.rest.docs.get('rankingState/current'))
  d.rest.docs.set('rankingBudgets/2026-10-27',{version:1,readsReserved:generationLimits.dailyReads,writesReserved:0,deletesReserved:0})
  const before=structuredClone([...d.rest.docs])
  assert.equal((await inspectRankingReadiness(d)).reason,'ranking-budget-exhausted')
