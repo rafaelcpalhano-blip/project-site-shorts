@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-29",
+  "referenceWorkerVersion": "68add1ea-d8f8-468c-a8ba-9d752a41dac3",
+  "workerVersionNotEmbeddedInLighthouse": true,
+  "reports": [
+    {
+      "profile": "desktop",
+      "fetchTime": "2026-10-29T16:25:47.557Z",
+      "url": "https://www.clipzone.workers.dev/",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 647.6358,
+        "largest-contentful-paint": 732.545,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.03439322432168915,
+        "speed-index": 721.6249298332873,
+        "interactive": 732.545
+      },
+      "audits": {
+        "is-crawlable": {
+          "score": 1,
+          "failingItems": 0
+        },
+        "robots-txt": {
+          "score": 1,
+          "failingItems": 0
+        },
+        "label-content-name-mismatch": {
+          "score": 1,
+          "failingItems": 0
+        }
+      },
+      "runWarnings": [
+        "There may be stored data affecting loading performance in this location: IndexedDB. Audit this page in an incognito window to prevent those resources from affecting your scores."
+      ],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "throttlingMethod": "simulate",
+      "htmlMatchesJson": true,
+      "htmlFile": "www.clipzone.workers.dev_2026-10-29_13-25-47.html",
+      "jsonFile": "www.clipzone.workers.dev_2026-10-29_13-25-47.json",
+      "htmlSha256": "8e3fd93f0adf4ed18591dc76a522f8c3ff8e604a3d0f69fcb4e0e2b2f6ef7ba0",
+      "jsonSha256": "053831097462cf2898971ab4f6920566fa6e9dfcbb5cb96d55a8ad7f99563986",
+      "finalScreenshotReviewed": true,
+      "feedCardsVisible": true,
+      "welcomeOrPlayerOverlayVisible": false
+    },
+    {
+      "profile": "mobile",
+      "fetchTime": "2026-10-29T16:27:05.624Z",
+      "url": "https://www.clipzone.workers.dev/",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 1639.4169,
+        "largest-contentful-paint": 1669.9169,
+        "total-blocking-time": 5.5,
+        "cumulative-layout-shift": 0.03219921295257025,
+        "speed-index": 1744.238852000111,
+        "interactive": 3047.6669
+      },
+      "audits": {
+        "is-crawlable": {
+          "score": 1,
+          "failingItems": 0
+        },
+        "robots-txt": {
+          "score": 1,
+          "failingItems": 0
+        },
+        "label-content-name-mismatch": {
+          "score": 1,
+          "failingItems": 0
+        }
+      },
+      "runWarnings": [
+        "There may be stored data affecting loading performance in this location: IndexedDB. Audit this page in an incognito window to prevent those resources from affecting your scores."
+      ],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "throttlingMethod": "simulate",
+      "htmlMatchesJson": true,
+      "htmlFile": "www.clipzone.workers.dev_2026-10-29_13-27-05.html",
+      "jsonFile": "www.clipzone.workers.dev_2026-10-29_13-27-05.json",
+      "htmlSha256": "63a2bf979ea18505384078f94468291d091aa333019bc40042cdee99f7dbe8e3",
+      "jsonSha256": "20d130ca89b9b736d4f5570d3df1620c882a9d34600ac678586ea8a0e2b4c871",
+      "finalScreenshotReviewed": true,
+      "feedCardsVisible": true,
+      "welcomeOrPlayerOverlayVisible": false
+    }
+  ],
+  "priorScores": {
+    "desktop": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 66
+    },
+    "mobile": {
+      "performance": 94,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 66
+    }
+  },
+  "conclusion": {
+    "crawlBlockResolved": true,
+    "noFailingScoredAuditsInAccessibilityBestPracticesSeo": true,
+    "mobilePerformanceScoreIs99Not100": true,
+    "noFunctionalFixRequiredFromTheseReports": true,
+    "performanceImprovementNotAttributedToRobotsDeploy": true,
+    "unresolvedLaunchBlockerIdentified": false
+  },
+  "followupOpportunities": [
+    "Optional main-bundle splitting after measuring actually needed public code",
+    "Responsive image dimensions and compression for provider artwork and Clipper",
+    "Provider-controlled cache lifetimes; do not add proxy/storage by inference",
+    "Small render-blocking CSS opportunity; maintain regression checks"
+  ],
+  "limits": [
+    "IndexedDB warning in both reports; clean incognito conditions not confirmed",
+    "screenEmulation.disabled=true in both; mobile profile does not independently prove physical-device performance",
+    "Single run per profile; no guarantee for every device/network/load",
+    "Does not measure Worker CPU, quota resilience or prove absence of security vulnerabilities"
+  ],
+  "applicationChanged": false,
+  "deployPerformed": false,
+  "reportsAndScreenshotsAddedToGit": false
+}

@@ -2495,3 +2495,22 @@ Backup/segunda cópia deixam de ser pendências; nenhuma restauração real ou c
 Proprietário relatou recuperação dos acessos por e-mail/autenticador/alternativas e perguntou sobre runtime. Local privado informado diretamente na conversa, finalidade de chave de serviço Firestore e cuidados explicados; não aberta ou copiada para HD nesta fase. Primeira revisão alterada a pedido para08/11/2026 às21hBrasília; busca Agenda primário sem evento no dia, evento único privado de30min criado com popup0min, sem convidados/captura automática. ID/link só no recibo privado. Depois combinar15dias;13/11 deixa de ser a primeira revisão.
 
 Candidato9-C congelado44arquivos, apenas robots/_headers alterados e42idênticos; APIbundle e9c81ab6... idêntico. RobotsAllow:/ exclui/admin e/api, HTMLadmin noindex/nofollow.1contrato+8rotas locais/lint/segredos/diff/dryrun aprovados, sem nova suíte integral por não mudar executáveis/dados. CLIleitura confirmou versão7ec6774e...100% e9referências secretas/flags; CloudflareUI confirmou Free/Currentplan,76/100mil pedidos exibidos. Sem segredo aberto/deploy/cron/plano/GitHub modificado. Relatório/evidência etapa-9-c-preparacao-lancamento. Próxima ação requer autorização específica do lançamento/pacote; depoisverificação remota/humana/Lighthousefinal/README e9-D. CI23ffccc anterior não aprova estes arquivos locais novos.
+
+
+## 29/10/2026 — Lançamento público autorizado e deploy verificado
+
+Retomada: checkout limpo main/originmain, commits98d73fb ecb0e9dc realizados. GitHubCI15/40827859709 sucesso1m29s paraSHAcb0e9dc6f0540180355980d81df7f54322454e9e; pacote44hashes/API revalidado e versão7ec ativa100%. Proprietário autorizou explicitamente lançamento. ReconfirmadosFreeCurrentplan eSpark/default/margem exibida329leituras/50mil,16writes/0deletes (pode atrasar). Executor privado validou configuração/ACL/9segredos/artifacts e marcador exclusivo. Deploy13h20Brasília:68add1ea-d8f8-468c-a8ba-9d752a41dac3; rollbackreferência7ec6774e-b1f8-4da5-bf3b-ce1c41d16bf4.44arquivos, sórobots/_headers alterados,42idênticos/APIe9c81ab6... idêntico.9valoressecretos earquivo privado preservados, sem plano/dadoseditoriais/cron/jobs/ranking/GitHub alterados.
+
+Verificador passou43hashes e política/shells, inicialmente esperava401adminsemcookie, mascontratoexistente retorna429semvisitante. Corrigido apenasexecutor privado; comcookievisitante/semtoken obteve401, semenfraquecer app ou redeploy. Pós-checkintegral43assets,3shells,7checksAPI, trêsordens200/15itens, relevant400, versão100%,9bindings/0cron/flags preservados. Sessão/metadadosoperacionaisesperados, sem conteúdo fictício. Relatório/evidência etapa-9-c-lancamento. READMEestado atualizado publicado masnotasLH28/10retidashistóricas. Aguardam resposta humanaPC/cel/PWA/admin eLighthousefinalHTMLJSON, depoisatualizarnotas/commitCI e9-D. Nenhuma nova captura debackup (cobre02h56), lembrete8/11às21hmantido.
+
+
+## 29/10/2026 — Reteste pós-lançamento aprovado pelo proprietário
+
+Resposta “tudo funcionando” à pergunta combinada PC/celular/PWA, vídeo, filtros/ordenações e painel na versão68add1ea. Registrar como confirmação humana conjunta, sem inventar detalhes de dispositivos. Relatório/evidência9-C eREADME atualizados; LighthousefinalHTMLJSON ainda pendente para notas reais/fechamento. Somente documentação, sem deploy ou consultas ao banco.
+
+
+## 29/10/2026 — Lighthouse final e README atualizados
+
+Proprietário enviou HTML+JSON13h25min47sdesktop e13h27min05smobile e pediu atualizar README com notas e motivo do valor anterior. Conferidos quatro arquivos, JSONembutido idêntico, screenshots feedcomcards/semplayer/boasvindas. LH13.5desktop100/100/100/100;mobile99/100/100/100, rastreabilidade/robots/nomesacessíveis aprovados e semruntimeError. IndexedDBwarningnosdois/screenEmulation.disabledtrue, não afirmar anonimolimpo ou aparelho físico por estes relatórios; confirmaçãohumana anterior separada. SEO66 dehomologação eraDisallow:/, agora100 compolíticapública. Nãoatribuir performance melhor ao robots.
+
+README substitui tabelaantiga e explica66para100, mantendo99mobile e limites. Relatório/evidência etapa-9-c-lighthouse-final registra FCP/LCP/TBT/CLS/hashesarquivos e oportunidadesopcionaisJS57KiB/imagens/cacheexterno/CSS; sem ajustefuncional/dependência/provedor/novo deploy. Validações9-C concluídas noescopo; faltamcommit/push/CI documental e9-D uso legítimo/cotas/incidentes, semmonitorautomáticoinferido. Backups/segredos/HTMLs/screenshots reais foraGit.

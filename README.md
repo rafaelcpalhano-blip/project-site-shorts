@@ -11,9 +11,9 @@ queiram mostrar seus jogos, incluindo projetos independentes.
 
 **Acesse:** [www.clipzone.workers.dev](https://www.clipzone.workers.dev/)
 
-**Estado atual:** homologação controlada; o lançamento público ainda depende do
-fechamento operacional e da autorização final. Anúncios e restrições dos players
-externos continuam sob responsabilidade de cada plataforma.
+**Estado atual:** publicado em **29/10/2026**, com conferência técnica pós-deploy,
+reteste manual e rodada final do Lighthouse concluídos. Anúncios e restrições dos players externos continuam sob
+responsabilidade de cada plataforma.
 
 ## Proposta e desenvolvimento
 
@@ -166,24 +166,27 @@ O desenvolvimento combina testes automatizados com verificações manuais no PC,
 celular e PWA. A suíte cobre regras de negócio, validações, autenticação,
 autorização, contratos de integração e cenários de regressão.
 
-Na rodada Lighthouse de 28/10/2026, os resultados foram:
+Na rodada final do **Lighthouse 13.5.0**, em **29/10/2026**, após o lançamento:
 
 | Perfil | Performance | Acessibilidade | Boas práticas | SEO |
 | --- | ---: | ---: | ---: | ---: |
-| Desktop | 99 | 100 | 100 | 66 |
-| Mobile simulado | 94 | 100 | 100 | 66 |
+| Desktop | 100 | 100 | 100 | 100 |
+| Mobile (Lighthouse) | 99 | 100 | 100 | 100 |
 
-O SEO reflete o bloqueio intencional de rastreamento na homologação. A liberação
-autorizada do rastreamento no lançamento pode melhorar essa nota; o resultado
-precisa ser confirmado por uma nova medição. Após o deploy final e a conferência
-da política de indexação, será feita uma última rodada desktop/mobile para
-atualizar esta tabela com a data, a versão e os resultados efetivamente obtidos.
+O SEO anterior de **66** refletia o bloqueio intencional de rastreamento durante a
+homologação. Após a autorização de lançamento, as páginas públicas foram liberadas
+para os buscadores e os novos testes registraram **100 em SEO nos dois perfis**.
+Painel e API continuam excluídos na política de rastreamento, com orientação de
+não indexação no HTML administrativo e autenticação preservada no backend.
 
-As medições são
-de uma rodada específica, não garantias para todos os dispositivos ou condições;
-o perfil mobile simulado complementa os testes físicos. Lighthouse também não
-substitui testes de segurança nem mede o tempo de CPU do Worker.
-[Resultados e condições](docs/etapa-9-a-lighthouse-fechamento.md).
+As notas representam esta rodada, sem garantir o mesmo resultado em qualquer rede
+ou dispositivo. Os relatórios trazem aviso de IndexedDB; o perfil mobile do
+Lighthouse complementa os testes de uso em aparelho físico. Ainda existem
+sugestões de otimização de imagens, JavaScript e recursos externos, registradas
+para evolução do projeto. Lighthouse não substitui auditoria de segurança nem
+mede o tempo de CPU do Worker.
+
+[Relatório final, condições e comparação com a homologação](docs/etapa-9-c-lighthouse-final.md).
 
 ## Executar a demonstração
 
