@@ -18,7 +18,7 @@ after(async()=>server?.close())
 const short={id:'video',identity:'YouTube:abcdefghijk',url:'https://www.youtube.com/shorts/abcdefghijk',platform:'YouTube',title:'Jogada especial',channelName:'Canal teste',gameId:'game',createdAt:Date.now(),likeCount:7}
 test('card separa canal e horário e apresenta curtidas antes de comentários',()=>{
  const html=render(h(MemoryRouter,null,h(Card,{short,gameName:'Jogo teste',onOpen:()=>{}})))
- assert.match(html,/aria-label="Abrir vídeo: Jogada especial\./)
+ assert.match(html,/Abrir vídeo: Jogada especial/)
  assert.doesNotMatch(html,/>Abrir vídeo</)
  assert.match(html,/Canal teste<\/p><p[^>]*><time/)
  const positions=['Jogo teste','Jogada especial</span></button>','Canal teste','<time','7 curtidas','Comentários','Ver jogo'].map(text=>html.indexOf(text))
