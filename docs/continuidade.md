@@ -2457,3 +2457,25 @@ Usuário pediu continuar e respondeu às perguntas: usa Google Authenticator, re
 Revisado o código do runner antigo/captura e preparado plano etapa-9-b-backup-lancamento.md, reutilizando bibliotecas existentes e tetos de500caminhos/250pedidos/5MiB/arquivo8MiB/120s, sem executar nem reaproveitar autorização antiga. Só preparar autorização concreta de captura/segunda cópia após definir destino/proteção; não criar nova ferramenta de criptografia, ACL/volume ou transferência sem aprovação. Política15dias/lembrete futuro mantidos.
 
 Conferência independente em aba GitHub de leitura confirmou CI run12/40815315804, push em a6b8d3f4fb695455d1b963bb6f0bcbbc5b55a4f3, sucesso1m39s. Checkout estava limpo no início. Sem rerun, configuração, deploy ou novo teste da aplicação por serem apenas anotações/plano. Aguardam pasta do HD, fechamento operacional/backup de lançamento e trabalho conjunto do README/contatos antes das autorizações públicas.
+
+
+## 29/10/2026 — Conferência final 9-B.5 e contatos para README
+
+Conferido SHA6a69c3c29db5d1c7c8ba5752510df91770edccc2: scanner830arquivos/1843blobs sem achados heurísticos, npm audit zero conhecidas,15mídias com hashes idênticos ao inventário. GitHub privado/1branch/0tags/0PRs/semreleases; Dependabot ativo/zeroalertas com timestamp27/10, code scanning e malware alerts desativados. CI run13/40815936504 Success2m12s/verify2m08s sem artefatos. Relatório/evidência etapa-9-b5-fechamento-2026-10-29. Nenhuma configuração remota ou visibilidade alterada.
+
+Usuário escolheu LinkedIn rafael-caron-palhano-33081118b, e-mail rafaelcpalhano@gmail.com e sedaking.itch.io como contatos públicos. README preparado para revisão conjunta com esses contatos, link de homologação, três ordenações atuais, ranking experimental inativo e estado observado de tradução/TikTok. Nenhuma licença adicionada. Não presumir aprovação pública; conferir CI do commit final sem ciclo documental infinito. Backup pré-lançamento/HD e recuperação individual Cloudflare/GitHub continuam pendentes, sem captura/acesso ao HD, credenciais, plano ou deploy.
+
+
+## 29/10/2026 — README reformulado com proposta e funcionalidades
+
+Proprietário pediu apresentação mais completa para portfólio: comunidade de games/indies, participação sem cadastro, três fontes oficiais, cadastro simplificado, IGDB/fichas manuais, Clipper, navegação entre players, moderação, administração e infraestrutura gratuita. README reestruturado após conferir código. Esclarecidos título TikTok manual quando indisponível/handle extraído, triagem de comentários para revisão, histórico por ID versus ordenação por data e franquias com períodos variados. Incluídos PWA, arquitetura, consumo de CPU/leitura/escrita/rede, decisão de ranking inativo e Lighthouse com condições. Contatos escolhidos preservados; política de backup descrita sem declarar captura/HD já realizados. Apenas documentação, sem deploy, configurações remotas ou visibilidade alterada.
+
+
+## 29/10/2026 — Simplificação TikTok e reteste final de SEO registrado
+
+Usuário aprovou descrição simplificada de canal/título/links curtos TikTok no README e pediu lembrar a última medição após finalizar. Mantidas notas reais da homologação; não estimar nota futura. Registrado checklist de indexação aprovada, Lighthouse desktop/mobile HTML/JSON com data/versão e atualização da tabela após deploy final, além de verificação física/PWA. Não alterar robots, rastreamento, deploy ou dados nesta edição documental.
+
+
+## 29/10/2026 — README aprovado pelo proprietário
+
+Usuário declarou que gostou do README e autorizou prosseguir. Revisão editorial conjunta concluída; preparar comandos exatos para os cinco arquivos documentais pendentes, sem commit/push automático. Após push, conferir CI do SHA final. Não confundir aprovação do README com alteração de visibilidade ou lançamento; backup atualizado/HD e confirmações operacionais restantes seguem separados.

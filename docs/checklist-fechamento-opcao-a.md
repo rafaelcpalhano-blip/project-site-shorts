@@ -76,3 +76,11 @@ O checkpoint privado antigo do ranking permanece preservado; qualquer limpeza/re
 As regras de nomes acessíveis e robots passaram nos dois relatórios. Performance desktop99/mobile94, Acessibilidade100/BoasPráticas100 e SEO66 pelo bloqueio intencional de rastreamento. Não repetir Lighthouse agora; aviso IndexedDB limita comparação limpa de performance. Ver etapa-9-a-lighthouse-fechamento.md.
 
 Revisão local 9-B e guia de operação/recuperação preparados, sem alteração de código funcional adicional, conta, plano ou infraestrutura. 112 testes direcionados aprovados; nenhum novo impedimento crítico no código revisado. Recuperação/custódia/frequência de backup, estratégia de retenção, CI do commit final e README conjunto ainda exigem fechamento. Ver etapa-9-b-revisao-final-local.md e guia-operacao-recuperacao.md.
+
+
+## Conferência após o lançamento autorizado
+
+- [ ] Após o deploy final, conferir a política de indexação aprovada e as respostas efetivas de robots.txt e eventuais diretivas de não indexação. Não liberar rastreamento durante a homologação apenas para elevar a nota.
+- [ ] Executar a rodada final Lighthouse desktop/mobile na versão publicada, registrar data, versão, condições e preservar HTML/JSON. Comparar as quatro categorias sem presumir SEO100.
+- [ ] Atualizar a tabela do README com os resultados medidos e seu contexto, distinguindo a rodada de homologação de28/10/2026 da rodada final.
+- [ ] Conferir navegação e players no aparelho físico/PWA após a versão final; o perfil mobile simulado não substitui essa verificação.
