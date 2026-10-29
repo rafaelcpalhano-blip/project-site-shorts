@@ -61,7 +61,7 @@ try {
     },
   })
   stopNetworkRetention=startLocalNetworkRetention(store)
-  stopRanking=await startLocalRanking({store,now:()=>new Date()})
+  if(process.env.CLIPZONE_EXPERIMENTAL_LOCAL_RANKING==='true')stopRanking=await startLocalRanking({store,now:()=>new Date()})
   process.env.VITE_DATA_MODE = 'firestore-emulator'
   server = createHttpsServer({ cert, key, requestTimeout: 30_000, headersTimeout: 10_000 })
   vite = await createViteServer({

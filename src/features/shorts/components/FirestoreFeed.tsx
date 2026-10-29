@@ -8,7 +8,7 @@ import {getGameCatalogVersion,subscribeGameCatalog,invalidateGameCatalog} from '
 import { readFailureMessage } from '../../../lib/http/read-failure'
 import { ClipperFailure } from '../../../components/clipper/ClipperFailure'
 import {updateItemLikeCount,updatePageLikeCount} from '../services/feed-like-count'
-import {createOrderedFeedClient,feedOrderLabels} from '../services/ordered-feed-api'
+import {createOrderedFeedClient,feedOrderLabels,normalizeFeedOrder} from '../services/ordered-feed-api'
 import type {FeedOrder} from '../services/ordered-feed-api'
 import { TITLE_SEARCH_ENABLED } from '../../../lib/features/title-search'
 import { createTitleSearchClient } from '../services/title-search-api'
@@ -27,14 +27,15 @@ const loadViewer=createDeferredModule(()=>import('./ShortSequenceDialog').then(m
 import styles from './ShortFeed.module.css'
 type FeedCursor=PublicCursor|TitleSearchCursor|string
 interface FeedPage {items:Short[];next:FeedCursor|null;limited?:boolean;orderingAt?:string}
-interface FeedReturn {order:FeedOrder;filter:string;index:number;scroll:number;query:string;draft:string;attempt:number;pager:ReturnType<typeof createCursorPages<Short,FeedCursor,FeedPage>>}
+interface FeedReturn {order:FeedOrder|'relevant';filter:string;index:number;scroll:number;query:string;draft:string;attempt:number;pager:ReturnType<typeof createCursorPages<Short,FeedCursor,FeedPage>>}
 const orderedFeed=createOrderedFeedClient()
 const searchTitles=createTitleSearchClient()
 const repository = createPublicRepository(database)
 export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; reset?:boolean }) {
   const location=useLocation()
   const [restored]=useState(()=>!gameId&&!reset?loadFeedReturn<FeedReturn>(location.state?.feedReturn??location.key):undefined)
-  const [order,setOrder]=useState<FeedOrder>(restored?.order??'latest')
+  const canRestoreOrder=restored!==undefined&&normalizeFeedOrder(restored.order)===restored.order
+  const [order,setOrder]=useState<FeedOrder>(normalizeFeedOrder(restored?.order))
   const [draft,setDraft]=useState(restored?.draft??'')
   const [query,setQuery]=useState(restored?.query??'')
   const [filter, setFilter] = useState(restored?.filter??'')
@@ -43,7 +44,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
   const [catalogBusy, setCatalogLoading] = useState(false)
   const [page, setPage] = useState<FeedPage>({ items: [], next: null })
   const [cursors, setCursors] = useState<Array<FeedCursor | undefined>>([undefined])
-  const [index, setIndex] = useState(restored?.index??0)
+  const [index, setIndex] = useState(canRestoreOrder?restored.index:0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(restored?.attempt??0)
@@ -78,7 +79,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
   const context=useRef(pager),viewerTicket=useRef(0),selectedRef=useRef(selected)
   useLayoutEffect(()=>{context.current=pager;selectedRef.current=selected})
   const snapshot=useRef<FeedReturn|undefined>(undefined)
-  const restoreScroll=useRef(restored?.scroll)
+  const restoreScroll=useRef(canRestoreOrder?restored.scroll:undefined)
   useLayoutEffect(()=>{snapshot.current={order,filter,index,scroll:0,query,draft,attempt,pager}})
   useLayoutEffect(()=>()=>{
     if(!gameId&&snapshot.current)saveFeedReturn(location.key,{...snapshot.current,scroll:window.scrollY})
@@ -146,7 +147,7 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
         {catalogLoading&&<p role="status">Carregando jogos…</p>}
         {loadedCatalogVersion===catalogVersion && catalogError && <p role="alert">{catalogError} <button type="button" onClick={()=>invalidateGameCatalog()}>Recarregar catálogo</button></p>}
       </div>}
-      <div className="form-field"><label htmlFor="persistent-order">Filtrar por relevância</label>
+      <div className="form-field"><label htmlFor="persistent-order">Ordenar por</label>
         <select id="persistent-order" value={order} onChange={event=>{setOrder(event.target.value as FeedOrder);setIndex(0);setCursors([undefined]);setError('');setLoading(true)}}>{(Object.keys(feedOrderLabels) as FeedOrder[]).map(value=><option key={value} value={value}>{feedOrderLabels[value]}</option>)}</select>
       </div>
     </div>
@@ -159,7 +160,6 @@ export function FirestoreFeed({ gameId, reset = false }: { gameId?: string; rese
     </div>
     {TITLE_SEARCH_ENABLED&&query&&!loading&&!error&&page.next&&<p role="status">{page.limited?'Limite de 30 candidatos atingido. ':''}Pode haver mais resultados; use Continuar busca.</p>}
     {!TITLE_SEARCH_ENABLED&&!loading&&!error&&page.next&&page.limited&&<p role="status">Consulta limitada a 30 candidatos. Continue para consultar os próximos shorts.</p>}
-    {order==='relevant'&&page.orderingAt&&!loading&&!error&&<p className="muted">Ranking atualizado em {new Date(page.orderingAt).toLocaleString('pt-BR')}. Novas interações entram na próxima atualização do ranking.</p>}
     <FeedPagination current={index} available={Math.max(index+1,cursors.length)} busy={loading} canNext={!error&&!!page.next} nextLabel={TITLE_SEARCH_ENABLED&&query?'Continuar busca →':'Próxima →'} onChange={changePage}/>
     {selected && <DeferredDialog title="Visualizador de short" load={loadViewer} onClose={closeViewer} dialogProps={{short:selected, items:page.items, hasPreviousPage:index>0, hasNextPage:!!page.next, onBoundary:boundary, onNavigate:setSelected, onLikeCount:updateLikeCount, onCommentCount:updateCommentCount, onModerated:()=>{setSelected(null);refresh();requestAnimationFrame(()=>document.getElementById('main-content')?.focus())}, onClose:closeViewer}} />}
   </div>

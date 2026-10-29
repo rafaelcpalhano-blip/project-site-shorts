@@ -36,7 +36,7 @@ test('mensagens visíveis distinguem timeout/rede e não expõem exceções ines
 })
 test('ranking indisponível conserva orientação para outras ordenações',async()=>{
  const client=createOrderedFeedClient(async path=>path==='/api/session'?new Response(null,{status:204}):Response.json({error:'ranking-not-ready'},{status:503}))
- await assert.rejects(client('relevant'),error=>error instanceof PublicReadFailure&&/outras ordenações continuam disponíveis/.test(readFailureMessage(error,'fallback')))
+ await assert.rejects(client('likes'),error=>error instanceof PublicReadFailure&&/outras ordenações continuam disponíveis/.test(readFailureMessage(error,'fallback')))
 })
 test('formulário suspenso bloqueia envio e deixa textarea somente leitura para preservar rascunho e guarda de navegação',()=>{
  const html=renderToStaticMarkup(h(Form,{shortId:'short',disabled:false,suspended:true,onBusyChange(){},onPublished(){}}))

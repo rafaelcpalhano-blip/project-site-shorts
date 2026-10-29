@@ -99,7 +99,7 @@ for(const [label,hidden,expected,visible]of [['all hidden',true,21,0],['14 visib
  t.diagnostic(`${expected} REST calls; OAuth/retries/CPU remain separate deployment gates.`)
 })
 
-for(const order of ['latest','relevant'])test(order+': candidate/visibility mixes keep the bounded no-retry budget',async t=>{
+for(const order of ['latest','likes'])test(order+': candidate/visibility mixes keep the bounded no-retry budget',async t=>{
  let maximum=0
  for(let visible=0;visible<=15;visible++){
   const f=await fixture(t,{hidden:i=>i>=visible,ceiling:50})
@@ -108,7 +108,7 @@ for(const order of ['latest','relevant'])test(order+': candidate/visibility mixe
   assert.ok(f.calls.length<=45);maximum=Math.max(maximum,f.calls.length)
   if(visible<15){assert.equal(body.candidatesExamined,30);assert.ok(body.next)}
  }
- assert.equal(maximum,order==='relevant'?45:43)
+ assert.equal(maximum,43)
  t.diagnostic(`Maximum across 16 mixes: ${maximum} calls, excluding retry/OAuth.`)
 })
 

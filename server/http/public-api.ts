@@ -1,3 +1,4 @@
+import {withoutCompositeRanking} from '../ranking/release-store.ts'
 import type {TikTokBackoff} from '../videos/tiktok-availability.ts'
 import {resolveSharedVideoUrl} from '../videos/resolve-shared-url.ts'
 import {handlePlaybackFailure} from './playback-failure.ts'
@@ -46,30 +47,31 @@ export interface PublicApiOptions {
 }
 // Server composition only. No Cloudflare binding or browser endpoint is enabled here.
 export async function createPublicApi(options: PublicApiOptions) {
+  const releaseStore=withoutCompositeRanking(options.store)
   const previewVerifier=createVideoPreviewVerifier(options.verify,options.previewFetch,options.tiktokBackoff)
   const origin = new URL(options.origin)
   if (origin.protocol !== 'https:' || origin.origin !== options.origin) throw new Error('Expected canonical HTTPS origin')
-  const network=options.network?await createNetworkProtection({secret:options.network.secret,store:options.store,now:options.now}):undefined
+  const network=options.network?await createNetworkProtection({secret:options.network.secret,store:releaseStore,now:options.now}):undefined
   const rankingCursor = await createRankingCursor(options.visitorSecret,options.origin)
   const identity = await createVisitorIdentity(options.visitorSecret, options.now)
-  const checkAbuse = createAttemptLimiter({ store: options.store, now: options.now,
+  const checkAbuse = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs })
-  const adminLimit = createAttemptLimiter({ store: options.store, now: options.now,
+  const adminLimit = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'admin-auth' })
-  const playbackLimit=createAttemptLimiter({store:options.store,now:options.now,maximum:20,windowMs:60000,scope:'playback'})
-  const reportLimit = createAttemptLimiter({ store: options.store, now: options.now,
+  const playbackLimit=createAttemptLimiter({store:releaseStore,now:options.now,maximum:20,windowMs:60000,scope:'playback'})
+  const reportLimit = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'report' })
-  const gameRequestLimit = createAttemptLimiter({ store: options.store, now: options.now,
+  const gameRequestLimit = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'game-request' })
   const titleSearchEnabled = options.titleSearchEnabled ?? TITLE_SEARCH_ENABLED
-  const titleSearchLimit = titleSearchEnabled ? createAttemptLimiter({ store: options.store, now: options.now, maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'title-search' }) : undefined
-  const publicReadLimit = createAttemptLimiter({store:options.store,now:options.now,maximum:options.maximumAttempts,windowMs:options.attemptWindowMs,scope:'public-read'})
-  const likeLimit = createAttemptLimiter({store:options.store,now:options.now,maximum:20,windowMs:60000,scope:'like'})
-  const commentLimit = createAttemptLimiter({ store: options.store, now: options.now,
+  const titleSearchLimit = titleSearchEnabled ? createAttemptLimiter({ store: releaseStore, now: options.now, maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'title-search' }) : undefined
+  const publicReadLimit = createAttemptLimiter({store:releaseStore,now:options.now,maximum:options.maximumAttempts,windowMs:options.attemptWindowMs,scope:'public-read'})
+  const likeLimit = createAttemptLimiter({store:releaseStore,now:options.now,maximum:20,windowMs:60000,scope:'like'})
+  const commentLimit = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'comment' })
-  const previewLimit = createAttemptLimiter({ store: options.store, now: options.now,
+  const previewLimit = createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.maximumAttempts, windowMs: options.attemptWindowMs, scope: 'video-preview' })
-  const searchLimit = options.gameSearch ? createAttemptLimiter({ store: options.store, now: options.now,
+  const searchLimit = options.gameSearch ? createAttemptLimiter({ store: releaseStore, now: options.now,
     maximum: options.gameSearch.maximumAttempts, windowMs: options.gameSearch.windowMs, scope: 'game-search' }) : undefined
   return async (request: Request, trusted?: {clientAddress?:string}): Promise<Response> => {
     const path = new URL(request.url).pathname
@@ -81,7 +83,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       return true
     })
     if (['/api/admin/updates', '/api/admin/updates/read', '/api/admin/history', '/api/admin/games/edit', '/api/admin/games/catalog', '/api/admin/games/detail', '/api/admin/games/moderate', '/api/admin/games/queue', '/api/admin/games/review', '/api/admin/queue', '/api/admin/detail', '/api/admin/review', '/api/admin/comments/queue', '/api/admin/comments/detail', '/api/admin/comments/review'].includes(path)) return handleAdminModeration(request, {
-      origin: options.origin, admin: options.admin, store: options.store, now: options.now, verify: options.verify,
+      origin: options.origin, admin: options.admin, store: releaseStore, now: options.now, verify: options.verify,
       checkAbuse: async candidate => {
         const visitor = await identity.resolveVisitor(candidate)
         if (!visitor) return false
@@ -90,26 +92,26 @@ export async function createPublicApi(options: PublicApiOptions) {
       },
     })
     if (path === '/api/games/manual') return handleGameRequest(request, {
-      manual:true, origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:gameRequestLimit,
+      manual:true, origin:options.origin,store:releaseStore,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:gameRequestLimit,
     })
     if (path === '/api/games/requests') return handleGameRequest(request, {
-      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
+      origin: options.origin, store: releaseStore, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: gameRequestLimit,
     })
-    if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
-    if (['/api/games/list','/api/games/detail','/api/feed/ordered','/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:options.store,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit,ordered:{cursor:rankingCursor,now:options.now}})
+    if (path === '/api/shorts/search' && titleSearchLimit) return handleTitleSearch(request, {origin:options.origin,store:releaseStore,resolveVisitor:identity.resolveVisitor,checkAbuse:titleSearchLimit})
+    if (['/api/games/list','/api/games/detail','/api/feed/ordered','/api/feed','/api/shorts/detail','/api/comments/list'].includes(path)) return handlePublicRead(request,{origin:options.origin,store:releaseStore,resolveVisitor:identity.resolveVisitor,checkAbuse:publicReadLimit,ordered:{cursor:rankingCursor,now:options.now}})
     if (path === '/api/comments') return handleComment(request, {
-      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
+      origin: options.origin, store: releaseStore, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: commentLimit,
     })
-    if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:options.store,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'like-attempts');await likeLimit(visitor)},...(network?{prepareNetworkLike:(tx,shortId)=>network.prepareContribution(tx,address,'like',shortId)}:{})})
-    if(path==='/api/playback/failure')return handlePlaybackFailure(request,{origin:options.origin,store:options.store,now:options.now,verify:options.verify,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'playback-attempts');await playbackLimit(visitor)}})
+    if (path === '/api/likes/state' || path === '/api/likes/set') return handleLike(request, {origin:options.origin,store:releaseStore,now:options.now,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'like-attempts');await likeLimit(visitor)},...(network?{prepareNetworkLike:(tx,shortId)=>network.prepareContribution(tx,address,'like',shortId)}:{})})
+    if(path==='/api/playback/failure')return handlePlaybackFailure(request,{origin:options.origin,store:releaseStore,now:options.now,verify:options.verify,resolveVisitor:identity.resolveVisitor,checkAbuse:async visitor=>{if(network)await network.attempt(address,'playback-attempts');await playbackLimit(visitor)}})
     if (path === '/api/reports') return handleReport(request, {
-      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
+      origin: options.origin, store: releaseStore, now: options.now, resolveVisitor: identity.resolveVisitor, checkAbuse: reportLimit,
     })
     if (path === '/api/shorts/preview' || path === '/api/shorts/resolve') return handleVideoPreview(request, {
       origin: options.origin, resolveVisitor: identity.resolveVisitor, checkAbuse: previewLimit, verify: previewVerifier, resolveUrl:url=>resolveSharedVideoUrl(url,options.previewFetch),
     })
     if (path === '/api/games/confirm') return handleGameConfirmation(request, options.gameSearch?.get && searchLimit ? {
-      origin: options.origin, store: options.store, now: options.now, resolveVisitor: identity.resolveVisitor,
+      origin: options.origin, store: releaseStore, now: options.now, resolveVisitor: identity.resolveVisitor,
       checkAbuse: searchLimit, get: options.gameSearch.get, translateGame: options.gameTranslation,
     } : undefined)
     if (path === '/api/games/search') return handleGameSearch(request, options.gameSearch && searchLimit ? {
@@ -122,7 +124,7 @@ export async function createPublicApi(options: PublicApiOptions) {
       },
     })
     if (path === '/api/shorts') return handleSubmission(request, {
-      origin: options.origin, store: options.store, verify: options.verify, now: options.now,
+      origin: options.origin, store: releaseStore, verify: options.verify, now: options.now,
       resolveVisitor: identity.resolveVisitor, checkAbuse:async visitor=>{if(network)await network.attempt(address,'submission-attempts');await checkAbuse(visitor)},
       ...(network?{prepareNetworkPublication:tx=>network.prepareContribution(tx,address,'publication')}:{})
     })

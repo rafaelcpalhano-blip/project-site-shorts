@@ -4,6 +4,7 @@ const count=(value:unknown)=>{if(!Number.isSafeInteger(value)||Number(value)<0)t
 const hash=async(value:string)=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(n=>n.toString(16).padStart(2,'0')).join('')
 export function emptyRankingMetric(shortId:string,gameId:string,at:Date,epoch:string){return {version:1,ready:true,epoch,shortId,gameId,asOf:at,likeMass:0,commentMass:0,likeContributors:0,commentContributors:0}}
 export async function prepareEngagement(tx:AtomicTransaction,input:{shortId:string;gameId:string;kind:'like'|'comment';sourceId:string;identity?:string;at:Date;now:Date;active:boolean;bootstrapEpoch?:string}){
+ if(tx.experimentalRankingDisabled)return ()=>{}
  const marker=await tx.get('rankingState/metrics')
  if(!marker||marker.ready!==true&&!input.bootstrapEpoch)return ()=>{}
  if(marker.version!==1||typeof marker.epoch!=='string'||!/^[a-f0-9]{32}$/.test(marker.epoch)||input.bootstrapEpoch&&input.bootstrapEpoch!==marker.epoch)throw Error('ranking-metrics-not-ready')

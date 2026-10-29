@@ -6,7 +6,7 @@ import vm from 'node:vm'
 import ts from 'typescript'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import {createOrderedFeedClient,feedOrderLabels} from '../src/features/shorts/services/ordered-feed-api.ts'
+import {createOrderedFeedClient,feedOrderLabels,normalizeFeedOrder} from '../src/features/shorts/services/ordered-feed-api.ts'
 import * as catalogCache from '../src/features/games/services/catalog-cache.ts'
 import * as deferredModule from '../src/components/ui/deferred-module.ts'
 import * as cursorPages from '../src/features/shorts/services/cursor-pages.ts'
@@ -25,7 +25,7 @@ function renderFeed(file, props = {}) {
     if (name === 'react' || name === 'react/jsx-runtime') return require(name)
     if (name.includes('features/title-search')) return { TITLE_SEARCH_ENABLED }
     if (name.includes('title-search-api')) return { createTitleSearchClient: () => () => { searches++; throw Error('Busca não autorizada') } }
-    if (name.includes('ordered-feed-api')) return {createOrderedFeedClient,feedOrderLabels}
+    if (name.includes('ordered-feed-api')) return {createOrderedFeedClient,feedOrderLabels,normalizeFeedOrder}
     if (name.includes('catalog-cache')) return catalogCache
     if (name.includes('public-repository')) return { createPublicRepository: () => ({}) }
     if (name.includes('firebase/client')) return { database: {} }
@@ -92,4 +92,13 @@ test('índices exclusivos ficam arquivados, isenções não geram índices', () 
   assert.ok(!active.indexes.some(i => i.fields.some(f => f.fieldPath === 'searchFragments')))
   assert.equal(archived.indexes.length, 2)
   for (const field of ['searchFragments', 'titleSearchVersion']) assert.deepEqual(active.fieldOverrides.find(f => f.fieldPath === field).indexes, [])
+})
+
+test('release feed offers Mais Curtidos without scheduled relevance promises',()=>{
+ const html=renderFeed('FirestoreFeed.tsx');assert.match(html,/Mais Curtidos/);assert.match(html,/Ordenar por/);assert.doesNotMatch(html,/Mais Relevante|45 minutos|Ranking atualizado/)
+})
+test('retired return context starts likes at page one rather than reusing the old pager',()=>{
+ const legacyPager={knownCursors(){throw Error('obsolete pager reused')}}
+ feedReturn.saveFeedReturn('fixture',{order:'relevant',filter:'',index:2,scroll:900,query:'',draft:'',attempt:0,pager:legacyPager})
+ const html=renderFeed('FirestoreFeed.tsx');assert.match(html,/<option value="likes" selected="">Mais Curtidos/);assert.doesNotMatch(html,/Mais Relevante/)
 })

@@ -6,10 +6,10 @@ export type RankingCursorCodec=Awaited<ReturnType<typeof createRankingCursor>>
 export async function orderedFeed(input:unknown,store:AtomicStore,options:{cursor:RankingCursorCodec;now:()=>Date}){
  if(!input||typeof input!=='object'||Array.isArray(input))throw new RankingRequestError('invalid-ranking-input')
  const data=input as Record<string,unknown>
- if(Object.keys(data).some(key=>!['order','gameId','cursor'].includes(key))||data.order!==undefined&&!['latest','oldest','likes','relevant'].includes(String(data.order))||data.gameId!==undefined&&(typeof data.gameId!=='string'||!/^[-_a-zA-Z0-9]{1,128}$/.test(data.gameId)))throw new RankingRequestError('invalid-ranking-input')
+ if(Object.keys(data).some(key=>!['order','gameId','cursor'].includes(key))||data.order!==undefined&&!['latest','oldest','likes'].includes(String(data.order))||data.gameId!==undefined&&(typeof data.gameId!=='string'||!/^[-_a-zA-Z0-9]{1,128}$/.test(data.gameId)))throw new RankingRequestError('invalid-ranking-input')
  const cursor=data.cursor===undefined?undefined:await options.cursor.open(data.cursor)
  try{
-  const page=await readOrderedFeed({order:(data.order??'latest') as 'latest'|'oldest'|'likes'|'relevant',gameId:data.gameId as string|undefined,cursor},{store,now:options.now})
+  const page=await readOrderedFeed({order:(data.order??'latest') as 'latest'|'oldest'|'likes',gameId:data.gameId as string|undefined,cursor},{store,now:options.now})
   return {...page,next:page.next?await options.cursor.seal(page.next):null}
  }catch(error){
   const code=error instanceof Error?error.message:''

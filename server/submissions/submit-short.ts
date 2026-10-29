@@ -59,7 +59,7 @@ export async function submitShort(input: unknown, visitorHash: string, dependenc
     const title = submission.title || originalTitle || 'Short de ' + String(game.officialName || 'game')
     if (title.length > 500) throw new SubmissionError('invalid-metadata')
     const thumbnail=createThumbnail(evidence.thumbnailUrl,submission.platform,submission.identity,now)
-    const ranking=await transaction.get('rankingState/metrics')
+    const ranking=transaction.experimentalRankingDisabled?null:await transaction.get('rankingState/metrics')
     const applyNetwork=decision.status==='published'&&dependencies.prepareNetworkPublication?await dependencies.prepareNetworkPublication(transaction):()=>{}
     applyNetwork()
     transaction.create('videoIdentities/' + identityId, { shortId: identityId, identity: submission.identity, createdAt: now })

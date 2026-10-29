@@ -66,5 +66,5 @@ test('cursor HMAC impede fabricação, outra origem e alteração de modo/tempo'
 test('cliente ordenado valida DTO, propaga indisponibilidade e não repete consultas',async()=>{
  let calls=0;const ok={items:[],next:null,order:'latest',orderingAt:new Date().toISOString(),limited:false,candidatesRead:0,candidatesExamined:0};let body=ok,status=200
  const client=createOrderedFeedClient(async path=>{calls++;return path==='/api/session'?new Response(null,{status:204}):Response.json(body,{status})});assert.equal((await client('latest')).order,'latest');assert.equal(calls,2)
- body={...ok,candidatesRead:31};await assert.rejects(client('latest'),/inválida/);assert.equal(calls,4);body={error:'ranking-not-ready'};status=503;await assert.rejects(client('relevant'),/ainda não está disponível/);assert.equal(calls,6)
+ body={...ok,candidatesRead:31};await assert.rejects(client('latest'),/inválida/);assert.equal(calls,4);body={error:'ranking-not-ready'};status=503;await assert.rejects(client('likes'),/ainda não está disponível/);assert.equal(calls,6)
 })

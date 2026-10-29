@@ -3,8 +3,14 @@ import { PublicReadFailure, sessionReadFailure } from '../../../lib/http/read-fa
 import { validThumbnail } from '../../../lib/validation/thumbnail.ts'
 import type {PublicShort} from '../../../lib/firebase/public-read-api'
 import {publicId} from '../../../lib/validation/public-read.ts'
-export const feedOrderLabels={latest:'Últimos Postados',oldest:'Primeiro Postado',likes:'Mais Curtidos',relevant:'Mais Relevante'} as const
+export const feedOrderLabels={latest:'Últimos Postados',oldest:'Primeiro Postado',likes:'Mais Curtidos'} as const
 export type FeedOrder=keyof typeof feedOrderLabels
+/** Retired tab-local contexts start at page one of the active likes order. */
+export function normalizeFeedOrder(value:unknown):FeedOrder{
+ if(value==='relevant')return 'likes'
+ return typeof value==='string'&&Object.hasOwn(feedOrderLabels,value)?value as FeedOrder:'latest'
+}
+
 export interface OrderedPage {items:PublicShort[];next:string|null;order:FeedOrder;orderingAt:string;limited:boolean}
 export function createOrderedFeedClient(fetcher:typeof fetch=fetch){
  return async(order:FeedOrder,gameId?:string,cursor?:string,signal?:AbortSignal):Promise<OrderedPage>=>{
