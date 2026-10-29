@@ -1,6 +1,6 @@
 {
   "date": "2026-10-29",
-  "state": "deployment-technical-human-and-lighthouse-validated-documentation-commit-pending",
+  "state": "9-C-completed-initial-9-D-observation-recorded",
   "ownerAuthorized": true,
   "origin": "https://www.clipzone.workers.dev",
   "version": "68add1ea-d8f8-468c-a8ba-9d752a41dac3",
@@ -99,5 +99,11 @@
     "newBackupCapture": false
   },
   "backupReadTime": "2026-10-29T05:56:09.174Z",
-  "privatePayloadsAndPathsOmitted": true
+  "privatePayloadsAndPathsOmitted": true,
+  "documentationCi": {
+    "commit": "993b3819d3119f7a1270ba5b8473ad6591d62550",
+    "run": 40913693952,
+    "status": "success"
+  },
+  "nextStageEvidence": "etapa-9-d-acompanhamento-inicial.json"
 }

@@ -35,8 +35,8 @@ Publicação técnica e reteste humano concluídos; a conclusão completa da9-C 
 - [x] Proprietário respondeu “tudo funcionando” à conferência combinada PC/celular/PWA, vídeo, filtro/ordenações e painel. Não foram individualizados detalhes de cada dispositivo.
 - [x] Rodada final HTML/JSONdesktop/mobile de29/10 conferida; notas e condições registradas, com feed visível e sem overlays. Há aviso IndexedDB, sem confirmação de sessão limpa.
 - [x] README atualizado com notas medidas100/100/100/100desktop e99/100/100/100mobile; motivo do SEO66 anterior explicado. Condições em etapa-9-c-lighthouse-final.md.
-- [ ] Commit/push dos registros finais e CI do SHA correspondente, sem incluir backups ou chaves.
-- [ ] Seguir9-D com observação de uso legítimo, erros de limite e cotas, sem carga artificial, novos recursos pagos ou automação criada por inferência.
+- [x] Registros finais commitados/push:bd7d4b0 e993b381; CI16/40913693952 aprovado para993b381 em1m31s. Não inclui alterações documentais posteriores desta conferência.
+- [x] Primeira conferência9-D realizada; CPU continua como ponto de atenção operacional. Ver etapa-9-d-acompanhamento-inicial.md; sem carga ou monitor automático.
 
 O backup existente cobre o instante de29/10 às02h56Brasília, não mudanças posteriores; não houve nova captura no lançamento. Revisão lembrada no Agenda para08/11 às21h, sem execução automática. Rollback de código não restaura dados. Logs/segredos e recibos privados permanecem fora do Git. Não há garantia de indexação, ausência futura de429 de provedores ou consumo estável em qualquer escala.
 
@@ -49,3 +49,8 @@ Em29/10/2026, proprietário confirmou “tudo funcionando” no pedido combinado
 ## Lighthouse final aprovado
 
 Relatórios29/10 às13h25desktop/13h27mobile conferidos, HTMLs iguais aosJSONs, SEO100nosdois e rastreabilidade/nomeacessível/robots aprovados. Sem novo ajuste funcional/deploy. Publicação e validações9-C concluídas; commitCI documental e acompanhamento9-D são os próximos passos. Ver etapa-9-c-lighthouse-final.md para oportunidades e limites.
+
+
+## Fechamento documental e passagem9-D
+
+CI16 doSHA993b381 confirmado com sucesso em29/10, repositórioPublic observado. Primeira conferência9-D semerrodeexecução no recorte, comP90/P99CPUacima10ms registrado, semgarantiauniversal. Validações9-C encerradas; acompanhamento operacional prossegue conformeuso/incidentes, semnovo deploy.

@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-29",
+  "scope": "single initial operational observation; not continuous monitoring",
+  "commit": "993b3819d3119f7a1270ba5b8473ad6591d62550",
+  "ci": {
+    "run": 40913693952,
+    "number": 16,
+    "status": "success",
+    "totalDuration": "1m31s",
+    "jobDuration": "1m27s",
+    "artifacts": 0
+  },
+  "repositoryVisibilityObserved": "public",
+  "repositoryVisibilityChangedByAgent": false,
+  "versionObserved": "68add1ea-d8f8-468c-a8ba-9d752a41dac3",
+  "activeAt100Percent": true,
+  "publicCheck": {
+    "requests": 3,
+    "apiOrProviderCalls": 0,
+    "routes": {
+      "/": 200,
+      "/robots.txt": 200,
+      "/admin": 200
+    },
+    "adminNoindex": true,
+    "publicPagesAllowed": true,
+    "securityHeadersPreserved": true
+  },
+  "cloudflareWindow": {
+    "start": "2026-10-29T13:20:00-03:00",
+    "end": "2026-10-29T13:40:00-03:00",
+    "filter": "Actively deployed versions",
+    "workerInvocations": 78,
+    "subrequests": 260,
+    "executionErrors": 0,
+    "exceededCpuErrors": 0,
+    "exceededMemoryErrors": 0,
+    "internalErrors": 0,
+    "loadShedErrors": 0,
+    "uncaughtExceptions": 0,
+    "displayedCpuPercentilesMs": {
+      "p50": 3.75,
+      "p90": 13.39,
+      "p99": 14.67,
+      "p999": 14.67
+    },
+    "assetRequests": 214,
+    "assetCacheHitPercent": 99.07,
+    "includesRetestsAndLighthouse": true,
+    "notUniqueUserCount": true
+  },
+  "dailyQuotaDisplayed": {
+    "workerRequests": 248,
+    "workerAllowance": 100000,
+    "firestoreReadsApprox": 1100,
+    "firestoreReadPercent": 2.2,
+    "firestoreReadAllowance": 50000,
+    "firestoreWrites": 72,
+    "firestoreWriteAllowance": 20000,
+    "firestoreDeletes": 0,
+    "firebasePlan": "Spark",
+    "indicatorsMayBeDelayed": true
+  },
+  "cpuAttention": {
+    "percentilesAbove10ms": true,
+    "allRequestsBelow10msProven": false,
+    "endpointAttributionAvailable": false,
+    "coldStartAttributionAvailable": false,
+    "error1102Observed": false,
+    "persistentLogsOrTracesEnabled": false
+  },
+  "initialReviewCompleted": true,
+  "applicationInterventionRequiredFromObservedFailure": false,
+  "automaticMonitoringCreated": false,
+  "deploymentPerformed": false,
+  "credentialOpened": false,
+  "remoteContentWrites": false,
+  "newBackup": false
+}

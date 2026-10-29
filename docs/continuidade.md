@@ -2514,3 +2514,12 @@ Resposta “tudo funcionando” à pergunta combinada PC/celular/PWA, vídeo, fi
 Proprietário enviou HTML+JSON13h25min47sdesktop e13h27min05smobile e pediu atualizar README com notas e motivo do valor anterior. Conferidos quatro arquivos, JSONembutido idêntico, screenshots feedcomcards/semplayer/boasvindas. LH13.5desktop100/100/100/100;mobile99/100/100/100, rastreabilidade/robots/nomesacessíveis aprovados e semruntimeError. IndexedDBwarningnosdois/screenEmulation.disabledtrue, não afirmar anonimolimpo ou aparelho físico por estes relatórios; confirmaçãohumana anterior separada. SEO66 dehomologação eraDisallow:/, agora100 compolíticapública. Nãoatribuir performance melhor ao robots.
 
 README substitui tabelaantiga e explica66para100, mantendo99mobile e limites. Relatório/evidência etapa-9-c-lighthouse-final registra FCP/LCP/TBT/CLS/hashesarquivos e oportunidadesopcionaisJS57KiB/imagens/cacheexterno/CSS; sem ajustefuncional/dependência/provedor/novo deploy. Validações9-C concluídas noescopo; faltamcommit/push/CI documental e9-D uso legítimo/cotas/incidentes, semmonitorautomáticoinferido. Backups/segredos/HTMLs/screenshots reais foraGit.
+
+
+## 29/10/2026 — Primeira conferência9-D e CI de fechamento aprovados
+
+Usuário pediu prosseguir. Checkout limpo/commitsbd7d4b0 e993b381 realizados; CI16/40913693952 para993b3819d3119f7a1270ba5b8473ad6591d62550 passou1m31s/verify1m27s/semartefatos. GitHubPublic confirmado (proprietário mudou, agente não). TrêsGETs início/robots/admin200 comheaders/indexaçãocorretos; semsessão/API/provedores/chave.
+
+CloudflareUI janela explícita13h20–13h40BRT, Activelydeployedversions/68add1ea100%:78invocações/260subreq/0erros/0ExceededCPU/memória/exceção; CPUgráficoP50=3,75/P90=13,39/P99=14,67ms,214assets/99,07%hit. RessalvaP90/P99>10: não declarar todas<10, não atribuirendpoint/frio por agregados. Logs/traces persistidosdesligados. Nenhum1102 relatado/observado; zeroerros não éausênciaHTTP4xxintencionais. MargemexibidaWorkers248/100mil,FirestoreSpark1,1milleituras/50mil(2,2%),72writes/20mil/0deletes; dadospodematrasar.
+
+Relatório/evidência etapa-9-d-acompanhamento-inicial. Primeira observação pontualconcluída; CPU merece acompanhamentofuturoemuso legítimo, sempilotoderanking/loadtest/upgrade. Nenhum deploy/app/conta/GitHub/segredo/backup/cron/monitorautomático alterado. 9-C CI/validaçõesfechadas; anotaçõesnovasdocumentaispendentescommit, semloop para registraroprórioCI. Lembretebackup8/11às21hmantido.
