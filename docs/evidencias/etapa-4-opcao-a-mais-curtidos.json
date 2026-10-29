@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-28",
+  "decision": "A: existing accumulated likes order; retire public composite ranking for this release",
+  "scope": "local only",
+  "publicOrders": [
+    "latest",
+    "oldest",
+    "likes"
+  ],
+  "defaultOrder": "latest",
+  "pageSize": 15,
+  "allPagesAvailable": true,
+  "gameFilterPreserved": true,
+  "legacyRelevantContext": "likes, first page, no old pager/scroll",
+  "publicRelevantHttpStatus": 400,
+  "compositeEngagementDisabledInPublicApi": true,
+  "experimentalAlgorithmRetained": true,
+  "experimentalLocalTimerDefault": false,
+  "remoteRankingDataDeleted": false,
+  "reactivationRequiresMetricReview": true,
+  "validation": {
+    "general": {
+      "passed": 888,
+      "failed": 0
+    },
+    "firestoreFullBeforeExpectationCorrection": {
+      "total": 157,
+      "passed": 154,
+      "failed": 3,
+      "failedFile": "tests/firestore/ranking-generation.test.mjs"
+    },
+    "firestoreCorrectedFile": {
+      "passed": 8,
+      "failed": 0
+    },
+    "types": true,
+    "lint": true,
+    "build": true,
+    "localSecretScan": true,
+    "diffCheck": true,
+    "workerDryRun": true
+  },
+  "package": {
+    "bundleSha256": "e9c81ab6a913414c7a263dce7ceab2bbd03a39130d65e850f21e8b688324ea87",
+    "assetFiles": 43,
+    "sourceFilesHashed": 113,
+    "staticFixedAssetsUnchanged": true,
+    "frontendMode": "api",
+    "secretReferences": 9,
+    "secretFileOpened": false,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "cron": false,
+    "pilot": false,
+    "rankingRetention": false
+  },
+  "noRemoteAccess": true,
+  "deploymentPerformed": false,
+  "realCredentialsOpened": false,
+  "plansChanged": false,
+  "publicLaunchApproved": false,
+  "compositeCpuTargetSolved": false,
+  "cpuBlockerRemovedFromReleaseScopeByDecision": true,
+  "pending": [
+    "Specific package deployment approval and remote preflight",
+    "Desktop/mobile/PWA manual regression",
+    "Final Lighthouse and integration review",
+    "TikTok official validation support",
+    "Remote private incomplete checkpoint: separate recovery authorization if needed",
+    "README and final public repository review"
+  ],
+  "homologation": {
+    "authorizedSeparately": true,
+    "deployedAt": "2026-10-28T22:40:14.522Z",
+    "version": "ffec1d98-360b-43ea-bcb4-f3dbc29da2eb",
+    "priorVersion": "df8da48f-975f-47a5-9424-4d2476f4a0fc",
+    "activeAt100Percent": true,
+    "assetsPublished": 43,
+    "publicAssetHashesChecked": 42,
+    "secretCount": 9,
+    "sameSecretValuesSupplied": true,
+    "secretFileUnchanged": true,
+    "rankingEnabled": false,
+    "jobsEnabled": false,
+    "cron": 0,
+    "contentWrites": false,
+    "sessionOperationalWritesExpected": true,
+    "apiChecks": [
+      {
+        "order": "likes",
+        "session": false,
+        "status": 401
+      },
+      {
+        "order": "latest",
+        "status": 200,
+        "itemCount": 10
+      },
+      {
+        "order": "oldest",
+        "status": 200,
+        "itemCount": 10
+      },
+      {
+        "order": "likes",
+        "status": 200,
+        "itemCount": 10
+      },
+      {
+        "order": "relevant",
+        "status": 400,
+        "itemCount": null
+      }
+    ],
+    "adminShellVerified": true,
+    "authenticatedAdminManualCheckPending": false,
+    "desktopMobileManualCheckPending": false,
+    "cpuMeasured": false,
+    "publicLaunchApproved": false,
+    "manualConfirmation": {
+      "recordedAt": "2026-10-28T22:47:43.668Z",
+      "source": "User confirmation: Tudo funcionou no PC e celular",
+      "desktop": true,
+      "mobile": true,
+      "threeOrders": true,
+      "gameFilter": true,
+      "videoOpenClose": true,
+      "adminAccess": true,
+      "paginationBeyondFirstPage": "automated coverage only; ten current videos",
+      "pwaStandaloneRetestSeparatelyConfirmed": false
+    }
+  }
+}

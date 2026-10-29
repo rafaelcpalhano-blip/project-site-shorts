@@ -139,3 +139,11 @@ Submit foi acionado uma vez; apareceu CAPTCHA. O agente não resolveu o desafio.
 ## 26/10/2026 — proprietário confirmou envio ao suporte Developers/Embed
 
 O proprietário informou: “Concluí e apareceu confirmação de envio”. Recebimento do relato técnico em Bug Report → Embed registrado com base nessa confirmação humana; não houve inspeção independente pelo agente, número de chamado informado ou resposta técnica recebida. O CAPTCHA foi concluído pelo proprietário, não pelo agente. Nenhuma mensagem duplicada foi enviada, nenhum monitoramento automático de e-mail foi criado e nenhuma nova consulta de validação ou publicação TikTok foi realizada. Aguardar possível retorno pelo contato público informado; confirmação do chamado não resolve o erro429 nem encerra o bloqueio de lançamento. Permanecem validação no servidor e demais proteções. Não houve código, testes, commit ou deploy nesta rodada.
+
+## 28/10/2026 — sucesso real relatado e registro TikTok público observado
+
+O proprietário informou envio bem-sucedido. A leitura normal do feed encontrou treze vídeos e um TikTok criado às 20h16min49s (Brasília). [Análise e limitações](etapa-9-a-retorno-2026-10-28.md): validação/backend/backoff inalterados frente ao pacote anterior, sem afrouxamento, proxy ou retry. Retomada da fonte é hipótese compatível, não causa comprovada; não há resposta upstream/log CPU dessa tentativa. Sucesso de publicação substitui a falta anterior de publicação real confirmada. Link da tentativa e reprodução no player aguardam confirmação específica do proprietário. Não alegar estabilidade definitiva ou solução permanente do 429. Sem consulta TikTok ou nova postagem pelo agente. Vinte e um testes existentes em fixtures aprovados. Suporte sem novo retorno técnico confirmado; não enviar outro contato por inferência.
+
+### Confirmação de reprodução recebida
+
+O proprietário confirmou o mesmo vídeo identificado no feed e informou reprodução normal no player. Publicação e reprodução reais confirmadas para esse exemplo; retirar o bloqueio de ausência de prova funcional TikTok. Manter o incidente 429 e sua causa desconhecida no histórico, sem prometer disponibilidade permanente ou presumir teste nos dois dispositivos. Nenhuma proteção foi reduzida.

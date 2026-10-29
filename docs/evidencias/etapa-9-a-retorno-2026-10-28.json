@@ -1,0 +1,130 @@
+{
+  "recordedAt": "2026-10-28T23:22:06.349Z",
+  "referenceVersion": "ffec1d98-360b-43ea-bcb4-f3dbc29da2eb",
+  "userGeneralFunctionalReport": "Tested applicable functions and additional functions; reported working. Exact individual checklist items not enumerated.",
+  "reports": [
+    {
+      "formFactor": "mobile",
+      "fetchTime": "2026-10-28T23:07:06.489Z",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": 2360.5715,
+        "largest-contentful-paint": 2634.48485,
+        "total-blocking-time": 3.5,
+        "cumulative-layout-shift": 0.03219921295257025,
+        "speed-index": 2441.652286007824
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "throttlingMethod": "simulate",
+      "disableStorageReset": false,
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "visibleFeedConfirmed": true,
+      "clipperWelcomeOverlayInFinalScreenshot": false,
+      "labelMismatchCount": 10,
+      "robotsSyntaxErrorCount": 21,
+      "originalJsonSha256": "d4e9ea573e4c78306da2da529b7fbb92506e69dda9403dae867b1fe2bb3f3273",
+      "originalHtmlSha256": "4bc29ff2fa16b91f372849630f80c5040815f51def929b3e1eb5069760e06006"
+    },
+    {
+      "formFactor": "desktop",
+      "fetchTime": "2026-10-28T23:12:07.852Z",
+      "lighthouseVersion": "13.5.0",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": 785.4216,
+        "largest-contentful-paint": 785.4216,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0.03439322432168915,
+        "speed-index": 1092.492181500743
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": true
+      },
+      "throttlingMethod": "simulate",
+      "disableStorageReset": false,
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "visibleFeedConfirmed": true,
+      "clipperWelcomeOverlayInFinalScreenshot": false,
+      "labelMismatchCount": 10,
+      "robotsSyntaxErrorCount": 21,
+      "originalJsonSha256": "bba08245f4b3a9c3d794c28b4418a026d2a24326d020cf073cbb7546e20419cc",
+      "originalHtmlSha256": "b3d711817e8877f49e27012068050cd50977ebbf79658adbb2da0e97e350590a"
+    }
+  ],
+  "tiktok": {
+    "state": "real publication and playback confirmed by user; matching public record independently observed",
+    "observedAt": "2026-10-28T23:20:16.782Z",
+    "publicFeedItemCount": 13,
+    "publicVideoUrl": "https://www.tiktok.com/@revistaarkade/video/7701828211558108434",
+    "publishedAt": "2026-10-28T23:16:49.600Z",
+    "currentVerifierUnchangedVsEarlierPackage": true,
+    "verifierFiles": [
+      "server/videos/tiktok.ts",
+      "server/videos/tiktok-availability.ts",
+      "server/http/video-preview.ts",
+      "server/submissions/decision.ts"
+    ],
+    "upstreamStatusCapturedForSuccessfulRequest": false,
+    "successRequestCpuCaptured": false,
+    "rootCauseConfirmed": false,
+    "interpretation": "Existing server verification can succeed when the official source supplies acceptable evidence; expiry or recovery of temporary upstream restrictions is plausible, not proven.",
+    "originalVideoCorrelationWithUserPending": false,
+    "providerCallsDuringInvestigation": 0,
+    "newPublicationAttempts": 0,
+    "securityRelaxed": false,
+    "localFixtureTestsPassed": 21,
+    "supportReplyConfirmed": false,
+    "officialReference": "https://developers.tiktok.com/docs/en/embed-videos",
+    "playbackConfirmedByUser": true,
+    "confirmedCanonicalUrl": "https://www.tiktok.com/@revistaarkade/video/7701828211558108434",
+    "confirmationRecordedAt": "2026-10-28T23:32:30.344Z"
+  },
+  "findings": [
+    "Ten visible-label/accessibility-name mismatches despite Accessibility 100, in both reports",
+    "robots.txt is HTML SPA fallback and has 21 syntax errors",
+    "Image delivery, third-party cache, unused JavaScript and render-blocking CSS remain optimization opportunities, not measured savings"
+  ],
+  "productionCpuCertified": false,
+  "deploymentPerformed": false,
+  "dependenciesChanged": false,
+  "launchApproved": false
+}

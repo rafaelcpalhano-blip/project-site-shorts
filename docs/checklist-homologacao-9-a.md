@@ -10,7 +10,7 @@ tags: [clipzone, homologacao, desktop, mobile, lighthouse]
 
 Endereço desta rodada: **https://www.clipzone.workers.dev/**. Use a versão HTTPS publicada; esta rodada não usa os servidores locais 5174/5175. Não faça upgrade, deploy, limpeza de banco ou cadastro fictício para preencher o checklist.
 
-Versão de referência confirmada em 26/10/2026: `a0d58723-b19c-4439-a2d2-85a402571691`. Se houver novo deploy, identifique a versão e separe os resultados. TikTok está bloqueado, aguardando suporte; não repetir envios ou testes de IDs inexistentes nesta rodada.
+Versão de referência atualizada em 28/10/2026: `ffec1d98-360b-43ea-bcb4-f3dbc29da2eb` (opção A). Se houver novo deploy, identifique a versão e separe os resultados. TikTok teve publicação real relatada e registro público observado em 28/10; reprodução também confirmada pelo proprietário para esse vídeo e a causa do antigo 429 continua desconhecida. Não repetir envios em massa ou testes de IDs inexistentes.
 
 ## Como preencher
 
@@ -34,7 +34,7 @@ Marque somente quando confirmar o resultado. Para falha, mantenha desmarcado e r
 - [ ] F01-PC
 - [ ] F01-MOB
 
-**F02 — Filtros e ordenações:** selecionar um jogo com cards, conferir os resultados e voltar a Todos os jogos. Conferir Últimos Postados, Primeiro Postado e Mais Curtidos; atualizar uma vez. Em Mais Relevante, registrar resultado/aviso exatamente: ranking/jobs ainda têm pendências 8-F e um aviso esperado não aprova a geração do ranking. Não insistir se houver erro/limite.
+**F02 — Filtros e ordenações:** selecionar um jogo com cards, conferir os resultados e voltar a Todos os jogos. Conferir Últimos Postados, Primeiro Postado e Mais Curtidos; atualizar uma vez. Mais Relevante foi retirado do escopo desta versão por decisão do proprietário; não deve aparecer como opção. Ranking composto e jobs permanecem desligados. Não insistir se houver erro/limite.
 
 - [ ] F02-PC
 - [ ] F02-MOB
@@ -44,7 +44,7 @@ Marque somente quando confirmar o resultado. Para falha, mantenha desmarcado e r
 - [ ] F03-PC
 - [ ] F03-MOB
 
-**F04 — Paginação (se houver mais de uma página):** trocar página e conferir alinhamento em “Últimos Postados”, ausência de cards antigos/duplicados e estados de Anterior/Próxima. Saltos de cinco páginas só são testáveis com páginas suficientes. Atualmente a home observada tem seis cards/uma página; não criar conteúdo só para aumentar a paginação. Registrar itens sem conteúdo suficiente como não executados.
+**F04 — Paginação (se houver mais de uma página):** trocar página e conferir alinhamento em “Últimos Postados”, ausência de cards antigos/duplicados e estados de Anterior/Próxima. Saltos de cinco páginas só são testáveis com páginas suficientes. Na verificação de 28/10, a home tem dez cards/uma página; não criar conteúdo só para aumentar a paginação. Registrar itens sem conteúdo suficiente como não executados.
 
 - [ ] F04-PC
 - [ ] F04-MOB
@@ -72,7 +72,7 @@ Usar um short YouTube e um Twitch já publicados. Abrir um por vez, tentar repro
 | --- | --- |
 | YouTube | |
 | Twitch | |
-| TikTok | BLOQUEADO — aguardar suporte e validação backend; não testar postagem agora |
+| TikTok | Publicação observada e reprodução confirmada pelo proprietário em 28/10; não inferir confirmação nos dois dispositivos |
 
 - [ ] V01-PC — YouTube
 - [ ] V01-MOB — YouTube
@@ -105,7 +105,7 @@ Não há funcionamento offline prometido: a PWA não implementa service worker/c
 
 - [ ] W01 — publicação legítima YouTube/Twitch, somente se houver conteúdo definitivo escolhido e janela combinada; nada fictício
 - [ ] W02 — curtida/retirada, comentário legítimo e moderação autorizada, com estados e telemetria coordenados quando necessários
-- [ ] W03 — TikTok: continuar bloqueado, sem trocar a validação backend por validação apenas do navegador
+- [ ] W03 — TikTok: publicação e reprodução do mesmo vídeo confirmadas em 28/10, mantendo validação backend; registrar dispositivos efetivamente usados
 
 Se não combinamos essa janela, deixe W01/W02 como não executados. Este formulário não instrui a apagar conteúdo ou gerar denúncias para testar moderação.
 
@@ -144,6 +144,6 @@ Não repetir para buscar nota maior. Se houver timeout/IndexedDB/falha, guardar 
 - [ ] Comparar resultados e corrigir regressões confirmadas antes da aprovação
 - [ ] Coordenar as lacunas de CPU/ações legítimas, sem repetir testes cegamente
 - [ ] Concluir auditorias 9-B e 9-B.5; não tornar GitHub público automaticamente
-- [ ] Resolver TikTok antes da aprovação de lançamento 9-C
+- [ ] Registrar sucesso funcional TikTok e tratamento de indisponibilidade externa na revisão de lançamento 9-C
 
 Nenhuma marcação deste checklist autoriza lançamento, deploy, mudança de plano ou publicação do repositório. Backup privado real foi verificado em 26/10/2026; recuperação Auth/TOTP, custódia adicional e autorização de restauração continuam separadas.
