@@ -26,6 +26,14 @@ refinamentos surgiram dos testes de uso, dos limites reais dos serviços e da bu
 por uma experiência mais simples. A automação facilita a participação, enquanto as
 decisões sensíveis continuam sob controle administrativo.
 
+O desenvolvimento contou com assistência de IA por meio do Codex no planejamento,
+na implementação, na investigação de falhas, na elaboração de testes e na
+documentação. As artes do Clipper foram geradas e refinadas com ferramentas de IA.
+A concepção do produto, a definição dos requisitos, as decisões de escopo e as
+aprovações ficaram a cargo do autor, que também realizou testes de uso no PC e no
+celular. As entregas foram verificadas por testes automatizados e conferências
+manuais; a assistência de IA não substitui essas validações.
+
 ## Funcionalidades
 
 ### Compartilhar vídeos sem cadastro
